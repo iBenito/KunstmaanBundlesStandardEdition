@@ -23,6 +23,7 @@ class AppKernel extends Kernel
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new Zizoo\BaseBundle\ZizooBaseBundle(),
             new Zizoo\BoatBundle\ZizooBoatBundle(),
+            new Zizoo\UserBundle\ZizooUserBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
