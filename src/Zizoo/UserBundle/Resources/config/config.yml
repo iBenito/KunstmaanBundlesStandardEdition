@@ -1,0 +1,7 @@
+
+parameters:
+    # Registration email
+    zizoo_user.emails.contact_email: fetz4@gmx.net
+    
+    # Blogger max latest comments
+    zizoo_user.confirm_registration:  false

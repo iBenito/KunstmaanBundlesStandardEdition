@@ -1,0 +1,27 @@
+login:
+    pattern:   /login
+    defaults:  { _controller: ZizooUserBundle:User:login }
+login_check:
+    pattern:   /login_check
+logout:
+    pattern:   /logout
+    
+register:
+  pattern:    /register
+  defaults:   {_controller: ZizooUserBundle:Registration:register }  
+submitted:
+  pattern:    /submitted
+  defaults:   {_controller: ZizooUserBundle:Registration:submitted }
+  requirements:
+        _method:  GET
+confirm:
+  pattern:    /confirm/{token}/email/{email}
+  defaults:   {_controller: ZizooUserBundle:Registration:confirm }
+  requirements:
+        _method:  GET
+confirmed:
+  pattern:    /confirmed
+  defaults:   {_controller: ZizooUserBundle:Registration:confirmed }
+  requirements:
+        _method:  GET|POST
+  
