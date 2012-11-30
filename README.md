@@ -1,4 +1,4 @@
 zizoo
 =====
 
-Zizooo
+zizoo application repository

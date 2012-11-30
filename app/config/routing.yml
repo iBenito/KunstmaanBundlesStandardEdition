@@ -1,0 +1,16 @@
+zizoo_user:
+    resource: "@ZizooUserBundle/Resources/config/routing.yml"
+    prefix:   /
+
+zizoo_boat:
+    resource: "@ZizooBoatBundle/Resources/config/routing.yml"
+    prefix:   /boat
+
+zizoo_base:
+    resource: "@ZizooBaseBundle/Resources/config/routing.yml"
+    prefix:   /zizoo
+
+# Internal routing configuration to handle ESI
+#_internal:
+#    resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
+#    prefix:   /_internal
