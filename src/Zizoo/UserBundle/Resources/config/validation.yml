@@ -1,0 +1,15 @@
+# src/Zizoo/UserBundle/Resources/config/validation.yml
+Zizoo\UserBundle\Entity\User:
+    properties:
+        username:
+            - NotBlank: ~
+            - MinLength: { limit: 5, message: zizoo.user.error.username_min_length }
+        email:
+            - NotBlank: { message: zizoo.user.error.email_not_blank }
+            - Email:
+                message: zizoo.user.error.email_email
+                checkMX: true
+                
+        password:
+            - NotBlank: { message: zizoo.user.error.password_not_blank }
+            - MinLength: { limit: 5, message: zizoo.user.error.password_min_length }
