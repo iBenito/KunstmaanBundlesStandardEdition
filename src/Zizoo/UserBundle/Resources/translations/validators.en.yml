@@ -1,0 +1,3 @@
+zizoo_user.error.email_taken: "This email address is already taken."
+    
+zizoo_user.error.user_taken: "This username is already taken."
