@@ -34,7 +34,7 @@ class RegistrationController extends Controller
 
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
-            ->setFrom('info@alex-fuckert.net')
+            ->setFrom($this->container->getParameter('email_register'))
             ->setTo($user->getEmail());
 
         if (!empty($htmlBody)) {
@@ -63,7 +63,7 @@ class RegistrationController extends Controller
 
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
-            ->setFrom('info@alex-fuckert.net')
+            ->setFrom($this->container->getParameter('email_password'))
             ->setTo($user->getEmail());
 
         if (!empty($htmlBody)) {
@@ -91,7 +91,7 @@ class RegistrationController extends Controller
 
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
-            ->setFrom('info@alex-fuckert.net')
+            ->setFrom($this->container->getParameter('email_password'))
             ->setTo($user->getEmail());
 
         if (!empty($htmlBody)) {
