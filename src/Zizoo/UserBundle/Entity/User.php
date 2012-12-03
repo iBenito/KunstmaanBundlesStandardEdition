@@ -6,12 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
-
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * Zizoo\UserBundle\Entity\User
  *
  * @ORM\Table(name="users")
  * @ORM\Entity(repositoryClass="Zizoo\UserBundle\Entity\UserRepository")
+ * @UniqueEntity(fields="username", message="zizoo_user.error.user_taken")
+ * @UniqueEntity(fields="email", message="zizoo_user.error.email_taken")
  */
 class User implements AdvancedUserInterface, \Serializable
 {
@@ -37,7 +39,7 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Column(type="string", length=255)
      */
     private $password;
-
+    
     /**
      * @ORM\Column(type="string", length=60, unique=true)
      */
@@ -296,4 +298,6 @@ class User implements AdvancedUserInterface, \Serializable
     {
         return $this->confirmationToken;
     }
+    
+   
 }

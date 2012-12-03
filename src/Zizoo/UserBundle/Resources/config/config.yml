@@ -5,3 +5,6 @@ parameters:
     
     # Blogger max latest comments
     zizoo_user.confirm_registration:  false
+    
+    
+    

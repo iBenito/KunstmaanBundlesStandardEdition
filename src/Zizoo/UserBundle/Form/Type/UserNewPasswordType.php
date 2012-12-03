@@ -1,23 +1,21 @@
 <?php
-// src/Zizoo/UserBundle/Form/Type/UserType.php
+// src/Zizoo/UserBundle/Form/Type/UserNewPasswordType.php
 namespace Zizoo\UserBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class UserType extends AbstractType
+class UserNewType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('username', 'text' );
-        $builder->add('email', 'email');
         $builder->add('password', 'repeated', array(
            'first_name' => 'password',
            'second_name' => 'confirm',
            'type' => 'password',
            'invalid_message' => 'The password fields must match.',
-           'first_options'  => array('label' => 'Password'),
+           'first_options'  => array('label' => 'New password'),
            'second_options' => array('label' => 'Repeat password')
         ));
     }
@@ -29,7 +27,7 @@ class UserType extends AbstractType
 
     public function getName()
     {
-        return 'user';
+        return 'usernewpassword';
     }
 }
 ?>

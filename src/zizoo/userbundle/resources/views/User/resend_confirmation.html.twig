@@ -1,0 +1,11 @@
+{% extends 'ZizooUserBundle::layout.html.twig' %}
+
+{% block body %}
+    <p>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder?</p>
+    <p>Click the "Resend Confirmation Email" button below to resend the email</p>
+    <form method="post">
+        <input type="submit" value="Resend Confirmation Email" />
+    </form>
+{% endblock %}
+
+

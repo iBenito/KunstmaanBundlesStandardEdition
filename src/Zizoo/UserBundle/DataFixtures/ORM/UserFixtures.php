@@ -17,8 +17,8 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface
 
         $encoder1 = new MessageDigestPasswordEncoder('sha512', true, 10);
         $user_1 = new User();
-        $user_1->setUsername('alex');
-        $user_1->setEmail('alex@fuckert.de');
+        $user_1->setUsername('alexf');
+        $user_1->setEmail('alexf83@gmail.com');
         $user_1->setSalt(md5(time()));
         $password1 = $encoder1->encodePassword('haha', $user_1->getSalt());
         $user_1->setPassword($password1);
@@ -28,7 +28,7 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface
         $encoder2 = new MessageDigestPasswordEncoder('sha512', true, 10);
         $user_2 = new User();
         $user_2->setUsername('benny');
-        $user_2->setEmail('fetz4@gmx.net');
+        $user_2->setEmail('vbenitogo@hotmail.com');
         $user_2->setSalt(md5(time()));
         $password2 = $encoder2->encodePassword('test', $user_2->getSalt());
         $user_2->setPassword($password2);

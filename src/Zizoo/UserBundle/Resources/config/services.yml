@@ -1,6 +1,3 @@
-parameters:
-#    zizoo_user.example.class: Zizoo\UserBundle\Example
-
 services:
 #    zizoo_user.example:
 #        class: %zizoo_user.example.class%

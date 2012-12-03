@@ -1,14 +1,17 @@
 login:
     pattern:   /login
     defaults:  { _controller: ZizooUserBundle:User:login }
+    
 login_check:
     pattern:   /login_check
+    
 logout:
     pattern:   /logout
     
 register:
   pattern:    /register
   defaults:   {_controller: ZizooUserBundle:Registration:register }  
+  
 submitted:
   pattern:    /submitted
   defaults:   {_controller: ZizooUserBundle:Registration:submitted }
@@ -19,9 +22,39 @@ confirm:
   defaults:   {_controller: ZizooUserBundle:Registration:confirm }
   requirements:
         _method:  GET
+        
 confirmed:
   pattern:    /confirmed
   defaults:   {_controller: ZizooUserBundle:Registration:confirmed }
   requirements:
         _method:  GET|POST
+        
+resend_confirmation:
+  pattern:    /resend-confirmation/email/{email}
+  defaults:   {_controller: ZizooUserBundle:Registration:resendConfirmation }
+  requirements:
+        _method:  GET|POST
+        
+forgot_password:
+  pattern:    /forgot-password
+  defaults:   {_controller: ZizooUserBundle:Registration:forgotPassword }
+  requirements:
+        _method:  GET|POST
+        
+reset_password_email:
+  pattern:    /reset-password
+  defaults:   {_controller: ZizooUserBundle:Registration:resetPasswordEmail }
+  requirements:
+        _method:  GET|POST
+        
+reset_password:
+  pattern:    /reset-password/{token}/email/{email}
+  defaults:   {_controller: ZizooUserBundle:Registration:resetPassword }
+  requirements:
+        _method:  GET|POST
   
+reset_password_confirm:
+  pattern:    /reset-password-confirm/
+  defaults:   {_controller: ZizooUserBundle:Registration:resetPasswordConfirm }
+  requirements:
+        _method:  GET|POST

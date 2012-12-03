@@ -8,34 +8,122 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
 use Zizoo\UserBundle\Form\Type\RegistrationType;
+use Zizoo\UserBundle\Form\Type\UserType;
+use Zizoo\UserBundle\Form\Type\UserForgotPasswordType;
 use Zizoo\UserBundle\Form\Model\Registration;
+use Zizoo\UserBundle\Form\Model\ForgotPassword;
+
+use Zizoo\UserBundle\Entity\User;
 use Zizoo\UserBundle\Entity\Group;
 
 class RegistrationController extends Controller
 {
+    /**
+     * Send email to registration user, with activation link
+     * @param type $user
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
+    private function sendConfirmationEmail($user){
+        $activationLink = $this->generateUrl('confirm', array('token' => $user->getConfirmationToken(), 'email' => $user->getEmail()), true);
+        $twig = $this->container->get('twig');
+        $template = $twig->loadTemplate('ZizooUserBundle:Registration:email_confirm.html.twig');
+        $context = array('link' => $activationLink);
+        $subject = $template->renderBlock('subject', $context);
+        $textBody = $template->renderBlock('body_text', $context);
+        $htmlBody = $template->renderBlock('body_html', $context);
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom('info@alex-fuckert.net')
+            ->setTo($user->getEmail());
+
+        if (!empty($htmlBody)) {
+            $message->setBody($htmlBody, 'text/html')
+                ->addPart($textBody, 'text/plain');
+        } else {
+            $message->setBody($textBody);
+        }
+
+        $this->get('mailer')->send($message);
+    }
+    
+    /**
+     * Send email to user with link for generating new password.
+     * @param type $user
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
+    private function sendForgotPasswordEmail($user){
+        $passwordLink = $this->generateUrl('reset_password', array('token' => $user->getConfirmationToken(), 'email' => $user->getEmail()), true);
+        $twig = $this->container->get('twig');
+        $template = $twig->loadTemplate('ZizooUserBundle:Registration:email_password_confirm.html.twig');
+        $context = array('link' => $passwordLink);
+        $subject = $template->renderBlock('subject', $context);
+        $textBody = $template->renderBlock('body_text', $context);
+        $htmlBody = $template->renderBlock('body_html', $context);
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom('info@alex-fuckert.net')
+            ->setTo($user->getEmail());
+
+        if (!empty($htmlBody)) {
+            $message->setBody($htmlBody, 'text/html')
+                ->addPart($textBody, 'text/plain');
+        } else {
+            $message->setBody($textBody);
+        }
+
+        $this->get('mailer')->send($message);
+    }
+    
+    /**
+     * Send email to user with new password.
+     * @param type $user
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
+    private function sendNewPasswordEmail($user, $pass){
+        $twig = $this->container->get('twig');
+        $template = $twig->loadTemplate('ZizooUserBundle:Registration:email_password_new.html.twig');
+        $context = array('pass' => $pass);
+        $subject = $template->renderBlock('subject', $context);
+        $textBody = $template->renderBlock('body_text', $context);
+        $htmlBody = $template->renderBlock('body_html', $context);
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom('info@alex-fuckert.net')
+            ->setTo($user->getEmail());
+
+        if (!empty($htmlBody)) {
+            $message->setBody($htmlBody, 'text/html')
+                ->addPart($textBody, 'text/plain');
+        } else {
+            $message->setBody($textBody);
+        }
+
+        $this->get('mailer')->send($message);
+    }
    
     public function registerAction()
     {
-        
-        $form = $this->createForm(new RegistrationType(), new Registration());
+        $form = $this->createForm(new RegistrationType());
         $request = $this->getRequest();
         
+        // If submit
         if ($request->isMethod('POST')) {
             $form->bindRequest($request);
-            
+
+            $data = $form->getData();
+            $user = $data->getUser();
             if ($form->isValid()) {
                 
-                $data = $form->getData();
-                $user = $data->getUser();
                 $user->setSalt(md5(time()));
                 $encoder = new MessageDigestPasswordEncoder('sha512', true, 10);
                 $password = $encoder->encodePassword($user->getPassword(), $user->getSalt());
                 $user->setPassword($password);
-                $user->setUsername($user->getEmail());
-                //$confirmationToken = $encoder->encodePassword($user->getUserName(), $user->getSalt());
                 $user->setConfirmationToken(uniqid());
                 $em = $this->getDoctrine()
-                            ->getEntityManager();
+                           ->getEntityManager();
                 
                 $zizooUserGroup = $em->getRepository('ZizooUserBundle:Group')->findOneByRole('ROLE_ZIZOO_USER');
                 
@@ -45,45 +133,80 @@ class RegistrationController extends Controller
                 $em->persist($user);
                 $em->flush();
 
-                $activationLink = $this->generateUrl('confirm', array('token' => $user->getConfirmationToken(), 'email' => $user->getEmail()), true);
-                $twig = $this->container->get('twig');
-                $template = $twig->loadTemplate('ZizooUserBundle:Registration:email_confirm.html.twig');
-                $context = array('link' => $activationLink);
-                $subject = $template->renderBlock('subject', $context);
-                $textBody = $template->renderBlock('body_text', $context);
-                $htmlBody = $template->renderBlock('body_html', $context);
+                $this->sendConfirmationEmail($user);
+
+                return $this->redirect($this->generateUrl('submitted'));
+            } else {
+                // Form is not valid. Check if the user is valid. If not, see if it's because the user already exists and hasn't completed registration (i.e. confirmation)
+                // If that is the case, forward to "resend_confirmation". 
+                // Maybe this shouldn't be done automatically? But it's hard to get the "Have you previously signed up" message below the right form control (i.e. username or email)
+                $em = $this->getDoctrine()
+                            ->getEntityManager();
                 
-                $message = \Swift_Message::newInstance()
-                    ->setSubject($subject)
-                    ->setFrom('info@alex-fuckert.net')
-                    ->setTo($user->getEmail());
+                // Validate user
+                $validator = $this->get('validator');
+                $errors = $validator->validate($user);
+                $num_errors = $errors->count();
                 
-                if (!empty($htmlBody)) {
-                    $message->setBody($htmlBody, 'text/html')
-                        ->addPart($textBody, 'text/plain');
-                } else {
-                    $message->setBody($textBody);
+                // See if invalid because user or email already taken.
+                $possibleUnconfirmedUser = null;
+                for ($i=0; $i<$num_errors; $i++){
+                    $msgTemplate = $errors->get($i)->getMessageTemplate();
+                    if ($msgTemplate=='zizoo_user.error.email_taken'){
+                        $email = $errors->get($i)->getRoot()->getEmail();
+                        if ($email){
+                            $possibleUnconfirmedUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($email);
+                            // If email already taken and not yet confirmed, forward.
+                            if ($possibleUnconfirmedUser->getConfirmationToken()!=null){
+                                return $this->render('ZizooUserBundle:User:register.html.twig', array('form' => $form->createView(), 'unconfirmed_user' => $possibleUnconfirmedUser, 'unconfirmed_email' => true, 'unconfirmed_username' => false));
+                                //return $this->redirect($this->generateUrl('resend-confirmation', array('email' => $email)));
+                            }
+                        }
+                    } else if ($msgTemplate=='zizoo_user.error.user_taken'){
+                        $username = $errors->get($i)->getRoot()->getUsername();
+                        if ($username){
+                            $possibleUnconfirmedUser = $em->getRepository('ZizooUserBundle:User')->findOneByUsername($username);
+                            // If username already taken and not yet confirmed, forward.
+                            if ($possibleUnconfirmedUser->getConfirmationToken()!=null){
+                                return $this->render('ZizooUserBundle:User:register.html.twig', array('form' => $form->createView(), 'unconfirmed_user' => $possibleUnconfirmedUser, 'unconfirmed_email' => false, 'unconfirmed_username' => true));
+                                //return $this->redirect($this->generateUrl('resend_confirmation', array('email' => $possibleUnconfirmedUser->getEmail())));
+                            }
+                        }
+                    }
                 }
                 
-                $this->get('mailer')->send($message);
-                
-                return $this->redirect($this->generateUrl('submitted'));
             }
         }
         
-        return $this->render('ZizooUserBundle:User:register.html.twig', array('form' => $form->createView()));
+        return $this->render('ZizooUserBundle:User:register.html.twig', array('form' => $form->createView(), 'unconfirmed_user' => null, 'unconfirmed_email' => false, 'unconfirmed_username' => false));
     }
     
     public function submittedAction(){
-        
         return $this->render('ZizooUserBundle:User:submitted.html.twig');
+    }
+    
+    
+    public function resendConfirmationAction($email){
+        $request = $this->getRequest();
+        $user = null;
+        $em = $this->getDoctrine()
+                    ->getEntityManager();
+        if ($email!=null){
+            $user = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($email);
+        } 
+        if ($user==null || $user->getConfirmationToken()==null){
+            return $this->redirect($this->generateUrl('submitted'));
+        }
+        if ($request->isMethod('POST')) {
+            $this->sendConfirmationEmail($user);
+            return $this->redirect($this->generateUrl('submitted'));
+        }
+        return $this->render('ZizooUserBundle:User:resend_confirmation.html.twig');
     }
     
     public function confirmAction($token, $email){
         $em = $this->getDoctrine()
                    ->getEntityManager();
-        
-        
         
         $user = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($email);
         
@@ -100,9 +223,67 @@ class RegistrationController extends Controller
     }
     
     public function confirmedAction(){
-
         $user = $this->getUser();
         return $this->render('ZizooUserBundle:User:confirmed.html.twig', array('user' => $user));
     }
     
+    public function forgotPasswordAction(){
+        $request = $this->getRequest();
+        $form = $this->createForm(new UserForgotPasswordType());
+        
+        if ($request->isMethod('POST')) {
+            $form->bindRequest($request);
+            $data = $form->getData();
+            $user_or_email = $data['user_or_email'];
+            
+            $em = $this->getDoctrine()
+                       ->getEntityManager();
+            
+            $user = $em->getRepository('ZizooUserBundle:User')->findOneByUsername($user_or_email);
+            if ($user==null) $user = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($user_or_email);
+            if ($user==null){
+                return $this->render('ZizooUserBundle:User:forgot_password.html.twig', array('form' => $form->createView(), 'error' => 'no_such_user'));
+            }
+            
+            $user->setConfirmationToken(uniqid());
+            
+            $em->persist($user);
+            $em->flush();
+
+            $this->sendForgotPasswordEmail($user);
+            
+            return $this->redirect($this->generateUrl('reset_password_email'));
+        }
+        
+        return $this->render('ZizooUserBundle:User:forgot_password.html.twig', array('form' => $form->createView()));
+    }
+    
+    public function resetPasswordEmailAction(){
+        return $this->render('ZizooUserBundle:User:reset_password_email.html.twig');
+    }
+    
+    public function resetPasswordAction($token, $email){
+        $em = $this->getDoctrine()
+                   ->getEntityManager();
+        
+        $user = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($email);
+        
+        if ($user && $user->getConfirmationToken()===$token){
+            $user->setConfirmationToken(null);
+            $encoder = new MessageDigestPasswordEncoder('sha512', true, 10);
+            $pass_plain = uniqid();
+            $password = $encoder->encodePassword($pass_plain, $user->getSalt());
+            $user->setPassword($password);
+            $em->persist($user);
+            $em->flush();
+            $this->sendNewPasswordEmail($user, $pass_plain);
+            return $this->render('ZizooUserBundle:User:reset_password_confirm.html.twig');
+        } else {
+            return $this->redirect($this->generateUrl('login'));
+        }
+    }
+    
+    public function resetPasswordConfirmAction(){
+        return $this->render('ZizooUserBundle:User:reset_password_email.html.twig');
+    }
 }

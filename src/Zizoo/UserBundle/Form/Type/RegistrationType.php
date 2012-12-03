@@ -11,13 +11,19 @@ class RegistrationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('user', new UserType());
+        $builder->add('user', new UserType(), array('label' => ' '));
         $builder->add('terms', 'checkbox', array('property_path' => 'termsAccepted'));
     }
 
+    public function getDefaultOptions(array $options)
+    {
+        return array('data_class' => 'Zizoo\UserBundle\Form\Model\Registration',
+                        'cascade_validation' => true);
+    }
+    
     public function getName()
     {
-        return 'zizoo_registration';
+        return 'registration';
     }
 }
 
