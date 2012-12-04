@@ -23,6 +23,5 @@ class PageController extends Controller {
     {
         return $this->render('ZizooBaseBundle:Page:about.html.twig');
     }
-    
 
 }

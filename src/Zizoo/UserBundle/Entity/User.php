@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 /**
  * Zizoo\UserBundle\Entity\User
  *
@@ -50,7 +51,6 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $isActive;
     
-    
     /**
      * @ORM\Column(name="confirmation_token", type="string", length=255, nullable=true)
      */
@@ -76,6 +76,11 @@ class User implements AdvancedUserInterface, \Serializable
     {
         return $this->isActive;
     }
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Profile", mappedBy="user")
+     **/
+    private $profile;
     
     /**
      * @ORM\ManyToMany(targetEntity="Group", inversedBy="users")
@@ -300,4 +305,27 @@ class User implements AdvancedUserInterface, \Serializable
     }
     
    
+
+    /**
+     * Set profile
+     *
+     * @param \Zizoo\UserBundle\Entity\Profile $profile
+     * @return User
+     */
+    public function setProfile(\Zizoo\UserBundle\Entity\Profile $profile = null)
+    {
+        $this->profile = $profile;
+    
+        return $this;
+    }
+
+    /**
+     * Get profile
+     *
+     * @return \Zizoo\UserBundle\Entity\Profile 
+     */
+    public function getProfile()
+    {
+        return $this->profile;
+    }
 }

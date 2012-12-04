@@ -1,30 +1,36 @@
 {% extends 'ZizooBaseBundle::layout.html.twig' %}
 
 {% block body %}
-    <h1>Boats!</h1>
-    <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-    {% for boat in boats %}    
-        <h2><a href="{{ path('ZizooBoatBundle_boat_show', { 'id': boat.id }) }}">{{ boat.name }}</a></h2>
-    {% else %}
-        <p>There are no blog entries for symblog</p>
-    {% endfor %}
-    <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+    <!-- Main hero unit for a primary marketing message or call to action -->
+    <div class="span8 hero-unit">
+        <h1>Boats!</h1>
+        {% for boat in boats %}    
+            <h2><a href="{{ path('ZizooBoatBundle_boat_show', { 'id': boat.id }) }}">{{ boat.name }}</a></h2>
+        {% else %}
+            <p>There are no blog entries for symblog</p>
+        {% endfor %}
+        <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+    </div>
+    <div class="span4 hero-unit">
+         <h1>Search!</h1>
+    </div>
+    
 {% endblock %}
     
 {% block row %}    
     <div class="span4">
-        <h2>Heading</h2>
-        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+        <h2>Ride The Waves</h2>
+        <p>Renting a boat is your way to a unique vacation.</p>
         <p><a class="btn" href="#">View details &raquo;</a></p>
     </div>
     <div class="span4">
-        <h2>Heading</h2>
-        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+        <h2>Rent Your Boat</h2>
+        <p>Find out how and why to add your boat.</p>
         <p><a class="btn" href="#">View details &raquo;</a></p>
     </div>
     <div class="span4">
-        <h2>Heading</h2>
-        <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+        <h2>Be a Skipper</h2>
+        <p>Find out how and why to be a skipper.</p>
         <p><a class="btn" href="#">View details &raquo;</a></p>
     </div>
 {% endblock %}

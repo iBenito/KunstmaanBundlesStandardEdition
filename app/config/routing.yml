@@ -1,3 +1,7 @@
+zizoo_booking:
+    resource: "@ZizooBookingBundle/Resources/config/routing.yml"
+    prefix:   /
+
 zizoo_user:
     resource: "@ZizooUserBundle/Resources/config/routing.yml"
     prefix:   /
@@ -5,7 +9,7 @@ zizoo_user:
 zizoo_boat:
     resource: "@ZizooBoatBundle/Resources/config/routing.yml"
     prefix:   /boat
-
+   
 zizoo_base:
     resource: "@ZizooBaseBundle/Resources/config/routing.yml"
     prefix:   /zizoo

@@ -24,6 +24,7 @@ class AppKernel extends Kernel
             new Zizoo\BaseBundle\ZizooBaseBundle(),
             new Zizoo\BoatBundle\ZizooBoatBundle(),
             new Zizoo\UserBundle\ZizooUserBundle(),
+            new Zizoo\BookingBundle\ZizooBookingBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

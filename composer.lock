@@ -31,7 +31,6 @@
                     "Doctrine\\Common": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -96,7 +95,6 @@
                     "Doctrine\\Common\\DataFixtures": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -144,7 +142,6 @@
                     "Doctrine\\DBAL": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -220,7 +217,6 @@
                     "Doctrine\\Bundle\\DoctrineBundle": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -276,7 +272,6 @@
                     "Doctrine\\Bundle\\FixturesBundle": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -330,7 +325,6 @@
                     "Doctrine\\Bundle\\MigrationsBundle": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -389,7 +383,6 @@
                     "Doctrine\\DBAL\\Migrations": "lib"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "LGPL"
             ],
@@ -451,7 +444,6 @@
                     "Doctrine\\ORM": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -512,7 +504,6 @@
                     "lib"
                 ]
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "LGPL"
             ],
@@ -557,7 +548,6 @@
                     "JMS\\AopBundle": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "Apache"
             ],
@@ -600,7 +590,6 @@
                     "CG\\": "src/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "Apache"
             ],
@@ -660,7 +649,6 @@
                     "JMS\\DiExtraBundle": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "Apache"
             ],
@@ -668,7 +656,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -704,7 +692,6 @@
                     "Metadata\\": "src/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "Apache"
             ],
@@ -768,7 +755,6 @@
                     "JMS\\SecurityExtraBundle": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "Apache2"
             ],
@@ -838,7 +824,6 @@
                     "src/functions.php"
                 ]
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -895,7 +880,6 @@
                     "Monolog": "src/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -945,7 +929,6 @@
                     "Sensio\\Bundle\\DistributionBundle": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -993,7 +976,6 @@
                     "Sensio\\Bundle\\FrameworkExtraBundle": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1046,7 +1028,6 @@
                     "Sensio\\Bundle\\GeneratorBundle": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1088,7 +1069,6 @@
                     "lib/swift_required.php"
                 ]
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "LGPL"
             ],
@@ -1153,7 +1133,6 @@
                     "Symfony\\Bundle\\AsseticBundle": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1211,7 +1190,6 @@
                     "Symfony\\Bundle\\MonologBundle": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1267,7 +1245,6 @@
                     "Symfony\\Bundle\\SwiftmailerBundle": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1358,7 +1335,6 @@
                     "SessionHandlerInterface": "src/Symfony/Component/HttpFoundation/Resources/stubs"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1408,7 +1384,6 @@
                     "Twig_Extensions_": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1456,7 +1431,6 @@
                     "Twig_": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "BSD-3"
             ],
