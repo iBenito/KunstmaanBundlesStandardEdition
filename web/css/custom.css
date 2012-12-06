@@ -6,11 +6,11 @@
         Purpose of the stylesheet follows.
 */
 
-.container {
+.container-fluid {
   max-width: 800px;
   margin: 20px auto;
 }
 
 .hero-unit {
-  max-width: 800px;
+  max-width: 600px;
 }

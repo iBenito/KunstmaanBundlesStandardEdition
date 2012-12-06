@@ -25,6 +25,9 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface
         $user_1->setIsActive(true);
         $user_1->addGroup($manager->merge($this->getReference('group_admin')));
        
+        $this->addReference('user-1', $user_1);
+        
+        
         $encoder2 = new MessageDigestPasswordEncoder('sha512', true, 10);
         $user_2 = new User();
         $user_2->setUsername('benny');
@@ -38,9 +41,7 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface
         $manager->persist($user_2);
 
         $manager->flush();
-        
-        
-
+  
     }
     
     public function getOrder()

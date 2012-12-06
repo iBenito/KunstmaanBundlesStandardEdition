@@ -1,10 +1,10 @@
 <?php
-namespace Zizoo\BoatBundle\Entity;
+namespace Zizoo\BookingBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Zizoo\BoatBundle\Entity\ReservationRepository")
+ * @ORM\Entity(repositoryClass="Zizoo\BookingBundle\Entity\ReservationRepository")
  * @ORM\Table(name="reservation")
  * @ORM\HasLifecycleCallbacks()
  */
@@ -18,7 +18,7 @@ class Reservation
     protected $id;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Boat", inversedBy="reservation")
+     * @ORM\ManyToOne(targetEntity="Zizoo\BoatBundle\Entity\Boat", inversedBy="reservation")
      * @ORM\JoinColumn(name="boat_id", referencedColumnName="id")
      */
     protected $boat;
@@ -33,6 +33,11 @@ class Reservation
      */
     protected $check_out;
 
+    /**
+     * @ORM\Column(type="smallint")
+     */
+    private $status;
+    
     /**
      * @ORM\Column(type="datetime")
      */
@@ -172,5 +177,28 @@ class Reservation
     public function getBoat()
     {
         return $this->boat;
+    }
+
+    /**
+     * Set status
+     *
+     * @param integer $status
+     * @return Reservation
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer 
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

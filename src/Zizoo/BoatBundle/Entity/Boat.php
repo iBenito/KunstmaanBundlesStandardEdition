@@ -84,7 +84,7 @@ class Boat
     protected $image;
     
     /**
-     * @ORM\OneToMany(targetEntity="Reservation", mappedBy="boat")
+     * @ORM\OneToMany(targetEntity="Zizoo\BookingBundle\Entity\Reservation", mappedBy="boat")
      */
     protected $reservation;
     
@@ -439,10 +439,10 @@ class Boat
     /**
      * Add reservation
      *
-     * @param \Zizoo\BoatBundle\Entity\Reservation $reservation
+     * @param \Zizoo\BookingBundle\Entity\Reservation $reservation
      * @return Boat
      */
-    public function addReservation(\Zizoo\BoatBundle\Entity\Reservation $reservation)
+    public function addReservation(\Zizoo\BookingBundle\Entity\Reservation $reservation)
     {
         $this->reservation[] = $reservation;
     
@@ -452,9 +452,9 @@ class Boat
     /**
      * Remove reservation
      *
-     * @param \Zizoo\BoatBundle\Entity\Reservation $reservation
+     * @param \Zizoo\BookingBundle\Entity\Reservation $reservation
      */
-    public function removeReservation(\Zizoo\BoatBundle\Entity\Reservation $reservation)
+    public function removeReservation(\Zizoo\BookingBundle\Entity\Reservation $reservation)
     {
         $this->reservation->removeElement($reservation);
     }

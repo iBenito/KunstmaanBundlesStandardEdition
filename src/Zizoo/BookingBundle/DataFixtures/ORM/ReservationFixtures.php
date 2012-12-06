@@ -1,11 +1,11 @@
 <?php
 
-namespace Zizoo\BoatBundle\DataFixtures\ORM;
+namespace Zizoo\BookingBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Zizoo\BoatBundle\Entity\Reservation;
+use Zizoo\BookingBundle\Entity\Reservation;
 use Zizoo\BoatBundle\Entity\Boat;
 
 class ReservationFixtures extends AbstractFixture implements OrderedFixtureInterface

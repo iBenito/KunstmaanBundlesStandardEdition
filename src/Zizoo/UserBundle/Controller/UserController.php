@@ -32,6 +32,7 @@ class UserController extends Controller
             'error'         => $error,
         ));
     }
+
     
     public function loginWidgetAction()
     {

@@ -9,3 +9,11 @@ ZizooBaseBundle_about:
     defaults: { _controller: ZizooBaseBundle:Page:about }
     requirements:
         _method:  GET
+        
+        
+ZizooBaseBundle_dashboard:
+    pattern:  /dashboard/{userId}
+    defaults: { _controller: ZizooBaseBundle:Dashboard:index }
+    requirements:
+        _method:  GET
+        userId: \d+

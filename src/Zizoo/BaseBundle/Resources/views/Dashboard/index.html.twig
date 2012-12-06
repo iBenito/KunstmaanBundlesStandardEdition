@@ -1,0 +1,25 @@
+{% extends 'ZizooBaseBundle::layout.html.twig' %}
+
+{% block title %}{{ user.username }}{% endblock %}
+
+{% block body %}
+
+    {% block dashboard_navigation %}
+        <div class="dashboard_navigation">
+            <ul class="nav">
+              <li class="active"><a href="{{ path('ZizooBaseBundle_dashboard', { 'userId': user.id }) }}">Dashboard</a></li>
+              <li><a href="{{ path('ZizooBaseBundle_dashboard', { 'userId': user.id }) }}">Profile</a></li>
+              <li><a href="{{ path('ZizooBaseBundle_dashboard', { 'userId': user.id }) }}">Bookings</a></li>
+              <li><a href="{{ path('ZizooBaseBundle_dashboard', { 'userId': user.id }) }}">Boats</a></li>
+              <li><a href="{{ path('ZizooBaseBundle_dashboard', { 'userId': user.id }) }}">Skills</a></li>
+              <li><a href="{{ path('ZizooBaseBundle_dashboard', { 'userId': user.id }) }}">Settings</a></li>
+            </ul>
+        </div>
+    {% endblock %}
+
+    {% include 'ZizooUserBundle:Profile:show.html.twig' with { 'user': user } %}
+
+    <h3>{{ profile.firstName }}</h3>
+    <h3>{{ profile.lastName }}</h3>
+    
+{% endblock %}

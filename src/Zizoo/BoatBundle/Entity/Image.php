@@ -24,6 +24,11 @@ class Image
     protected $boat;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    protected $path;
+    
+    /**
      * Get id
      *
      * @return integer 
@@ -54,5 +59,28 @@ class Image
     public function getBoat()
     {
         return $this->boat;
+    }
+
+    /**
+     * Set path
+     *
+     * @param string $path
+     * @return Image
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    
+        return $this;
+    }
+
+    /**
+     * Get path
+     *
+     * @return string 
+     */
+    public function getPath()
+    {
+        return $this->path;
     }
 }
