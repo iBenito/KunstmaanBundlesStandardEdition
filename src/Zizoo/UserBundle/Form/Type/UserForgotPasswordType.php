@@ -10,7 +10,7 @@ class UserForgotPasswordType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('user_or_email', 'text', array('label' => 'Username or email'));
+        $builder->add('user_or_email', 'text', array('label' => 'zizoo_user.label.username_or_email'));
     }
 
     public function getDefaultOptions(array $options)

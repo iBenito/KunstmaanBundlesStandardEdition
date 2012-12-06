@@ -1,7 +1,10 @@
 zizoo_user.error.email_taken: "This email address is already taken."
 zizoo_user.error.user_taken: "This username is already taken."
 
-zizoo.user.error.username_min_length: "Your username must have at least {{ limit }} characters.|Your username must have at least {{ limit }} characters."
-zizoo.user.error.email_not_blank: "You must enter your email address."
-zizoo.user.error.password_not_blank: "You must enter a password"
-zizoo.user.error.password_min_length: "Your password must have at least {{ limit }} characters.|Your password must have at least {{ limit }} characters."
+zizoo_user.error.username_not_blank: "You must choose a username."
+zizoo_user.error.username_min_length: "Your username must have at least {{ limit }} characters.|Your username must have at least {{ limit }} characters."
+zizoo_user.error.email_not_blank: "You must enter your email address."
+zizoo_user.error.password_not_blank: "You must enter a password"
+zizoo_user.error.password_min_length: "Your password must have at least {{ limit }} characters.|Your password must have at least {{ limit }} characters."
+
+zizoo_user.error.password_mismatch: "The password fields must match."
