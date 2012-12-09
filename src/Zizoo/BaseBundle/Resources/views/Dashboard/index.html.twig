@@ -1,4 +1,4 @@
-{% extends 'ZizooBaseBundle::layout.html.twig' %}
+{% extends 'ZizooBaseBundle:Page:index.html.twig' %}
 
 {% block title %}{{ user.username }}{% endblock %}
 
@@ -17,9 +17,10 @@
         </div>
     {% endblock %}
 
-    {% include 'ZizooUserBundle:Profile:show.html.twig' with { 'user': user } %}
-
-    <h3>{{ profile.firstName }}</h3>
-    <h3>{{ profile.lastName }}</h3>
+    {% include 'ZizooProfileBundle:Profile:show.html.twig' %}
     
+    {% block row %}    
+
+    {% endblock %}
+
 {% endblock %}

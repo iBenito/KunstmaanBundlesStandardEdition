@@ -1,0 +1,5 @@
+ZizooUserBundle_user_show:
+    pattern:  /profile/
+    defaults: { _controller: ZizooProfileBundle:Profile:show }
+    requirements:
+        _method:  GET

@@ -1,0 +1,23 @@
+{% block profile %}
+    {% if user is defined and user %}
+    <article class="user">
+        <header>
+            <h2>{{ user.username }}</h2>
+        </header>
+    </article>
+
+    <section class="details" id="details">
+        <h3>{{ user.username }}</h3>
+        <p>E-mail: {{ user.email }}</p>
+    </section>
+
+    <section class="details" id="profile">
+        <h3>{{ profile.firstName }}</h3>
+        <h3>{{ profile.lastName }}</h3>
+        <p>{{ profile.city }}</p>
+    </section>
+
+    {% else %}
+        <p>Please login to view your profile.</p>
+    {% endif %}    
+{% endblock %} 

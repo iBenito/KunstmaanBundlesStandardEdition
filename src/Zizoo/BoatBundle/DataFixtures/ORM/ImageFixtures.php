@@ -14,14 +14,17 @@ class ImageFixtures extends AbstractFixture implements OrderedFixtureInterface
     {
         $image = new Image();
         $image->setBoat($manager->merge($this->getReference('boat-1')));
+        $image->setPath('boat_1.png');
         $manager->persist($image);
         
         $image = new Image();
         $image->setBoat($manager->merge($this->getReference('boat-1')));
+        $image->setPath('boat_2.png');
         $manager->persist($image);
 
         $image = new Image();
         $image->setBoat($manager->merge($this->getReference('boat-2')));
+        $image->setPath('boat_1.png');
         $manager->persist($image);
         
         $manager->flush();

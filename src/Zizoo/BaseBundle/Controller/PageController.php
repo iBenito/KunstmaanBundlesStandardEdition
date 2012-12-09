@@ -10,11 +10,19 @@ class PageController extends Controller {
 
     public function indexAction() 
     {
+        $user = null;
         $em = $this->getDoctrine()->getEntityManager();
 
         $boats = $em->getRepository('ZizooBoatBundle:Boat')->getBoats();
+                
+        $securityContext = $this->container->get('security.context');
+        if( $securityContext->isGranted('IS_AUTHENTICATED_FULLY') || $securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') ){
+            // authenticated REMEMBERED, FULLY will imply REMEMBERED (NON anonymous)
+            $user = $this->getUser();
+        }
         
         return $this->render('ZizooBaseBundle:Page:index.html.twig',array(
+            'user' => $user,
             'boats' => $boats
         ));
     }

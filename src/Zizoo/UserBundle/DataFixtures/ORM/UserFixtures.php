@@ -35,7 +35,10 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface
         $user_2->setSalt(md5(time()));
         $password2 = $encoder2->encodePassword('test', $user_2->getSalt());
         $user_2->setPassword($password2);
+        $user_2->setIsActive(true);
         $user_2->addGroup($manager->merge($this->getReference('group_user')));
+        
+        $this->addReference('user-2', $user_2);
         
         $manager->persist($user_1);
         $manager->persist($user_2);

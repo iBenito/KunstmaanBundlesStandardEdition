@@ -10,10 +10,8 @@ ZizooBaseBundle_about:
     requirements:
         _method:  GET
         
-        
 ZizooBaseBundle_dashboard:
-    pattern:  /dashboard/{userId}
+    pattern:  /dashboard
     defaults: { _controller: ZizooBaseBundle:Dashboard:index }
     requirements:
         _method:  GET
-        userId: \d+

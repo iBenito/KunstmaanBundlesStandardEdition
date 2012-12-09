@@ -1,10 +1,10 @@
 <?php
-namespace Zizoo\UserBundle\Entity;
+namespace Zizoo\ProfileBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Zizoo\UserBundle\Entity\ProfileRepository")
+ * @ORM\Entity(repositoryClass="Zizoo\ProfileBundle\Entity\ProfileRepository")
  * @ORM\Table(name="profile")
  */
 class Profile
@@ -17,7 +17,7 @@ class Profile
     protected $id;
     
     /**
-     * @ORM\OneToOne(targetEntity="User", inversedBy="profile")
+     * @ORM\OneToOne(targetEntity="Zizoo\UserBundle\Entity\User", inversedBy="profile")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;

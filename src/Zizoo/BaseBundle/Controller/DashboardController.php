@@ -14,20 +14,20 @@ class DashboardController extends Controller {
      * @param integer $userId
      * @author Benito Gonzalez <vbenitogo@gmail.com>
      */
-    public function indexAction($userId)
+    public function indexAction()
     {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $user = $em->getRepository('ZizooUserBundle:User')->find($userId);
-
-        if (!$user) {
-            throw $this->createNotFoundException('Unable to find User with id: '.$userId);
+        $user = $this->getUser();
+        
+        if($user){
+            return $this->render('ZizooBaseBundle:Dashboard:index.html.twig', array(
+                'user' => $user,
+                'profile' => $user->getProfile()
+            ));
+        }
+        else{
+            return $this->redirect($this->generateUrl('login'));
         }
 
-        return $this->render('ZizooBaseBundle:Dashboard:index.html.twig', array(
-            'user' => $user,
-            'profile' => $user->getProfile()
-        ));
     }
 
 }

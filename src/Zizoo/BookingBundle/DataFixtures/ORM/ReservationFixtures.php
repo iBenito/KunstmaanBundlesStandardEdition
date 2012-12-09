@@ -16,6 +16,7 @@ class ReservationFixtures extends AbstractFixture implements OrderedFixtureInter
         $reservation->setCheckIn(new \DateTime());
         $reservation->setCheckOut(new \DateTime());
         $reservation->setBoat($manager->merge($this->getReference('boat-1')));
+        $reservation->setStatus('4');
         $manager->persist($reservation);
 
         $manager->flush();

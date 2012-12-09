@@ -1,6 +1,6 @@
 <?php
 
-namespace Zizoo\UserBundle\Controller;
+namespace Zizoo\ProfileBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -13,15 +13,9 @@ class ProfileController extends Controller
      * @param integer $id
      * @author Benito Gonzalez <vbenitogo@gmail.com>
      */
-    public function showAction($id) 
+    public function showAction() 
     {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $user = $em->getRepository('ZizooUserBundle:User')->find($id);
-
-        if (!$user) {
-            throw $this->createNotFoundException('Unable to find User with id: '.$id);
-        }
+        $user = $this->getUser();
 
         return $this->render('ZizooUserBundle:Profile:show.html.twig', array(
             'user' => $user

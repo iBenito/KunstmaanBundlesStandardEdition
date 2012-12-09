@@ -58,10 +58,3 @@ reset_password_confirm:
   defaults:   {_controller: ZizooUserBundle:Registration:resetPasswordConfirm }
   requirements:
         _method:  GET|POST
-        
-ZizooUserBundle_user_show:
-    pattern:  /profile/{id}
-    defaults: { _controller: ZizooUserBundle:Profile:show }
-    requirements:
-        _method:  GET
-        id: \d+
