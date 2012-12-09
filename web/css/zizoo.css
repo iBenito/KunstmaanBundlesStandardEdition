@@ -1,0 +1,12 @@
+#logged_in_widget {
+    position: absolute;
+    right: 0;
+}
+
+#logged_in_widget .logged_in_as {
+    margin-right: 15px;
+}
+
+#logged_in_widget .change_password {
+    margin-right: 15px;
+}

@@ -13,8 +13,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Table(name="users")
  * @ORM\Entity(repositoryClass="Zizoo\UserBundle\Entity\UserRepository")
- * @UniqueEntity(fields="username", message="zizoo_user.error.user_taken")
- * @UniqueEntity(fields="email", message="zizoo_user.error.email_taken")
+ * @UniqueEntity(fields="username", groups={"registration"}, message="zizoo_user.error.user_taken")
+ * @UniqueEntity(fields="email", groups={"registration"}, message="zizoo_user.error.email_taken")
  */
 class User implements AdvancedUserInterface, \Serializable
 {
@@ -40,6 +40,7 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Column(type="string", length=255)
      */
     private $password;
+    private $newPassword;
     
     /**
      * @ORM\Column(type="string", length=60, unique=true)
@@ -117,6 +118,10 @@ class User implements AdvancedUserInterface, \Serializable
     public function getPassword()
     {
         return $this->password;
+    }
+    
+    public function getNewPassword(){
+        return $this->newPassword;
     }
 
     /**
@@ -201,7 +206,13 @@ class User implements AdvancedUserInterface, \Serializable
     
         return $this;
     }
-
+    
+    public function setNewPassword($newPassword){
+        $this->newPassword = $newPassword;
+        
+        return $this;
+    }
+    
     /**
      * Set email
      *

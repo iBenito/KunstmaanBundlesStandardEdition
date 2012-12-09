@@ -6,7 +6,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use Zizoo\UserBundle\Entity\User;
 
-class Registration
+class UserNewPassword
 {
     /**
      * @Assert\Type(type="Zizoo\UserBundle\Entity\User")
@@ -28,5 +28,16 @@ class Registration
         return $this->user;
     }
 
+    protected $newPassword;
+
+    public function getNewPassword()
+    {
+        return $this->newPassword;
+    }
+
+    public function setNewPassword($newPassword)
+    {
+        $this->newPassword = $newPassword;
+    }
 }
 ?>
