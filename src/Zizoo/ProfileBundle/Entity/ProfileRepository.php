@@ -1,6 +1,6 @@
 <?php
 
-namespace Zizoo\UserBundle\Entity;
+namespace Zizoo\ProfileBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 

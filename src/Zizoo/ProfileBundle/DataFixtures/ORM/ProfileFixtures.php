@@ -1,6 +1,6 @@
 <?php
 
-namespace Zizoo\UserBundle\DataFixtures\ORM;
+namespace Zizoo\ProfileBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;

@@ -17,7 +17,7 @@ class ProfileController extends Controller
     {
         $user = $this->getUser();
 
-        return $this->render('ZizooUserBundle:Profile:show.html.twig', array(
+        return $this->render('ZizooProfileBundle:Profile:show.html.twig', array(
             'user' => $user
         ));
     }
