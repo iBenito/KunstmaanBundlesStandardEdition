@@ -79,7 +79,7 @@ class User implements AdvancedUserInterface, \Serializable
     }
     
     /**
-     * @ORM\OneToOne(targetEntity="Profile", mappedBy="user")
+     * @ORM\OneToOne(targetEntity="\Zizoo\ProfileBundle\Entity\Profile", mappedBy="user")
      **/
     private $profile;
     
@@ -320,10 +320,10 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * Set profile
      *
-     * @param \Zizoo\UserBundle\Entity\Profile $profile
+     * @param \Zizoo\ProfileBundle\Entity\Profile $profile
      * @return User
      */
-    public function setProfile(\Zizoo\UserBundle\Entity\Profile $profile = null)
+    public function setProfile(\Zizoo\ProfileBundle\Entity\Profile $profile = null)
     {
         $this->profile = $profile;
     
@@ -333,7 +333,7 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * Get profile
      *
-     * @return \Zizoo\UserBundle\Entity\Profile 
+     * @return \Zizoo\ProfileBundle\Entity\Profile 
      */
     public function getProfile()
     {
