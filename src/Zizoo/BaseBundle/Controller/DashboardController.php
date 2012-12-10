@@ -18,15 +18,10 @@ class DashboardController extends Controller {
     {
         $user = $this->getUser();
         
-        if($user){
-            return $this->render('ZizooBaseBundle:Dashboard:index.html.twig', array(
-                'user' => $user,
-                'profile' => $user->getProfile()
-            ));
-        }
-        else{
-            return $this->redirect($this->generateUrl('login'));
-        }
+        return $this->render('ZizooBaseBundle:Dashboard:index.html.twig', array(
+            'user' => $user,
+            'profile' => $user->getProfile()
+        ));
 
     }
 
