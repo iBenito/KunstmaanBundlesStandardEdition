@@ -33,8 +33,10 @@
 
             var type;
             var val = null;
+            var search = null;
             if (index>0){
                 type = $('#unique_locations option:nth-of-type('+(index+1)+')').attr('class');
+                search = $('#unique_locations option:nth-of-type('+(index+1)+')').attr('search');
                 val  = $('#unique_locations').val();
             }
 
@@ -49,7 +51,7 @@
                         map.setCenter(center);
                         map.setZoom(zoom);
                     } else {
-                        codeAddress(val);
+                        codeAddress(search);
                         map.setZoom(5);
                     }
                     $('#map').unblock();

@@ -13,6 +13,37 @@ class AddressController extends Controller
         return $this->render('ZizooAddressBundle:Address:index.html.twig', array('name' => $name));
     }
     
+    private function getFormattedAddress($location){
+        $address = array();
+        
+        $locality = $location['locality'];
+        if ($locality && $locality!=''){
+            $address[] = $locality;
+        }
+        
+        $subLocality = $location['subLocality'];
+        if ($subLocality && $subLocality!=''){
+            $address[] = $subLocality;
+        }
+        
+        $state = $location['state'];
+        if ($state && $state!=''){
+            $address[] = $state;
+        }
+        
+        $province = $location['province'];
+        if ($province && $province!=''){
+            $address[] = $province;
+        }
+        
+        $country = $location['countryName'];
+        if ($country && $country!=''){
+            $address[] = $country;
+        }
+        
+        return implode(',', $address);
+    }
+    
     public function uniqueLocationsAction(){
         $em = $this->getDoctrine()
                    ->getEntityManager();
@@ -25,23 +56,23 @@ class AddressController extends Controller
             $countryKey     = $location['countryISO'];
             $countryName    = $location['countryName'];
             $locality       = $location['locality'];
-            $sub_locality   = $location['subLocality'];
+            $subLocality    = $location['subLocality'];
             $state          = $location['state'];
             $province       = $location['province'];
             if (!array_key_exists($countryName, $groupedLocations)){
                 $groupedLocations[$countryName] = array('name' => $countryName, 'locations' => array());
             }
             if ($locality && !array_key_exists($locality, $groupedLocations[$countryName]['locations'])){
-                $groupedLocations[$countryName]['locations'][$locality] = $locality;
+                $groupedLocations[$countryName]['locations'][$locality] = array('location' => $locality, 'search' => $this->getFormattedAddress($location));
             }
-            if ($sub_locality && !array_key_exists($sub_locality, $groupedLocations[$countryName]['locations'])){
-                $groupedLocations[$countryName]['locations'][$sub_locality] = $sub_locality;
+            if ($subLocality && !array_key_exists($subLocality, $groupedLocations[$countryName]['locations'])){
+                $groupedLocations[$countryName]['locations'][$subLocality] = array('location' => $subLocality, 'search' => $this->getFormattedAddress($location));
             } 
             if ($state && !array_key_exists($state, $groupedLocations[$countryName]['locations'])){
-                $groupedLocations[$countryName]['locations'][$state] = $state;
+                $groupedLocations[$countryName]['locations'][$state] = array('location' => $state, 'search' => $this->getFormattedAddress($location));
             }
             if ($province && !array_key_exists($province, $groupedLocations[$countryName]['locations'])){
-                $groupedLocations[$countryName]['locations'][$province] = $province;
+                $groupedLocations[$countryName]['locations'][$province] = array('location' => $province, 'search' => $this->getFormattedAddress($location));
             }
         }
 

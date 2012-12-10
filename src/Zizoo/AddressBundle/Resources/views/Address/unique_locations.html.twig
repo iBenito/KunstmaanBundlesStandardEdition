@@ -8,9 +8,9 @@
 <select id="unique_locations">
     <option value="-1">All</option>
     {% for country,country_data in unique_locations %}
-        <option value="{{ country }}" class="country">{{ country_data.name }}</option>
+        <option value="{{ country }}" class="country" search="{{ country_data.name }}">{{ country_data.name }}</option>
         {% for location,location_data in country_data.locations %}
-            <option value="{{ location_data }}" class="sub">{{ location_data }}</option>
+            <option value="{{ location_data.location }}" class="sub" search="{{ location_data.search }}">{{ location_data.location }}</option>
         {% endfor %}
     {% endfor %}
 </select>
