@@ -33,7 +33,8 @@ class BoatFixtures extends AbstractFixture implements OrderedFixtureInterface
         $boat1Address->setLocality('Krk');
         $boat1Address->setPostcode('54321');
         $boat1Address->setCountry($manager->merge($this->getReference('countryHR')));
-        $boat1Address->setBoat($boat1);
+        $boat1Address->fetchGeo();
+        $boat1Address->setBoat($boat1);        
         
         $manager->persist($boat1Address);
         $manager->persist($boat1);
@@ -56,10 +57,35 @@ class BoatFixtures extends AbstractFixture implements OrderedFixtureInterface
         $boat2Address->setPremise('84');
         $boat2Address->setLocality('Alicante');
         $boat2Address->setPostcode('12345');
+        $boat2Address->setProvince('Some spanish province');
         $boat2Address->setCountry($manager->merge($this->getReference('countryES')));
+        $boat2Address->fetchGeo();
         $boat2Address->setBoat($boat2);
         
+        $boat2Address2 = new BoatAddress();
+        $boat2Address2->setStreet('Hafenstr.');
+        $boat2Address2->setPremise('84');
+        $boat2Address2->setLocality('Hamburg');
+        $boat2Address2->setPostcode('69429');
+        $boat2Address2->setProvince('North');
+        $boat2Address2->setCountry($manager->merge($this->getReference('countryDE')));
+        $boat2Address2->fetchGeo();
+        $boat2Address2->setBoat($boat2);
+        
+        $boat2Address3 = new BoatAddress();
+        $boat2Address3->setStreet('Uferstr.');
+        $boat2Address3->setPremise('77');
+        $boat2Address3->setLocality('Kiel');
+        $boat2Address3->setPostcode('12234');
+        $boat2Address3->setProvince('Kiel');
+        $boat2Address3->setSubLocality('Kiel');
+        $boat2Address3->setCountry($manager->merge($this->getReference('countryDE')));
+        $boat2Address3->fetchGeo();
+        $boat2Address3->setBoat($boat2);
+        
         $manager->persist($boat2Address);
+        $manager->persist($boat2Address2);
+        $manager->persist($boat2Address3);
         $manager->persist($boat2);
 
         $manager->flush();

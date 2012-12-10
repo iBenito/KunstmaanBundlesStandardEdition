@@ -1,3 +1,13 @@
-zizoo_address_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: ZizooAddressBundle:Default:index }
+zizoo_address_unique_locations:
+    pattern:  /unique_locations
+    defaults: { _controller: ZizooAddressBundle:Address:uniqueLocations, _format: json }
+    requirements: { _format: (xml|json), _method: GET }
+
+zizoo_address_location_markers:
+    pattern:  /location_markers/{search}
+    defaults: { _controller: ZizooAddressBundle:Address:locationMarkers, search: '-1', _format: json}
+    requirements: { _format: (xml|json), _method: GET }
+
+zizoo_address_locations:
+    pattern:  /locations
+    defaults: { _controller: ZizooAddressBundle:Address:locations}

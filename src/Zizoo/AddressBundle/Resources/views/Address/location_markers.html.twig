@@ -1,0 +1,10 @@
+{data : [
+    {% for boat in boats %}
+            {% for location in boat.addresses %}
+                {
+                    'name': '{{ boat.name }}',
+                    'location' : [{{ location.lat }}, {{ location.lng }}]
+                },
+            {% endfor %}
+    {% endfor %}
+    ]}

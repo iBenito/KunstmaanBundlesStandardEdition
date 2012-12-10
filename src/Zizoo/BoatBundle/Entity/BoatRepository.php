@@ -24,4 +24,6 @@ class BoatRepository extends EntityRepository
         return $qb->getQuery()
                   ->getResult();
     }   
+    
+    
 }

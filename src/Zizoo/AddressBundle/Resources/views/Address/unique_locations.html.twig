@@ -1,0 +1,28 @@
+{# src/Zizoo/AddressBundle/Resources/views/Address/locations_test.html.twig #}
+{% trans_default_domain "labels" %}
+
+
+<link href="{{ asset('css/chosen.css') }}" rel="stylesheet">
+<script type="text/javascript" src="{{ asset('js/chosen.jquery.js') }}"></script>
+
+<select id="unique_locations">
+    <option value="-1">All</option>
+    {% for country,country_data in unique_locations %}
+        <option value="{{ country }}" class="country">{{ country_data.name }}</option>
+        {% for location,location_data in country_data.locations %}
+            <option value="{{ location_data }}" class="sub">{{ location_data }}</option>
+        {% endfor %}
+    {% endfor %}
+</select>
+
+<style type="text/css">
+        
+#unique_locations_chzn .country {
+    font-weight: bold;
+}
+
+#unique_locations_chzn .sub {
+    padding-left: 15px;
+}
+        
+</style>
