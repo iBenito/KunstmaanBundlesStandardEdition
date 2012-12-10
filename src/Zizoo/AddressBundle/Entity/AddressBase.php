@@ -57,7 +57,7 @@ class AddressBase
      *
      * @ORM\Column(name="sub_locality", type="string", length=255, nullable=true)
      */
-    private $sub_locality;
+    private $subLocality;
 
     /**
      * @var string
@@ -204,7 +204,7 @@ class AddressBase
      */
     public function setSubLocality($subLocality)
     {
-        $this->sub_locality = $subLocality;
+        $this->subLocality = $subLocality;
     
         return $this;
     }
@@ -216,7 +216,7 @@ class AddressBase
      */
     public function getSubLocality()
     {
-        return $this->sub_locality;
+        return $this->subLocality;
     }
 
     /**

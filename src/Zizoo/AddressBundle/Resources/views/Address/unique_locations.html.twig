@@ -10,31 +10,10 @@
     {% for country,country_data in unique_locations %}
         <option value="{{ country }}" class="country">{{ country_data.name }}</option>
         {% for location,location_data in country_data.locations %}
-            <option value="{{ location_data }}" class="{{ location }}">{{ location_data }}</option>
+            <option value="{{ location_data }}" class="sub">{{ location_data }}</option>
         {% endfor %}
     {% endfor %}
 </select>
-
-<script type="text/javascript">
-
-    function updateMap(){
-        var index = $('#unique_locations :selected').index();
-        console.log(index);
-        var type;
-        var val;
-        if (index>0){
-            type = $('#unique_locations option:nth-of-type('+(index+1)+')').attr('class');
-            val  = $('#unique_locations').val();
-        }
-    }
-
-    $(document).ready(function(){
-        
-        $('#unique_locations').chosen().change(updateMap);
-        
-    });
-
-</script>
 
 <style type="text/css">
         
@@ -42,7 +21,7 @@
     font-weight: bold;
 }
 
-#unique_locations_chzn .locality, #unique_locations_chzn .sub_locality, #unique_locations_chzn .province, #unique_locations_chzn .state {
+#unique_locations_chzn .sub {
     padding-left: 15px;
 }
         

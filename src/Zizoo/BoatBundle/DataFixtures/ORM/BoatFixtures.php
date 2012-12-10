@@ -77,6 +77,8 @@ class BoatFixtures extends AbstractFixture implements OrderedFixtureInterface
         $boat2Address3->setPremise('77');
         $boat2Address3->setLocality('Kiel');
         $boat2Address3->setPostcode('12234');
+        $boat2Address3->setProvince('Kiel');
+        $boat2Address3->setSubLocality('Kiel');
         $boat2Address3->setCountry($manager->merge($this->getReference('countryDE')));
         $boat2Address3->fetchGeo();
         $boat2Address3->setBoat($boat2);
