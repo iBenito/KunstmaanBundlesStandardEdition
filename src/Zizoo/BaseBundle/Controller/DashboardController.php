@@ -19,8 +19,7 @@ class DashboardController extends Controller {
         $user = $this->getUser();
         
         return $this->render('ZizooBaseBundle:Dashboard:index.html.twig', array(
-            'user' => $user,
-            'profile' => $user->getProfile()
+            'user' => $user
         ));
     }
     
@@ -35,8 +34,7 @@ class DashboardController extends Controller {
         $user = $this->getUser();
         
         return $this->render('ZizooBaseBundle:Dashboard:profile.html.twig', array(
-            'user' => $user,
-            'profile' => $user->getProfile()
+            'user' => $user
         ));
     }
 

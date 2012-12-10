@@ -45,7 +45,7 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
         $manager->persist($profile);
         
         $profile = new Profile();
-        $profile->setFirstName('Benny');
+        $profile->setFirstName('Benito');
         $profile->setLastName('Gonzo');
         $profile->setAbout('If I am not me, then who de hell am I');
         $profile->setPhone('006666666');
