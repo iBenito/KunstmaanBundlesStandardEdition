@@ -2,6 +2,7 @@
 namespace Zizoo\ProfileBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Zizoo\ProfileBundle\Entity\ProfileRepository")
@@ -37,20 +38,11 @@ class Profile
      */
     protected $about;
 
+  
     /**
-     * @ORM\Column(type="string")
+     * @ORM\OneToMany(targetEntity="Zizoo\AddressBundle\Entity\ProfileAddress", mappedBy="profile")
      */
-    protected $country;
-    
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $city;
-
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $address;
+    protected $addresses;
     
     /**
      * @ORM\Column(type="string", length=60, unique=true)
@@ -149,75 +141,6 @@ class Profile
     public function getAbout()
     {
         return $this->about;
-    }
-
-    /**
-     * Set country
-     *
-     * @param string $country
-     * @return Profile
-     */
-    public function setCountry($country)
-    {
-        $this->country = $country;
-    
-        return $this;
-    }
-
-    /**
-     * Get country
-     *
-     * @return string 
-     */
-    public function getCountry()
-    {
-        return $this->country;
-    }
-
-    /**
-     * Set city
-     *
-     * @param string $city
-     * @return Profile
-     */
-    public function setCity($city)
-    {
-        $this->city = $city;
-    
-        return $this;
-    }
-
-    /**
-     * Get city
-     *
-     * @return string 
-     */
-    public function getCity()
-    {
-        return $this->city;
-    }
-
-    /**
-     * Set address
-     *
-     * @param string $address
-     * @return Profile
-     */
-    public function setAddress($address)
-    {
-        $this->address = $address;
-    
-        return $this;
-    }
-
-    /**
-     * Get address
-     *
-     * @return string 
-     */
-    public function getAddress()
-    {
-        return $this->address;
     }
 
     /**
@@ -333,5 +256,55 @@ class Profile
     public function getUser()
     {
         return $this->user;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->addresses = new ArrayCollection();
+    }
+    
+    /**
+     * Add addresses
+     *
+     * @param \Zizoo\AddressBundle\Entity\ProfileAddress $address
+     * @return Profile
+     */
+    public function addAddresse(\Zizoo\AddressBundle\Entity\ProfileAddress $address)
+    {
+        $this->addresses[] = $address;
+    
+        return $this;
+    }
+
+    /**
+     * Remove addresses
+     *
+     * @param \Zizoo\AddressBundle\Entity\ProfileAddress $address
+     */
+    public function removeAddress(\Zizoo\AddressBundle\Entity\ProfileAddress $address)
+    {
+        $this->addresses->removeElement($address);
+    }
+
+    /**
+     * Get addresses
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAddresses()
+    {
+        return $this->addresses;
+    }
+
+    /**
+     * Remove addresses
+     *
+     * @param \Zizoo\AddressBundle\Entity\ProfileAddress $addresses
+     */
+    public function removeAddresse(\Zizoo\AddressBundle\Entity\ProfileAddress $addresses)
+    {
+        $this->addresses->removeElement($addresses);
     }
 }

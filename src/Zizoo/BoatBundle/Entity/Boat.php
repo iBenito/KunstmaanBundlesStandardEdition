@@ -34,14 +34,9 @@ class Boat
     protected $description;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\OneToMany(targetEntity="Zizoo\AddressBundle\Entity\BoatAddress", mappedBy="boat")
      */
-    protected $city;
-
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $address;
+    protected $addresses;
 
     /**
      * @ORM\Column(type="string")
@@ -100,6 +95,8 @@ class Boat
 
     public function __construct()
     {
+        $this->address = new ArrayCollection();
+        
         $this->image = new ArrayCollection();
         $this->reservation = new ArrayCollection();
     }
@@ -204,29 +201,6 @@ class Boat
     public function getCity()
     {
         return $this->city;
-    }
-
-    /**
-     * Set address
-     *
-     * @param string $address
-     * @return Boat
-     */
-    public function setAddress($address)
-    {
-        $this->address = $address;
-    
-        return $this;
-    }
-
-    /**
-     * Get address
-     *
-     * @return string 
-     */
-    public function getAddress()
-    {
-        return $this->address;
     }
 
     /**
@@ -500,5 +474,63 @@ class Boat
     public function getImage()
     {
         return $this->image;
+    }
+
+
+    /**
+     * Add addresses
+     *
+     * @param \Zizoo\AddressBundle\Entity\BoatAddress $address
+     * @return Boat
+     */
+    public function addAddress(\Zizoo\AddressBundle\Entity\BoatAddress $address)
+    {
+        $this->addresses[] = $address;
+    
+        return $this;
+    }
+
+    /**
+     * Remove addresses
+     *
+     * @param \Zizoo\AddressBundle\Entity\BoatAddress $address
+     */
+    public function removeAddress(\Zizoo\AddressBundle\Entity\BoatAddress $address)
+    {
+        $this->addresses->removeElement($address);
+    }
+
+    /**
+     * Get addresses
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAddresses()
+    {
+        return $this->addresses;
+    }
+    
+
+    /**
+     * Add addresses
+     *
+     * @param \Zizoo\AddressBundle\Entity\BoatAddress $addresses
+     * @return Boat
+     */
+    public function addAddresse(\Zizoo\AddressBundle\Entity\BoatAddress $addresses)
+    {
+        $this->addresses[] = $addresses;
+    
+        return $this;
+    }
+
+    /**
+     * Remove addresses
+     *
+     * @param \Zizoo\AddressBundle\Entity\BoatAddress $addresses
+     */
+    public function removeAddresse(\Zizoo\AddressBundle\Entity\BoatAddress $addresses)
+    {
+        $this->addresses->removeElement($addresses);
     }
 }

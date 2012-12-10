@@ -16,6 +16,11 @@ class ProfileController extends Controller
     public function showAction() 
     {
         $user = $this->getUser();
+        
+        $em = $this->getDoctrine()
+                   ->getEntityManager();
+        
+        //$profile = $em->getRepository('ZizooProfileBundle:Profile')->findOneByUser($user->getId());
 
         return $this->render('ZizooProfileBundle:Profile:show.html.twig', array(
             'user' => $user
