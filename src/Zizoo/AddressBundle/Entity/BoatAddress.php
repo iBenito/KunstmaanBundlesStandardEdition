@@ -141,7 +141,7 @@ class BoatAddress extends AddressBase {
         // Getting results
         $result = json_decode(curl_exec($ch)); 
 
-        if ($this->results && count($this->results)>0){
+        if ($result->results && count($result->results)>0){
             $geoLocation = $result->results[0]->geometry->location;
 
             $this->setLat($geoLocation->lat);
