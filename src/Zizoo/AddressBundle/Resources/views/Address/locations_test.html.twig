@@ -1,0 +1,8 @@
+{# src/Zizoo/AddressBundle/Resources/views/Address/locations_test.html.twig #}
+{% trans_default_domain "labels" %}
+{% extends 'ZizooAddressBundle::layout.html.twig' %}
+
+{% block body %}
+{% render "ZizooAddressBundle:Address:uniqueLocations" %}
+{% render "ZizooAddressBundle:Address:locationsMap" %}
+{% endblock %}
