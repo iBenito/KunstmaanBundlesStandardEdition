@@ -7,7 +7,7 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Zizoo\AddressBundle\Entity\Country;
 
-class BoatFixtures extends AbstractFixture implements OrderedFixtureInterface
+class CountryFixtures extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
