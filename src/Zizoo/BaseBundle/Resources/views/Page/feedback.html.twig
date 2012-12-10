@@ -1,0 +1,36 @@
+{% extends 'ZizooBaseBundle:Page:index.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/zizoobase/css/form.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block title %}Feedback{% endblock%}
+
+{% block body %}
+    <header>
+        <h1>Feedback</h1>
+    </header>
+
+    <p>Drop us a line</p>
+
+    {% if app.session.hasFlash('zizoo-notice') %}
+        <div class="zizoo-notice">
+            {{ app.session.flash('zizoo-notice') }}
+        </div>
+    {% endif %}
+    
+    <form action="{{ path('ZizooBaseBundle_feedback') }}" method="post" {{ form_enctype(form) }} class="zizoo">
+        {{ form_errors(form) }}
+
+        {{ form_row(form.name) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.subject) }}
+        {{ form_row(form.body) }}
+
+        {{ form_rest(form) }}
+
+        <input type="submit" value="Submit" />
+    </form>
+
+{% endblock %}

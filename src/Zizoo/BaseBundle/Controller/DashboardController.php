@@ -18,16 +18,24 @@ class DashboardController extends Controller {
     {
         $user = $this->getUser();
         
-        if($user){
-            return $this->render('ZizooBaseBundle:Dashboard:index.html.twig', array(
-                'user' => $user,
-                'profile' => $user->getProfile()
-            ));
-        }
-        else{
-            return $this->redirect($this->generateUrl('login'));
-        }
-
+        return $this->render('ZizooBaseBundle:Dashboard:index.html.twig', array(
+            'user' => $user
+        ));
+    }
+    
+    /**
+     * Display User Profile
+     * 
+     * @param integer $userId
+     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     */
+    public function profileAction()
+    {
+        $user = $this->getUser();
+        
+        return $this->render('ZizooBaseBundle:Dashboard:profile.html.twig', array(
+            'user' => $user
+        ));
     }
 
 }
