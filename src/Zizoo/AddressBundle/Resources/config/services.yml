@@ -1,0 +1,7 @@
+parameters:
+#    zizoo_address.example.class: Zizoo\AddressBundle\Example
+
+services:
+#    zizoo_address.example:
+#        class: %zizoo_address.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

@@ -1,3 +1,5 @@
+{% trans_default_domain "labels" %}
+
 {% block profile %}
     {% if user is defined and user %}
     <article class="user">
@@ -8,13 +10,17 @@
 
     <section class="details" id="details">
         <h3>{{ user.username }}</h3>
-        <p>E-mail: {{ user.email }}</p>
+        <p>{% trans %}zizoo_profile.label.email{% endtrans %}: {{ user.email }}</p>
     </section>
 
     <section class="details" id="profile">
-        <h3>{{ profile.firstName }}</h3>
-        <h3>{{ profile.lastName }}</h3>
-        <p>{{ profile.city }}</p>
+        <h3>{{ user.profile.firstName }}</h3>
+        <h3>{{ user.profile.lastName }}</h3>
+        <section class="addresses" id="profile_addresses">
+            {% for address in user.profile.addresses %}
+                <p>{{ address.locality }}</p>
+            {% endfor %}
+        </section>
     </section>
 
     {% else %}

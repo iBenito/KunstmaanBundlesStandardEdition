@@ -43,6 +43,7 @@ security:
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/, role: ROLE_ZIZOO_ADMIN }
         - { path: ^/account/, roles: ROLE_ZIZOO_USER }
+        - { path: ^/profile, roles: ROLE_ZIZOO_USER }
         - { path: ^/dashboard, roles: ROLE_ZIZOO_USER }
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
         #- { path: ^/_internal/secure, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }

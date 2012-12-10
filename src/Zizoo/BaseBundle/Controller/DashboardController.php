@@ -22,7 +22,22 @@ class DashboardController extends Controller {
             'user' => $user,
             'profile' => $user->getProfile()
         ));
-
+    }
+    
+    /**
+     * Display User Profile
+     * 
+     * @param integer $userId
+     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     */
+    public function profileAction()
+    {
+        $user = $this->getUser();
+        
+        return $this->render('ZizooBaseBundle:Dashboard:profile.html.twig', array(
+            'user' => $user,
+            'profile' => $user->getProfile()
+        ));
     }
 
 }

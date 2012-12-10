@@ -1,4 +1,5 @@
 {% extends 'ZizooBoatBundle::layout.html.twig' %}
+{% trans_default_domain "labels" %}
 
 {% block title %}{{ boat.name }}{% endblock %}
 
@@ -14,19 +15,25 @@
 
     <section class="details" id="details">
         <h3>{{ boat.name }}</h3>
-        <p>City: {{ boat.city }}</p>
-        <p>Brand: {{ boat.brand }}</p>
-        <p>Model: {{ boat.model }}</p>
-        <p>Length: {{ boat.length }}</p>
-        <p>Cabins: {{ boat.cabins }}</p>
+        <p>{% trans %}zizoo_address.label.cities{% endtrans %}: 
+            <ul>
+                {% for address in boat.addresses %}
+                    <li>{{ address.locality }}</li>
+                {% endfor %}
+            </ul>
+        </p>
+        <p>{% trans %}zizoo_boat.label.brand{% endtrans %}: {{ boat.brand }}</p>
+        <p>{% trans %}zizoo_boat.label.model{% endtrans %}: {{ boat.model }}</p>
+        <p>{% trans %}zizoo_boat.label.length{% endtrans %}: {{ boat.length }}</p>
+        <p>{% trans %}zizoo_boat.label.cabins{% endtrans %}: {{ boat.cabins }}</p>
         {% if boat.bathrooms %}
-            <p>Bathrooms: {{ boat.bathrooms }}</p>
+            <p>{% trans %}zizoo_boat.label.bathrooms{% endtrans %}: {{ boat.bathrooms }}</p>
         {% endif %}
         
     </section>
 
     <section class="images" id="images">
-        <h3>Images</h3>
+        <h3>{% trans %}zizoo_boat.label.images{% endtrans %}</h3>
         {% include 'ZizooBoatBundle:Image:index.html.twig' with { 'images': images } %}
     </section>
 

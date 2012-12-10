@@ -24,7 +24,7 @@ class BoatController extends Controller
 
         $images = $em->getRepository('ZizooBoatBundle:Image')
                      ->getImagesForBoat($boat->getId());
-
+        
         return $this->render('ZizooBoatBundle:Boat:show.html.twig', array(
             'boat' => $boat,
             'images'  => $images

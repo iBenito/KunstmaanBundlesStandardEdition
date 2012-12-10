@@ -3,13 +3,12 @@
 {% block title %}{{ user.username }}{% endblock %}
 
 {% block body %}
-    <h1>Welcome {{ profile.firstName }}</h1>
-    
+
     {% block dashboard_navigation %}
         <div class="dashboard_navigation">
             <ul class="nav">
               <li class="active"><a href="{{ path('ZizooBaseBundle_dashboard') }}">Dashboard</a></li>
-              <li><a href="{{ path('ZizooBaseBundle_profile') }}">Profile</a></li>
+              <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Profile</a></li>
               <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Bookings</a></li>
               <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Boats</a></li>
               <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Skills</a></li>
@@ -17,6 +16,8 @@
             </ul>
         </div>
     {% endblock %}
+
+    {% include 'ZizooProfileBundle:Profile:show.html.twig' with { 'user': user } %}
     
     {% block row %}{% endblock %}
 

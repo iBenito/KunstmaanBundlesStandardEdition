@@ -4,14 +4,50 @@ ZizooBaseBundle_homepage:
     requirements:
         _method:  GET
         
+ZizooBaseBundle_how:
+    pattern:  /how
+    defaults: { _controller: ZizooBaseBundle:Page:how }
+    requirements:
+        _method:  GET
+        
 ZizooBaseBundle_about:
     pattern:  /about
     defaults: { _controller: ZizooBaseBundle:Page:about }
     requirements:
         _method:  GET
         
+ZizooBaseBundle_terms:
+    pattern:  /terms
+    defaults: { _controller: ZizooBaseBundle:Page:terms }
+    requirements:
+        _method:  GET
+        
+ZizooBaseBundle_policies:
+    pattern:  /policies
+    defaults: { _controller: ZizooBaseBundle:Page:policies }
+    requirements:
+        _method:  GET
+        
+ZizooBaseBundle_feedback:
+    pattern:  /feedback
+    defaults: { _controller: ZizooBaseBundle:Page:feedback }
+    requirements:
+        _method:  GET|POST
+        
+ZizooBaseBundle_faq:
+    pattern:  /faq
+    defaults: { _controller: ZizooBaseBundle:Page:faq }
+    requirements:
+        _method:  GET
+        
 ZizooBaseBundle_dashboard:
     pattern:  /dashboard
     defaults: { _controller: ZizooBaseBundle:Dashboard:index }
+    requirements:
+        _method:  GET
+        
+ZizooBaseBundle_profile:
+    pattern:  /dashboard/profile
+    defaults: { _controller: ZizooBaseBundle:Dashboard:profile }
     requirements:
         _method:  GET

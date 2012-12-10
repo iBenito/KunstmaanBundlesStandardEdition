@@ -15,13 +15,12 @@
               <div class="nav-collapse collapse">
                 <ul class="nav pull-right">
                   <li class="active"><a href="{{ path('ZizooBaseBundle_homepage') }}">Home</a></li>
-                  <li><a href="{{ path('ZizooBaseBundle_about') }}">About</a></li>
-                  <li><a href="#contact">Contact</a></li>
+                  <li><a href="{{ path('ZizooBaseBundle_how') }}">How it works</a></li>
                   <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome {{ user.username | default("none") }}<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                      <li><a href="#">Dashboard {{ user.username | default("none") }}</a></li>
-                      <li><a href="#">My Profile</a></li>
+                      <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Dashboard</a></li>
+                      <li><a href="{{ path('ZizooBaseBundle_profile') }}">My Profile</a></li>
                       <li><a href="#">My Bookings</a></li>
                       <li class="divider"></li>
                       <li class="nav-header">Account</li>
@@ -29,6 +28,7 @@
                       <li><a href="{{ path('logout') }}">Logout</a></li>
                     </ul>
                   </li>
+                  <li class="add-boat"><a href="#">Add Boat</a></li>
                 </ul>
               </div><!--/.nav-collapse -->
             </div>
@@ -56,7 +56,8 @@
     </div>
 {% endblock %}
     
-{% block row %}    
+{% block row %}
+    {% if main is defined and main %}
     <div class="span4">
         <h2>Ride The Waves</h2>
         <p>Renting a boat is your way to a unique vacation.</p>
@@ -72,4 +73,5 @@
         <p>Find out how and why to be a skipper.</p>
         <p><a class="btn" href="#">View details &raquo;</a></p>
     </div>
+    {% endif %}
 {% endblock %}
