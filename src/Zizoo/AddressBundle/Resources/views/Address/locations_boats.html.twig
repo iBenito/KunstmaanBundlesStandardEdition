@@ -1,0 +1,81 @@
+{% trans_default_domain "labels" %}
+{% for boat in boats %}
+    {% if loop.index0 % page_size == 0 %}
+    <div class="page{% if (loop.index0 / page_size)+1 == page %} current {% endif %}" id="page_{{ (loop.index0 / page_size)+1 }}">
+    {% endif %}
+        <article class="boat">
+            <header>
+                <h2>{{ boat.title }}</h2>
+            </header>
+            <div>
+                <p>{{ boat.description }}</p>
+            </div>
+
+
+            <section class="details" id="details">
+                <h3>{{ boat.name }}</h3>
+                <p>{% trans %}zizoo_address.label.cities{% endtrans %}: 
+                    <ul>
+                        {% for address in boat.addresses %}
+                            <li>{{ address.locality }}</li>
+                        {% endfor %}
+                    </ul>
+                </p>
+                <p>{% trans %}zizoo_boat.label.brand{% endtrans %}: {{ boat.brand }}</p>
+                <p>{% trans %}zizoo_boat.label.model{% endtrans %}: {{ boat.model }}</p>
+                <p>{% trans %}zizoo_boat.label.length{% endtrans %}: {{ boat.length }}</p>
+                <p>{% trans %}zizoo_boat.label.cabins{% endtrans %}: {{ boat.cabins }}</p>
+                {% if boat.bathrooms %}
+                    <p>{% trans %}zizoo_boat.label.bathrooms{% endtrans %}: {{ boat.bathrooms }}</p>
+                {% endif %}
+
+            </section>
+
+            <section class="images" id="images">
+                <h3>{% trans %}zizoo_boat.label.images{% endtrans %}</h3>
+                {% include 'ZizooBoatBundle:Image:index.html.twig' with { 'images': boat.image } %}
+            </section>
+        </article>
+    {% if loop.index % page_size == 0 %}
+    </div>
+    {% endif %}
+{% endfor %}
+<div class="paging_div">
+    {% if num_pages > 1 %}
+        <ul id="paging">
+        {% for i in range(1, num_pages) %}
+            <li><a href="{{ path('zizoo_address_locations') }}?page={{ i }}&search={{ current }}">Page {{ i }}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        
+        markers = new Array();
+        mc.clearMarkers();
+        {% for boat in boats %}
+            {% for address in boat.addresses %}
+                markers.push(new google.maps.Marker({
+                    title: '{{ boat.name }}',
+                    position: new google.maps.LatLng(
+                         {{ address.lat }}, {{ address.lng }}),
+                         clickable: true,
+                         draggable: false,
+                         flat: true
+                }));
+            {% endfor %}
+        {% endfor %}
+        mc = new MarkerClusterer(map, markers, {maxZoom: 19});
+        
+        $('#paging li a').click(function(el, a){
+            $('#boats').block({ message: null });
+            var url = $(this).attr('href');
+            url = encodeURI(url);
+            $('#boats').load(url, function(){
+                $('#boats').unblock();
+            });
+            return false;
+        });
+    });
+</script>

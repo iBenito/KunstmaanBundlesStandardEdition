@@ -4,6 +4,7 @@ namespace Zizoo\AddressBundle\Controller;
 
 use Zizoo\BoatBundle\Entity\Boat;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class AddressController extends Controller
@@ -44,7 +45,7 @@ class AddressController extends Controller
         return implode(',', $address);
     }
     
-    public function uniqueLocationsAction(){
+    public function uniqueLocationsAction($current){
         $em = $this->getDoctrine()
                    ->getEntityManager();
         
@@ -53,7 +54,6 @@ class AddressController extends Controller
         
         $groupedLocations = array();
         foreach ($locations as $location){
-            $countryKey     = $location['countryISO'];
             $countryName    = $location['countryName'];
             $locality       = $location['locality'];
             $subLocality    = $location['subLocality'];
@@ -83,7 +83,8 @@ class AddressController extends Controller
         //$response = new Response(json_encode($groupedLocations));
         //return $response;
         return $this->render('ZizooAddressBundle:Address:unique_locations.html.twig', array(
-            'unique_locations' => $groupedLocations
+            'unique_locations' => $groupedLocations,
+            'current'          => $current
         ));
     }
     
@@ -93,23 +94,23 @@ class AddressController extends Controller
                    ->getEntityManager();
         $markers = array();
         if ($search!='-1'){
+            $addresses = $em->getRepository('ZizooAddressBundle:BoatAddress')->getMarkers($search);
+            var_dump($addresses);
+            exit();
             $addresses = $em->getRepository('ZizooAddressBundle:BoatAddress')->search($search);
             foreach ($addresses as $address){
-                $markers[] = array('name' => $address->getBoat()->getName(), 'location' => array('lat' => $address->getLat(), 'lng' => $address->getLng()));
+                $markers[] = array('boat' => $address->getBoat(), 'location' => array('lat' => $address->getLat(), 'lng' => $address->getLng()));
             }
         } else {
             $boats = $em->getRepository('ZizooBoatBundle:Boat')->findAll();
             foreach ($boats as $boat){
                 $addresses = $boat->getAddresses();
                 foreach ($addresses as $address){
-                    $markers[] = array('name' => $boat->getName(), 'location' => array('lat' => $address->getLat(), 'lng' => $address->getLng()));
+                    $markers[] = array('boat' => $boat, 'location' => array('lat' => $address->getLat(), 'lng' => $address->getLng()));
                 }
             }
         }
-        
-        
-        
-        
+
         $response = new Response(json_encode($markers));
         return $response;
         
@@ -119,15 +120,42 @@ class AddressController extends Controller
     }
     
     
-    public function locationsAction(){
+    public function locationsAction(Request $request){
+        $page       = $request->query->get('page', '1');
+        $pageSize   = $request->query->get('page_size', '1');
+        $search     = $request->query->get('search', '-1');
+        
         $em = $this->getDoctrine()
                    ->getEntityManager();
         
-        $boats = $em->getRepository('ZizooBoatBundle:Boat')->findAll();
         
-        return $this->render('ZizooAddressBundle:Address:locations.html.twig', array(
-            'boats' => $boats
-        ));
+        $boats = $em->getRepository('ZizooBoatBundle:Boat')->getBoatsWithAddressesAndImages($search);
+        $numBoats = count($boats);
+        $numPages = floor($numBoats / $pageSize);
+        if ($numBoats % $pageSize > 0){
+            $numPages++;
+        }
+        
+        if ($request->isXmlHttpRequest()){
+            return $this->render('ZizooAddressBundle:Address:locations_boats.html.twig', array(
+                'boats'     => $boats,
+                'page'      => $page,
+                'page_size' => $pageSize,
+                'num_pages' => $numPages,
+                'current'   => $search
+            ));
+        } else {
+            return $this->render('ZizooAddressBundle:Address:locations.html.twig', array(
+                'boats'     => $boats,
+                'page'      => $page,
+                'page_size' => $pageSize,
+                'num_pages' => $numPages,
+                'current'   => $search
+            ));
+        }
+        
+        
     }
+    
     
 }

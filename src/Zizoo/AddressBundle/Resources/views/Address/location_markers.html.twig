@@ -2,7 +2,7 @@
     {% for boat in boats %}
             {% for location in boat.addresses %}
                 {
-                    'name': '{{ boat.name }}',
+                    'name': '{{ location.boat.name }}',
                     'location' : [{{ location.lat }}, {{ location.lng }}]
                 },
             {% endfor %}
