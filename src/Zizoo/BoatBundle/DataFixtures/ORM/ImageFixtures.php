@@ -76,10 +76,15 @@ class ImageFixtures implements OrderedFixtureInterface, SharedFixtureInterface, 
     
     public function load(ObjectManager $manager)
     {
-        $this->rrmdir($this->imgPath);
         if (!file_exists($this->imgPath)){
-            mkdir($this->imgPath, 0775, true);
+            if (is_dir($this->imgPath)){
+                $this->rrmdir($this->imgPath);
+            } else {
+                unlink($this->imgPath);
+            }
         }
+
+        mkdir($this->imgPath, 0775, true);
         
         $boat = $this->getReference('boat-1');
         
