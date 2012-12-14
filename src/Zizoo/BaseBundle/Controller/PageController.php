@@ -27,7 +27,8 @@ class PageController extends Controller {
         $user = $this->getLoggedInUser();
         
         return $this->render('ZizooBaseBundle:Page:how.html.twig',array(
-            'user' => $user
+            'user' => $user,
+            'main' => TRUE
         ));
     }
     
