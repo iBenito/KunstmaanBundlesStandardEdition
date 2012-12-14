@@ -76,7 +76,7 @@ class ImageFixtures implements OrderedFixtureInterface, SharedFixtureInterface, 
     
     public function load(ObjectManager $manager)
     {
-        if (!file_exists($this->imgPath)){
+        if (file_exists($this->imgPath)){
             if (is_dir($this->imgPath)){
                 $this->rrmdir($this->imgPath);
             } else {
