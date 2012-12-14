@@ -20,14 +20,9 @@ class BoatController extends Controller
 
         if (!$boat) {
             throw $this->createNotFoundException('Unable to find boat post.');
-        }
-
-        $images = $em->getRepository('ZizooBoatBundle:Image')
-                     ->getImagesForBoat($boat->getId());
-        
+        }        
         return $this->render('ZizooBoatBundle:Boat:show.html.twig', array(
-            'boat' => $boat,
-            'images'  => $images
+            'boat' => $boat
         ));
     }
 

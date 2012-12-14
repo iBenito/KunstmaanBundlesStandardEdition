@@ -12,4 +12,20 @@ use Doctrine\ORM\EntityRepository;
  */
 class ReservationRepository extends EntityRepository
 {
+    
+    public function getReservationBoatIds($resFrom, $resTo) {
+        
+        $qb = $this->createQueryBuilder('r')
+                    ->select('r')
+                    ->where('r.check_in BETWEEN :check_in AND :check_out')
+                    ->orWhere('r.check_out BETWEEN :check_in AND :check_out')
+                    ->orWhere(':check_in BETWEEN r.check_in AND r.check_out')
+                    ->setParameter('check_in', $resFrom)
+                    ->setParameter('check_out', $resTo);
+
+        
+        return $qb->getQuery()->getResult();
+        
+    }
+    
 }

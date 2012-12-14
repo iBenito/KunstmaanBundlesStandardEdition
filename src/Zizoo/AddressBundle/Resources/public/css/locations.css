@@ -1,0 +1,21 @@
+#map {
+    width: 100%;
+    height: 400px;
+    display: none;
+}
+
+#boats .page {
+    display: none;
+}
+
+#boats .page.current {
+    display: block;
+}
+
+#unique_locations_chzn .country, #unique_locations .country {
+    font-weight: bold;
+}
+
+#unique_locations_chzn .sub, #unique_locations .sub {
+    padding-left: 15px;
+}

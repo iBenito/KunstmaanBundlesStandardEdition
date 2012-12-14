@@ -26,11 +26,17 @@ class BoatRepository extends EntityRepository
                   ->getResult();
     }
     
-    public function getBoatsWithAddressesAndImages($search='-1')
+    public function getBoatsWithAddressesAndImages($search='-1', $resFrom='', $resTo='', $numGuests='')
     {
-        $qb = $this->createQueryBuilder('b')
-                   ->select('b, i, a, c');
         
+        $qb = $this->createQueryBuilder('b')
+                   ->select('b, i, a, c, r')
+                   ->leftJoin('b.image', 'i')
+                   ->leftJoin('b.addresses', 'a')
+                   ->leftJoin('b.reservation', 'r')
+                   ->leftJoin('a.country', 'c');
+        
+        $firstWhere = false;
         if ($search!='-1'){
             $qb->where('a.locality = :search')
                ->orWhere('a.subLocality = :search')
@@ -38,18 +44,43 @@ class BoatRepository extends EntityRepository
                ->orWhere('a.province = :search')
                ->orWhere('c.printableName = :search')
                ->setParameter('search', $search);
+            $firstWhere = true;
+        }
+        
+        if ($resFrom!='' && $resTo!=''){
+            // Get boat ids of all reservations
+            $reservations = $this->getEntityManager()->getRepository('ZizooBookingBundle:Reservation')->getReservationBoatIds($resFrom, $resTo);                        
+            
+            $reservationsArr = array();
+            foreach ($reservations as $reservation){
+                $reservationsArr[] = $reservation->getBoat()->getId();
+            }
+            
+            if (count($reservationsArr)>0){
+                if ($firstWhere){
+                    $qb->andWhere($qb->expr()->notIn('b.id',   implode(',', $reservationsArr)));
+                } else {
+                    $qb->where($qb->expr()->notIn('b.id', implode(',', $reservationsArr)));
+                }
+            }
+           
+            $firstWhere = true;
+        }
+        
+        if ($numGuests!=''){
+            if ($firstWhere){
+                $qb->where('b.nr_guests >= :num_guests');
+            } else {
+                $qb->andWhere('b.nr_guests >= :num_guests');
+            }
+            $qb->setParameter('num_guests', $numGuests);
+            $firstWhere = true;
         }
          
-        $qb->leftJoin('b.image', 'i')
-           ->leftJoin('b.addresses', 'a')
-           ->leftJoin('a.country', 'c')
-           ->addOrderBy('b.created', 'DESC');
+        $qb->addOrderBy('b.created', 'DESC');
         
         return $qb->getQuery()
                   ->getResult();
-        $paginator = new Paginator($qb->getQuery(), $fetchJoinCollection = true);
-
-        return $paginator;
     }
     
     

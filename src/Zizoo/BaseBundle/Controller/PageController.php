@@ -13,7 +13,7 @@ class PageController extends Controller {
         $em = $this->getDoctrine()->getEntityManager();
         $boats = $em->getRepository('ZizooBoatBundle:Boat')->getBoats();
         
-        $user = $this->getLoggedInUser();
+        $user = $this->getUser();
 
         return $this->render('ZizooBaseBundle:Page:index.html.twig',array(
             'user' => $user,
@@ -24,7 +24,7 @@ class PageController extends Controller {
     
     public function howAction()
     {
-        $user = $this->getLoggedInUser();
+        $user = $this->getUser();
         
         return $this->render('ZizooBaseBundle:Page:how.html.twig',array(
             'user' => $user,
@@ -34,7 +34,7 @@ class PageController extends Controller {
     
     public function aboutAction()
     {
-        $user = $this->getLoggedInUser();
+        $user = $this->getUser();
         
         return $this->render('ZizooBaseBundle:Page:about.html.twig',array(
             'user' => $user
@@ -43,7 +43,7 @@ class PageController extends Controller {
 
     public function termsAction()
     {
-        $user = $this->getLoggedInUser();
+        $user = $this->getUser();
         
         return $this->render('ZizooBaseBundle:Page:terms.html.twig',array(
             'user' => $user
@@ -52,7 +52,7 @@ class PageController extends Controller {
     
     public function policiesAction()
     {
-        $user = $this->getLoggedInUser();
+        $user = $this->getUser();
         
         return $this->render('ZizooBaseBundle:Page:policies.html.twig',array(
             'user' => $user
@@ -61,7 +61,7 @@ class PageController extends Controller {
     
     public function feedbackAction()
     {
-        $user = $this->getLoggedInUser();
+        $user = $this->getUser();
         
         $feedback = new Feedback();
         $form = $this->createForm(new FeedbackType(), $feedback);
@@ -96,29 +96,33 @@ class PageController extends Controller {
     
     public function faqAction()
     {
-        $user = $this->getLoggedInUser();
+        $user = $this->getUser();
         
         return $this->render('ZizooBaseBundle:Page:faq.html.twig',array(
             'user' => $user
         ));
     }
     
-    /**
-     * Check if a User is logged in 
-     * 
-     * @return Zizoo\UserBundle\Entity\User $user
-     */
-    private function getLoggedInUser()
+    public function loginWidgetAction($showLoginForm=false)
     {
-        $user = null;
-        
+        $request = $this->getRequest();
+        $session = $request->getSession();
+
+        $isLoggedIn = false;
         $securityContext = $this->container->get('security.context');
         if( $securityContext->isGranted('IS_AUTHENTICATED_FULLY') || $securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') ){
             // authenticated REMEMBERED, FULLY will imply REMEMBERED (NON anonymous)
-            $user = $this->getUser();
+            $isLoggedIn = true;
         }
         
-        return $user;
+        $user = $this->getUser();
+       
+        return $this->render('ZizooBaseBundle:Page:login_widget.html.twig', array(
+            // last username entered by the user
+            'user' => $user,
+            'logged_in' => $isLoggedIn,
+            'show_login_form' => $showLoginForm
+        ));
     }
     
 }

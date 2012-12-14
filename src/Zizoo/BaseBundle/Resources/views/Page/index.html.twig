@@ -1,45 +1,5 @@
 {% extends 'ZizooBaseBundle::layout.html.twig' %}
 
-    {% block navigation %}
-    {% if user is defined and user %}
-
-        <div class="navbar navbar-inverse navbar-fixed-top">
-          <div class="navbar-inner">
-            <div class="container">
-              <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </a>
-              <a class="brand active" href="{{ path('ZizooBaseBundle_homepage') }}">Zizoo</a>
-              <div class="nav-collapse collapse">
-                <ul class="nav pull-right">
-                  <li class="active"><a href="{{ path('ZizooBaseBundle_homepage') }}">Home</a></li>
-                  <li><a href="{{ path('ZizooBaseBundle_how') }}">How it works</a></li>
-                  <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome {{ user.username | default("none") }}<b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                      <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Dashboard</a></li>
-                      <li><a href="{{ path('ZizooBaseBundle_profile') }}">My Profile</a></li>
-                      <li><a href="#">My Bookings</a></li>
-                      <li class="divider"></li>
-                      <li class="nav-header">Account</li>
-                      <li><a href="#">Settings</a></li>
-                      <li><a href="{{ path('logout') }}">Logout</a></li>
-                    </ul>
-                  </li>
-                  <li class="add-boat"><a href="#">Add Boat</a></li>
-                </ul>
-              </div><!--/.nav-collapse -->
-            </div>
-          </div>
-        </div>
-
-    {% else %}
-        {{ parent() }}
-    {% endif %}    
-    {% endblock %} 
-
 {% block body %}
     <!-- Main hero unit for a primary marketing message or call to action -->
     <div class="span8 hero-unit">
@@ -52,7 +12,7 @@
         <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
     </div>
     <div class="span4 hero-unit">
-         <h1>Search!</h1>
+         <h1><a href="{{ path('zizoo_address_locations') }}">Search!</a></h1>
     </div>
 {% endblock %}
     

@@ -1,11 +1,8 @@
 {# src/Zizoo/AddressBundle/Resources/views/Address/locations_test.html.twig #}
 {% trans_default_domain "labels" %}
 
-
-<link href="{{ asset('css/chosen.css') }}" rel="stylesheet">
-<script type="text/javascript" src="{{ asset('js/chosen.jquery.js') }}"></script>
-<select id="unique_locations" name="search" autocomplete="off">
-    <option value="-1" {% if '-1' == current %}selected="selected"{% endif %}>All</option>
+<select id="unique_locations" name="search">
+    <option value="-1" {% if '-1' == current %}selected="selected"{% endif %}>All locations</option>
     {% for country,country_data in unique_locations %}
         <option value="{{ country }}" class="country" search="{{ country_data.name }}" {% if country == current %}selected="selected"{% endif %}>{{ country_data.name }}</option>
         {% for location,location_data in country_data.locations %}
@@ -13,15 +10,6 @@
         {% endfor %}
     {% endfor %}
 </select>
-
-<style type="text/css">
-        
-#unique_locations_chzn .country {
-    font-weight: bold;
-}
-
-#unique_locations_chzn .sub {
-    padding-left: 15px;
-}
-        
-</style>
+<input type="text" id="reservation_from" name="revervation_from" placeholder="From" />
+<input type="text" id="reservation_to" name="revervation_to" placeholder="Until" />
+<input type="text" id="num_guests" name="num_guests" placeholder="Number of people" />

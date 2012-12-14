@@ -32,28 +32,6 @@ class UserController extends Controller
             'error'         => $error,
         ));
     }
-
-    
-    public function loginWidgetAction()
-    {
-        $request = $this->getRequest();
-        $session = $request->getSession();
-
-        $isLoggedIn = false;
-        $securityContext = $this->container->get('security.context');
-        if( $securityContext->isGranted('IS_AUTHENTICATED_FULLY') || $securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') ){
-            // authenticated REMEMBERED, FULLY will imply REMEMBERED (NON anonymous)
-            $isLoggedIn = true;
-        }
-        
-        $user = $this->getUser();
-       
-        return $this->render('ZizooUserBundle:User:login_widget.html.twig', array(
-            // last username entered by the user
-            'user' => $user,
-            'logged_in' => $isLoggedIn
-        ));
-    }
     
     
     public function forgotPasswordAction(){

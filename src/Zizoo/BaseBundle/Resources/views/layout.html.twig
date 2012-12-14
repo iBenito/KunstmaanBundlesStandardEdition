@@ -1,5 +1,10 @@
 {% extends '::zizoo.html.twig' %}
 
+{% block navigation %}
+{% render 'ZizooBaseBundle:Page:loginWidget' with {showLoginForm: true} %}
+{% endblock %}
+
+
 {% block stylesheets %}
     {{ parent() }}
 {% endblock %}

@@ -34,7 +34,7 @@
 
     <section class="images" id="images">
         <h3>{% trans %}zizoo_boat.label.images{% endtrans %}</h3>
-        {% include 'ZizooBoatBundle:Image:index.html.twig' with { 'images': images } %}
+        {% include 'ZizooBoatBundle:Image:index.html.twig' with { 'images': boat.image } %}
     </section>
 
 {% endblock %}

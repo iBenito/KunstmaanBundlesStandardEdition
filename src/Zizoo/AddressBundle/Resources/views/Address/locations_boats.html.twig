@@ -36,7 +36,7 @@
                 {% include 'ZizooBoatBundle:Image:index.html.twig' with { 'images': boat.image } %}
             </section>
         </article>
-    {% if loop.index % page_size == 0 %}
+    {% if loop.index % page_size == 0 or loop.last %}
     </div>
     {% endif %}
 {% endfor %}
@@ -44,13 +44,13 @@
     {% if num_pages > 1 %}
         <ul id="paging">
         {% for i in range(1, num_pages) %}
-            <li><a href="{{ path('zizoo_address_locations') }}?page={{ i }}&search={{ current }}">Page {{ i }}</a></li>
+            <li class="{{ i }}"><a href="{{ path('zizoo_address_locations') }}?page={{ i }}&search={{ current }}&reservation_from={{ res_from }}&reservation_to={{ res_to }}&num_guests={{ num_guests }}">Page {{ i }}</a></li>
         {% endfor %}
         </ul>
     {% endif %}
 </div>
 <script type="text/javascript">
-    jQuery(document).ready(function(){
+    $(document).ready(function(){
         
         markers = new Array();
         mc.clearMarkers();
@@ -68,8 +68,15 @@
         {% endfor %}
         mc = new MarkerClusterer(map, markers, {maxZoom: 19});
         
-        $('#paging li a').click(function(el, a){
+        $('#paging li a').click(function(el){
             $('#boats').block({ message: null });
+            var page = $(this).parent().attr('class');
+            
+            $('#boats .page').hide().removeClass('current');
+            $('#boats #page_'+page).show().addClass('current');
+            $('#boats').unblock();
+            return false;
+            
             var url = $(this).attr('href');
             url = encodeURI(url);
             $('#boats').load(url, function(){
