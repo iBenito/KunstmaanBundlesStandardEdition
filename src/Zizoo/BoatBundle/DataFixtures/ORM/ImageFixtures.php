@@ -94,7 +94,7 @@ class ImageFixtures implements OrderedFixtureInterface, SharedFixtureInterface, 
         $manager->persist($image);
         $this->copyImage($boat, '1', $image);
         
-        $boat = $this->getReference('boat-1');
+        $boat = $this->getReference('boat-2');
         $image = new Image();
         $image->setBoat($manager->merge($boat));
         $image->setPath('2.jpg');
