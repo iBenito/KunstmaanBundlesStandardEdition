@@ -1,6 +1,6 @@
 zizoo_address_unique_locations:
-    pattern:  /unique_locations
-    defaults: { _controller: ZizooAddressBundle:Address:uniqueLocations, _format: json }
+    pattern:  /unique_locations/{current}
+    defaults: { _controller: ZizooAddressBundle:Address:uniqueLocations, current: '-1', _format: json }
     requirements: { _format: (xml|json), _method: GET }
 
 zizoo_address_location_markers:
@@ -9,5 +9,5 @@ zizoo_address_location_markers:
     requirements: { _format: (xml|json), _method: GET }
 
 zizoo_address_locations:
-    pattern:  /locations
-    defaults: { _controller: ZizooAddressBundle:Address:locations}
+    pattern:  /locations/{page}/{search}
+    defaults: { _controller: ZizooAddressBundle:Address:locations, page: '1', search: '-1'}

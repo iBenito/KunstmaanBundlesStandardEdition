@@ -3,6 +3,7 @@
 namespace Zizoo\BoatBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * BoatRepository
@@ -23,7 +24,33 @@ class BoatRepository extends EntityRepository
 
         return $qb->getQuery()
                   ->getResult();
-    }   
+    }
+    
+    public function getBoatsWithAddressesAndImages($search='-1')
+    {
+        $qb = $this->createQueryBuilder('b')
+                   ->select('b, i, a, c');
+        
+        if ($search!='-1'){
+            $qb->where('a.locality = :search')
+               ->orWhere('a.subLocality = :search')
+               ->orWhere('a.state = :search')
+               ->orWhere('a.province = :search')
+               ->orWhere('c.printableName = :search')
+               ->setParameter('search', $search);
+        }
+         
+        $qb->leftJoin('b.image', 'i')
+           ->leftJoin('b.addresses', 'a')
+           ->leftJoin('a.country', 'c')
+           ->addOrderBy('b.created', 'DESC');
+        
+        return $qb->getQuery()
+                  ->getResult();
+        $paginator = new Paginator($qb->getQuery(), $fetchJoinCollection = true);
+
+        return $paginator;
+    }
     
     
 }

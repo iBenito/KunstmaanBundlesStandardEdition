@@ -3,7 +3,10 @@
 {% extends 'ZizooAddressBundle::layout.html.twig' %}
 
 {% block body %}
-{% render "ZizooAddressBundle:Address:uniqueLocations" %}
+<form id="search_form" action="{{ path('zizoo_address_locations') }}" method="get">
+    {% render "ZizooAddressBundle:Address:uniqueLocations" with {'current': current} %}
+    <input type="submit" value="Search" />
+</form>
 <div id="map_div">
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/tags/markermanager/1.0/src/markermanager.js"></script>
@@ -16,65 +19,63 @@
         width: 100%;
         height: 400px;
     }
+    
+    #boats .page {
+        display: none;
+    }
+    
+    #boats .page.current {
+        display: block;
+    }
     </style>
     
     
     <script type="text/javascript">
-        var map;
-        var markers = new Array();
-        var mc;
-        var geocoder;
+        var currentPage = {{ page }};
+        var map = null;
+        var markers = null;
+        var mc = null;
+        var geocoder = null;
         var center = new google.maps.LatLng(38, 15);
         var zoom = 2;
         
-        function updateMarkers(){
+        function updateSearch(page){
             $('#map').block({ message: null }); 
+            $('#boats').block({ message: null }); 
             var index = $('#unique_locations :selected').index();
 
             var type;
             var val = null;
+            var search = null;
             if (index>0){
                 type = $('#unique_locations option:nth-of-type('+(index+1)+')').attr('class');
+                search = $('#unique_locations option:nth-of-type('+(index+1)+')').attr('search');
                 val  = $('#unique_locations').val();
             }
 
-            $.ajax({
-                url: (val==null?'location_markers':'location_markers/'+val),
-                dataType: 'json',
-                success: function(data) {
-                    mc.clearMarkers();
-                    markers = data;
-                    placeMarkers();
-                    if(val==null){
-                        map.setCenter(center);
-                        map.setZoom(zoom);
-                    } else {
-                        codeAddress(val);
-                        map.setZoom(5);
-                    }
-                    $('#map').unblock();
+            var sep = '?';
+            var url ='{{ path('zizoo_address_locations') }}';
+            if (page!=null){
+                url += sep + 'page='+page;
+                sep = '&';
+            }
+            if (val!=null) {
+                url += sep + 'search='+val;
+                sep = '&';
+            }
+            url = encodeURI(url);
+            $('#boats').load(url, function(){
+                if(val==null){
+                    map.setCenter(center);
+                    map.setZoom(zoom);
+                } else {
+                    codeAddress(search);
+                    map.setZoom(5);
                 }
+                $('#map').unblock();
+                $('#boats').unblock();
             });
 
-        }
-
-        function placeMarkers(){
-            // Prepares the marker object, creating a google.maps.Marker object for each
-            // location, place and country
-            if (markers) {                
-                $(markers).each(function(index, marker){
-                    markers[index] = new google.maps.Marker({
-                        title: marker.name,
-                        position: new google.maps.LatLng(
-                             marker.location.lat, marker.location.lng),
-                             clickable: true,
-                             draggable: false,
-                             flat: true
-                      });
-                });
-                mc = new MarkerClusterer(map, markers, {maxZoom: 19});
-            }
-            
         }
         
         function codeAddress(address) {
@@ -97,25 +98,12 @@
                 zoom: zoom,
                 mapTypeId: 'terrain'
             });
-            //markers = {% render "ZizooAddressBundle:Address:locationMarkers" with {'search': '-1'} %};
+            markers = new Array();
             mc = new MarkerClusterer(map, markers, {maxZoom: 19});
-            updateMarkers();
-            //placeMarkers();
+            //updateSearch();
         }
 
         $(document).ready(function(){
-
-            /**
-            * The MarkerClusterer object.
-            * @type {MarkerCluster}
-            */
-            mc = null;
-
-            /**
-            * The Map object.
-            * @type {google.maps.Map}
-            */
-            map = null;
 
             if(typeof google === 'undefined' || google==null){
                 $('#map').hide();
@@ -123,12 +111,19 @@
             }
             initialize();
 
-            $('#unique_locations').chosen().change(updateMarkers);
+            $('#unique_locations').chosen();
+            
+            jQuery('#search_form').on('submit', function(){
+                updateSearch();
+                return false;
+            });
 
         });
 
     </script>
-    
+    <div id="boats">
+        {% include "ZizooAddressBundle:Address:locations_boats.html.twig" with {'page': page, 'page_size': page_size } %}
+    </div>
     
 </div>
 {% endblock %}
