@@ -18,6 +18,14 @@ use Doctrine\ORM\NoResultException;
 class UserRepository extends EntityRepository implements UserProviderInterface
 {
     
+    /**
+     * Allows a user to log in using his email address or username
+     * 
+     * @param string $username
+     * @return src/Zizoo/UserBundle/Entity/User user
+     * @throws UsernameNotFoundException
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
     public function loadUserByUsername($username)
     {
         $q = $this

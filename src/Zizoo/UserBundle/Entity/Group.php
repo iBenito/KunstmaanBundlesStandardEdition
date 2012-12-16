@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="groups")
+ * @ORM\Table(name="usergroup")
  * @ORM\Entity(repositoryClass="Zizoo\UserBundle\Entity\GroupRepository")
  */
 class Group implements RoleInterface

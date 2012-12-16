@@ -92,6 +92,11 @@ class BoatAddress extends AddressBase {
         return $this->lng;
     }
     
+    /**
+     * Gets a formatted boat address, used by fetchGeo() to search.
+     * @return string   Formatted address
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
     public function getFormattedAddress(){
         $address = array();
         $street     = $this->getStreet();
@@ -122,6 +127,11 @@ class BoatAddress extends AddressBase {
         return implode(',', $address);
     }
     
+    /**
+     * Fetch geo data (lat, lng) for boat address from Google Maps service. Requires CURL.
+     * TODO: Fail gracefully.
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
     public function fetchGeo(){
         // jSON URL which should be requested
         $json_url = 'http://maps.googleapis.com/maps/api/geocode/json?address='.urlencode($this->getFormattedAddress()).'&sensor=false';

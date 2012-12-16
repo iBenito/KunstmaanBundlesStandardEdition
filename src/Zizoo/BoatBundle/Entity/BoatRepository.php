@@ -26,9 +26,18 @@ class BoatRepository extends EntityRepository
                   ->getResult();
     }
     
-    public function getBoatsWithAddressesAndImages($search='-1', $resFrom='', $resTo='', $numGuests='')
+    /**
+     * 
+     * @param string $search      Optional location search value
+     * @param string $resFrom     Optional date from
+     * @param string $resTo       Optional date until
+     * @param string $numGuests   Optional number of guests
+     * @return Doctrine\ORM\AbstractQuery[] Results
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
+    public function searchBoatAvailability($search='-1', $resFrom='', $resTo='', $numGuests='')
     {
-        
+        // Join boat, image, address, country and reservation
         $qb = $this->createQueryBuilder('b')
                    ->select('b, i, a, c, r')
                    ->leftJoin('b.image', 'i')
@@ -36,6 +45,7 @@ class BoatRepository extends EntityRepository
                    ->leftJoin('b.reservation', 'r')
                    ->leftJoin('a.country', 'c');
         
+        // Optionally search by location
         $firstWhere = false;
         if ($search!='-1'){
             $qb->where('a.locality = :search')
@@ -47,8 +57,9 @@ class BoatRepository extends EntityRepository
             $firstWhere = true;
         }
         
+        // Optionally restrict by date range
         if ($resFrom!='' && $resTo!=''){
-            // Get boat ids of all reservations
+            // Get boat ids of all reservations. These will be excluded from results.
             $reservations = $this->getEntityManager()->getRepository('ZizooBookingBundle:Reservation')->getReservationBoatIds($resFrom, $resTo);                        
             
             $reservationsArr = array();
@@ -67,6 +78,7 @@ class BoatRepository extends EntityRepository
             $firstWhere = true;
         }
         
+        // Optionally restrict by number of guests
         if ($numGuests!=''){
             if ($firstWhere){
                 $qb->where('b.nr_guests >= :num_guests');

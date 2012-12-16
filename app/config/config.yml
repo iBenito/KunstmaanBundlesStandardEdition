@@ -49,3 +49,14 @@ doctrine:
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
+
+liip_imagine:
+    filter_sets:
+        thumb_50x50:
+            quality: 75
+            filters:
+                thumbnail: { size: [50, 50], mode: outbound, allow_upscale: true }
+        thumb_75x75:
+            quality: 75
+            filters:
+                thumbnail: { size: [75, 75], mode: outbound, allow_upscale: true }

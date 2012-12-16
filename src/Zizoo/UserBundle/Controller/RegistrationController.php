@@ -20,7 +20,8 @@ class RegistrationController extends Controller
 {
     /**
      * Send email to registration user, with activation link
-     * @param type $user
+     * 
+     * @param Zizoo\UserBundle\Entity\User $user
      * @author Alex Fuckert <alexf83@gmail.com>
      */
     private function sendConfirmationEmail($user){
@@ -48,7 +49,11 @@ class RegistrationController extends Controller
     }
     
     
-   
+    /**
+     * Try to register a user.
+     * 
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
     public function registerAction()
     {
         $form = $this->createForm(new RegistrationType());
@@ -126,11 +131,21 @@ class RegistrationController extends Controller
         return $this->render('ZizooUserBundle:Registration:register.html.twig', array('form' => $form->createView(), 'unconfirmed_user' => null, 'unconfirmed_email' => false, 'unconfirmed_username' => false));
     }
     
+    /**
+     * Registration form submitted successfully.
+     * Redirected to from registerAction() (which also sends confirmation email, by calling sendConfirmationEmail()).
+     * 
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
     public function submittedAction(){
         return $this->render('ZizooUserBundle:Registration:submitted.html.twig');
     }
     
-    
+    /**
+     * Resend confirmation email.
+     * @param string $email
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
     public function resendConfirmationAction($email){
         $request = $this->getRequest();
         $user = null;
@@ -149,6 +164,13 @@ class RegistrationController extends Controller
         return $this->render('ZizooUserBundle:Registration:resend_confirmation.html.twig');
     }
     
+    /**
+     * Confirm a registration by token and email. This is done by clicking on the link in the confirmation email.
+     * 
+     * @param string $token
+     * @param string $email
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
     public function confirmAction($token, $email){
         $em = $this->getDoctrine()
                    ->getEntityManager();
@@ -167,6 +189,11 @@ class RegistrationController extends Controller
         
     }
     
+    /**
+     * Registration confirmed.
+     * 
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
     public function confirmedAction(){
         $user = $this->getUser();
         return $this->render('ZizooUserBundle:Registration:confirmed.html.twig', array('user' => $user));

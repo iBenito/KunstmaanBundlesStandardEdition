@@ -2,6 +2,10 @@ parameters:
 #    zizoo_address.example.class: Zizoo\AddressBundle\Example
 
 services:
+    zizoo_boat.twig.image_extension:
+        class: Zizoo\BoatBundle\Twig\ImageExtension
+        tags:
+            - { name: twig.extension }
 #    zizoo_address.example:
 #        class: %zizoo_address.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]

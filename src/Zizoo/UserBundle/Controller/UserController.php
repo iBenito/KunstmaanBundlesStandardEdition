@@ -13,6 +13,11 @@ use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
 class UserController extends Controller
 {
+    /**
+     * Login form.
+     * 
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
     public function loginAction()
     {
         $request = $this->getRequest();
@@ -33,7 +38,11 @@ class UserController extends Controller
         ));
     }
     
-    
+    /**
+     * User forgot password. Set confirmation token and sendForgotPasswordEmail()
+     * 
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
     public function forgotPasswordAction(){
         $request = $this->getRequest();
         $form = $this->createForm(new UserForgotPasswordType());
@@ -65,10 +74,22 @@ class UserController extends Controller
         return $this->render('ZizooUserBundle:User:forgot_password.html.twig', array('form' => $form->createView()));
     }
     
+    /**
+     * Reset password email was sent. 
+     * 
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
     public function resetPasswordEmailAction(){
         return $this->render('ZizooUserBundle:User:reset_password_email.html.twig');
     }
     
+    /**
+     * Actually reset the password by token and email. This is done by clicking on the link in the reset password email.
+     * 
+     * @param string $token
+     * @param string $email
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
     public function resetPasswordAction($token, $email){
         $em = $this->getDoctrine()
                    ->getEntityManager();
@@ -90,6 +111,11 @@ class UserController extends Controller
         }
     }
     
+    /**
+     * Reset password confirmed.
+     * 
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
     public function resetPasswordConfirmAction(){
         return $this->render('ZizooUserBundle:User:reset_password_email.html.twig');
     }
@@ -97,7 +123,8 @@ class UserController extends Controller
     
     /**
      * Send email to user with link for generating new password.
-     * @param type $user
+     * 
+     * @param Zizoo\UserBundle\Entity\User $user
      * @author Alex Fuckert <alexf83@gmail.com>
      */
     private function sendForgotPasswordEmail($user){
@@ -126,7 +153,8 @@ class UserController extends Controller
     
     /**
      * Send email to user with new password.
-     * @param type $user
+     * 
+     * @param Zizoo\UserBundle\Entity\User $user
      * @author Alex Fuckert <alexf83@gmail.com>
      */
     private function sendNewPasswordEmail($user, $pass){
@@ -152,7 +180,11 @@ class UserController extends Controller
         $this->get('mailer')->send($message);
     }
     
-    
+    /**
+     * Change password. Must only be allowed when user is logged in!
+     * 
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
     public function changePasswordAction(){
         $user = $this->getUser();
         $form = $this->createForm(new UserNewPasswordType());

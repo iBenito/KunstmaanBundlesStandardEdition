@@ -2,6 +2,10 @@ parameters:
 #    zizoo_boat.example.class: Zizoo\BoatBundle\Example
 
 services:
+    zizoo_boat.twig.image_extension:
+        class: Zizoo\BoatBundle\Twig\ImageExtension
+        tags:
+            - { name: twig.extension }
 #    zizoo_boat.example:
 #        class: %zizoo_boat.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]

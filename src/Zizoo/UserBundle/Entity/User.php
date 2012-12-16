@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * Zizoo\UserBundle\Entity\User
  *
- * @ORM\Table(name="users")
+ * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="Zizoo\UserBundle\Entity\UserRepository")
  * @UniqueEntity(fields="username", groups={"registration"}, message="zizoo_user.error.user_taken")
  * @UniqueEntity(fields="email", groups={"registration"}, message="zizoo_user.error.email_taken")

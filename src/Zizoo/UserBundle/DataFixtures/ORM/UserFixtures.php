@@ -36,12 +36,26 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface
         $password2 = $encoder2->encodePassword('test', $user_2->getSalt());
         $user_2->setPassword($password2);
         $user_2->setIsActive(true);
-        $user_2->addGroup($manager->merge($this->getReference('group_user')));
+        $user_2->addGroup($manager->merge($this->getReference('group_admin')));
         
         $this->addReference('user-2', $user_2);
         
+        
+        $encoder3 = new MessageDigestPasswordEncoder('sha512', true, 10);
+        $user_3 = new User();
+        $user_3->setUsername('skippa');
+        $user_3->setEmail('sinan.masovic@gmail.com');
+        $user_3->setSalt(md5(time()));
+        $password3 = $encoder2->encodePassword('sinan', $user_3->getSalt());
+        $user_3->setPassword($password2);
+        $user_3->setIsActive(true);
+        $user_3->addGroup($manager->merge($this->getReference('group_user')));
+        
+        $this->addReference('user-3', $user_3);
+        
         $manager->persist($user_1);
         $manager->persist($user_2);
+        $manager->persist($user_3);
 
         $manager->flush();
   

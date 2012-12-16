@@ -66,6 +66,22 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
         $manager->persist($profile);
         
         
+        $profile = new Profile();
+        $profile->setFirstName('Sinan');
+        $profile->setLastName('Masovic');
+        $profile->setCreated(new \DateTime());
+        $profile->setUpdated($profile->getCreated());
+        $profile->setUser($manager->merge($this->getReference('user-3')));
+        
+        $profileAddress = new ProfileAddress();
+        
+        $profileAddress->setLocality('Wien');;
+        $profileAddress->setCountry($manager->merge($this->getReference('countryAT')));
+        $profileAddress->setProfile($profile);
+        
+        $manager->persist($profileAddress);
+        $manager->persist($profile);
+        
         $manager->flush();
 
     }

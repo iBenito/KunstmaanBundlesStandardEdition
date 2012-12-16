@@ -34,7 +34,7 @@ class Profile
     protected $lastName;
     
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $about;
 
@@ -45,12 +45,12 @@ class Profile
     protected $addresses;
     
     /**
-     * @ORM\Column(type="string", length=60, unique=true)
+     * @ORM\Column(type="string", length=60, unique=true, nullable=true)
      */
     protected $phone;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $picture;
     

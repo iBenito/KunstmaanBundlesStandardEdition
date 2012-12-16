@@ -53,9 +53,15 @@
     $(document).ready(function(){
         
         markers = new Array();
+        infoWindows = new Array();
+        lastOpenWindow = -1;
+        
         mc.clearMarkers();
         {% for boat in boats %}
             {% for address in boat.addresses %}
+                infoWindows.push(new google.maps.InfoWindow({
+                    content: {% include "ZizooAddressBundle:Address:locations_boat_info_window.html.twig" with {'boat': boat } %}
+                }));
                 markers.push(new google.maps.Marker({
                     title: '{{ boat.name }}',
                     position: new google.maps.LatLng(
@@ -64,6 +70,13 @@
                          draggable: false,
                          flat: true
                 }));
+                google.maps.event.addListener(markers[{{ loop.parent.loop.index0 + loop.index0 }}], 'click', function() {
+                    if (lastOpenWindow!=-1){
+                        infoWindows[lastOpenWindow].close();
+                    }
+                    infoWindows[{{ loop.parent.loop.index0 + loop.index0 }}].open(map, markers[{{ loop.parent.loop.index0 + loop.index0 }}]);
+                    lastOpenWindow = {{ loop.parent.loop.index0 + loop.index0 }};
+                  });
             {% endfor %}
         {% endfor %}
         mc = new MarkerClusterer(map, markers, {maxZoom: 19});

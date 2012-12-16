@@ -103,6 +103,12 @@ class PageController extends Controller {
         ));
     }
     
+    /**
+     * Displays the login widget.
+     * 
+     * @param boolean $showLoginForm    True to show login form directly in widget if user not logged in.
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
     public function loginWidgetAction($showLoginForm=false)
     {
         $request = $this->getRequest();

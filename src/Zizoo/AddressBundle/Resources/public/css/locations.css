@@ -4,6 +4,32 @@
     display: none;
 }
 
+#map img {
+    max-width: none;
+}
+
+#map .marker {
+    padding-right: 40px;
+}
+
+#map .marker .marker_heading {
+    font-size: 20px;
+}
+
+#map .marker .marker_images {
+    float: right;
+    margin-left: 15px;
+    margin-bottom: 15px;
+}
+
+#map .marker .marker_images article.image {
+    margin-bottom: 5px;
+}
+
+#map .marker .marker_images article.image:last-child {
+    margin-bottom: 0;
+}
+
 #boats .page {
     display: none;
 }

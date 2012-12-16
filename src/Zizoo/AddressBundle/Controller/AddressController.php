@@ -14,6 +14,11 @@ class AddressController extends Controller
         return $this->render('ZizooAddressBundle:Address:index.html.twig', array('name' => $name));
     }
     
+    /**
+     * Get formatted address, used for geocoding an address when the user searches for a location.
+     * @param type $location    Array containing locality, subLocality, state, province, countryName
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
     private function getFormattedAddress($location){
         $address = array();
         
@@ -45,6 +50,12 @@ class AddressController extends Controller
         return implode(',', $address);
     }
     
+    /**
+     * Show all unique locations (country, locality, sub locality, state, province) in a select dropdown.
+     * 
+     * @param type $current Currently selected location
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
     public function uniqueLocationsAction($current){
         $em = $this->getDoctrine()
                    ->getEntityManager();
@@ -79,47 +90,23 @@ class AddressController extends Controller
         foreach ($groupedLocations as $country => $groupedLocation){
             ksort($groupedLocations[$country]['locations']);
         }
-        
-        //$response = new Response(json_encode($groupedLocations));
-        //return $response;
+
         return $this->render('ZizooAddressBundle:Address:unique_locations.html.twig', array(
             'unique_locations' => $groupedLocations,
             'current'          => $current
         ));
     }
-    
-
-    public function locationMarkersAction($search){
-        $em = $this->getDoctrine()
-                   ->getEntityManager();
-        $markers = array();
-        if ($search!='-1'){
-            $addresses = $em->getRepository('ZizooAddressBundle:BoatAddress')->getMarkers($search);
-            var_dump($addresses);
-            exit();
-            $addresses = $em->getRepository('ZizooAddressBundle:BoatAddress')->search($search);
-            foreach ($addresses as $address){
-                $markers[] = array('boat' => $address->getBoat(), 'location' => array('lat' => $address->getLat(), 'lng' => $address->getLng()));
-            }
-        } else {
-            $boats = $em->getRepository('ZizooBoatBundle:Boat')->findAll();
-            foreach ($boats as $boat){
-                $addresses = $boat->getAddresses();
-                foreach ($addresses as $address){
-                    $markers[] = array('boat' => $boat, 'location' => array('lat' => $address->getLat(), 'lng' => $address->getLng()));
-                }
-            }
-        }
-
-        $response = new Response(json_encode($markers));
-        return $response;
         
-        return $this->render('ZizooAddressBundle:Address:location_markers.html.twig', array(
-            'boats' => $boats
-        ));
-    }
     
-    
+    /**
+     * Displays the locations page. Allows user to search by location, date range and number of people.
+     * Displays results on Google Maps and as list. List is paged on the client-side, since we have to fetch all boats
+     * to display on the map according to search criteria anyway.
+     * If request is AJAX return only a component of the locations page.
+     * 
+     * @param \Symfony\Component\HttpFoundation\Request $request    Used to check if AJAX request
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
     public function locationsAction(Request $request){
         $page       = $request->query->get('page', '1');
         $pageSize   = $request->query->get('page_size', '1');
@@ -142,7 +129,7 @@ class AddressController extends Controller
         $em = $this->getDoctrine()
                    ->getEntityManager();
         
-        $boats = $em->getRepository('ZizooBoatBundle:Boat')->getBoatsWithAddressesAndImages($search, $resFrom, $resTo, $numGuests);
+        $boats = $em->getRepository('ZizooBoatBundle:Boat')->searchBoatAvailability($search, $resFrom, $resTo, $numGuests);
         $numBoats = count($boats);
         $numPages = floor($numBoats / $pageSize);
         if ($numBoats % $pageSize > 0){
@@ -151,25 +138,25 @@ class AddressController extends Controller
         
         if ($request->isXmlHttpRequest()){
             return $this->render('ZizooAddressBundle:Address:locations_boats.html.twig', array(
-                'boats'     => $boats,
-                'page'      => $page,
-                'page_size' => $pageSize,
-                'num_pages' => $numPages,
-                'current'   => $search,
-                'res_from'  => $resFrom,
-                'res_to'  => $resTo,
-                'num_guests'  => $numGuests
+                'boats'         => $boats,
+                'page'          => $page,
+                'page_size'     => $pageSize,
+                'num_pages'     => $numPages,
+                'current'       => $search,
+                'res_from'      => $resFrom,
+                'res_to'        => $resTo,
+                'num_guests'    => $numGuests
             ));
         } else {
             return $this->render('ZizooAddressBundle:Address:locations.html.twig', array(
-                'boats'     => $boats,
-                'page'      => $page,
-                'page_size' => $pageSize,
-                'num_pages' => $numPages,
-                'current'   => $search,
-                'res_from'  => $resFrom,
-                'res_to'  => $resTo,
-                'num_guests'  => $numGuests
+                'boats'         => $boats,
+                'page'          => $page,
+                'page_size'     => $pageSize,
+                'num_pages'     => $numPages,
+                'current'       => $search,
+                'res_from'      => $resFrom,
+                'res_to'        => $resTo,
+                'num_guests'    => $numGuests
             ));
         }
         
