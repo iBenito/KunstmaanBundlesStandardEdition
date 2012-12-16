@@ -55,7 +55,7 @@
         markers = new Array();
         infoWindows = new Array();
         lastOpenWindow = -1;
-        
+        {% set index = 0 %}
         mc.clearMarkers();
         {% for boat in boats %}
             {% for address in boat.addresses %}
@@ -70,13 +70,14 @@
                          draggable: false,
                          flat: true
                 }));
-                google.maps.event.addListener(markers[{{ loop.parent.loop.index0 + loop.index0 }}], 'click', function() {
+                google.maps.event.addListener(markers[{{ index }}], 'click', function() {
                     if (lastOpenWindow!=-1){
                         infoWindows[lastOpenWindow].close();
                     }
-                    infoWindows[{{ loop.parent.loop.index0 + loop.index0 }}].open(map, markers[{{ loop.parent.loop.index0 + loop.index0 }}]);
-                    lastOpenWindow = {{ loop.parent.loop.index0 + loop.index0 }};
+                    infoWindows[{{ index }}].open(map, markers[{{ index }}]);
+                    lastOpenWindow = {{ index }};
                   });
+                  {% set index {{ index+1 }} %}
             {% endfor %}
         {% endfor %}
         mc = new MarkerClusterer(map, markers, {maxZoom: 19});
