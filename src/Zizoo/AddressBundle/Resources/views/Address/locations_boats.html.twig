@@ -77,7 +77,7 @@
                     infoWindows[{{ index }}].open(map, markers[{{ index }}]);
                     lastOpenWindow = {{ index }};
                   });
-                  {% set index {{ index+1 }} %}
+                  {% set index = index + 1 %}
             {% endfor %}
         {% endfor %}
         mc = new MarkerClusterer(map, markers, {maxZoom: 19});
