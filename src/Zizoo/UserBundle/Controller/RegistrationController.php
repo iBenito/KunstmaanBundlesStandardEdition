@@ -288,6 +288,6 @@ class RegistrationController extends Controller
         $em->persist($user);
         $em->flush();
         
-        
+        return $this->render('ZizooUserBundle:Registration:facebook_success.html.twig');
     }
 }
