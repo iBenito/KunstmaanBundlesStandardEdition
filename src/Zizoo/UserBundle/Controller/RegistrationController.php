@@ -224,6 +224,29 @@ class RegistrationController extends Controller
         return $this->render('ZizooUserBundle:Registration:register_facebook.html.twig', array('facebookAppID' => $fbAppId));
     }
     
+    
+    private function parse_signed_request($signed_request, $secret) {
+        list($encoded_sig, $payload) = explode('.', $signed_request, 2); 
+
+        // decode the data
+        $sig = base64_url_decode($encoded_sig);
+        $data = json_decode(base64_url_decode($payload), true);
+
+        if (strtoupper($data['algorithm']) !== 'HMAC-SHA256') {
+          error_log('Unknown algorithm. Expected HMAC-SHA256');
+          return null;
+        }
+
+        // check sig
+        $expected_sig = hash_hmac('sha256', $payload, $secret, $raw = true);
+        if ($sig !== $expected_sig) {
+          error_log('Bad Signed JSON signature!');
+          return null;
+        }
+
+        return $data;
+    }
+    
     /**
      * 
      * @author Alex Fuckert <alexf83@gmail.com>
@@ -235,7 +258,12 @@ class RegistrationController extends Controller
                    ->getEntityManager();
         
         
-        var_dump($request);
+        $fbSecret = $this->container->getParameter('zizoo_user.facebook.app_secret');
+        $response = parse_signed_request($request['signed_request'], $fbSecret);
+        
+        var_dump($response);
+        
+        
         
         $user->setPassword();
         $user->setSalt(md5(time()));
