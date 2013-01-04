@@ -226,21 +226,24 @@ class RegistrationController extends Controller
     
     
     private function parse_signed_request($signed_request, $secret) {
-        list($encoded_sig, $payload) = explode('.', $signed_request, 2); 
+ 
+        list($encoded_sig, $payload) = explode('.', $signed_request, 2);
 
         // decode the data
-        $sig = base64_url_decode($encoded_sig);
-        $data = json_decode(base64_url_decode($payload), true);
+        $sig = base64_decode(strtr($encoded_sig, '-_', '+/'));
+
+        $data = json_decode(base64_decode((strtr($payload, '-_', '+/'))), true);
+
 
         if (strtoupper($data['algorithm']) !== 'HMAC-SHA256') {
-          error_log('Unknown algorithm. Expected HMAC-SHA256');
+          //echo 'Unknown algorithm. Expected HMAC-SHA256';
           return null;
         }
 
         // check sig
         $expected_sig = hash_hmac('sha256', $payload, $secret, $raw = true);
         if ($sig !== $expected_sig) {
-          error_log('Bad Signed JSON signature!');
+          //print_r('Bad Signed JSON signature.');
           return null;
         }
 
@@ -257,15 +260,19 @@ class RegistrationController extends Controller
         $em = $this->getDoctrine()
                    ->getEntityManager();
         
-        var_dump($request);
+        $fbRequest = $request->request->get('signed_request', null);
         $fbSecret = $this->container->getParameter('zizoo_user.facebook.app_secret');
-        $response = $this->parse_signed_request($request->request->get('signed_request'), $fbSecret);
+        $response = $this->parse_signed_request($fbRequest, $fbSecret);
         
-        var_dump($response);
+        if ($response==null){
+            die('Error');
+        }
         
         
-        
-        $user->setPassword();
+        $user = new User();
+        $user->setEmail($response['registration']['email']);
+        $user->setUsername($response['registration']['username']);
+        $user->setPassword($response['registration']['password']);
         $user->setSalt(md5(time()));
         $encoder = new MessageDigestPasswordEncoder('sha512', true, 10);
         $password = $encoder->encodePassword($user->getPassword(), $user->getSalt());
@@ -281,18 +288,6 @@ class RegistrationController extends Controller
         $em->persist($user);
         $em->flush();
         
-        
-        $user = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($email);
-        
-        if ($user && $user->getConfirmationToken()===$token){
-            $user->setConfirmationToken(null);
-            $user->setIsActive(1);
-            $em->persist($user);
-            $em->flush();
-            return $this->redirect($this->generateUrl('confirmed'));
-        } else {
-            return $this->redirect($this->generateUrl('register'));
-        }
         
     }
 }
