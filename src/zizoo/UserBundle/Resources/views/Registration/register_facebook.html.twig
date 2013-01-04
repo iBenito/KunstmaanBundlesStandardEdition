@@ -1,0 +1,27 @@
+{# src/Zizoo/UserBundle/Resources/views/Registration/register.html.twig #}
+{% extends 'ZizooUserBundle::layout.html.twig' %}
+
+{% block body %}
+    <div id="fb-root"></div>
+    <script src="http://connect.facebook.net/en_US/all.js"></script>
+    <script>
+        FB.init({
+            appId      : '{{ facebookAppID }}', // App ID
+            status : true, // check login status
+            cookie : true, // enable cookies to allow the server to access the session
+            xfbml  : true  // parse XFBML
+        });
+     </script>
+     <fb:registration
+        fields="[
+           {'name':'name'},
+           {'name':'email'},
+           {'name':'username',       'description':'Username', 'type':'text' },
+ 
+       ]"
+        redirect-uri="{{ url('register_facebook_confirm2') }}"
+        width="530"
+        fb_only="true"
+        fb_register="true">
+    </fb:registration>
+{% endblock %}
