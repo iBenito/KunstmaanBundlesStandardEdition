@@ -257,7 +257,7 @@ class RegistrationController extends Controller
         $em = $this->getDoctrine()
                    ->getEntityManager();
         
-        
+        var_dump($request);
         $fbSecret = $this->container->getParameter('zizoo_user.facebook.app_secret');
         $response = $this->parse_signed_request($request['signed_request'], $fbSecret);
         
