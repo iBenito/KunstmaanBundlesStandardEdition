@@ -259,7 +259,7 @@ class RegistrationController extends Controller
         
         
         $fbSecret = $this->container->getParameter('zizoo_user.facebook.app_secret');
-        $response = parse_signed_request($request['signed_request'], $fbSecret);
+        $response = $this->parse_signed_request($request['signed_request'], $fbSecret);
         
         var_dump($response);
         
