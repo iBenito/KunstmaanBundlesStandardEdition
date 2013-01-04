@@ -44,8 +44,8 @@ register_facebook:
   pattern:    /register-fb
   defaults:   {_controller: ZizooUserBundle:Registration:registerFacebook }  
   
-FB_register_facebook_confirm:
-  pattern:    /FB-register-fb-confirm
+register_facebook_confirm:
+  pattern:    /register-fb-confirm
   defaults:   {_controller: ZizooUserBundle:Registration:confirmFacebook }  
 
 # User
