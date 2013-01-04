@@ -224,5 +224,47 @@ class RegistrationController extends Controller
         return $this->render('ZizooUserBundle:Registration:register_facebook.html.twig', array('facebookAppID' => $fbAppId));
     }
     
-    
+    /**
+     * 
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
+    public function confirmFacebookAction(){
+        $request = $this->getRequest();
+        
+        $em = $this->getDoctrine()
+                   ->getEntityManager();
+        
+        
+        var_dump($request);
+        
+        $user->setPassword();
+        $user->setSalt(md5(time()));
+        $encoder = new MessageDigestPasswordEncoder('sha512', true, 10);
+        $password = $encoder->encodePassword($user->getPassword(), $user->getSalt());
+        $user->setPassword($password);
+        $user->setConfirmationToken(null);
+        $user->setIsActive(1);
+        
+        $zizooUserGroup = $em->getRepository('ZizooUserBundle:Group')->findOneByRole('ROLE_ZIZOO_USER');
+
+        $user->addGroup($zizooUserGroup);
+
+        $em->persist($zizooUserGroup);
+        $em->persist($user);
+        $em->flush();
+        
+        
+        $user = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($email);
+        
+        if ($user && $user->getConfirmationToken()===$token){
+            $user->setConfirmationToken(null);
+            $user->setIsActive(1);
+            $em->persist($user);
+            $em->flush();
+            return $this->redirect($this->generateUrl('confirmed'));
+        } else {
+            return $this->redirect($this->generateUrl('register'));
+        }
+        
+    }
 }
