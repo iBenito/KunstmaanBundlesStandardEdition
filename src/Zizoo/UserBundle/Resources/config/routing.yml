@@ -36,7 +36,14 @@ resend_confirmation:
   requirements:
         _method:  GET|POST
         
-        
+facebook_channel:
+  pattern:    /fb-channel
+  defaults:   {_controller: ZizooUserBundle:Registration:facebookChannel }  
+
+register_facebook:
+  pattern:    /register-fb
+  defaults:   {_controller: ZizooUserBundle:Registration:registerFacebook }  
+  
 
 # User
 login:

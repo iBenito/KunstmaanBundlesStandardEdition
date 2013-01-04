@@ -200,4 +200,29 @@ class RegistrationController extends Controller
     }
     
     
+    public function facebookChannelAction(){
+        return $this->render('ZizooUserBundle:Registration:facebook_channel.html.twig');
+    }
+    
+    /**
+     * Try to register a user with Facebook.
+     * 
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
+    public function registerFacebookAction()
+    {
+        
+        $request = $this->getRequest();
+        
+        // If submit
+        if ($request->isMethod('POST')) {
+           
+        }
+        
+        $fbAppId = $this->container->getParameter('zizoo_user.facebook.app_id');
+        
+        return $this->render('ZizooUserBundle:Registration:register_facebook.html.twig', array('facebookAppID' => $fbAppId));
+    }
+    
+    
 }
