@@ -1,0 +1,57 @@
+{# src/Zizoo/UserBundle/Resources/views/Registration/register.html.twig #}
+{% extends 'ZizooUserBundle::layout.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/zizoouser/js/register.js') }}"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/zizoouser/css/register.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block body %}
+
+    <div>
+        <input type="button" value="With EMAIL account" id="register_email_btn" />
+        or
+        <form action="https://www.facebook.com/dialog/oauth/?client_id={{ facebook_app_id }}&redirect_uri={{ url('register_facebook_confirm') }}&state=zizoo_register&response_type=code&scope=email">
+            <input type="submit" value="Connect with FACEBOOK" id="register_facebook_btn" />
+        </form>
+    </div>
+
+    <div id="register_email">
+        <form novalidate="novalidate" action="{{ path('register')}}" method="post" {{ form_enctype(form) }}>
+            {{ form_errors(form) }}
+
+            <div>
+                {{ form_label(form.user.username) }}
+                {{ form_errors(form.user.username) }}
+                {% if unconfirmed_username %}
+                    <ul>
+                        <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
+                    </ul>
+                {% endif %}
+                {{ form_widget(form.user.username) }}
+            </div>
+
+            <div>
+                {{ form_label(form.user.email) }}
+                {{ form_errors(form.user.email) }}
+                {% if unconfirmed_email %}
+                    <ul>
+                        <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
+                    </ul>
+                {% endif %}
+                {{ form_widget(form.user.email) }}
+            </div>
+
+            {{ form_rest(form) }}
+
+            <input type="submit" />
+        </form>
+    </div>
+{% endblock %}
+
+
