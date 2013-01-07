@@ -206,26 +206,6 @@ class RegistrationController extends Controller
         return $this->render('ZizooUserBundle:Registration:facebook_channel.html.twig');
     }
     
-    /**
-     * Try to register a user with Facebook.
-     * 
-     * @author Alex Fuckert <alexf83@gmail.com>
-     */
-    public function registerFacebookAction()
-    {
-        
-        $request = $this->getRequest();
-        
-        // If submit
-        if ($request->isMethod('POST')) {
-           
-        }
-        
-        $fbAppId = $this->container->getParameter('zizoo_user.facebook.app_id');
-        $fbRedirect = urlencode($router->generate('register_facebook', null, true));
-        return $this->render('ZizooUserBundle:Registration:register_facebook.html.twig', array('facebook_app_id' => $fbAppId, 'facebook_redirect' => $fbRedirect));
-    }
-    
     
     private function parse_signed_request($signed_request, $secret) {
  
@@ -256,7 +236,7 @@ class RegistrationController extends Controller
      * 
      * @author Alex Fuckert <alexf83@gmail.com>
      */
-    public function confirmFacebookAction(){
+    public function registerFacebookAction(){
         $request = $this->getRequest();
         
         $em = $this->getDoctrine()

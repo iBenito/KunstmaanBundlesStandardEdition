@@ -43,10 +43,6 @@ facebook_channel:
 register_facebook:
   pattern:    /register-fb
   defaults:   {_controller: ZizooUserBundle:Registration:registerFacebook }  
-  
-register_facebook_confirm:
-  pattern:    /register-fb-confirm
-  defaults:   {_controller: ZizooUserBundle:Registration:confirmFacebook }  
 
 # User
 login:
