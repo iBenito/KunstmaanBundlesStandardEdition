@@ -13,6 +13,7 @@ class BoatExtension extends \Twig_Extension
     }
 
     public function reservationExists($boat, $from, $to){
+        if ($from=='' || $to=='') return false;
         $reservations = $boat->getReservation();
         if (count($reservations)==0) return false;
         
