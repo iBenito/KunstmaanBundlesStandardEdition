@@ -17,9 +17,7 @@
 
         <input type="button" value="With EMAIL account" id="register_email_btn" />
         or
-        <form method="get" action="https://www.facebook.com/dialog/oauth/?client_id={{ facebook_app_id }}&redirect_uri={{ facebook_redirect }}&state=zizoo_register&response_type=code&scope=email">
-            <input type="submit" value="Connect with FACEBOOK" id="register_facebook_btn" />
-        </form>
+        <input type="button" value="Connect with FACEBOOK" id="register_facebook_btn" />
     </div>
 
     <div id="register_email">
@@ -53,6 +51,13 @@
             <input type="submit" />
         </form>
     </div>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#register_facebook_btn').click(function(){
+                top.location.href = 'https://www.facebook.com/dialog/oauth/?client_id={{ facebook_app_id }}&redirect_uri={{ facebook_redirect }}&state=zizoo_register&response_type=code&scope=email';
+            });
+        });
+    </script>
 {% endblock %}
 
 
