@@ -127,9 +127,9 @@ class RegistrationController extends Controller
                 
             }
         }
-        $router = $this->get("router");
+        $router = $this->get('router');
         $fbAppId    = $this->container->getParameter('zizoo_user.facebook.app_id');
-        $fbRedirect = urlencode($router->generate('register_facebook', null, true));
+        $fbRedirect = urlencode($router->generate('register_facebook', array(), true));
         return $this->render('ZizooUserBundle:Registration:register.html.twig', array('form' => $form->createView(), 'unconfirmed_user' => null, 'unconfirmed_email' => false, 'unconfirmed_username' => false, 'facebook_app_id' => $fbAppId, 'facebook_redirect' => $fbRedirect));
     }
     
@@ -273,10 +273,10 @@ class RegistrationController extends Controller
             if ($code==null || $state==null){
                 die("error");
             }
-            $router = $this->get("router");
+            $router = $this->get('router');
             if ($_SESSION['fb_state'] === $state){
                 $token_url = "https://graph.facebook.com/oauth/access_token?"
-                            . "client_id=" . $fbAppId . "&redirect_uri=" . urlencode($router->generate('register_facebook_confirm', null, true))
+                            . "client_id=" . $fbAppId . "&redirect_uri=" . urlencode($router->generate('register_facebook_confirm', array(), true))
                             . "&client_secret=" . $fbAppSecret . "&code=" . $code;
 
                 $response = file_get_contents($token_url);
