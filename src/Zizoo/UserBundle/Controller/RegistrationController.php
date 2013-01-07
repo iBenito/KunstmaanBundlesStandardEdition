@@ -128,7 +128,8 @@ class RegistrationController extends Controller
             }
         }
         $fbAppId    = $this->container->getParameter('zizoo_user.facebook.app_id');
-        return $this->render('ZizooUserBundle:Registration:register.html.twig', array('form' => $form->createView(), 'unconfirmed_user' => null, 'unconfirmed_email' => false, 'unconfirmed_username' => false, 'facebook_app_id' => $fbAppId));
+        $fbRedirect = urlencode($router->generate('register_facebook', null, true));
+        return $this->render('ZizooUserBundle:Registration:register.html.twig', array('form' => $form->createView(), 'unconfirmed_user' => null, 'unconfirmed_email' => false, 'unconfirmed_username' => false, 'facebook_app_id' => $fbAppId, 'facebook_redirect' => $fbRedirect));
     }
     
     /**
