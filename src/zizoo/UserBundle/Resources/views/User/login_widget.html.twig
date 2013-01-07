@@ -1,0 +1,17 @@
+{% trans_default_domain "labels" %}
+
+{% block body %}
+{% if logged_in %}
+<div id="logged_in_widget">
+<span class="logged_in_as">You are logged in as {{user.username}}</span>
+<a class="change_password" href="{{ path('change_password') }}">Change password</a>
+<a class="logout" href="{{ path('logout') }}">Logout</a>
+</div>
+{% else %}
+<form class="navbar-form pull-right" action="{{ path('login_check') }}" method="post">
+    <input class="span2" type="text" placeholder="Username or email" id="username" name="_username" />
+    <input class="span2" type="password" placeholder="Password" id="password" name="_password" />
+    <button type="submit" class="btn">Sign in</button>
+  </form>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,24 @@
+{# src/Zizoo/UserBundle/Resources/views/User/login.html.twig #}
+{% trans_default_domain "labels" %}
+{% extends 'ZizooUserBundle::layout.html.twig' %}
+
+{% block body %}
+    {% if error %}
+        <div>{{ error.message }}</div>
+    {% endif %}
+
+    <form action="{{ path('login_check') }}" method="post">
+        <label for="username">{% trans %}zizoo_user.label.username_or_email{% endtrans %}:</label>
+        <input type="text" id="username" name="_username" value="{{ last_username }}" />
+
+        <label for="password">{% trans %}zizoo_user.label.password{% endtrans %}:</label>
+        <input type="password" id="password" name="_password" />
+
+        {#
+            If you want to control the URL the user is redirected to on success (more details below)
+            <input type="hidden" name="_target_path" value="/account" />
+        #}
+
+        <button type="submit">{% trans %}zizoo_user.label.login{% endtrans %}</button>
+    </form>
+{% endblock %}
