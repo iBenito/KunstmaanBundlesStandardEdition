@@ -6,6 +6,11 @@ services:
         class: Zizoo\BoatBundle\Twig\ImageExtension
         tags:
             - { name: twig.extension }
+            
+    zizoo_boat.twig.boat_extension:
+        class: Zizoo\BoatBundle\Twig\BoatExtension
+        tags:
+            - { name: twig.extension }
 #    zizoo_address.example:
 #        class: %zizoo_address.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]

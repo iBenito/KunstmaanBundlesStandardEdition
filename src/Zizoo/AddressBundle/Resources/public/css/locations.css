@@ -38,6 +38,10 @@
     display: block;
 }
 
+#boats .boat.booked {
+    opacity: 0.5;
+}
+
 #unique_locations_chzn .country, #unique_locations .country {
     font-weight: bold;
 }

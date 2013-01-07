@@ -3,7 +3,7 @@
     {% if loop.index0 % page_size == 0 %}
     <div class="page{% if (loop.index0 / page_size)+1 == page %} current {% endif %}" id="page_{{ (loop.index0 / page_size)+1 }}">
     {% endif %}
-        <article class="boat">
+        <article class="boat{% if boat|reservationExists(res_from, res_to)==true %} booked{% endif %}">
             <header>
                 <h2>{{ boat.title }}</h2>
             </header>
@@ -33,7 +33,13 @@
 
             <section class="images" id="images">
                 <h3>{% trans %}zizoo_boat.label.images{% endtrans %}</h3>
-                {% include 'ZizooBoatBundle:Image:index.html.twig' with { 'images': boat.image } %}
+                {% for image in boat.image %}
+                    <article class="image" id="image-{{ image.id }}">
+                        <img src="{{ asset(image|imageWebPath)| imagine_filter('thumb_75x75') }}" alt="{{ image.path }} image not found" class="large" />
+                    </article>
+                {% else %}
+                    <p>There are no images for this boat.</p>
+                {% endfor %}
             </section>
         </article>
     {% if loop.index % page_size == 0 or loop.last %}
@@ -58,27 +64,29 @@
         {% set index = 0 %}
         mc.clearMarkers();
         {% for boat in boats %}
-            {% for address in boat.addresses %}
-                infoWindows.push(new google.maps.InfoWindow({
-                    content: {% include "ZizooAddressBundle:Address:locations_boat_info_window.html.twig" with {'boat': boat } %}
-                }));
-                markers.push(new google.maps.Marker({
-                    title: '{{ boat.name }}',
-                    position: new google.maps.LatLng(
-                         {{ address.lat }}, {{ address.lng }}),
-                         clickable: true,
-                         draggable: false,
-                         flat: true
-                }));
-                google.maps.event.addListener(markers[{{ index }}], 'click', function() {
-                    if (lastOpenWindow!=-1){
-                        infoWindows[lastOpenWindow].close();
-                    }
-                    infoWindows[{{ index }}].open(map, markers[{{ index }}]);
-                    lastOpenWindow = {{ index }};
-                  });
-                  {% set index = index + 1 %}
-            {% endfor %}
+            {% if boat|reservationExists(res_from, res_to)!=true %}
+                {% for address in boat.addresses %}
+                    infoWindows.push(new google.maps.InfoWindow({
+                        content: {% include "ZizooAddressBundle:Address:locations_boat_info_window.html.twig" with {'boat': boat } %}
+                    }));
+                    markers.push(new google.maps.Marker({
+                        title: '{{ boat.name }}',
+                        position: new google.maps.LatLng(
+                             {{ address.lat }}, {{ address.lng }}),
+                             clickable: true,
+                             draggable: false,
+                             flat: true
+                    }));
+                    google.maps.event.addListener(markers[{{ index }}], 'click', function() {
+                        if (lastOpenWindow!=-1){
+                            infoWindows[lastOpenWindow].close();
+                        }
+                        infoWindows[{{ index }}].open(map, markers[{{ index }}]);
+                        lastOpenWindow = {{ index }};
+                      });
+                      {% set index = index + 1 %}
+                {% endfor %}
+            {% endif %}
         {% endfor %}
         mc = new MarkerClusterer(map, markers, {maxZoom: 19});
         

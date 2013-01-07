@@ -1,0 +1,12 @@
+{% trans_default_domain "labels" %}
+            <div id="unavailable_boats">
+            {% for unvailable_boat in unavailable_boats %}
+                {% if loop.index0 % page_size == 0 %}
+                <div class="unavailable_page{% if (loop.index0 / page_size)+1 == page %} current {% endif %}" id="unavailable_page_{{ (loop.index0 / page_size)+1 }}">
+                {% endif %}
+                    {% include "ZizooAddressBundle:Address:locations_boat.html.twig" with {'boat': unvailable_boat } %}
+                {% if loop.index % page_size == 0 or loop.last %}
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>

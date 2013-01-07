@@ -109,36 +109,26 @@ class AddressController extends Controller
      */
     public function locationsAction(Request $request){
         $page       = $request->query->get('page', '1');
-        $pageSize   = $request->query->get('page_size', '1');
+        $pageSize   = $request->query->get('page_size', '2');
         $search     = $request->query->get('search', '-1');
         $resFrom    = $request->query->get('reservation_from', '');
         $resTo      = $request->query->get('reservation_to', '');
         $numGuests  = $request->query->get('num_guests', '');
         
-        $resFrom = \DateTime::createFromFormat('d/m/Y', $resFrom);
-        $resTo = \DateTime::createFromFormat('d/m/Y', $resTo);
-        
-        if ($resFrom && $resTo){
-            $resFrom    = $resFrom->format('Y-m-d') . ' 00:00:00';
-            $resTo      = $resTo->format('Y-m-d') . ' 23:59:59';
-        } else {
-            $resFrom    = '';
-            $resTo      = '';
-        }
-        
+              
         $em = $this->getDoctrine()
                    ->getEntityManager();
         
-        $boats = $em->getRepository('ZizooBoatBundle:Boat')->searchBoatAvailability($search, $resFrom, $resTo, $numGuests);
-        $numBoats = count($boats);
-        $numPages = floor($numBoats / $pageSize);
-        if ($numBoats % $pageSize > 0){
+        $availableBoats = $em->getRepository('ZizooBoatBundle:Boat')->searchBoatAvailability($search, $numGuests);
+        $numAvailableBoats = count($availableBoats);
+        $numPages = floor($numAvailableBoats / $pageSize);
+        if ($numAvailableBoats % $pageSize > 0){
             $numPages++;
         }
         
         if ($request->isXmlHttpRequest()){
             return $this->render('ZizooAddressBundle:Address:locations_boats.html.twig', array(
-                'boats'         => $boats,
+                'boats'         => $availableBoats,
                 'page'          => $page,
                 'page_size'     => $pageSize,
                 'num_pages'     => $numPages,
@@ -149,7 +139,7 @@ class AddressController extends Controller
             ));
         } else {
             return $this->render('ZizooAddressBundle:Address:locations.html.twig', array(
-                'boats'         => $boats,
+                'boats'         => $availableBoats,
                 'page'          => $page,
                 'page_size'     => $pageSize,
                 'num_pages'     => $numPages,
