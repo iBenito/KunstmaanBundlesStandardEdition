@@ -16,7 +16,7 @@
     <div>
         <input type="button" value="With EMAIL account" id="register_email_btn" />
         or
-        <form action="https://www.facebook.com/dialog/oauth/?client_id={{ facebook_app_id }}&redirect_uri={{ facebook_redirect }}&state=zizoo_register&response_type=code&scope=email">
+        <form method="get" action="https://www.facebook.com/dialog/oauth/?client_id={{ facebook_app_id }}&redirect_uri={{ facebook_redirect }}&state=zizoo_register&response_type=code&scope=email">
             <input type="submit" value="Connect with FACEBOOK" id="register_facebook_btn" />
         </form>
     </div>
