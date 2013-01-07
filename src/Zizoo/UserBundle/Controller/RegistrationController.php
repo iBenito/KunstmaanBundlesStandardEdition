@@ -220,8 +220,8 @@ class RegistrationController extends Controller
         }
         
         $fbAppId = $this->container->getParameter('zizoo_user.facebook.app_id');
-        
-        return $this->render('ZizooUserBundle:Registration:register_facebook.html.twig', array('facebookAppID' => $fbAppId));
+        $fbRedirect = urlencode($router->generate('register_facebook', null, true));
+        return $this->render('ZizooUserBundle:Registration:register_facebook.html.twig', array('facebook_app_id' => $fbAppId, 'facebook_redirect'));
     }
     
     
