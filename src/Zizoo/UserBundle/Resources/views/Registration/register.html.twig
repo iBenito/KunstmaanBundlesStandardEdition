@@ -14,6 +14,7 @@
 {% block body %}
 
     <div>
+
         <input type="button" value="With EMAIL account" id="register_email_btn" />
         or
         <form method="get" action="https://www.facebook.com/dialog/oauth/?client_id={{ facebook_app_id }}&redirect_uri={{ facebook_redirect }}&state=zizoo_register&response_type=code&scope=email">
