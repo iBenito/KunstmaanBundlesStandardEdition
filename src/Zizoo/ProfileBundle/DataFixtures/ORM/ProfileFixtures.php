@@ -44,6 +44,8 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
         $manager->persist($profileAddress2);
         $manager->persist($profile);
         
+        $this->addReference('profile-1', $profile);
+        
         $profile = new Profile();
         $profile->setFirstName('Benito');
         $profile->setLastName('Gonzo');
@@ -65,6 +67,7 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
         $manager->persist($profileAddress);
         $manager->persist($profile);
         
+        $this->addReference('profile-2', $profile);
         
         $profile = new Profile();
         $profile->setFirstName('Sinan');
@@ -81,6 +84,8 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
         
         $manager->persist($profileAddress);
         $manager->persist($profile);
+        
+        $this->addReference('profile-3', $profile);
         
         $manager->flush();
 

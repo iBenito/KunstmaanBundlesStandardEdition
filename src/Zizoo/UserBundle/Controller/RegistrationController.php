@@ -127,8 +127,8 @@ class RegistrationController extends Controller
                 
             }
         }
-        
-        return $this->render('ZizooUserBundle:Registration:register.html.twig', array('form' => $form->createView(), 'unconfirmed_user' => null, 'unconfirmed_email' => false, 'unconfirmed_username' => false));
+        $fbAppId    = $this->container->getParameter('zizoo_user.facebook.app_id');
+        return $this->render('ZizooUserBundle:Registration:register.html.twig', array('form' => $form->createView(), 'unconfirmed_user' => null, 'unconfirmed_email' => false, 'unconfirmed_username' => false, 'facebook_app_id' => $fbAppId));
     }
     
     /**
@@ -260,6 +260,35 @@ class RegistrationController extends Controller
         $em = $this->getDoctrine()
                    ->getEntityManager();
         
+        $fbAppId       = $this->container->getParameter('zizoo_user.facebook.app_id');
+        $fbAppSecret   = $this->container->getParameter('zizoo_user.facebook.app_secret');
+        
+        if (!array_key_exists('fb_state', $_SESSION)){
+            $_SESSION['fb_state'] = md5(uniqid(rand(), TRUE)); // CSRF protection
+        } else {
+            $code   = $request->request->get('code', null);
+            $state  = $request->request->get('state', null);
+            if ($code==null || $state==null){
+                die("error");
+            }
+            if ($_SESSION['fb_state'] === $state){
+                $token_url = "https://graph.facebook.com/oauth/access_token?"
+                            . "client_id=" . $fbAppId . "&redirect_uri=" . urlencode($router->generate('register_facebook_confirm', null, true))
+                            . "&client_secret=" . $fbAppSecret . "&code=" . $code;
+
+                $response = file_get_contents($token_url);
+                $params = null;
+                parse_str($response, $params);
+                var_dump($params);
+                exit();
+            } else {
+                die("error");
+            }
+        }
+        
+        
+        
+        /**
         $fbRequest = $request->request->get('signed_request', null);
         $fbSecret = $this->container->getParameter('zizoo_user.facebook.app_secret');
         $response = $this->parse_signed_request($fbRequest, $fbSecret);
@@ -288,6 +317,8 @@ class RegistrationController extends Controller
         $em->persist($user);
         $em->flush();
         
+         *
+         */
         return $this->render('ZizooUserBundle:Registration:facebook_success.html.twig');
     }
 }

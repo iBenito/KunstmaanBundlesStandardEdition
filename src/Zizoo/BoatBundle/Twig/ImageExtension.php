@@ -19,7 +19,7 @@ class ImageExtension extends \Twig_Extension
 
     public function getName()
     {
-        return 'acme_extension';
+        return 'image_extension';
     }
 }
 ?>

@@ -2,8 +2,10 @@
 
 namespace Zizoo\BoatBundle\Entity;
 
+use Zizoo\BoatBundle\Extensions\DoctrineExtensions\CustomWalker\SortableNullsWalker;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\ORM\Query;
 
 /**
  * BoatRepository
@@ -35,7 +37,7 @@ class BoatRepository extends EntityRepository
      * @return Doctrine\ORM\AbstractQuery[] Results
      * @author Alex Fuckert <alexf83@gmail.com>
      */
-    public function searchBoatAvailability($search='-1', $resFrom='', $resTo='', $numGuests='')
+    public function searchBoatAvailability($search='-1', $numGuests='')
     {
         // Join boat, image, address, country and reservation
         $qb = $this->createQueryBuilder('b')
@@ -56,28 +58,7 @@ class BoatRepository extends EntityRepository
                ->setParameter('search', $search);
             $firstWhere = true;
         }
-        
-        // Optionally restrict by date range
-        if ($resFrom!='' && $resTo!=''){
-            // Get boat ids of all reservations. These will be excluded from results.
-            $reservations = $this->getEntityManager()->getRepository('ZizooBookingBundle:Reservation')->getReservationBoatIds($resFrom, $resTo);                        
-            
-            $reservationsArr = array();
-            foreach ($reservations as $reservation){
-                $reservationsArr[] = $reservation->getBoat()->getId();
-            }
-            
-            if (count($reservationsArr)>0){
-                if ($firstWhere){
-                    $qb->andWhere($qb->expr()->notIn('b.id',   implode(',', $reservationsArr)));
-                } else {
-                    $qb->where($qb->expr()->notIn('b.id', implode(',', $reservationsArr)));
-                }
-            }
-           
-            $firstWhere = true;
-        }
-        
+
         // Optionally restrict by number of guests
         if ($numGuests!=''){
             if ($firstWhere){
@@ -88,10 +69,20 @@ class BoatRepository extends EntityRepository
             $qb->setParameter('num_guests', $numGuests);
             $firstWhere = true;
         }
+        
+        
+        //$qb->getQuery();
+        
          
-        $qb->addOrderBy('b.created', 'DESC');
+        $qb->addOrderBy('r.id, b.created', 'ASC');
+
         
         return $qb->getQuery()
+                  ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'Zizoo\BoatBundle\Extensions\DoctrineExtensions\CustomWalker\SortableNullsWalker')
+                  ->setHint('SortableNullsWalker.fields',
+                        array(
+                            'r.id' => SortableNullsWalker::NULLS_FIRST,
+                        ))
                   ->getResult();
     }
     

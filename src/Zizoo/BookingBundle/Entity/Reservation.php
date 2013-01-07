@@ -201,4 +201,5 @@ class Reservation
     {
         return $this->status;
     }
+
 }

@@ -1,0 +1,3 @@
+zizoo_message_homepage:
+    pattern:  /hello/{name}
+    defaults: { _controller: ZizooMessageBundle:Default:index }
