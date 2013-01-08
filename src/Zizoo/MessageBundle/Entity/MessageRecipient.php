@@ -42,7 +42,7 @@ class MessageRecipient
 
     
     /**
-     * @ORM\ManyToOne(targetEntity="Zizoo\MessageBundle\Entity\Message", inversedBy="recipient")
+     * @ORM\ManyToOne(targetEntity="Zizoo\MessageBundle\Entity\Message", inversedBy="recipients")
      */
     private $message;
 

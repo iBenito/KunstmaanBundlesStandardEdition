@@ -3,3 +3,5 @@ zizoo_user.label.username_or_email: Username or email
 zizoo_user.label.password: Password
 
 zizoo_user.label.login: Login
+
+zizoo_user.label.remember_me: Remember me

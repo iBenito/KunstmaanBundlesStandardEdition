@@ -58,6 +58,11 @@ class User implements AdvancedUserInterface, \Serializable
     private $confirmationToken;
     
     
+    /**
+     * @ORM\Column(name="fb_uid", type="string", length=255, nullable=true)
+     */
+    private $facebookUID;
+    
     public function isAccountNonExpired()
     {
         return true;
@@ -338,5 +343,28 @@ class User implements AdvancedUserInterface, \Serializable
     public function getProfile()
     {
         return $this->profile;
+    }
+
+    /**
+     * Set facebookUID
+     *
+     * @param string $facebookUID
+     * @return User
+     */
+    public function setFacebookUID($facebookUID)
+    {
+        $this->facebookUID = $facebookUID;
+    
+        return $this;
+    }
+
+    /**
+     * Get facebookUID
+     *
+     * @return string 
+     */
+    public function getFacebookUID()
+    {
+        return $this->facebookUID;
     }
 }

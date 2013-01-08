@@ -10,15 +10,23 @@ use Zizoo\UserBundle\Form\Type\UserNewPasswordType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class UserController extends Controller
 {
+    
+    private function doLogin($user){
+        $token = new UsernamePasswordToken($user, $user->getPassword(), 'main', $user->getRoles());
+        $securityContext = $this->get('security.context');
+        $securityContext->setToken($token);
+    }
+    
     /**
      * Login form.
      * 
      * @author Alex Fuckert <alexf83@gmail.com>
      */
-    public function loginAction()
+    public function loginAction($hidden=false)
     {
         $request = $this->getRequest();
         $session = $request->getSession();
@@ -30,12 +38,67 @@ class UserController extends Controller
             $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
             $session->remove(SecurityContext::AUTHENTICATION_ERROR);
         }
-
-        return $this->render('ZizooUserBundle:User:login.html.twig', array(
+        $routeName = $request->get('_route');
+        $facebook = $this->get('facebook');
+        
+        if ($hidden){
+            $template = 'ZizooUserBundle:User:login_hidden.html.twig';
+        } else {
+            $template = 'ZizooUserBundle:User:login.html.twig';
+        }
+        return $this->render($template, array(
             // last username entered by the user
             'last_username' => $session->get(SecurityContext::LAST_USERNAME),
             'error'         => $error,
+            'current_route' => $routeName,
+            'facebook'      => $facebook
         ));
+    }
+    
+    public function facebookLoginCheckAction(){
+        $params = array(
+            'ok_session' => 'ok_session',
+            'no_user' => 'no_user',
+            'no_session' => 'no_session'
+        );
+
+        $facebook = $this->get('facebook');
+        $user = $facebook->getUser();
+        try {
+            $status = $facebook->getLoginStatusUrl($params);
+            return $this->render('ZizooUserBundle:User:dummy.html.twig');
+        } catch (FacebookApiException $e){
+            return $this->render('ZizooUserBundle:User:dummy.html.twig');
+        }
+    }
+    
+    public function loginFacebookAction(){
+        $facebook = $this->get('facebook');
+        try {
+            $obj = $facebook->api('/me');
+        } catch (FacebookApiException $e){
+            return $this->render('ZizooUserBundle:Registration:register_facebook_forward.html.twig', array( 'action' => 'login' ));
+        }
+        
+        if (!array_key_exists('id', $obj)){
+            return $this->render('ZizooUserBundle:Registration:register_facebook_forward.html.twig', array( 'action' => 'login' ));
+        }
+        
+        $em = $this->getDoctrine()
+                    ->getEntityManager();
+            
+        $user = $em->getRepository('ZizooUserBundle:User')->findOneByFacebookUID($obj['id']);
+        
+        if ($user){
+            $request    = $this->getRequest();
+            $forward        =  $request->query->get('forward', null);
+            if (!$forward) $forward = 'ZizooBaseBundle_dashboard';
+            $this->doLogin($user);
+            return $this->render('ZizooUserBundle:Registration:register_facebook_forward.html.twig', array( 'action' => $forward ));
+        } else {
+            return $this->render('ZizooUserBundle:Registration:register_facebook_forward.html.twig', array( 'action' => 'login' ));
+        }
+        
     }
     
     /**
