@@ -9,4 +9,7 @@
 
 #logged_in_widget .change_password {
     margin-right: 15px;
+
+#login_hidden {
+	display: none;
 }
