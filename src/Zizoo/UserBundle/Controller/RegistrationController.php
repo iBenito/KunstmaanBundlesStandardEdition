@@ -386,7 +386,7 @@ class RegistrationController extends Controller
         }
         
         $existingUser->setFacebookUID($obj['id']);
-        $existingUser->setIsAtive(1);
+        $existingUser->setIsActive(1);
         $existingUser->setConfirmationToken(null);
         $em->persist($existingUser);
         $em->flush();
