@@ -1,4 +1,7 @@
 services:
+    facebook:
+        class: Zizoo\UserBundle\Service\Facebook
+        arguments: [{ appId: %zizoo_user.facebook.app_id%, secret: %zizoo_user.facebook.app_secret% }]
 #    zizoo_user.example:
 #        class: %zizoo_user.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]

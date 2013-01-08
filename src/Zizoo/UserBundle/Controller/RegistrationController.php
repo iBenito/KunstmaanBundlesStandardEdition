@@ -127,10 +127,15 @@ class RegistrationController extends Controller
                 
             }
         }
+        $state = md5(uniqid(rand(), TRUE)); // CSRF protection
+        $_SESSION['fb_state'] = $state;
         $router = $this->get('router');
         $fbAppId    = $this->container->getParameter('zizoo_user.facebook.app_id');
-        $fbRedirect = urlencode($router->generate('register_facebook', array(), true));
-        return $this->render('ZizooUserBundle:Registration:register.html.twig', array('form' => $form->createView(), 'unconfirmed_user' => null, 'unconfirmed_email' => false, 'unconfirmed_username' => false, 'facebook_app_id' => $fbAppId, 'facebook_redirect' => $fbRedirect));
+        $fbRedirect = $router->generate('register_facebook', array(), true);
+        
+        $facebook = $this->get('facebook');
+        
+        return $this->render('ZizooUserBundle:Registration:register.html.twig', array('form' => $form->createView(), 'unconfirmed_user' => null, 'unconfirmed_email' => false, 'unconfirmed_username' => false, 'facebook_app_id' => $fbAppId, 'facebook_redirect' => $fbRedirect, 'facebook_state' => $state, 'facebook' => $facebook));
     }
     
     /**
@@ -248,25 +253,55 @@ class RegistrationController extends Controller
         if (!array_key_exists('fb_state', $_SESSION)){
             $_SESSION['fb_state'] = md5(uniqid(rand(), TRUE)); // CSRF protection
         } else {
-            $code   = $request->request->get('code', null);
-            $state  = $request->request->get('state', null);
+            $code   = $request->query->get('code', null);
+            $state  = $request->query->get('state', null);
             if ($code==null || $state==null){
                 die("error");
             }
             $router = $this->get('router');
             if ($_SESSION['fb_state'] === $state){
-                $token_url = "https://graph.facebook.com/oauth/access_token?"
-                            . "client_id=" . $fbAppId . "&redirect_uri=" . urlencode($router->generate('register_facebook_confirm', array(), true))
-                            . "&client_secret=" . $fbAppSecret . "&code=" . $code;
+                $token_url = "https://graph.facebook.com/oauth/access_token";
 
-                $response = file_get_contents($token_url);
-                $params = null;
-                parse_str($response, $params);
-                var_dump($params);
-                exit();
+                $ch=curl_init();
+                curl_setopt($ch,CURLOPT_URL,$token_url);
+                curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, "client_id=" . $fbAppId . "&redirect_uri=" . urlencode($router->generate('register_facebook', array(), true))."&client_secret=" . $fbAppSecret . "&code=" . $code);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                $buffer = curl_exec($ch);
+                curl_close($ch);    
+                if ($buffer === false){
+                    die ('Curl error #'.curl_errno($ch).': ' . curl_error($ch));
+                } else if(strpos($buffer, 'access_token=') === 0){
+                    //if you requested offline acces save this token to db 
+                    //for use later   
+                    $token = str_replace('access_token=', '', $buffer);
+
+                    //this is just to demo how to use the token and 
+                    //retrieves the users facebook_id
+                    $url = 'https://graph.facebook.com/me';
+                    $ch=curl_init();
+                    curl_setopt($ch,CURLOPT_URL,$url);
+                    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,2);
+                    curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+                    curl_setopt($ch,CURLOPT_POSTFIELDS, 'access_token='.$token);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                    $buffer = curl_exec($ch);
+                    curl_close($ch);
+                    $jobj = json_decode($buffer);
+                    //$facebook_id = $jobj->id;
+                    
+                    
+                    //$_SESSION['fb_access_token'] = $params['access_token'];
+                    
+                    var_dump($jobj);
+                    exit();
+                } else{
+                    //do error stuff
+                }
             } else {
-                die("error");
+               //do error stuff
             }
+                
         }
         
         

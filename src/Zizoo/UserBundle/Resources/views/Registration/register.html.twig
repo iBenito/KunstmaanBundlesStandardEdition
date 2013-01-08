@@ -54,7 +54,9 @@
     <script type="text/javascript">
         $(document).ready(function(){
             $('#register_facebook_btn').click(function(){
-                top.location.href = 'https://www.facebook.com/dialog/oauth/?client_id={{ facebook_app_id }}&redirect_uri={{ facebook_redirect }}&state=zizoo_register&response_type=code&scope=email';
+                //top.location.href = 'https://www.facebook.com/dialog/oauth/?client_id={{ facebook_app_id }}&redirect_uri={{ facebook_redirect }}&state={{ facebook_state }}&response_type=code&scope=email';
+                top.location.href = '{{ facebook.loginUrl({ scope: 'email', redirect_uri: facebook_redirect, display: 'popup' }) }}';
+                //console.log('{{ facebook.loginUrl({ redirect_uri: facebook_redirect }) }}');
             });
         });
     </script>
