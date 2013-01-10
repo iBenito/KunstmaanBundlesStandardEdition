@@ -1,0 +1,327 @@
+<div id="menu_hidden" style="display: none">
+    <div id="login_hidden" class="empty"></div>
+    <div id="register_hidden" class="empty"></div>
+    <div id="facebook_register_hidden" class="empty"></div>
+    <div id="forgot_password_hidden" class="empty"></div>
+</div>
+<script type="text/javascript">
+    
+    function getLoginWidget(){
+        $('#login_widget').block({ message: '' });
+        $.ajax({
+            type: 'get',
+            url: '{{ path('ZizooBaseBundle_login_widget') }}',
+            success: function(data, textStatus, XHR){
+                $('#login_widget').html(data);
+                loginFormListeners();
+                registerFormListeners();
+                facebookFormListeners();
+                $('#login_inner').unblock();
+                closeAllDialogs();
+            }
+        });
+    }
+    
+    function openLoginDialog(){
+        $('#login_inner_ajax').dialog({
+            modal: true,
+            closeOnEscape: false,
+            resizable: false
+        });
+    }
+    
+    function closeLoginDialog(){
+        if ($('#login_inner_ajax').is(':data(dialog)')){
+            $('#login_inner_ajax').dialog('close');
+        }
+        $('#login_inner_ajax').unblock();
+    }
+    
+    function openRegisterDialog(){
+        $('#register_inner_ajax').dialog({
+            modal: true,
+            closeOnEscape: false,
+            resizable: false
+        });
+    }
+    
+    function closeRegisterDialog(){
+        if ($('#register_inner_ajax').is(':data(dialog)')){
+            $('#register_inner_ajax').dialog('close');
+        }
+        $('#register_inner_ajax').unblock();
+    }
+    
+    function openFacebookRegisterDialog(){
+        $('#facebook_register_inner_ajax').dialog({
+            modal: true,
+            closeOnEscape: false,
+            resizable: false
+        });
+    }
+    
+    function closeFacebookRegisterDialog(){
+        if ($('#facebook_register_inner_ajax').is(':data(dialog)')){
+            $('#facebook_register_inner_ajax').dialog('close');
+        }
+        $('#facebook_register_inner_ajax').unblock();
+    }
+    
+    function openForgotPasswordDialog(){
+        $('#forgot_password_inner_ajax').dialog({
+            modal: true,
+            closeOnEscape: false,
+            resizable: false
+        });
+    }
+    
+    function closeForgotPasswordDialog(){
+        if ($('#forgot_password_inner_ajax').is(':data(dialog)')){
+            $('#forgot_password_inner_ajax').dialog('close');
+        }
+        $('#forgot_password_inner_ajax').unblock();
+    }
+    
+    function closeAllDialogs(){
+        closeLoginDialog();
+        closeRegisterDialog();
+        closeFacebookRegisterDialog();
+        closeForgotPasswordDialog();
+    }
+    
+    function loginFormListeners(){
+        $('#login_inner_ajax .login_form').live('submit', function(){
+            $('#login_inner_ajax').block({ message: '' });
+            $.ajax({
+                type: 'post', 
+                url: '{{ path('login_check') }}',
+                data:$('#login_inner_ajax .login_form').serialize(),
+                success: function(data, textStatus, XHR){
+                    var login = $(data).find('#login_inner_ajax');
+                    if (login.length>0){
+                        $('#login_inner_ajax').html(login);
+                        $('#login_inner_ajax .login_facebook_btn').click(function(){
+                            $('#login_inner_ajax').block({ message: '' });
+                            window.open($(this).attr('href'), 'Login with Facebook', "height=200,width=200");
+                        });
+                        $('#login_inner_ajax .forgot_password_link').click(function(){
+                            closeAllDialogs();
+                            
+                            if ($('#forgot_password_hidden').hasClass('empty')){
+                                $.blockUI({ message: '' });
+                                $.ajax({
+                                    type: 'get',
+                                    url: '{{ path('forgot_password') }}',
+                                    success: function(data, textStatus, XHR){
+                                        $('#forgot_password_hidden').removeClass('empty').html($(data).find('#forgot_password_inner_ajax'));
+                                        openForgotPasswordDialog();
+                                        $.unblockUI();
+                                    },
+                                    error: function(){
+                                          return true;
+                                    }
+                                });
+                            } else {
+                                openForgotPasswordDialog();
+                            }
+                            return false;
+                        });
+                        $('#login_inner_ajax').unblock();
+                    } else {
+                        getLoginWidget();
+                    }
+                }
+            });
+            return false;
+        });
+        
+        $('#login_link').unbind('click').click(function(){
+            if ($('#login_hidden').hasClass('empty')){
+                $.blockUI({ message: '' });
+                $.ajax({
+                    type: 'get',
+                    url: '{{ path('login') }}',
+                    success: function(data, textStatus, XHR){
+                        $('#login_hidden').removeClass('empty').html($(data).find('#login_inner_ajax'));
+                        $('#login_inner_ajax .login_facebook_btn').click(function(){
+                            $('#login_inner_ajax').block({ message: '' });
+                            window.open($(this).attr('href'), 'Login with Facebook', "height=200,width=200");
+                        });
+                        openLoginDialog();
+                        $.unblockUI();
+                    },
+                    error: function(){
+                          return true;
+                    }
+                });
+            } else {
+                openLoginDialog();
+            }
+            return false;
+        });
+    }
+    
+    function registerFormListeners(){
+        $('#register_inner_ajax .register_form').live('submit', function(){
+            $('#register_inner_ajax').block({ message: '' });
+            $.ajax({
+                type: 'post', 
+                url: '{{ path('register') }}',
+                data: $('#register_inner_ajax .register_form').serialize(),
+                success: function(data, textStatus, XHR){
+                    $('#register_inner_ajax').html($(data).find('#register_inner_ajax'));
+                    $('#register_inner_ajax .register_facebook_btn').click(function(){
+                        window.open($(this).attr('href'), 'Register with Facebook', "height=200,width=200");
+                    });
+                    $('#register_inner_ajax .register_email_btn').click(function(){
+                        $(this).parents('div.register').find('.register_email').slideDown(); 
+                     });
+                    $('#register_inner_ajax').unblock();
+                }
+            });
+            return false;
+        });
+        
+        $('#register_link').unbind('click').click(function(){
+             if ($('#register_hidden').hasClass('empty')){
+                $.blockUI({ message: '' });
+                $.ajax({
+                    type: 'get',
+                    url: '{{ path('register') }}',
+                    success: function(data, textStatus, XHR){
+                        $('#register_hidden').removeClass('empty').html($(data).find('#register_inner_ajax'));
+                        $('#register_hidden .register_email').hide();
+                        $('#register_hidden .register_facebook_btn').click(function(){
+                            //top.location.href = $(this).attr('href');
+                            $('#register_inner_ajax').block({ message: '' });
+                            window.open($(this).attr('href'), 'Register with Facebook', "height=200,width=200");
+                        });
+                        $('#register_hidden .register_email_btn').click(function(){
+                            $(this).parents('div.register').find('.register_email').slideDown(); 
+                         });
+                        openRegisterDialog();
+                        $.unblockUI();
+                    },
+                    error: function(){
+                          return true;
+                    }
+                });
+            } else {
+                openRegisterDialog();
+            }
+            return false;
+        });
+    }
+    
+    function facebookFormListeners(){
+        $('#facebook_register_inner_ajax .facebook_register_form').live('submit', function(){
+            $('#facebook_register_inner_ajax').block({ message: '' });
+            $.ajax({
+                type: 'post', 
+                url: $('#facebook_register_inner_ajax .facebook_register_form').attr('action'),
+                data: $('#facebook_register_inner_ajax .facebook_register_form').serialize(),
+                success: function(data, textStatus, XHR){
+                    var register = $(data).find('#facebook_register_inner_ajax');
+                    if (register.length>0){
+                        $('#facebook_register_inner_ajax').html(register);
+                        $('#facebook_register_inner_ajax').unblock();
+                        
+                        var status = $('#facebook_register_inner_ajax').find('#status').val();
+                        if (status=='success' || status=='merged'){
+                            getLoginWidget();
+                        }
+                    } 
+                }
+            });
+            return false;
+        });
+    }
+    
+    function forgotPasswordFormListeners(){
+        $('#forgot_password_inner_ajax .forgot_password_form').live('submit', function(){
+            $('#forgot_password_inner_ajax').block({ message: '' });
+            $.ajax({
+                type: 'post', 
+                url: '{{ path('forgot_password') }}',
+                data:$('#forgot_password_inner_ajax .forgot_password_form').serialize(),
+                success: function(data, textStatus, XHR){
+                    var p = $(data).find('#forgot_password_inner_ajax');
+                    $('#forgot_password_inner_ajax').html(p);
+                }
+            });
+            return false;
+        });
+        
+    }
+    
+    function register_facebook_newCallback(){
+        //closeRegisterDialog();
+        closeAllDialogs();
+        $.blockUI({ message: '' });
+        $.ajax({
+            type: 'get',
+            url: '{{ path('register_facebook_new') }}',
+            success: function(data, textStatus, XHR){
+                $('#facebook_register_hidden').removeClass('empty').html($(data).find('#facebook_register_inner_ajax'));
+                $.unblockUI();
+                openFacebookRegisterDialog();
+            }
+        });
+    }
+    
+    function register_facebook_linkCallback(){
+        //closeRegisterDialog();
+        closeAllDialogs();
+        $.blockUI({ message: '' });
+        $.ajax({
+            type: 'get',
+            url: '{{ path('register_facebook_link') }}',
+            success: function(data, textStatus, XHR){
+                $('#facebook_register_hidden').removeClass('empty').html($(data).find('#facebook_register_inner_ajax'));
+                $.unblockUI();
+                openFacebookRegisterDialog();
+            }
+        });
+    }
+        
+    function loginCallback(){
+        //closeLoginDialog();
+        closeAllDialogs();
+        getLoginWidget();
+    }
+    
+    function login_facebook_failCallback(){
+        $.ajax({
+            type: 'get',
+            url: '{{ path('login_facebook_fail') }}',
+            success: function(data, textStatus, XHR){
+                $('#login_inner_ajax').html($(data).find('#login_inner_ajax'));
+                $('#login_inner_ajax .logout_facebook_btn').click(function(){
+                    $('#login_inner_ajax').block({ message: '' });
+                    window.open($(this).attr('href'), 'Logout Facebook', "height=200,width=200");
+                });
+                $('#login_hidden').addClass('empty');
+                //closeLoginDialog();
+                closeAllDialogs();
+            }
+        });
+    }
+    
+    function ZizooBaseBundle_dashboardCallback(){
+        getLoginWidget();
+    }
+    
+    function login_facebookCallback(){
+        //closeLoginDialog();
+        closeAllDialogs();
+    }
+    
+    $(document).ready(function(){
+        
+        loginFormListeners();
+        registerFormListeners();
+        facebookFormListeners();
+        forgotPasswordFormListeners();
+        
+    });
+</script>

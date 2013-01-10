@@ -3,12 +3,10 @@
 {% extends 'ZizooUserBundle::layout.html.twig' %}
 
 {% block body %}
-    {% if error %}
-        <div>{{ error.message }}</div>
-    {% endif %}
 
-    <div class="login">
-        <form action="{{ path('login_check') }}" method="post">
+    <div class="login" id="{% if ajax %}login_inner_ajax{% else %}login_inner{% endif %}">
+
+        <form action="{{ path('login_check') }}" method="post" class="login_form">
             <label for="username">{% trans %}zizoo_user.label.username_or_email{% endtrans %}:</label>
             <input type="text" id="username" name="_username" value="{{ last_username }}" />
 
@@ -25,14 +23,18 @@
 
             <button type="submit">{% trans %}zizoo_user.label.login{% endtrans %}</button>
         </form>
-
-        <button type="submit" class="login_facebook_btn" href="{{ facebook.loginUrl({ scope: 'email', redirect_uri: url('login_facebook', {forward: current_route}), display: 'popup' }) }}">Login with FACEBOOK</button>
+        
+        {% if error %}
+            <div>{{ error.message }}</div>
+            <a class="forgot_password_link" href="{{ path('forgot_password') }}">{% trans %}zizoo_user.label.forgot_password{% endtrans %}</a>
+        {% endif %}
+            
+        <button type="submit" class="login_facebook_btn" href="{{ facebook.loginUrl({ scope: 'email', redirect_uri: url('login_facebook', {forward: current_route, ajax: ajax}), display: 'popup' }) }}">Login with FACEBOOK</button>
         
     </div>
     <script type="text/javascript">
         $(document).ready(function(){
             $('.login_facebook_btn').click(function(){
-                //top.location.href = $(this).attr('href');
                 window.open($(this).attr('href'), 'Login with Facebook', "height=200,width=200");
             });
         });

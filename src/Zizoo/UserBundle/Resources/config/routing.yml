@@ -1,13 +1,3 @@
-login:
-    pattern:   /login/{hidden}
-    defaults:  { _controller: ZizooUserBundle:User:login, hidden: false }
-    
-login_check:
-    pattern:   /login_check
-    
-logout:
-    pattern:   /logout
-    
 # Registration
 register:
   pattern:    /register
@@ -48,9 +38,17 @@ register_facebook_link:
   pattern:    /register-fb-link
   defaults:   {_controller: ZizooUserBundle:Registration:registerFacebookLink }
 
+register_facebook_success:
+  pattern:    /register-fb-success
+  defaults:   {_controller: ZizooUserBundle:Registration:facebookSuccess }
+
 register_facebook_merged:
   pattern:    /register-fb-merged
   defaults:   {_controller: ZizooUserBundle:Registration:facebookMerged }
+
+login_facebook_fail:
+  pattern:    /login-fb-fail
+  defaults:   {_controller: ZizooUserBundle:User:facebookLoginFail }
 
 # User
 login:
@@ -66,6 +64,10 @@ logout:
 login_facebook:
      pattern: /login-fb
      defaults: {_controller: ZizooUserBundle:User:loginFacebook }
+     
+logout_facebook:
+     pattern: /logout-fb
+     defaults: {_controller: ZizooUserBundle:User:logoutFacebook }
 
 forgot_password:
   pattern:    /forgot-password
@@ -101,4 +103,8 @@ change_password:
   pattern:    /account/change-password/
   defaults:   {_controller: ZizooUserBundle:User:changePassword }
   requirements:
-        _method:  GET|POST        
+        _method:  GET|POST 
+        
+forward:
+  pattern:    /forward/{action}
+  defaults:   {_controller: ZizooUserBundle:Registration:forward }

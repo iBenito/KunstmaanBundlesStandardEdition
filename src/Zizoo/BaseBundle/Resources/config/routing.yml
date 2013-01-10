@@ -51,3 +51,9 @@ ZizooBaseBundle_profile:
     defaults: { _controller: ZizooBaseBundle:Dashboard:profile }
     requirements:
         _method:  GET
+        
+ZizooBaseBundle_login_widget:
+    pattern:  /login-widget
+    defaults: { _controller: ZizooBaseBundle:Page:loginWidget }
+    requirements:
+        _method:  GET

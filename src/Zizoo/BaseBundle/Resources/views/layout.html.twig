@@ -1,9 +1,7 @@
 {% extends '::zizoo.html.twig' %}
 
 {% block navigation %}
-<div id="login_hidden" style="display: none">
-{% render 'ZizooUserBundle:User:login' with {hidden: true} %}
-</div>
+{% include 'ZizooBaseBundle:Page:ajax_login_register.html.twig' %}
 {% render 'ZizooBaseBundle:Page:loginWidget' with {showLoginForm: false} %}
 {% endblock %}
 

@@ -1,0 +1,22 @@
+{# src/Zizoo/UserBundle/Resources/views/User/login.html.twig #}
+{% trans_default_domain "labels" %}
+{% extends 'ZizooUserBundle::layout.html.twig' %}
+
+{% block body %}
+
+    <div class="login" id="{% if ajax %}login_inner_ajax{% else %}login_inner{% endif %}">
+        
+        The logged in Facebook user does not have an account. Try logging out of Facebook:
+        
+        <button type="submit" class="logout_facebook_btn" href="{{ facebook.logoutUrl({ next: url('logout_facebook', {ajax: ajax}) }) }}">Facebook logout</button>
+        
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function(){
+           $('#login_inner .logout_facebook_btn').click(function(){
+               window.open($(this).attr('href'), 'Logout Facebook', "height=200,width=200");
+           });
+        });
+    </script>
+    
+{% endblock %}

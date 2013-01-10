@@ -1,7 +1,7 @@
 {% trans_default_domain "labels" %}
 
 {% if logged_in %}
-<div class="navbar navbar-inverse navbar-fixed-top">
+<div id="login_widget" class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
             <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -33,7 +33,7 @@
     </div>
 </div>
 {% else %}
-<div class="navbar navbar-inverse navbar-fixed-top">
+<div id="login_widget" class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
             <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -53,9 +53,9 @@
                             </form>
                         </li>
                     {% else %}
-                        <li><a href="{{ path('login') }}">Login</a></li>
+                        <li><a id="login_link" href="{{ path('login') }}">Login</a></li>
                     {% endif %}
-                    <li><a href="{{ path('register') }}">Register</a></li>
+                    <li><a id="register_link" href="{{ path('register') }}">Register</a></li>
                     <li><a href="#">Add Boat</a></li>
                 </ul>
             </div><!--/.nav-collapse -->

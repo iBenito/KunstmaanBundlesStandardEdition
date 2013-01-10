@@ -5,3 +5,5 @@ zizoo_user.label.password: Password
 zizoo_user.label.login: Login
 
 zizoo_user.label.remember_me: Remember me
+
+zizoo_user.label.forgot_password: Forgot password?

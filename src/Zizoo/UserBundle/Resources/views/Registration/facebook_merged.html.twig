@@ -1,6 +1,19 @@
 {% extends 'ZizooUserBundle::layout.html.twig' %}
 
 {% block body %}
-    <p>Thanks for registering. Your account has been linked to Facebook.</p>
+    <div id="{% if ajax %}facebook_register_inner_ajax{% else %}facebook_register_inner{% endif %}">
+        
+        <div id="fb_profile">
+            {% if fb_id %}
+            <img src="https://graph.facebook.com/{{ fb_id }}/picture?redirect=true" />
+            {% endif %}
+            {% if fb_name %}
+            <span>{{ fb_name }}</span>
+            {% endif %}
+        </div>
+        
+        <p>Thanks for registering. Your account has been linked to Facebook.</p>
+        <input type="hidden" value="merged" id="status" />
+    </div>
 {% endblock %}
 

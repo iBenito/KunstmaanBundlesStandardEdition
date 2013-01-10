@@ -1,4 +1,4 @@
-{# src/Zizoo/UserBundle/Resources/views/Registration/register_facebook_new.html.twig #}
+{# src/Zizoo/UserBundle/Resources/views/Registration/register_facebook_link.html.twig #}
 {% extends 'ZizooUserBundle::layout.html.twig' %}
 
 {% block javascripts %}
@@ -20,9 +20,8 @@
             <span>{{ data['name'] }}</span>
             <span><a href="{{ facebook.logoutURL({ next: url('register', {'relogin': 'true'}) }) }}">Not you?</a></span>
         </div>
-    
         <div>
-            <form novalidate="novalidate" action="{{ path('register_facebook_new')}}" method="post" {{ form_enctype(form) }} class="facebook_register_form">
+            <form novalidate="novalidate" action="{{ path('register_facebook_link')}}" method="post" {{ form_enctype(form) }} class="facebook_register_form">
                 {{ form_errors(form) }}
 
                 <div>
@@ -40,7 +39,7 @@
 
                 <input type="submit" />
             </form>
-        </div>
+        </div
     </div>
     <script type="text/javascript">
         $(document).ready(function(){

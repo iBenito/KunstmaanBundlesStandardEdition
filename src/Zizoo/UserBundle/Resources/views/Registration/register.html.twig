@@ -12,15 +12,16 @@
 {% endblock %}
 
 {% block body %}
-    <div class="register">
+    <div class="register" id="{% if ajax %}register_inner_ajax{% else %}register_inner{% endif %}">
+        <input type="hidden" value="ongoing" id="status" />
         <div>
             <input type="button" value="With EMAIL account" class="register_email_btn" />
             or
-            <input type="button" value="Connect with FACEBOOK" class="register_facebook_btn" href="{{ facebook.loginUrl({ scope: 'email', redirect_uri: url('register_facebook'), display: 'popup' }) }}" />
+            <input type="button" value="Connect with FACEBOOK" class="register_facebook_btn" href="{{ facebook.loginUrl({ scope: 'email', redirect_uri: url('register_facebook', {ajax: ajax}), display: 'popup' }) }}" />
         </div>
 
         <div class="register_email">
-            <form novalidate="novalidate" action="{{ path('register')}}" method="post" {{ form_enctype(form) }}>
+            <form novalidate="novalidate" action="{{ path('register')}}" method="post" {{ form_enctype(form) }} class="register_form">
                 {{ form_errors(form) }}
 
                 <div>

@@ -2,7 +2,10 @@
     <head></head>
     <body>
         <script type="text/javascript">
-            {% if action %}
+            {% if ajax %}
+                window.opener.{{action}}Callback();
+                window.close();
+            {% else %}
                 window.opener.location.href = '{{ url(action) }}';
                 window.close();
             {% endif %}
