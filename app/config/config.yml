@@ -47,8 +47,15 @@ doctrine:
         charset:  UTF8
 
     orm:
-        auto_generate_proxy_classes: "%kernel.debug%"
-        auto_mapping: true
+        auto_generate_proxy_classes: "%kernel.debug%"        
+        entity_managers:
+            default:
+                auto_mapping: true
+                hydrators:
+                    user_profile_hydrator:    Zizoo\MessageBundle\Extensions\Hydrators\UserProfileHydrator
+                dql:
+                    string_functions:
+                        group_concat: Zizoo\MessageBundle\Extensions\DoctrineExtensions\Query\Mysql\GroupConcat
 
 liip_imagine:
     filter_sets:
@@ -60,3 +67,8 @@ liip_imagine:
             quality: 75
             filters:
                 thumbnail: { size: [75, 75], mode: outbound, allow_upscale: true }
+                
+                
+zizoo_jq_grid_custom: 
+    datepicker_format: dd/mm/yy
+    datepickerphp_format: d/m/Y

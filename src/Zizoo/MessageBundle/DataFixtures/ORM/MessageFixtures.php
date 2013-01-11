@@ -34,6 +34,7 @@ class MessageFixtures extends AbstractFixture implements OrderedFixtureInterface
         $manager->persist($message);
        
         $message2 = $message->getReplyMessage();
+        $message2->setSenderProfile($profile1);
         $message2->setBody("It's working!! I'm copying Sinan in :-)");
         $message2->setThreadRootMessage($message->getId());
         

@@ -46,6 +46,7 @@ class MessageRecipient
      */
     private $message;
 
+    private $test = 'Hello!';
     
     /**
      * Constructor

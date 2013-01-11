@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new JMS\DiExtraBundle\JMSDiExtraBundle($this),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new Liip\ImagineBundle\LiipImagineBundle(),
+            new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new Zizoo\BaseBundle\ZizooBaseBundle(),
             new Zizoo\BoatBundle\ZizooBoatBundle(),
             new Zizoo\UserBundle\ZizooUserBundle(),
@@ -29,6 +30,7 @@ class AppKernel extends Kernel
             new Zizoo\ProfileBundle\ZizooProfileBundle(),
             new Zizoo\AddressBundle\ZizooAddressBundle(),
             new Zizoo\MessageBundle\ZizooMessageBundle(),
+            new Zizoo\JqGridCustomBundle\ZizooJqGridCustomBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

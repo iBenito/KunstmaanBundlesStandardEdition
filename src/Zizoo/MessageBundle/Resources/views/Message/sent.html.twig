@@ -1,0 +1,26 @@
+{# src/Zizoo/MessageBundle/Resources/views/Message/sent.html.twig #}
+{% trans_default_domain "labels" %}
+{% extends 'ZizooMessageBundle::layout.html.twig' %}
+
+{% block body %}
+
+    <div>
+
+        {{jqgrid(grid)}}
+        
+    </div>
+
+    <script type="text/javascript">
+    
+        function messageDoubleClick(rowId, rowIndex, colIndex, e){
+            var msgId = jQuery('#grid_sent').jqGrid('getCell', rowId, 'grid_sentid');
+            alert("Opening message " + msgId);
+        }
+            
+        $(document).ready(function(){
+            jQuery('#grid_sent').jqGrid('setGridParam', { ondblClickRow: messageDoubleClick } );
+        });
+
+    </script>
+
+{% endblock %}

@@ -1,3 +1,11 @@
-zizoo_message_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: ZizooMessageBundle:Default:index }
+inbox:
+    pattern:  /inbox
+    defaults: { _controller: ZizooMessageBundle:Message:inbox }
+
+inbox_data:
+    pattern:  /inbox-data
+    defaults: { _controller: ZizooMessageBundle:Message:inboxData }
+    
+sent:
+    pattern:  /sent
+    defaults: { _controller: ZizooMessageBundle:Message:sent }

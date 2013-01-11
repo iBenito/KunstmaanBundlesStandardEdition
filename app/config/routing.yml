@@ -21,6 +21,11 @@ zizoo_boat:
 zizoo_base:
     resource: "@ZizooBaseBundle/Resources/config/routing.yml"
     prefix:   /
+    
+zizoo_message:
+    resource: "@ZizooMessageBundle/Resources/config/routing.yml"
+    prefix:   /
+
 
 _imagine:
     resource: .
