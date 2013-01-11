@@ -501,7 +501,6 @@ class RegistrationController extends Controller
                     $existingUser->setConfirmationToken(null);
                     $em->persist($existingUser);
                     $em->flush();
-                    $this->sendRegistrationEmail($profile);
                     
                     return $this->doLogin($existingUser, $this->generateUrl('register_facebook_merged'));
                 } else {
