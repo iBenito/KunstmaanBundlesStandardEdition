@@ -76,7 +76,7 @@ class MessageController extends Controller
         return $response;
     }
     
-    public function sentGetData(&$grid){
+    static function sentGetData(&$grid){
         if ($grid->getSession()->get($grid->getHash()) == 'Y') {
 
             $page = $grid->getRequest()->query->get('page');
@@ -162,7 +162,7 @@ class MessageController extends Controller
         $grid = $this->get('jq_grid_custom');
         
         //OPTIONAL
-        $grid->setGetDataFunction(function($grid){ $this->sentGetData($grid); });
+        $grid->setGetDataFunction(function($grid){ MessageController::sentGetData($grid); });
         $grid->setName('grid_sent');
         $grid->setCaption('Sent');
         $grid->setOptions(array('height' => 'auto', 
