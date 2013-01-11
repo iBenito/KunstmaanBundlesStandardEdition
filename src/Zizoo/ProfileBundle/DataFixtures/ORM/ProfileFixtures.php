@@ -14,6 +14,35 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
+        
+        $profile = new Profile();
+        $profile->setFirstName('Zizoo');
+        $profile->setLastName('Register');
+        $profile->setCreated(new \DateTime());
+        $profile->setUpdated($profile->getCreated());
+        $profile->setUser($manager->merge($this->getReference('user-register')));
+        
+        $profileAddress = new ProfileAddress();
+        $profileAddress->setCountry($manager->merge($this->getReference('countryAT')));
+        $profileAddress->setProfile($profile);
+        
+        $manager->persist($profileAddress);
+        $manager->persist($profile);
+        
+        $profile = new Profile();
+        $profile->setFirstName('Zizoo');
+        $profile->setLastName('Info');
+        $profile->setCreated(new \DateTime());
+        $profile->setUpdated($profile->getCreated());
+        $profile->setUser($manager->merge($this->getReference('user-info')));
+        
+        $profileAddress = new ProfileAddress();
+        $profileAddress->setCountry($manager->merge($this->getReference('countryAT')));
+        $profileAddress->setProfile($profile);
+        
+        $manager->persist($profileAddress);
+        $manager->persist($profile);
+        
         $profile = new Profile();
         $profile->setFirstName('Alex');
         $profile->setLastName('Bomba');

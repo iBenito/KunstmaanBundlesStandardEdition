@@ -2,106 +2,140 @@
 
 namespace Zizoo\BoatBundle\DataFixtures\ORM;
 
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\DataFixtures\SharedFixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\DataFixtures\ReferenceRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+
 use Zizoo\ProfileBundle\Entity\Profile;
 use Zizoo\MessageBundle\Entity\Message;
 use Zizoo\MessageBundle\Entity\MessageRecipient;
+use Zizoo\MessageBundle\Service\Messenger;
 
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
-
-
-class MessageFixtures extends AbstractFixture implements OrderedFixtureInterface
+class MessageFixtures implements OrderedFixtureInterface, SharedFixtureInterface, ContainerAwareInterface
 {
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+    
+    /**
+     * Fixture reference repository
+     * 
+     * @var ReferenceRepository
+     */
+    protected $referenceRepository;
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function setReferenceRepository(ReferenceRepository $referenceRepository)
+    {
+        $this->referenceRepository = $referenceRepository;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+    
     public function load(ObjectManager $manager)
     {
         $profile1 = $this->getReference('profile-1');
         $profile2 = $this->getReference('profile-2');
         $profile3 = $this->getReference('profile-3');
         
-        $message = new Message();
-        $message->setSubject('First message!');
-        $message->setBody('This is a test!');
-        $message->setSenderProfile($profile2);
+        $messenger = $this->container->get('messenger');
         
-        $messageRecipient = new MessageRecipient();
-        $messageRecipient->setRecipientProfile($profile1);
-        $messageRecipient->setMessage($message);
+        // Message thread 1 from profile 2 (Benny) to profile 1 (Alex)
+        $message = $messenger->sendMessageTo($profile2, $profile1, 'This is a test', 'First message!');
         
-        $message->addRecipient($messageRecipient);
-        
-        $manager->persist($messageRecipient);
-        $manager->persist($message);
-       
-        $message2 = $message->getReplyMessage();
-        $message2->setSenderProfile($profile1);
-        $message2->setBody("It's working!! I'm copying Sinan in :-)");
-        $message2->setThreadRootMessage($message->getId());
-        
-        $messageRecipient = new MessageRecipient();
-        $messageRecipient->setRecipientProfile($profile3);
-        $messageRecipient->setMessage($message2);
-        $message2->addRecipient($messageRecipient);
-        $message2Recipients = $message2->getRecipients();
-        foreach ($message2Recipients as $message2Recipient){
-            $manager->persist($message2Recipient);
-        }
-        $manager->persist($message2);
+        // Reply (thread 1) from profile 1 (Alex) to profile 2 (Benny), CC profile 3 (Sinan)
+        $recipients = new ArrayCollection();
+        $recipients->add($profile3);
+        $message2 = $messenger->sendMessage($profile1, $recipients, "It's working!! I'm copying Sinan in :-)", null, $message);
+                
+        // Reply (thread 1) from profile 2 (Benny) to profile 1 (Alex) CC profile 3 (Sinan)
+        $recipients = new ArrayCollection();
+        $recipients->add($profile3);
+        $message3 = $messenger->sendMessage($profile2, $recipients, "Awesome!", null, $message2);
         
         
-        $message3 = $message2->getReplyMessage();
-        $message3->setSenderProfile($profile2);
-        $message3->setBody("Hey Alex, I'm replying just to you.");
-        $message3->setThreadRootMessage($message->getId());
-        
-        $messageRecipient = new MessageRecipient();
-        $messageRecipient->setRecipientProfile($profile1);
-        $messageRecipient->setMessage($message3);
-        $message3->addRecipient($messageRecipient);
-        $message3Recipients = $message3->getRecipients();
-        foreach ($message3Recipients as $message3Recipient){
-            $manager->persist($message3Recipient);
-        }
-        $manager->persist($message3);
-        
-        
-        $message4 = new Message();
-        $message4->setSubject('2nd message thread!');
-        $message4->setBody('This is a test!');
-        $message4->setSenderProfile($profile1);
-        
-        $messageRecipient = new MessageRecipient();
-        $messageRecipient->setRecipientProfile($profile2);
-        $messageRecipient->setMessage($message4);
-        
-        $message4->addRecipient($messageRecipient);
-        
-        $manager->persist($messageRecipient);
-        $manager->persist($message4);
-        
-        
-        $message5 = $message4->getReplyMessage();
-        $message5->setSenderProfile($profile2);
-        $message5->setBody("Hey Alex, I'm replying just to you.");
-        $message5->setThreadRootMessage($message->getId());
-        
-        $messageRecipient = new MessageRecipient();
-        $messageRecipient->setRecipientProfile($profile1);
-        $messageRecipient->setMessage($message5);
-        $message5->addRecipient($messageRecipient);
-        $message5Recipients = $message5->getRecipients();
-        foreach ($message5Recipients as $message5Recipient){
-            $manager->persist($message5Recipient);
-        }
-        $manager->persist($message5);
-        
-        $manager->flush();
+        // Message thread 2 from profile 1 (Alex) to profile 2 (Benny), CC profile 3 (Sinan)
+        $recipients = new ArrayCollection();
+        $recipients->add($profile2);
+        $recipients->add($profile3);
+        $message4 = $messenger->sendMessage($profile1, $recipients, "Awesome!", '2nd thread');
 
     }
 
     public function getOrder()
     {
         return 5;
+    }
+        
+        /**
+     * Set the reference entry identified by $name
+     * and referenced to managed $object. If $name
+     * already is set, it overrides it
+     * 
+     * @param string $name
+     * @param object $object - managed object
+     * @see Doctrine\Common\DataFixtures\ReferenceRepository::setReference
+     * @return void
+     */
+    public function setReference($name, $object)
+    {
+        $this->referenceRepository->setReference($name, $object);
+    }
+    
+    /**
+     * Set the reference entry identified by $name
+     * and referenced to managed $object. If $name
+     * already is set, it overrides it
+     * 
+     * @param string $name
+     * @param object $object - managed object
+     * @see Doctrine\Common\DataFixtures\ReferenceRepository::addReference
+     * @return void
+     */
+    public function addReference($name, $object)
+    {
+        $this->referenceRepository->addReference($name, $object);
+    }
+    
+    /**
+     * Loads an object using stored reference
+     * named by $name
+     * 
+     * @param string $name
+     * @see Doctrine\Common\DataFixtures\ReferenceRepository::getReference
+     * @return object
+     */
+    public function getReference($name)
+    {
+        return $this->referenceRepository->getReference($name);
+    }
+    
+    /**
+     * Check if an object is stored using reference
+     * named by $name
+     * 
+     * @param string $name
+     * @see Doctrine\Common\DataFixtures\ReferenceRepository::hasReference
+     * @return boolean
+     */
+    public function hasReference($name)
+    {
+        return $this->referenceRepository->hasReference($name);
     }
 
 }

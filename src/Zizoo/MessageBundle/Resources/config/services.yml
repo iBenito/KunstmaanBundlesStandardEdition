@@ -2,6 +2,11 @@ parameters:
 #    zizoo_message.example.class: Zizoo\MessageBundle\Example
 
 services:
+    messenger:
+        class:  Zizoo\MessageBundle\Service\Messenger
+        arguments: 
+            entityManager: "@doctrine.orm.entity_manager"
+            
 #    zizoo_message.example:
 #        class: %zizoo_message.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]

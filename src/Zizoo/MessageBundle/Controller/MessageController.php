@@ -52,29 +52,6 @@ class MessageController extends Controller
         return ($grid->render());
     }
     
-    public function inboxDataAction()
-    {
-        $user       = $this->getUser();
-        $profile    = $user->getProfile();
-        
-        $em = $this->getDoctrine()->getEntityManager();
-        
-        $qb = $em->createQueryBuilder()->from('ZizooMessageBundle:Message', 'm')
-                                        ->leftJoin('m.recipients', 'r')
-                                        ->leftJoin('m.sender_profile', 'sp')
-                                        ->leftJoin('sp.user', 'su')
-                                        ->select('m.id, m.subject, CONCAT(sp.lastName, CONCAT(\', \', CONCAT(sp.firstName, CONCAT(\' &lt;\', CONCAT(su.email, \'&gt;\')))))) as sender, m.sent')
-                                        ->where('r.recipient_profile = :recipient')
-                                        ->setParameter('recipient', $profile->getID());
-        
-        //$qb->expr()->concat('s.firstName', $qb->expr()->concat($qb->expr()->literal(' '), 's.lastName'));
-        
-        
-        
-        $response = new Response(json_encode($qb->getQuery()->getArrayResult()));
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
-    }
     
     static function sentGetData(&$grid){
         if ($grid->getSession()->get($grid->getHash()) == 'Y') {
@@ -107,15 +84,22 @@ class MessageController extends Controller
                 'page' => $page, 'total' => $total_pages, 'records' => $nbRec
             );
 
-            $row_id = null;
-            $last_row_id = null;
-            $last_receiver = null;
+            $message_id         = null;
+            $last_message_id    = null;
+            $last_receiver      = null;
+            $last_val           = null;
             $index = 0;
+            $all_receivers = null;
+            $output = false;
             foreach ($pagination as $key => $item) {
                 $row = $item;
-                $row_id = $row['id'];
-                if ($row_id==$last_row_id){
-                    $row['receiver'] .= ', ' . $last_receiver;
+                $message_id = $row['message_id'];
+                if ($message_id==$last_message_id){
+                    $all_receivers = $row['receiver'] . ', ' . $last_receiver;
+                } else if ($last_val){
+                    $last_val[2] = $all_receivers;
+                } else {
+                    $all_receivers = $row['receiver'];
                 }
                 $val = array();
                 $columns = $grid->getColumns();
@@ -136,10 +120,20 @@ class MessageController extends Controller
                     }
                 }
                 
-                if ($row_id==$last_row_id) $response['rows'][$index++]['cell'] = $val;
+                if ($message_id!=$last_message_id && $last_val) {
+                    $response['rows'][$index++]['cell'] = $last_val;
+                    $output = true;
+                } else {
+                    $output = false;
+                }
                 
-                $last_row_id    = $row_id;
-                $last_receiver  = $row['receiver'];
+                $last_message_id    = $message_id;
+                $last_receiver      = $row['receiver'];
+                $last_val           = $val;
+            }
+            if (!$output){
+                $last_val[2] = $all_receivers;
+                $response['rows'][$index++]['cell'] = $last_val;
             }
             $grid->setGetDataFunctionResponse($response);
         } else {

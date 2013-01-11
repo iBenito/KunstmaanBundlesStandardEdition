@@ -297,6 +297,12 @@ class Message
         $reply = new Message();
         $reply->setReplyToMessage($this);
         $reply->setSubject('RE: ' . $this->getSubject());
+        $rootMessage = $this->getThreadRootMessage();
+        if ($rootMessage){
+            //$reply->setThreadRootMessage($rootMessage);
+        } else {
+            //$reply->setThreadRootMessage($this);
+        }
         $messageRecipient = new MessageRecipient();
         $messageRecipient->setRecipientProfile($this->getSenderProfile());
         $messageRecipient->setMessage($reply);

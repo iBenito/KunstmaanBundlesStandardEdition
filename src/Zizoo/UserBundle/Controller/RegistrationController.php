@@ -26,6 +26,21 @@ use Zizoo\ProfileBundle\Entity\Profile;
 
 class RegistrationController extends Controller
 {
+    
+    private function sendRegistrationEmail($profile){
+        $messenger = $this->container->get('messenger');
+        
+        $em = $this->getDoctrine()
+                    ->getEntityManager();
+        
+        $registerUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($this->container->getParameter('email_register'));
+        if (!$registerUser) return false;
+        
+        $message = $messenger->sendMessageTo($registerUser->getProfile(), $profile, 'Welcome message...', 'Welcome to Zizoo!');
+        return $message;
+    }
+    
+    
     /**
      * Send email to registration user, with activation link
      * 
@@ -231,6 +246,7 @@ class RegistrationController extends Controller
             $em->persist($profile);
             $em->persist($user);
             $em->flush();
+            $this->sendRegistrationEmail($profile);
             
             return $this->doLogin($user, $this->generateUrl('confirmed'));
             //return $this->redirect($this->generateUrl('confirmed'));
@@ -369,7 +385,8 @@ class RegistrationController extends Controller
                     $em->persist($profile);
                     $em->persist($user);
                     $em->flush();
-
+                    $this->sendRegistrationEmail($profile);
+                    
                     return $this->doLogin($user, $this->generateUrl('register_facebook_success'));
                     //return $this->redirect($this->generateUrl('submitted'));
                 } else {
@@ -484,7 +501,8 @@ class RegistrationController extends Controller
                     $existingUser->setConfirmationToken(null);
                     $em->persist($existingUser);
                     $em->flush();
-
+                    $this->sendRegistrationEmail($profile);
+                    
                     return $this->doLogin($existingUser, $this->generateUrl('register_facebook_merged'));
                 } else {
                     // Form is not valid. Check if the user is valid. If not, see if it's because the user already exists and hasn't completed registration (i.e. confirmation)
