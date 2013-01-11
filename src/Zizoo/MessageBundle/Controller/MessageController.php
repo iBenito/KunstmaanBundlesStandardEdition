@@ -2,7 +2,6 @@
 
 namespace Zizoo\MessageBundle\Controller;
 
-use Zizoo\MessageBundle\Extensions\Hydrators\UserProfileHydrator;
 use Zizoo\MessageBundle\Extensions\DoctrineExtensions\Query\Mysql\GroupConcat;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
