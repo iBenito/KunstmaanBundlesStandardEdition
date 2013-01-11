@@ -18,9 +18,10 @@ class MessageRepository extends EntityRepository
                                         ->leftJoin('m.recipients', 'r')
                                         ->leftJoin('m.sender_profile', 'sp')
                                         ->leftJoin('sp.user', 'su')
-                                        ->select('m.id, m.subject, CONCAT(sp.lastName, CONCAT(\', \', CONCAT(sp.firstName, CONCAT(\' &lt;\', CONCAT(su.email, \'&gt;\'))))) as sender, m.sent')
+                                        ->select('DISTINCT m.id, m.subject, CONCAT(sp.lastName, CONCAT(\', \', CONCAT(sp.firstName, CONCAT(\' &lt;\', CONCAT(su.email, \'&gt;\'))))) as sender, m.sent')
                                         ->where('r.recipient_profile = :recipient')
                                         ->setParameter('recipient', $profile->getID());
+        $qb->getQuery()->getArrayResult();
         return $qb;
     }
     
