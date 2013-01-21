@@ -34,9 +34,9 @@ class Boat
     protected $description;
 
     /**
-     * @ORM\OneToMany(targetEntity="Zizoo\AddressBundle\Entity\BoatAddress", mappedBy="boat")
+     * @ORM\OneToOne(targetEntity="Zizoo\AddressBundle\Entity\BoatAddress", mappedBy="boat")
      */
-    protected $addresses;
+    protected $address;
 
     /**
      * @ORM\Column(type="string")
@@ -84,6 +84,11 @@ class Boat
     protected $reservation;
     
     /**
+     * @ORM\OneToMany(targetEntity="Zizoo\BoatBundle\Entity\Availability", mappedBy="boat")
+     */
+    protected $availability;
+    
+    /**
      * @ORM\Column(type="datetime")
      */
     protected $created;
@@ -95,7 +100,6 @@ class Boat
 
     public function __construct()
     {
-        $this->address = new ArrayCollection();
         
         $this->image = new ArrayCollection();
         $this->reservation = new ArrayCollection();
@@ -490,49 +494,60 @@ class Boat
         return $this;
     }
 
-    /**
-     * Remove addresses
-     *
-     * @param \Zizoo\AddressBundle\Entity\BoatAddress $address
-     */
-    public function removeAddress(\Zizoo\AddressBundle\Entity\BoatAddress $address)
-    {
-        $this->addresses->removeElement($address);
-    }
-
-    /**
-     * Get addresses
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getAddresses()
-    {
-        return $this->addresses;
-    }
     
-
     /**
-     * Add addresses
+     * Add availability
      *
-     * @param \Zizoo\AddressBundle\Entity\BoatAddress $addresses
+     * @param \Zizoo\BoatBundle\Entity\Availability $availability
      * @return Boat
      */
-    public function addAddresse(\Zizoo\AddressBundle\Entity\BoatAddress $addresses)
+    public function addAvailability(\Zizoo\BoatBundle\Entity\Availability $availability)
     {
-        $this->addresses[] = $addresses;
+        $this->availability[] = $availability;
     
         return $this;
     }
 
     /**
-     * Remove addresses
+     * Remove availability
      *
-     * @param \Zizoo\AddressBundle\Entity\BoatAddress $addresses
+     * @param \Zizoo\BoatBundle\Entity\Availability $availability
      */
-    public function removeAddresse(\Zizoo\AddressBundle\Entity\BoatAddress $addresses)
+    public function removeAvailability(\Zizoo\BoatBundle\Entity\Availability $availability)
     {
-        $this->addresses->removeElement($addresses);
+        $this->availability->removeElement($availability);
     }
+
+    /**
+     * Get availability
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAvailability()
+    {
+        return $this->availability;
+    }
+
+    /**
+     * Set address
+     *
+     * @param \Zizoo\AddressBundle\Entity\BoatAddress $address
+     * @return Boat
+     */
+    public function setAddress(\Zizoo\AddressBundle\Entity\BoatAddress $address = null)
+    {
+        $this->address = $address;
     
-    
+        return $this;
+    }
+
+    /**
+     * Get address
+     *
+     * @return \Zizoo\AddressBundle\Entity\BoatAddress 
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
 }

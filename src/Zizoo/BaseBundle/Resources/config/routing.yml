@@ -41,13 +41,13 @@ ZizooBaseBundle_faq:
         _method:  GET
         
 ZizooBaseBundle_dashboard:
-    pattern:  /dashboard
+    pattern:  /account/dashboard
     defaults: { _controller: ZizooBaseBundle:Dashboard:index }
     requirements:
         _method:  GET
         
 ZizooBaseBundle_profile:
-    pattern:  /dashboard/profile
+    pattern:  /account/profile
     defaults: { _controller: ZizooBaseBundle:Dashboard:profile }
     requirements:
         _method:  GET

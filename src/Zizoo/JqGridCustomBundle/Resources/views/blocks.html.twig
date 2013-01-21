@@ -10,6 +10,12 @@
 
 {% block jqgrid_j %}
  <script type="text/javascript">
+    
+    {{ grid.extraParams['extraJS']|raw }}
+    
+    function defaultLoadComplete(){
+    }
+     
     $(document).ready(function() {
         var $configs = $.extend({
                 minDate: new Date(2007, 0, 1),
@@ -45,6 +51,9 @@
                     $('#{{ grid.name|raw }}_wrapper').show();
                 }
             },
+            {% endif %}
+            {% if grid.extraParams['loadComplete'] %}
+            loadComplete: {{ grid.extraParams['loadComplete'] }},
             {% endif %}
             colNames:[{{ grid.columnsnames|raw }}],
             colModel:[

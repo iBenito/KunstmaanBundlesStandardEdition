@@ -1,0 +1,9 @@
+zizoo_message.label.confirm_sent_message_delete:  Are you sure you want to delete this message from your sent messages?
+
+zizoo_message.label.confirm_received_message_delete:  Are you sure you want to delete this message from your inbox?
+
+zizoo_message.message.message_deleted:  Message was deleted
+
+zizoo_message.error.message_not_blank:  "You must enter a message"
+
+zizoo_message.label.delete_thread:  Do you want to delete the entire thread?

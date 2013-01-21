@@ -158,4 +158,8 @@ class MessageRecipient
     {
         return $this->message;
     }
+    
+    public function __toString(){
+        return '' . $this->recipient_profile . '';
+    }
 }

@@ -4,11 +4,11 @@ zizoo_address:
 
 zizoo_profile:
     resource: "@ZizooProfileBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix:   /account
 
 zizoo_booking:
     resource: "@ZizooBookingBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix:   /account
 
 zizoo_user:
     resource: "@ZizooUserBundle/Resources/config/routing.yml"
@@ -24,7 +24,7 @@ zizoo_base:
     
 zizoo_message:
     resource: "@ZizooMessageBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix:   /account
 
 
 _imagine:

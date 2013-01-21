@@ -31,9 +31,7 @@
     }
     
     function closeLoginDialog(){
-        if ($('#login_inner_ajax').is(':data(dialog)')){
-            $('#login_inner_ajax').dialog('close');
-        }
+        $('#login_inner_ajax').dialog('close');
         $('#login_inner_ajax').unblock();
     }
     
@@ -46,9 +44,7 @@
     }
     
     function closeRegisterDialog(){
-        if ($('#register_inner_ajax').is(':data(dialog)')){
-            $('#register_inner_ajax').dialog('close');
-        }
+        $('#register_inner_ajax').dialog('close');
         $('#register_inner_ajax').unblock();
     }
     
@@ -61,9 +57,7 @@
     }
     
     function closeFacebookRegisterDialog(){
-        if ($('#facebook_register_inner_ajax').is(':data(dialog)')){
-            $('#facebook_register_inner_ajax').dialog('close');
-        }
+        $('#facebook_register_inner_ajax').dialog('close');
         $('#facebook_register_inner_ajax').unblock();
     }
     
@@ -76,9 +70,7 @@
     }
     
     function closeForgotPasswordDialog(){
-        if ($('#forgot_password_inner_ajax').is(':data(dialog)')){
-            $('#forgot_password_inner_ajax').dialog('close');
-        }
+        $('#forgot_password_inner_ajax').dialog('close');
         $('#forgot_password_inner_ajax').unblock();
     }
     
@@ -90,7 +82,7 @@
     }
     
     function loginFormListeners(){
-        $('#login_inner_ajax .login_form').live('submit', function(){
+        $(document).delegate('#login_inner_ajax .login_form', 'submit', function(){
             $('#login_inner_ajax').block({ message: '' });
             $.ajax({
                 type: 'post', 
@@ -162,7 +154,7 @@
     }
     
     function registerFormListeners(){
-        $('#register_inner_ajax .register_form').live('submit', function(){
+        $(document).delegate('#register_inner_ajax .register_form', 'submit', function(){
             $('#register_inner_ajax').block({ message: '' });
             $.ajax({
                 type: 'post', 
@@ -214,7 +206,7 @@
     }
     
     function facebookFormListeners(){
-        $('#facebook_register_inner_ajax .facebook_register_form').live('submit', function(){
+        $(document).delegate('#facebook_register_inner_ajax .facebook_register_form', 'submit', function(){
             $('#facebook_register_inner_ajax').block({ message: '' });
             $.ajax({
                 type: 'post', 
@@ -238,7 +230,7 @@
     }
     
     function forgotPasswordFormListeners(){
-        $('#forgot_password_inner_ajax .forgot_password_form').live('submit', function(){
+        $(document).delegate('#forgot_password_inner_ajax .forgot_password_form', 'submit', function(){
             $('#forgot_password_inner_ajax').block({ message: '' });
             $.ajax({
                 type: 'post', 

@@ -7,8 +7,10 @@
     {% block dashboard_navigation %}
         <div class="dashboard_navigation">
             <ul class="nav">
-              <li class="active"><a href="{{ path('ZizooBaseBundle_dashboard') }}">Dashboard</a></li>
-              <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Profile</a></li>
+              <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Dashboard</a></li>
+              <li><a href="{{ path('inbox') }}">Inbox</a></li>
+              <li><a href="{{ path('sent') }}">Sent Messages</a></li>
+              <li class="active"><a href="{{ path('ZizooBaseBundle_dashboard') }}">Profile</a></li>
               <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Bookings</a></li>
               <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Boats</a></li>
               <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Skills</a></li>

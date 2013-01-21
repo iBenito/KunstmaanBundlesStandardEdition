@@ -1,0 +1,15 @@
+{% block subject %}
+You have received a new message from {{sender.user.username}}
+{% endblock %}
+{% block body_text %}
+{{sender.user.username}} has sent you a private message:
+{{message.body}}
+
+You can view the message here: {{ link }}
+{% endblock %}
+{% block body_html %}
+<p>{{sender.user.username}} has sent you a private <a href="{{ link }}">message</a>:</p>
+<p>{{message.body}}</p>
+{% endblock %}
+
+

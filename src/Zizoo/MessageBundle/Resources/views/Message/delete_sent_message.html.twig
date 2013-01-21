@@ -1,0 +1,17 @@
+{# src/Zizoo/MessageBundle/Resources/views/Message/delete_sent_message.html.twig #}
+{% extends 'ZizooUserBundle::layout.html.twig' %}
+
+{% block body %}
+
+    {% block ajax %}
+        {% include 'ZizooMessageBundle:Message:delete_sent_message_ajax.html.twig' %}
+    {% endblock %}
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#delete_sent_message_form .cancel_btn').unbind('click').click(function(){
+                history.go(-1);
+            });
+        });
+    </script>
+{% endblock %}

@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="address")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"profile" = "ProfileAddress", "boat" = "BoatAddress"})
+ * @ORM\DiscriminatorMap({"profile" = "ProfileAddress", "boat" = "BoatAddress", "availability" = "AvailabilityAddress"})
  */
 class AddressBase
 {

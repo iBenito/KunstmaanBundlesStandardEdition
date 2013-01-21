@@ -1,6 +1,8 @@
 <?php
 namespace Zizoo\ProfileBundle\Entity;
 
+use Zizoo\ProfileBundle\Entity\Profile\NotificationSettings;
+
 use FOS\MessageBundle\Model\ParticipantInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -76,6 +78,11 @@ class Profile
      */
     protected $incoming_messages;
     
+    /**
+     * @ORM\OneToOne(targetEntity="Zizoo\ProfileBundle\Entity\Profile\NotificationSettings", cascade={"persist"})
+     */    
+    protected $notification_settings;
+        
     /**
      * Get id
      *
@@ -275,6 +282,13 @@ class Profile
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
+        $notificationSettings = new NotificationSettings();
+        $notificationSettings->setMessage(true);
+        $notificationSettings->setEnquiry(true);
+        $notificationSettings->setBooked(true);
+        $notificationSettings->setBooking(true);
+        $notificationSettings->setReview(true);
+        $this->setNotificationSettings($notificationSettings);
     }
     
     /**
@@ -384,5 +398,34 @@ class Profile
     public function getIncomingMessages()
     {
         return $this->incoming_messages;
+    }
+    
+    public function __toString(){
+        return '' . $this->user . '';
+    }
+
+  
+
+    /**
+     * Set notification_settings
+     *
+     * @param \Zizoo\ProfileBundle\Entity\Profile\NotificationSettings $notificationSettings
+     * @return Profile
+     */
+    public function setNotificationSettings(\Zizoo\ProfileBundle\Entity\Profile\NotificationSettings $notificationSettings = null)
+    {
+        $this->notification_settings = $notificationSettings;
+    
+        return $this;
+    }
+
+    /**
+     * Get notification_settings
+     *
+     * @return \Zizoo\ProfileBundle\Entity\Profile\NotificationSettings 
+     */
+    public function getNotificationSettings()
+    {
+        return $this->notification_settings;
     }
 }

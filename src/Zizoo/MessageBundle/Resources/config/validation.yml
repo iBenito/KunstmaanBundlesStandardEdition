@@ -1,0 +1,5 @@
+# src/Zizoo/MessageBundle/Resources/config/validation.yml
+Zizoo\MessageBundle\Entity\Message:
+    properties:
+        confirm_delete:
+            - "True": { message: zizoo_message.error.delete_message_true, groups: [delete_message] }

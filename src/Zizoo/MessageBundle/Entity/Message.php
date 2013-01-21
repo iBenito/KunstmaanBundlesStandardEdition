@@ -66,9 +66,9 @@ class Message
     private $reply_to_message;
 
     /**
-     * 
-     * @ORM\OneToOne(targetEntity="Message")
-     * @ORM\JoinColumn(name="root_message", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * @var integer
+     *
+     * @ORM\Column(name="root_message", type="integer", nullable=true)
      */
     private $thread_root_message;
 
@@ -79,6 +79,18 @@ class Message
     private $recipients;
       
     
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="message_type", type="integer")
+     */
+    private $type;
+    const MESSAGE   = 0;
+    const ENQUIRY   = 1;
+    const BOOKING   = 2;
+    const BOOKED    = 3;
+    const REVIEW    = 4;
+
     /**
      * Get id
      *
@@ -293,8 +305,9 @@ class Message
         return $this->recipients;
     }
     
-    public function getReplyMessage(){
+    public function getReplyMessage($setRecipient=true){
         $reply = new Message();
+        $reply->setType($this->getType());
         $reply->setReplyToMessage($this);
         $reply->setSubject('RE: ' . $this->getSubject());
         $rootMessage = $this->getThreadRootMessage();
@@ -303,10 +316,82 @@ class Message
         } else {
             //$reply->setThreadRootMessage($this);
         }
-        $messageRecipient = new MessageRecipient();
-        $messageRecipient->setRecipientProfile($this->getSenderProfile());
-        $messageRecipient->setMessage($reply);
-        $reply->addRecipient($messageRecipient);
+        if ($setRecipient){
+            $messageRecipient = new MessageRecipient();
+            $messageRecipient->setRecipientProfile($this->getSenderProfile());
+            $messageRecipient->setMessage($reply);
+            $reply->addRecipient($messageRecipient);
+        }
         return $reply;
+    }
+    
+
+    /**
+     * Set type
+     *
+     * @param integer $type
+     * @return Message
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return integer 
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+    
+    public function typeToString(){
+        switch ($this->type){
+            case Message::MESSAGE:
+                return 'Message';
+                break;
+            case Message::ENQUIRY:
+                return 'Enquiry';
+                break;
+            case Message::BOOKING:
+                return 'Booking';
+                break;
+            case Message::BOOKED:
+                return 'Booked';
+                break;
+            case Message::REVIEW:
+                return 'Review';
+                break;
+            default:
+                return 'Message';
+                break;
+        }
+    }
+    
+    public static function getTypeToString($type){
+        switch ($type){
+            case Message::MESSAGE:
+                return 'Message';
+                break;
+            case Message::ENQUIRY:
+                return 'Enquiry';
+                break;
+            case Message::BOOKING:
+                return 'Booking';
+                break;
+            case Message::BOOKED:
+                return 'Booked';
+                break;
+            case Message::REVIEW:
+                return 'Review';
+                break;
+            default:
+                return 'Message';
+                break;
+        }
     }
 }

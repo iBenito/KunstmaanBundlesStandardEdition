@@ -5,7 +5,13 @@ services:
     messenger:
         class:  Zizoo\MessageBundle\Service\Messenger
         arguments: 
-            entityManager: "@doctrine.orm.entity_manager"
+            entityManager:  "@doctrine.orm.entity_manager"
+            container:      "@service_container"
+            
+    zizoo_profile.twig.profile_extension:
+        class: Zizoo\ProfileBundle\Twig\ProfileExtension
+        tags:
+            - { name: twig.extension }
             
 #    zizoo_message.example:
 #        class: %zizoo_message.example.class%

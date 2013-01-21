@@ -1,0 +1,22 @@
+            <form id="send_message_form" novalidate="novalidate" action="{{ path('send_message') }}" method="post" {{ form_enctype(form) }}>
+                
+                <div>
+                    {{ form_label(form.message_body) }}
+                    {{ form_errors(form.message_body) }}
+                    {% for flashMessage in app.session.flashbag.get('notice') %}
+                        {% if flashMessage == 'This value should not be blank.' %}
+                        <div class="flash-notice">
+                            {% trans %}zizoo_message.error.message_not_blank{% endtrans %}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                   
+                    {{ form_widget(form.message_body) }}
+                </div>
+                {{ form_rest(form) }}
+                <button type="submit">Send</button>
+                
+                <input type="button" value="Cancel" class="cancel_btn" />
+            </form>
+
+            

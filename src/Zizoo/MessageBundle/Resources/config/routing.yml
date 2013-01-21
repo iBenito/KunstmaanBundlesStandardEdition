@@ -9,3 +9,31 @@ inbox_data:
 sent:
     pattern:  /sent
     defaults: { _controller: ZizooMessageBundle:Message:sent }
+    
+delete_sent_message:
+    pattern: /delete-sent-message/{messageId}
+    defaults: { _controller: ZizooMessageBundle:Message:deleteSentMessage, messageId: null, ajax: false}
+    
+delete_received_message:
+    pattern: /delete-received-message/{messageId}
+    defaults: { _controller: ZizooMessageBundle:Message:deleteReceivedMessage, messageId: null, ajax: false}
+    
+message_deleted:
+    pattern: /message_deleted
+    defaults: { _controller: ZizooMessageBundle:Message:messageDeleted}
+    
+mark_received_message:
+    pattern: /mark-received-message/{messageId}/{read}
+    defaults: { _controller: ZizooMessageBundle:Message:markReceivedMessage, messageId: null, read: false, ajax: false}
+    
+open_received_message:
+    pattern: /open-received-message/{messageId}
+    defaults: { _controller: ZizooMessageBundle:Message:openReceivedMessage, messageId: null, inbox: true, ajax: false}
+    
+open_sent_message:
+    pattern: /open-sent-message/{messageId}
+    defaults: { _controller: ZizooMessageBundle:Message:openSentMessage, messageId: null, inbox: false, ajax: false}
+    
+send_message:
+    pattern: /send-message/
+    defaults: { _controller: ZizooMessageBundle:Message:sendMessage, lastMessageId: null, to: null, ajax: false, redirect: null}

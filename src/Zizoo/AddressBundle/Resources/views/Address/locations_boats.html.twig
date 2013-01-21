@@ -3,7 +3,7 @@
     {% if loop.index0 % page_size == 0 %}
     <div class="page{% if (loop.index0 / page_size)+1 == page %} current {% endif %}" id="page_{{ (loop.index0 / page_size)+1 }}">
     {% endif %}
-        <article class="boat{% if boat|reservationExists(res_from, res_to)==true %} booked{% endif %}">
+        <article class="boat{% if boat|bookable(res_from, res_to)==false %} booked{% endif %}">
             <header>
                 <h2>{{ boat.title }}</h2>
             </header>
@@ -16,8 +16,8 @@
                 <h3>{{ boat.name }}</h3>
                 <p>{% trans %}zizoo_address.label.cities{% endtrans %}: 
                     <ul>
-                        {% for address in boat.addresses %}
-                            <li>{{ address.locality }}</li>
+                        {% for availability in boat.availability %}
+                            <li>{{ availability.address.locality }}</li>
                         {% endfor %}
                     </ul>
                 </p>
@@ -64,15 +64,15 @@
         {% set index = 0 %}
         mc.clearMarkers();
         {% for boat in boats %}
-            {% if boat|reservationExists(res_from, res_to)!=true %}
-                {% for address in boat.addresses %}
+            {% if boat|bookable(res_from, res_to)==true %}
+                {% for availability in boat.availability %}
                     infoWindows.push(new google.maps.InfoWindow({
                         content: {% include "ZizooAddressBundle:Address:locations_boat_info_window.html.twig" with {'boat': boat } %}
                     }));
                     markers.push(new google.maps.Marker({
                         title: '{{ boat.name }}',
                         position: new google.maps.LatLng(
-                             {{ address.lat }}, {{ address.lng }}),
+                             {{ availability.address.lat }}, {{ availability.address.lng }}),
                              clickable: true,
                              draggable: false,
                              flat: true

@@ -367,4 +367,8 @@ class User implements AdvancedUserInterface, \Serializable
     {
         return $this->facebookUID;
     }
+    
+    public function __toString(){
+        return '' . $this->username . '';
+    }
 }

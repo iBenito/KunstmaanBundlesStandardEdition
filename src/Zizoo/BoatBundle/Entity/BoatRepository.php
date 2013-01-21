@@ -41,10 +41,12 @@ class BoatRepository extends EntityRepository
     {
         // Join boat, image, address, country and reservation
         $qb = $this->createQueryBuilder('b')
-                   ->select('b, i, a, c, r')
+                   ->select('b, i, a, av, c, r')
                    ->leftJoin('b.image', 'i')
-                   ->leftJoin('b.addresses', 'a')
+                   ->leftJoin('b.address', 'a')
                    ->leftJoin('b.reservation', 'r')
+                   ->leftJoin('b.availability', 'av')
+                   ->leftJoin('b.address', 'av_a')
                    ->leftJoin('a.country', 'c');
         
         // Optionally search by location
@@ -55,6 +57,11 @@ class BoatRepository extends EntityRepository
                ->orWhere('a.state = :search')
                ->orWhere('a.province = :search')
                ->orWhere('c.printableName = :search')
+               ->orWhere('av_a.locality = :search')
+               ->orWhere('av_a.subLocality = :search')
+               ->orWhere('av_a.state = :search')
+               ->orWhere('av_a.province = :search')
+               ->orWhere('av_a.printableName = :search')
                ->setParameter('search', $search);
             $firstWhere = true;
         }
@@ -74,14 +81,14 @@ class BoatRepository extends EntityRepository
         //$qb->getQuery();
         
          
-        $qb->addOrderBy('r.id, b.created', 'ASC');
+        $qb->addOrderBy('av.id', 'desc');
 
         
         return $qb->getQuery()
                   ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'Zizoo\BoatBundle\Extensions\DoctrineExtensions\CustomWalker\SortableNullsWalker')
                   ->setHint('SortableNullsWalker.fields',
                         array(
-                            'r.id' => SortableNullsWalker::NULLS_FIRST,
+                            'av.id' => SortableNullsWalker::NULLS_LAST,
                         ))
                   ->getResult();
     }

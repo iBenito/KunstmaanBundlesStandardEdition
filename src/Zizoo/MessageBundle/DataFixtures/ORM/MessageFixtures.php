@@ -56,16 +56,19 @@ class MessageFixtures implements OrderedFixtureInterface, SharedFixtureInterface
         $messenger = $this->container->get('messenger');
         
         // Message thread 1 from profile 2 (Benny) to profile 1 (Alex)
+        //Profile $sender, Profile $recipient, $body, $subject=null, Message $previous=null, $setRecipient=true
         $message = $messenger->sendMessageTo($profile2, $profile1, 'This is a test', 'First message!');
         
         // Reply (thread 1) from profile 1 (Alex) to profile 2 (Benny), CC profile 3 (Sinan)
         $recipients = new ArrayCollection();
         $recipients->add($profile3);
+        //Profile $sender, ArrayCollection $recipients, $body, $subject=null, Message $previous=null, $setRecipient=true
         $message2 = $messenger->sendMessage($profile1, $recipients, "It's working!! I'm copying Sinan in :-)", null, $message);
                 
         // Reply (thread 1) from profile 2 (Benny) to profile 1 (Alex) CC profile 3 (Sinan)
         $recipients = new ArrayCollection();
         $recipients->add($profile3);
+        //Profile $sender, ArrayCollection $recipients, $body, $subject=null, Message $previous=null, $setRecipient=true
         $message3 = $messenger->sendMessage($profile2, $recipients, "Awesome!", null, $message2);
         
         
@@ -73,13 +76,14 @@ class MessageFixtures implements OrderedFixtureInterface, SharedFixtureInterface
         $recipients = new ArrayCollection();
         $recipients->add($profile2);
         $recipients->add($profile3);
+        //Profile $sender, ArrayCollection $recipients, $body, $subject=null, Message $previous=null, $setRecipient=true
         $message4 = $messenger->sendMessage($profile1, $recipients, "Awesome!", '2nd thread');
 
     }
 
     public function getOrder()
     {
-        return 5;
+        return 6;
     }
         
         /**

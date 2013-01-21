@@ -94,6 +94,8 @@ class Grid extends GridTools
     protected $getDataFunction;
     
     protected $getDataFunctionResponse;
+    
+    protected $extraParams;
 
     /**
      * @param \Symfony\Component\DependencyInjection\Container $container
@@ -125,9 +127,19 @@ class Grid extends GridTools
         $this->name = md5($now->format('Y-m-d H:i:s:u'));
 
         $this->hydrationMode = Query::HYDRATE_ARRAY;
+        $this->extraParams = array('loadComplete' => 'defaultLoadComplete');
+        $this->extraParams = array('extraJS' => '');
         unset($this->routeParameters['_route']);
     }
 
+    public function getExtraParams(){
+        return $this->extraParams;
+    }
+    
+    public function setExtraParams($extraParams){
+        $this->extraParams = $extraParams;
+    }
+    
     public function getHydrationMode(){
         return $this->hydrationMode;
     }
