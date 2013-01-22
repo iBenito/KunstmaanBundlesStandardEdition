@@ -213,14 +213,14 @@ class Messenger {
 
     public function markReceivedMessage(Profile $recipient, Message $message, $read){
         $recipients = $message->getRecipients();
-        foreach ($recipients as $recipient){
-            if ($recipient->getId()==$recipient->getId()){
+        foreach ($recipients as $messageRecipient){
+            if ($messageRecipient->getId()==$recipient->getId()){
                 if ($read){
-                    $recipient->setRecipientReadDate(new \DateTime());
+                    $messageRecipient->setRecipientReadDate(new \DateTime());
                 } else {
-                    $recipient->setRecipientReadDate(null);
+                    $messageRecipient->setRecipientReadDate(null);
                 }
-                $this->em->persist($recipient);
+                $this->em->persist($messageRecipient);
             }
         }
         
