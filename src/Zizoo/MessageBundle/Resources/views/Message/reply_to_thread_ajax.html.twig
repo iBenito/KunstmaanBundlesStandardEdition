@@ -1,3 +1,5 @@
+    <div>
+        <div class="reply_to_thread" id="{% if ajax %}reply_to_thread_inner_ajax{% else %}reply_to_thread_inner{% endif %}">
             <form id="send_message_form" novalidate="novalidate" action="{{ path('reply_to_thread') }}" method="post" {{ form_enctype(form) }}>
                 
                 <div>
@@ -25,4 +27,5 @@
                 <input type="button" value="Cancel" class="cancel_btn" />
             </form>
 
-            
+        </div>
+    </div>

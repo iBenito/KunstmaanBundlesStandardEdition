@@ -20,7 +20,7 @@ class Messenger {
     }
         
     private function sendNotificationMessageEmail(Profile $from, Profile $to, Message $message){
-        $messageLink = $this->container->get('router')->generate('open_received_message', array('messageId' => $message->getId()), true);
+        $messageLink = $this->container->get('router')->generate('view_thread', array('messageId' => $message->getId()), true);
         $twig = $this->container->get('twig');
         $template = $twig->loadTemplate('ZizooMessageBundle:Email:new_message.html.twig');
         $context = array(   'link'      => $messageLink,
@@ -46,7 +46,7 @@ class Messenger {
     }
     
     private function sendNotificationBookingEmail(Reservation $reservation, Profile $from, Profile $to){
-        //$messageLink = $this->container->get('router')->generate('open_received_message', array('messageId' => $message->getId()));
+        //$messageLink = $this->container->get('router')->generate('view_thread', array('messageId' => $message->getId()));
         $twig = $this->container->get('twig');
         $template = $twig->loadTemplate('ZizooBookingBundle:Email:new_booking.html.twig');
         $context = array(   'booking'      => $reservation->getId(),);

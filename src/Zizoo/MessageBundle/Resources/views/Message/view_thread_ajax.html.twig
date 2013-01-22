@@ -1,0 +1,47 @@
+    <div>
+        <div class="view_thread" id="{% if ajax %}view_thread_inner_ajax{% else %}view_thread_inner{% endif %}">
+            
+            <div id="thread">
+                {% for m in thread %}
+                    <div class="message{% if m.id == message.id %} current {% endif %}" id="message_{{ m.id}}">
+                        <div class="details">
+                            <div class="sender">{{ m|threadDisplay(profile) }}</div>
+                            <div class="date">{{ m.sent|date }}</div>
+                        </div>
+                        <div class="content">{{ m.body }}</div>
+                        <div style="clear: both"></div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% render 'ZizooMessageBundle:Message:replyToThread' with {to: to, lastMessageId: last_message_id, ajax: true, redirect: redirect} %}
+            
+            <style type="text/css">
+                #thread {
+                }
+
+                #thread .message {
+                    margin-bottom: 20px;
+                    clear: both;
+                }
+
+                #thread .message .details {
+                    float: left;
+                    margin-right: 50px;
+                }
+
+                #thread .message .content {
+                    float: left;
+                    border-radius: 15px;
+                    background-color: lightgrey;
+                    padding: 20px;
+                }
+
+                #thread .message.current .content {
+                    background-color: lightblue;
+                }
+            </style>
+
+        </div>
+            
+    </div>

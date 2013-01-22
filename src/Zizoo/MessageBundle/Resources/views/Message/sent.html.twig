@@ -17,7 +17,7 @@
 
     <div id="context_hidden" style="display: none">
         <div id="delete_hidden" class="empty">{% render 'ZizooMessageBundle:Message:deleteMessage' with {ajax: true, inbox: false} %}</div>
-        
+        <div id="thread_hidden" class="empty"></div>
     </div>
 
     <div class="contextMenu" id="contextMenu" style="display:none">
@@ -49,6 +49,24 @@
         function closeDeleteDialog(){
             $('#delete_message_inner_ajax').dialog('close');
             $('#delete_message_inner_ajax').unblock();
+        }
+        
+        function openThreadDialog(){
+            $('#view_thread_inner_ajax').dialog({
+                modal: true,
+                closeOnEscape: false,
+                resizable: true,
+                width: 600,
+                height: 800,
+                close: function(){
+                    $(this).dialog('destroy');
+                }
+            });
+        }
+
+        function closeThreadDialog(){
+            $('#view_thread_inner_ajax').dialog('close');            
+            $('#view_thread_inner_ajax').unblock();
         }
     
         function deleteListeners(){
@@ -85,6 +103,61 @@
             openDeleteDialog();
         }
     
+        function threadListeners(){
+            $(document).delegate('#view_thread_inner_ajax #send_message_form', 'submit', function(){
+                $('#view_thread_inner_ajax').block({ message: '' });
+                $.ajax({
+                    type: 'post', 
+                    url: $('#view_thread_inner_ajax #send_message_form').attr('action'),
+                    data:$('#view_thread_inner_ajax #send_message_form').serialize(),
+                    success: function(data, textStatus, XHR){
+                        var threadDiv = $(data).find('#view_thread_inner_ajax');
+                        var replyDiv  = $(data).find('#reply_to_thread_inner_ajax');
+                        if (threadDiv.length > 0){
+                            $('#view_thread_inner_ajax').html(threadDiv);
+                            $('#view_thread_inner_ajax').unblock();
+                            reloadGrid();
+                        } else if (replyDiv.length > 0){
+                            $('#reply_to_thread_inner_ajax').html(replyDiv);
+                            $('#view_thread_inner_ajax').unblock();
+                        } else {
+                            closeThreadDialog();
+                            reloadGrid();
+                        }
+                    },
+                    error: function(jqXHR, textStatus,errorThrown){
+                        closeThreadDialog();
+                    }
+                });
+                return false;
+            });
+        }
+        
+        function viewThread(url){
+            $.blockUI({ message: '' });
+            $.ajax({
+                type: 'get', 
+                url: url,
+                success: function(data, textStatus, XHR){
+                    var threadDiv = $(data).find('#view_thread_inner_ajax');
+                    if (threadDiv.length > 0){
+                        $('#thread_hidden').html(threadDiv);
+                        $(document).delegate('#view_thread_inner_ajax #send_message_form .cancel_btn', 'click', function(){
+                            closeThreadDialog();
+                        });
+                        openThreadDialog();
+                    } else {
+                        closeThreadDialog();
+                    }
+                    reloadGrid();
+                    $.unblockUI();
+                },
+                error: function(jqXHR, textStatus,errorThrown){
+                    closeThreadDialog();
+                }
+            });
+        }
+    
         function loadComplete(){
             $("tr.jqgrow", this).contextMenu('contextMenu', {
                 bindings: {
@@ -108,9 +181,7 @@
             });
         }
         
-        function messageOpen(msgId){
-            window.location.href = '{{ path('view_thread') }}/'+msgId+'/sent';
-        }
+       
     
         function messageDoubleClick(rowId, rowIndex, colIndex, e){
             var msgId = jQuery('#{{grid.name|raw}}').jqGrid('getCell', rowId, 'grid_sentmessage_id');
@@ -142,6 +213,7 @@
             jQuery('#showThreads_{{grid.name|raw}}').change(reloadGrid);
             
             deleteListeners();
+            threadListeners();
         });
 
     </script>
