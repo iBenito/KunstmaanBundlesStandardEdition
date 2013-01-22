@@ -1,6 +1,6 @@
 inbox:
-    pattern:  /inbox
-    defaults: { _controller: ZizooMessageBundle:Message:inbox }
+    pattern:  /inbox/{messageId}
+    defaults: { _controller: ZizooMessageBundle:Message:inbox, messageId: null }
 
 inbox_data:
     pattern:  /inbox-data

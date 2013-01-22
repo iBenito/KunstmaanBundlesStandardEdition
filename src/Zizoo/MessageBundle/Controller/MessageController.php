@@ -19,7 +19,7 @@ class MessageController extends Controller
     /**
      * @Template()
      */
-    public function inboxAction()
+    public function inboxAction($messageId=null)
     {
         $user           = $this->getUser();
         $profile        = $user->getProfile();
@@ -103,6 +103,14 @@ class MessageController extends Controller
                     ."          break;"
                     ."  }"
                     ."}";
+        
+        if ($messageId){
+            $extraJS .= "\n\n"
+                        ."$(document).ready(function(){"
+                        ."  url = '".$this->generateUrl('view_thread')."/".$messageId."/inbox';"
+                        ."  viewThread(url);"
+                        ."});";
+        }
         
         //COLUMNS DEFINITION
         $grid->addColumn('ID', array('name' => 'id', 'jsonmap' => 'cell.0','index' => 'm.id', 'hidden' => true, 'sortable' => false, 'search' => false));
