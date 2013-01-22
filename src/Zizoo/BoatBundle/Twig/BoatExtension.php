@@ -36,14 +36,14 @@ class BoatExtension extends \Twig_Extension
         if ($availabilities->count()==0) return false;
         if ($from=='' || $to=='') return true;
         foreach ($availabilities as $availability){
-            $from = \DateTime::createFromFormat('d/m/Y', $from);
-            $to = \DateTime::createFromFormat('d/m/Y', $to);
+            $fromDate = \DateTime::createFromFormat('d/m/Y', $from);
+            $toDate = \DateTime::createFromFormat('d/m/Y', $to);
 
-            $from->setTime(0, 0, 0);
-            $to->setTime(23, 59, 59);
-            if ($from >= $availability->getAvailableFrom() 
-                    && $to <= $availability->getAvailableUntil()
-                    && !$this->reservationExists($boat, $from, $to))
+            $fromDate->setTime(0, 0, 0);
+            $toDate->setTime(23, 59, 59);
+            if ($fromDate >= $availability->getAvailableFrom() 
+                    && $toDate <= $availability->getAvailableUntil()
+                    && !$this->reservationExists($boat, $fromDate, $toDate))
             {
                 return true;
             }

@@ -82,7 +82,7 @@ class MessageController extends Controller
         $extraJS = "function messageOpen(msgId, type){"
                     ."  switch (type){"
                     ."      case '0':"
-                    ."          url = '".$this->generateUrl('open_received_message')."/'+msgId;"
+                    ."          url = '".$this->generateUrl('view_thread')."/'+msgId+'/inbox';"
                     ."          window.location.href = url;"
                     ."          break;"
                     ."      case '1':"
@@ -98,7 +98,7 @@ class MessageController extends Controller
                     ."          alert('Feature not available yet');"
                     ."          break;"
                     ."      case '5':"
-                    ."          url = '".$this->generateUrl('open_received_message')."/'+msgId;"
+                    ."          url = '".$this->generateUrl('view_thread')."/'+msgId+'/inbox';"
                     ."          window.location.href = url;"
                     ."          break;"
                     ."  }"
@@ -162,16 +162,33 @@ class MessageController extends Controller
             $index = 0;
             $all_receivers = null;
             $output = false;
+            $num_recs = 0;
+            
+            $first_message      = true;
+            $message_changed    = false;
+            
             foreach ($pagination as $key => $item) {
                 $row = $item;
                 $message_id = $row['message_id'];
-                if ($message_id==$last_message_id){
-                    $all_receivers = $row['receiver'] . ', ' . $last_receiver;
-                } else if ($last_val){
-                    $last_val[2] = $all_receivers;
-                } else {
+                
+                if ($first_message){
+                    // first message
                     $all_receivers = $row['receiver'];
+                } else {
+                    if ($message_id==$last_message_id){
+                        // same message
+                        // combine all receivers of same message
+                        $all_receivers = $row['receiver'] . ', ' . $last_receiver;
+                        $message_changed = false;
+                    } else {
+                        // message changed
+                        // read in combined receivers to previous message
+                        $last_val[2] = $all_receivers;
+                        $all_receivers = $row['receiver'];
+                        $message_changed = true;
+                    }
                 }
+                
                 $val = array();
                 $columns = $grid->getColumns();
                 $templating = $grid->getTemplating();
@@ -191,18 +208,26 @@ class MessageController extends Controller
                     }
                 }
                 
-                if ($message_id!=$last_message_id && $last_val) {
-                    $response['rows'][$index++]['cell'] = $last_val;
-                    $output = true;
+                if ($first_message){
+                    $first_message = false;
                 } else {
-                    $output = false;
+                    if ($message_changed) {
+                        // message changed (implicitly not first message)
+                        // output last message
+                        $response['rows'][$index++]['cell'] = $last_val;
+                        $output = true;
+                        $num_recs++;
+                    } else {
+                        $output = false;
+                    }
                 }
-                
+
                 $last_message_id    = $message_id;
                 $last_receiver      = $row['receiver'];
                 $last_val           = $val;
             }
-            if (!$output){
+            if ($num_recs>0){
+                // if we found at least 1 message, output the last message
                 $last_val[2] = $all_receivers;
                 $response['rows'][$index++]['cell'] = $last_val;
             }
@@ -260,6 +285,7 @@ class MessageController extends Controller
         return ($grid->render());
     }
     
+    /**
     public function deleteSentMessageAction($messageId=null, $ajax=false){
         $user = $this->getUser();
         $profile = $user->getProfile();
@@ -334,7 +360,9 @@ class MessageController extends Controller
                                                                                                     'ajax'      => $ajax));
         }
     }
+    */
     
+    /**
     public function deleteReceivedMessageAction($messageId=null, $ajax=false){
         $user = $this->getUser();
         $profile = $user->getProfile();
@@ -422,6 +450,82 @@ class MessageController extends Controller
                                                                                                         'ajax'      => $ajax));
         }
     }
+    */
+    
+    public function deleteMessageAction($messageId=null, $inbox=false, $ajax=false){
+        $user = $this->getUser();
+        $profile = $user->getProfile();
+        $request = $this->getRequest();
+        if (!$ajax) $ajax    = $request->isXmlHttpRequest();
+        $em = $this->getDoctrine()->getEntityManager();
+        
+        if (!$messageId) {
+            // Try to et message_id from form if not passed directly
+            $f = $request->request->get('form', null);
+            if ($f && array_key_exists('message_id', $f)) $messageId = $f['message_id'];
+        }
+        if (!$inbox){
+            $f = $request->request->get('form', null);
+            if ($f && array_key_exists('inbox', $f)) $inbox = $f['inbox'];
+        }
+        $message = null;
+        if ($messageId){
+            $message = $em->getRepository('ZizooMessageBundle:message')->findOneBy(array( 'id' => $messageId));
+            if ($message){
+                // Get the entire thread
+                $thread = $em->getRepository('ZizooMessageBundle:Message')->getMessageThread($message, $profile);
+                // Get the thread that is available to the user
+                $thread = $em->getRepository('ZizooMessageBundle:Message')->getParticipantThread($thread, $profile, true);
+            }
+        }
+                    
+        if (!$message) $message = new Message();      
+        
+        $trans = $this->get('translator');
+        $defaultData = array(   'message_id'    => $messageId?$messageId:'',
+                                //'inbox'         => $inbox 
+                                );
+        $form = $this->createFormBuilder($defaultData)
+                        ->add('message_id', 'hidden')
+                        //->add('inbox', 'hidden', array( 'label' => null ))
+                        //->add('delete_thread', 'checkbox', array( 'label' => $trans->trans('zizoo_message.label.delete_thread')))
+                        ->getForm();
+        
+        // If submit
+        
+        if ($request->isMethod('POST')) {
+            $form->bind($request);
+
+            if ($form->isValid()){
+                $messenger = $this->get('messenger');
+                
+                $data = $form->getData();               
+                
+                // in future we can use this to undelete
+                $delete = true;
+                if ($inbox){
+                    $messenger->deleteReceivedThread($profile, $thread, $delete);
+                } else {
+                    $messenger->deleteSentThread($profile, $thread, $delete);
+                }
+                
+                return $this->redirect($this->generateUrl('message_deleted'));
+               
+            }
+        }
+
+      
+        
+        if ($ajax){
+            return $this->render('ZizooMessageBundle:Message:delete_message_ajax.html.twig', array( 'form'      => $form->createView(),
+                                                                                                    'inbox'     => $inbox,
+                                                                                                    'ajax'      => $ajax));
+        } else {
+            return $this->render('ZizooMessageBundle:Message:delete_message.html.twig', array(  'form'      => $form->createView(),
+                                                                                                'inbox'     => $inbox,
+                                                                                                'ajax'      => $ajax));
+        }
+    }
     
     public function messageDeletedAction(){
         return $this->render('ZizooMessageBundle:Message:delete_message_deleted.html.twig');
@@ -469,16 +573,26 @@ class MessageController extends Controller
         
     }
     
-    private function getLastIncomingMessageProfile($thread, Profile $profile){
-        $threadArr = array_reverse($thread);
-        foreach ($threadArr as $message){
-            if ($message->getSenderProfile()->getId()!=$profile->getId()){
-                return $message->getSenderProfile();
+    private function getSendToProfiles($thread, Profile $profile){
+        $thread = array_reverse($thread);
+        $recipientProfiles = array();
+        foreach ($thread as $message){
+            $senderProfile = $message->getSenderProfile();
+            if ($senderProfile->getId()!=$profile->getId() && !array_key_exists($senderProfile->getId(), $recipientProfiles)){
+                $recipientProfiles[$senderProfile->getId()] = $message->getSenderProfile();
+            }
+            $messageRecipients = $message->getRecipients();
+            foreach ($messageRecipients as $messageRecipient){
+                $recipientProfile = $messageRecipient->getRecipientProfile();
+                if ($recipientProfile->getId()!=$profile->getId() && !array_key_exists($recipientProfile->getId(), $recipientProfiles)){
+                    $recipientProfiles[$recipientProfile->getId()] = $messageRecipient->getRecipientProfile();
+                }
             }
         }
-        return null;
+        return $recipientProfiles;
     }
     
+    /**
     public function openReceivedMessageAction($messageId=null, $ajax=false){
         $user = $this->getUser();
         $profile = $user->getProfile();
@@ -488,6 +602,7 @@ class MessageController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         
         if (!$messageId) {
+            // Try to et message_id from form if not passed directly
             $f = $request->request->get('form', null);
             if ($f && array_key_exists('message_id', $f)) $messageId = $f['message_id'];
         }
@@ -498,33 +613,28 @@ class MessageController extends Controller
         if (!$message){
             throw $this->createNotFoundException('This message does not exist');
         }
-    
-        $userIsRecipient = false;
-        $recipients = $message->getRecipients();
-        foreach ($recipients as $recipient){
-            if ($profile->getId()==$recipient->getRecipientProfile()->getId() && $recipient->getRecipientKeep()){
-                $userIsRecipient = true;
-                break;
-            }
-        }
-        if (!$userIsRecipient){
+            
+        // Get the entire thread
+        $thread = $em->getRepository('ZizooMessageBundle:Message')->getIncomingMessageThread($message, $profile);
+        // Get the thread that is available to the user
+        $thread = $em->getRepository('ZizooMessageBundle:Message')->getParticipantThread($thread, $profile);
+        
+        if (count($thread)==0){
             throw $this->createNotFoundException('This message does not exist');
         }
-        
-        $thread = $em->getRepository('ZizooMessageBundle:Message')->getMessageThread($message);
-        $to = $this->getLastIncomingMessageProfile($thread, $profile);
+        $lastMessage = $thread[count($thread) - 1];
+        $lastMessageId = $lastMessage->getId();
+        $to = $this->getSendToProfiles($thread, $profile);
         if (!$to){
             throw $this->createNotFoundException('This message does not exist');
         }
-        $lastMessage = $thread[count($thread) -1];
-        $lastMessageId = $lastMessage->getId();
 
-        $redirect = 'open_sent_message';
+        $redirect = 'open_received_message';
         if ($ajax){
              return $this->render('ZizooMessageBundle:Message:open_received_message_ajax.html.twig', array( 'thread'            => $thread,
                                                                                                             'message'           => $message,
                                                                                                             'profile'           => $profile,
-                                                                                                            'to'                => $to->getId(),
+                                                                                                            'to'                => $to,
                                                                                                             'last_message_id'   => $lastMessageId,
                                                                                                             'redirect'          => $redirect,
                                                                                                             'ajax'              => $ajax));
@@ -532,7 +642,7 @@ class MessageController extends Controller
             return $this->render('ZizooMessageBundle:Message:open_received_message.html.twig', array(   'thread'            => $thread,
                                                                                                         'message'           => $message,
                                                                                                         'profile'           => $profile,
-                                                                                                        'to'                => $to->getId(),
+                                                                                                        'to'                => $to,
                                                                                                         'last_message_id'   => $lastMessageId,
                                                                                                         'redirect'          => $redirect,
                                                                                                         'ajax'              => $ajax));
@@ -548,36 +658,39 @@ class MessageController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         
         if (!$messageId) {
+            // Try to et message_id from form if not passed directly
             $f = $request->request->get('form', null);
             if ($f && array_key_exists('message_id', $f)) $messageId = $f['message_id'];
         }
         if (!$messageId){
            throw $this->createNotFoundException('This message does not exist');
         }
-        $message = $em->getRepository('ZizooMessageBundle:message')->findOneBy(array(   'id'            => $messageId,
-                                                                                        'sender_keep'   => true));
+        $message = $em->getRepository('ZizooMessageBundle:message')->findOneBy(array( 'id' => $messageId));
         if (!$message){
             throw $this->createNotFoundException('This message does not exist');
         }
-
-        if ($profile->getId()!=$message->getSenderProfile()->getId()){
+            
+        // Get the entire thread
+        $thread = $em->getRepository('ZizooMessageBundle:Message')->getSentMessageThread($message, $profile);
+        // Get the thread that is available to the user
+        $thread = $em->getRepository('ZizooMessageBundle:Message')->getParticipantThread($thread, $profile);
+        
+        if (count($thread)==0){
             throw $this->createNotFoundException('This message does not exist');
         }
-        
-        $thread = $em->getRepository('ZizooMessageBundle:Message')->getMessageThread($message);
-        $to = $this->getLastIncomingMessageProfile($thread, $profile);
+        $lastMessage = $thread[count($thread) - 1];
+        $lastMessageId = $lastMessage->getId();
+        $to = $this->getSendToProfiles($thread, $profile);
         if (!$to){
             throw $this->createNotFoundException('This message does not exist');
         }
-        $lastMessage = $thread[count($thread) -1];
-        $lastMessageId = $lastMessage->getId();
 
         $redirect = 'open_sent_message';
         if ($ajax){
              return $this->render('ZizooMessageBundle:Message:open_sent_message_ajax.html.twig', array( 'thread'            => $thread,
                                                                                                         'message'           => $message,
                                                                                                         'profile'           => $profile,
-                                                                                                        'to'                => $to->getId(),
+                                                                                                        'to'                => $to,
                                                                                                         'last_message_id'   => $lastMessageId,
                                                                                                         'redirect'          => $redirect,
                                                                                                         'ajax'              => $ajax));
@@ -585,19 +698,93 @@ class MessageController extends Controller
             return $this->render('ZizooMessageBundle:Message:open_sent_message.html.twig', array(   'thread'            => $thread,
                                                                                                     'message'           => $message,
                                                                                                     'profile'           => $profile,
-                                                                                                    'to'                => $to->getId(),
+                                                                                                    'to'                => $to,
+                                                                                                    'last_message_id'   => $lastMessageId,
+                                                                                                    'redirect'          => $redirect,
+                                                                                                    'ajax'              => $ajax));
+        }
+    }
+    */
+    
+    public function viewThreadAction($messageId=null, $ajax=false, $redirect){
+        $user = $this->getUser();
+        $profile = $user->getProfile();
+        $request = $this->getRequest();
+        if (!$ajax) $ajax = $request->isXmlHttpRequest();
+        
+        $em = $this->getDoctrine()->getEntityManager();
+        
+        if (!$messageId) {
+            // Try to et message_id from form if not passed directly
+            $f = $request->request->get('form', null);
+            if ($f && array_key_exists('message_id', $f)) $messageId = $f['message_id'];
+        }
+        if (!$messageId){
+            if ($ajax){
+                throw $this->createNotFoundException('This message does not exist');
+            } else {
+                return $this->redirect($this->generateUrl($redirect));
+            }
+        }
+        $message = $em->getRepository('ZizooMessageBundle:message')->findOneBy(array( 'id' => $messageId));
+        if (!$message){
+            if ($ajax){
+                throw $this->createNotFoundException('This message does not exist');
+            } else {
+                return $this->redirect($this->generateUrl($redirect));
+            }
+        }
+            
+        // Get the entire thread
+        $thread = $em->getRepository('ZizooMessageBundle:Message')->getMessageThread($message, $profile);
+        // Get the thread that is available to the user
+        $thread = $em->getRepository('ZizooMessageBundle:Message')->getParticipantThread($thread, $profile);
+        
+        if (count($thread)==0){
+            if ($ajax){
+                throw $this->createNotFoundException('This message does not exist');
+            } else {
+                return $this->redirect($this->generateUrl($redirect));
+            }
+        }
+        $lastMessage = $thread[count($thread) - 1];
+        $lastMessageId = $lastMessage->getId();
+        $to = $this->getSendToProfiles($thread, $profile);
+        if (!$to){
+            if ($ajax){
+                throw $this->createNotFoundException('This message does not exist');
+            } else {
+                return $this->redirect($this->generateUrl($redirect));
+            }
+        }
+
+        
+        if ($ajax){
+             return $this->render('ZizooMessageBundle:Message:open_sent_message_ajax.html.twig', array( 'thread'            => $thread,
+                                                                                                        'message'           => $message,
+                                                                                                        'profile'           => $profile,
+                                                                                                        'to'                => $to,
+                                                                                                        'last_message_id'   => $lastMessageId,
+                                                                                                        'redirect'          => $redirect,
+                                                                                                        'ajax'              => $ajax));
+        } else {
+            return $this->render('ZizooMessageBundle:Message:open_sent_message.html.twig', array(   'thread'            => $thread,
+                                                                                                    'message'           => $message,
+                                                                                                    'profile'           => $profile,
+                                                                                                    'to'                => $to,
                                                                                                     'last_message_id'   => $lastMessageId,
                                                                                                     'redirect'          => $redirect,
                                                                                                     'ajax'              => $ajax));
         }
     }
     
-    public function sendMessageAction($lastMessageId=null, $to=null, $ajax=false, $redirect=null){
+    public function replyToThreadAction($lastMessageId=null, $to=null, $ajax=false, $redirect=null){
         $user = $this->getUser();
         $profile = $user->getProfile();
         $request = $this->getRequest();
         if (!$ajax) $ajax = $request->isXmlHttpRequest();
         $em = $this->getDoctrine()->getEntityManager();
+        
         
         $f = $request->request->get('form', null);
         if (!$lastMessageId) {
@@ -607,34 +794,100 @@ class MessageController extends Controller
             if ($f && array_key_exists('to', $f)) $to = $f['to'];
         }
         
-        if (!$to){
-            throw $this->createNotFoundException('Error');
-        }
-        $toProfile = $em->getRepository('ZizooProfileBundle:Profile')->findOneById($to);
-        if (!$toProfile){
-            throw $this->createNotFoundException('Error');
-        }
-        
         if (!$redirect){
             if ($f && array_key_exists('redirect', $f)) $redirect = $f['redirect'];
         }
         
-        $defaultData = array(   'reply_to_message_id'  => $lastMessageId?$lastMessageId:'',
-                                'from'                 => $profile->getID(),
-                                'to'                   => $toProfile->getId(),
-                                'redirect'             => $redirect);
+        
+        if ($redirect=='open_received_message'){
+            $recipients = array();
+            if ($lastMessageId){
+                $message = $em->getRepository('ZizooMessageBundle:message')->findOneBy(array(   'id'            => $lastMessageId,
+                                                                                                'sender_keep'   => true));
+                if ($message){
+                    // Get the entire thread
+                    $thread = $em->getRepository('ZizooMessageBundle:Message')->getIncomingMessageThread($message, $profile);
+                    // Get the thread that is available to the user
+                    $thread = $em->getRepository('ZizooMessageBundle:Message')->getParticipantThread($thread, $profile);
 
-        $form = $this->createFormBuilder($defaultData)
-                        ->add('from', 'hidden')
-                        ->add('to', 'hidden')
-                        ->add('reply_to_message_id', 'hidden')
-                        ->add('redirect', 'hidden')
-                        ->add('message_body', 'textarea', array(
-                                                                'constraints' => array(
-                                                                    new NotBlank()
-                                                                ),
-                                                            ))
-                        ->getForm();
+                    if (count($thread)==0){
+                        if ($ajax){
+                            throw $this->createNotFoundException('This message does not exist');
+                        } else {
+                            return $this->redirect($request->headers->get('referer'));
+                        }
+                    }
+                    $to = $this->getSendToProfiles($thread, $profile);
+                    foreach ($to as $key => $t){
+                        $recipients[$key] = $t->getUser()->getUsername();
+                    }
+                }
+            }
+        } else {
+            $recipients = array();
+            if ($lastMessageId){
+                $message = $em->getRepository('ZizooMessageBundle:message')->findOneBy(array(   'id'            => $lastMessageId,
+                                                                                                'sender_keep'   => true));
+                if ($message){
+                    // Get the entire thread
+                    $thread = $em->getRepository('ZizooMessageBundle:Message')->getSentMessageThread($message, $profile);
+                    // Get the thread that is available to the user
+                    $thread = $em->getRepository('ZizooMessageBundle:Message')->getParticipantThread($thread, $profile);
+
+                    $to = $this->getSendToProfiles($thread, $profile);
+                    foreach ($to as $key => $t){
+                        $recipients[$key] = $t->getUser()->getUsername();
+                    }
+                }
+            }
+        }
+        if (count($recipients)==0){
+            if ($ajax){
+                throw $this->createNotFoundException('This message does not exist');
+            } else {
+                return $this->redirect($request->headers->get('referer'));
+            }
+        }
+        
+        if (count($recipients)>1){
+            $defaultData = array(   'reply_to_message_id'  => $lastMessageId?$lastMessageId:'',
+                                    'from'                 => $profile->getID(),
+                                    'to'                   => $recipients,
+                                    'redirect'             => $redirect);
+
+            $form = $this->createFormBuilder($defaultData)
+                            ->add('from', 'hidden')
+                            ->add('to', 'choice', array(
+                                                        'choices'   => $recipients,
+                                                        'multiple'  => true,
+                                                        'required'  => true))
+                            ->add('reply_to_message_id', 'hidden')
+                            ->add('redirect', 'hidden')
+                            ->add('message_body', 'textarea', array(
+                                                                    'constraints' => array(
+                                                                        new NotBlank()
+                                                                    ),
+                                                                ))
+                            ->getForm();
+        } else {
+            reset($to);
+            $defaultData = array(   'reply_to_message_id'  => $lastMessageId?$lastMessageId:'',
+                                    'from'                 => $profile->getID(),
+                                    'to'                   => current($to)->getId(),
+                                    'redirect'             => $redirect);
+
+            $form = $this->createFormBuilder($defaultData)
+                            ->add('from', 'hidden')
+                            ->add('to', 'hidden')
+                            ->add('reply_to_message_id', 'hidden', array('label' => null, 'required'  => true))
+                            ->add('redirect', 'hidden')
+                            ->add('message_body', 'textarea', array(
+                                                                    'constraints' => array(
+                                                                        new NotBlank()
+                                                                    ),
+                                                                ))
+                            ->getForm();
+        }
         
         if ($request->isMethod('POST')) {
             
@@ -653,10 +906,23 @@ class MessageController extends Controller
                     $replyToId = $data['reply_to_message_id'];
                     $previous = $em->getRepository('ZizooMessageBundle:Message')->findOneById($replyToId);                    
                 }
+                $to = null;
+                if (array_key_exists('to', $data)) $to = $data['to'];
+                
+                if (!$to || count($to)==0){
+                    if ($ajax){
+                        throw $this->createNotFoundException('This message does not exist');
+                    } else {
+                        return $this->redirect($request->headers->get('referer'));
+                    }
+                }
                 if (!$previous) $subject = '';
                 $messenger = $this->get('messenger');
+ 
+                $toProfiles = $em->getRepository('ZizooProfileBundle:Profile')->findById($to);
+                
                 //Profile $sender, Profile $recipient, $body, $subject=null, Message $previous=null, $setRecipient=true
-                $message = $messenger->sendMessageTo($profile, $toProfile, $body, $subject, $previous, false);
+                $message = $messenger->sendMessage($profile, new ArrayCollection($toProfiles), $body, $subject, $previous, false);
                 if ($redirect){
                     return $this->redirect($this->generateUrl($redirect, array( 'messageId' => $message->getId())));
                 } else {
@@ -674,25 +940,23 @@ class MessageController extends Controller
                 if ($redirect){
                     return $this->redirect($request->headers->get('referer'));
                 } else {
-                    return $this->redirect($this->generateUrl('inbox'));
+                    return $this->redirect($this->generateUrl('account'));
                 }
             }
         }
         
         if ($ajax){
-             return $this->render('ZizooMessageBundle:Message:send_message_ajax.html.twig', array(  'from'              => $profile->getId(),
-                                                                                                    'to'                => $toProfile->getId(),
+             return $this->render('ZizooMessageBundle:Message:reply_to_thread_ajax.html.twig', array(   'from'              => $profile->getId(),
+                                                                                                        'last_message_id'   => $lastMessageId,
+                                                                                                        'form'              => $form->createView(),
+                                                                                                        'redirect'          => $redirect,
+                                                                                                        'ajax'              => $ajax));
+        } else {
+            return $this->render('ZizooMessageBundle:Message:reply_to_thread.html.twig', array(     'from'              => $profile->getId(),
                                                                                                     'last_message_id'   => $lastMessageId,
                                                                                                     'form'              => $form->createView(),
                                                                                                     'redirect'          => $redirect,
                                                                                                     'ajax'              => $ajax));
-        } else {
-            return $this->render('ZizooMessageBundle:Message:send_message.html.twig', array(    'from'              => $profile->getId(),
-                                                                                                'to'                => $toProfile->getId(),
-                                                                                                'last_message_id'   => $lastMessageId,
-                                                                                                'form'              => $form->createView(),
-                                                                                                'redirect'          => $redirect,
-                                                                                                'ajax'              => $ajax));
         }
     }
 }

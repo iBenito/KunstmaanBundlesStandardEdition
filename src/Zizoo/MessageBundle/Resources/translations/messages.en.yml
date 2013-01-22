@@ -1,6 +1,6 @@
-zizoo_message.label.confirm_sent_message_delete:  Are you sure you want to delete this message from your sent messages?
+zizoo_message.label.confirm_sent_message_delete:  Are you sure you want to delete this message thread from your sent messages?
 
-zizoo_message.label.confirm_received_message_delete:  Are you sure you want to delete this message from your inbox?
+zizoo_message.label.confirm_received_message_delete:  Are you sure you want to delete this message thread from your inbox?
 
 zizoo_message.message.message_deleted:  Message was deleted
 

@@ -16,7 +16,7 @@
     </div>
 
     <div id="context_hidden" style="display: none">
-        <div id="delete_hidden" class="empty">{% render 'ZizooMessageBundle:Message:deleteSentMessage' with {ajax: true} %}</div>
+        <div id="delete_hidden" class="empty">{% render 'ZizooMessageBundle:Message:deleteMessage' with {ajax: true, inbox: false} %}</div>
         
     </div>
 
@@ -36,7 +36,7 @@
     <script type="text/javascript">
     
         function openDeleteDialog(){
-            $('#delete_sent_message_inner_ajax').dialog({
+            $('#delete_message_inner_ajax').dialog({
                 modal: true,
                 closeOnEscape: false,
                 resizable: false,
@@ -47,22 +47,22 @@
         }
 
         function closeDeleteDialog(){
-            $('#delete_sent_message_inner_ajax').dialog('close');
-            $('#delete_sent_message_inner_ajax').unblock();
+            $('#delete_message_inner_ajax').dialog('close');
+            $('#delete_message_inner_ajax').unblock();
         }
     
         function deleteListeners(){
-            $(document).delegate('#delete_sent_message_inner_ajax #delete_sent_message_form', 'submit', function(){
-                $('#delete_sent_message_inner_ajax').block({ message: '' });
+            $(document).delegate('#delete_message_inner_ajax #delete_message_form', 'submit', function(){
+                $('#delete_message_inner_ajax').block({ message: '' });
                 $.ajax({
                     type: 'post', 
-                    url: $('#delete_sent_message_inner_ajax #delete_sent_message_form').attr('action'),
-                    data:$('#delete_sent_message_inner_ajax #delete_sent_message_form').serialize(),
+                    url: $('#delete_message_inner_ajax #delete_message_form').attr('action'),
+                    data:$('#delete_message_inner_ajax #delete_message_form').serialize(),
                     success: function(data, textStatus, XHR){
-                        var deleteDiv = $(data).find('#delete_sent_message_inner_ajax');
+                        var deleteDiv = $(data).find('#delete_message_inner_ajax');
                         if (deleteDiv.length > 0){
-                            $('#delete_sent_message_inner_ajax').html(deleteDiv);
-                            $('#delete_sent_message_inner_ajax').unblock();
+                            $('#delete_message_inner_ajax').html(deleteDiv);
+                            $('#delete_message_inner_ajax').unblock();
                         } else {
                             closeDeleteDialog();
                             reloadGrid();
@@ -78,8 +78,8 @@
     
         
         function deleteMessagePopup(msgId){
-            $('#delete_sent_message_inner_ajax #form_message_id').val(msgId);
-            $('#delete_sent_message_inner_ajax .cancel_btn').unbind('click').click(function(){
+            $('#delete_message_inner_ajax #form_message_id').val(msgId);
+            $('#delete_message_inner_ajax .cancel_btn').unbind('click').click(function(){
                 closeDeleteDialog();
             });
             openDeleteDialog();
@@ -96,7 +96,7 @@
                     'del': function(trigger) {
                         var msgId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_sentmessage_id');
                         deleteMessagePopup(msgId);
-                        //window.location.href = '{{ path('delete_sent_message')}}/'+msgId;
+                        //window.location.href = '{{ path('delete_message')}}/'+msgId;
                     }
                 },
                 onContextMenu: function(event/*, menu*/) {
@@ -109,7 +109,7 @@
         }
         
         function messageOpen(msgId){
-            window.location.href = '{{ path('open_sent_message') }}/'+msgId;
+            window.location.href = '{{ path('view_thread') }}/'+msgId+'/sent';
         }
     
         function messageDoubleClick(rowId, rowIndex, colIndex, e){

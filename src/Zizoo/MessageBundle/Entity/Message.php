@@ -61,7 +61,7 @@ class Message
     /**
      * 
      * @ORM\OneToOne(targetEntity="Message")
-     * @ORM\JoinColumn(name="reply_to_message", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * @ORM\JoinColumn(name="reply_to_message", referencedColumnName="id", nullable=true, unique=false, onDelete="SET NULL")
      */
     private $reply_to_message;
 

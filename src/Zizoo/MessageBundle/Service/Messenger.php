@@ -18,7 +18,7 @@ class Messenger {
         $this->em           = $em;
         $this->container    = $container;
     }
-    
+        
     private function sendNotificationMessageEmail(Profile $from, Profile $to, Message $message){
         $messageLink = $this->container->get('router')->generate('open_received_message', array('messageId' => $message->getId()), true);
         $twig = $this->container->get('twig');
@@ -164,55 +164,53 @@ class Messenger {
         return $this->sendReservationMessage($reservation, $sender, new ArrayCollection(array($recipient)), $body, $subject, $previous, $setRecipient);
     }
     
-    public function deleteSentMessage(Profile $sender, Message $message, $deleteThread=true){
-        if ($sender->getId()!=$message->getSenderProfile()->getId()){
-            return false;
-        }
-        if ($deleteThread){
-            $thread = $this->em->getRepository('ZizooMessageBundle:Message')->getMessageThread($message);
-            foreach ($thread as $threadMessage){
-                if ($threadMessage->getSenderProfile()->getId()==$sender->getId()){
-                    $threadMessage->setSenderKeep(false);
-                    $this->em->persist($threadMessage);
-                }
-            }
-        } else {
-            if ($message->getSenderProfile()->getId()==$sender->getId()){
-                $message->setSenderKeep(false);
-                $this->em->persist($message);
-            }
-        }
-        $this->em->flush();
-        
-        return $message;
-    }
     
-    public function deleteReceivedMessage(Profile $recipient, Message $message, $deleteThread=true){
-        if ($deleteThread){
-            $thread = $this->em->getRepository('ZizooMessageBundle:Message')->getMessageThread($message);
-            foreach ($thread as $threadMessage){
-                $messageRecipients = $threadMessage->getRecipients();
-                foreach ($messageRecipients as $messageRecipient){
-                    if ($messageRecipient->getRecipientProfile()->getId()==$recipient->getId()){
-                        $messageRecipient->setRecipientKeep(false);
-                        $this->em->persist($messageRecipient);
-                    }
-                }
-            }
-        } else {
-            $messageRecipients = $message->getRecipients();
+    
+    
+    public function deleteReceivedThread(Profile $recipient, $thread, $delete=true){
+        foreach ($thread as $threadMessage){
+            $messageRecipients = $threadMessage->getRecipients();
             foreach ($messageRecipients as $messageRecipient){
                 if ($messageRecipient->getRecipientProfile()->getId()==$recipient->getId()){
-                    $messageRecipient->setRecipientKeep(false);
+                    $messageRecipient->setRecipientKeep(!$delete);
                     $this->em->persist($messageRecipient);
                 }
             }
         }
         $this->em->flush();
-        
-        return $message;
     }
     
+    public function deleteSentThread(Profile $sender, $thread, $delete=true){
+        foreach ($thread as $threadMessage){
+            if ($threadMessage->getSenderProfile()->getId()==$sender->getId()){
+                $threadMessage->setSenderKeep(!$delete);
+                $this->em->persist($threadMessage);
+            }
+        }
+        $this->em->flush();
+    }
+    
+    public function deleteReceivedMessage(Profile $recipient, Message $message, $delete=true){
+        $deleteThread = true;
+        if ($deleteThread){
+            $thread = $this->em->getRepository('ZizooMessageBundle:Message')->getMessageThread($message);
+            $this->deleteReceivedThread($recipient, $thread, $delete);
+        } else {
+            $this->deleteReceivedThread($recipient, array($message), $delete);
+        }
+    }
+    
+    public function deleteSentMessage(Profile $sender, Message $message, $delete=true){
+        $deleteThread=true;
+        if ($deleteThread){
+            $thread = $this->em->getRepository('ZizooMessageBundle:Message')->getMessageThread($message);
+            $this->deleteReceivedThread($sender, $thread, $delete);
+        } else {
+            $this->deleteReceivedThread($sender, array($message), $delete);
+        }
+    }
+    
+
     public function markReceivedMessage(Profile $recipient, Message $message, $read){
         $recipients = $message->getRecipients();
         foreach ($recipients as $recipient){

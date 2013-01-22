@@ -2,6 +2,8 @@
 
 namespace Zizoo\MessageBundle\Entity;
 
+use Zizoo\ProfileBundle\Entity\Profile;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 
@@ -59,28 +61,67 @@ class MessageRepository extends EntityRepository
         return $qb->getQuery()->getOneOrNullResult();
     }
     
-    public function getMessageThread(Message $message){
-        /**$previousMessages   = new ArrayCollection();
-        $afterMessages      = new ArrayCollection();
-        $afterMessages->add($message);
-        
-        while ( ($previous = $message->getReplyToMessage()) !=null){
-            $previousMessages->add($previous);
-            $message = $previous;
-        }
-        $previousMessages = new ArrayCollection(array_reverse($previousMessages->toArray()));
-        
-        
-        while ( ($next = $this->getReply($message)) != null){
-            $afterMessages->add($next);
-            $message = $next;
-        }
-        
-        return new ArrayCollection(array_merge($previousMessages->toArray(), $afterMessages->toArray()));*/
+    public function getIncomingMessageThread(Message $message){
+        $root = $message->getThreadRootMessage();
+        if ($root) $root = $this->findOneBy(array(   'id'            => $root ) );
+        if (!$root) $root = $message;
+        /**
         $root = $message;
         while ( ($previous = $root->getReplyToMessage()) !=null){
             $root = $previous;
         }
+        */
+        
+        $qb = $this->createQueryBuilder('m')
+                    ->leftJoin('m.recipients', 'r')
+                    ->select('m')
+                    ->where('m.id = :message_id')
+                        ->setParameter('message_id', $message->getId())
+                    ->orWhere('m.id = :message_id')
+                        ->setParameter('message_id', $root->getId())
+                    ->orWhere('m.thread_root_message = :root_id')
+                        ->setParameter('root_id', $root->getId())
+                    ->orderBy('m.id', 'asc');
+        
+        return $qb->getQuery()->getResult();
+    }
+    
+    public function getSentMessageThread(Message $message){
+        $root = $message->getThreadRootMessage();
+        if ($root) $root = $this->findOneBy(array(   'id'            => $root ) );
+        if (!$root) $root = $message;
+        /**
+        $root = $message;
+        while ( ($previous = $root->getReplyToMessage()) !=null){
+            $root = $previous;
+        }
+        */
+        
+        $qb = $this->createQueryBuilder('m')
+                    ->leftJoin('m.sender_profile', 'sp')
+                    ->select('m')
+                    ->where('m.id = :message_id')
+                        ->setParameter('message_id', $message->getId())
+                    ->orWhere('m.id = :message_id')
+                        ->setParameter('message_id', $root->getId())
+                    ->orWhere('m.thread_root_message = :root_id')
+                        ->setParameter('root_id', $root->getId())
+                    ->orderBy('m.id', 'asc');
+        
+        return $qb->getQuery()->getResult();
+    }
+    
+    
+    public function getMessageThread(Message $message){
+        $root = $message->getThreadRootMessage();
+        if ($root) $root = $this->findOneBy(array(   'id'            => $root ) );
+        if (!$root) $root = $message;
+        /**
+        $root = $message;
+        while ( ($previous = $root->getReplyToMessage()) !=null){
+            $root = $previous;
+        }
+        */
         
         $qb = $this->createQueryBuilder('m')
                     ->select('m')
@@ -96,4 +137,26 @@ class MessageRepository extends EntityRepository
     }
     
    
+    public function getParticipantThread($thread, Profile $profile, $ignoreDeleted=false){
+        $participantThread = array();
+        foreach ($thread as $threadMessage){
+            if ($threadMessage->getSenderProfile()->getId()==$profile->getId()){
+                // User is sender
+                if ($threadMessage->getSenderKeep() || $ignoreDeleted){
+                    $participantThread[] = $threadMessage;
+                }
+            }
+            $threadMessageRecipients = $threadMessage->getRecipients();
+            foreach ($threadMessageRecipients as $threadMessageRecipient){
+                $recipientProfile = $threadMessageRecipient->getRecipientProfile();
+                if ($recipientProfile->getId()==$profile->getId()){
+                    // User is recipient
+                    if ($threadMessageRecipient->getRecipientKeep() || $ignoreDeleted){
+                        $participantThread[] = $threadMessage;
+                    }
+                }
+            }
+        }
+        return $participantThread;
+    }
 }

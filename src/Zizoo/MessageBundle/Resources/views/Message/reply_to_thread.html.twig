@@ -1,9 +1,9 @@
-{# src/Zizoo/MessageBundle/Resources/views/Message/send_message.html.twig #}
+{# src/Zizoo/MessageBundle/Resources/views/Message/reply_to_thread.html.twig #}
 {% extends 'ZizooUserBundle::layout.html.twig' %}
 {% block body %}
 
     {% block ajax %}
-        {% include 'ZizooMessageBundle:Message:send_message_ajax.html.twig' %}
+        {% include 'ZizooMessageBundle:Message:reply_to_thread_ajax.html.twig' %}
     {% endblock %}
 
     <script type="text/javascript">

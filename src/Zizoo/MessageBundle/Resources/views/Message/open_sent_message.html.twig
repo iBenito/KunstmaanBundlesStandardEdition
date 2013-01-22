@@ -9,7 +9,7 @@
     <script type="text/javascript">
         $(document).ready(function(){
             $('#send_message_form .cancel_btn').unbind('click').click(function(){
-                window.location.href = '{{ path('sent') }}';
+                window.location.href = '{{ path(redirect) }}';
             });
             
             $('input[type="button"], input[type="submit"], button').button();

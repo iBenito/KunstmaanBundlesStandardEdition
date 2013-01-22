@@ -78,7 +78,15 @@ class MessageFixtures implements OrderedFixtureInterface, SharedFixtureInterface
         $recipients->add($profile3);
         //Profile $sender, ArrayCollection $recipients, $body, $subject=null, Message $previous=null, $setRecipient=true
         $message4 = $messenger->sendMessage($profile1, $recipients, "Awesome!", '2nd thread');
+        
+        
+        // Message thread 3 from profile 1 (Alex) to profile 2 (Benny)
+        //Profile $sender, Profile $recipient, $body, $subject=null, Message $previous=null, $setRecipient=true
+        $message = $messenger->sendMessageTo($profile1, $profile2, 'Only to Benny', '3rd thread!');
 
+        // Message thread 4 from profile 2 (Benny) to profile 1 (Alex)
+        //Profile $sender, Profile $recipient, $body, $subject=null, Message $previous=null, $setRecipient=true
+        $message = $messenger->sendMessageTo($profile2, $profile1, 'Only to alex', '4th thread!');
     }
 
     public function getOrder()

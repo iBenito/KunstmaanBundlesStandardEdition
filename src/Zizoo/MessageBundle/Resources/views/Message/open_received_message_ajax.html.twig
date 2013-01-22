@@ -14,7 +14,7 @@
                 {% endfor %}
             </div>
 
-            {% render 'ZizooMessageBundle:Message:sendMessage' with {to: to, lastMessageId: last_message_id, ajax: true, redirect: redirect} %}
+            {% render 'ZizooMessageBundle:Message:replyToThread' with {to: to, lastMessageId: last_message_id, ajax: true, redirect: redirect} %}
             
 
         </div>

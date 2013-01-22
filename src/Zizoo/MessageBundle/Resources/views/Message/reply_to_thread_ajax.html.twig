@@ -1,4 +1,10 @@
-            <form id="send_message_form" novalidate="novalidate" action="{{ path('send_message') }}" method="post" {{ form_enctype(form) }}>
+            <form id="send_message_form" novalidate="novalidate" action="{{ path('reply_to_thread') }}" method="post" {{ form_enctype(form) }}>
+                
+                <div>
+                    {{ form_label(form.to) }}
+                    {{ form_errors(form.to) }}                  
+                    {{ form_widget(form.to) }}
+                </div>
                 
                 <div>
                     {{ form_label(form.message_body) }}

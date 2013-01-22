@@ -3,7 +3,6 @@ namespace Zizoo\ProfileBundle\Entity;
 
 use Zizoo\ProfileBundle\Entity\Profile\NotificationSettings;
 
-use FOS\MessageBundle\Model\ParticipantInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 

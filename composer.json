@@ -21,7 +21,8 @@
         "jms/security-extra-bundle": "1.2.*",
         "jms/di-extra-bundle": "1.1.*",
         "liip/imagine-bundle": "*",
-        "knplabs/knp-paginator-bundle": "*"
+        "knplabs/knp-paginator-bundle": "*",
+        "braintree/braintree_php": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [
