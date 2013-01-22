@@ -214,7 +214,7 @@ class Messenger {
     public function markReceivedMessage(Profile $recipient, Message $message, $read){
         $recipients = $message->getRecipients();
         foreach ($recipients as $messageRecipient){
-            if ($messageRecipient->getId()==$recipient->getId()){
+            if ($messageRecipient->getRecipientProfile()->getId()==$recipient->getId()){
                 if ($read){
                     $messageRecipient->setRecipientReadDate(new \DateTime());
                 } else {
