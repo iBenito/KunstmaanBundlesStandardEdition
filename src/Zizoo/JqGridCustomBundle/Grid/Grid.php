@@ -63,7 +63,7 @@ class Grid extends GridTools
 
     private $onlyData;
 
-    private $qb;
+    private $sourceData;
     private $name;
     private $options;
     private $routeforced;
@@ -96,7 +96,7 @@ class Grid extends GridTools
     protected $getDataFunctionResponse;
     
     protected $extraParams;
-
+    
     /**
      * @param \Symfony\Component\DependencyInjection\Container $container
      */
@@ -199,11 +199,10 @@ class Grid extends GridTools
     /**
      * Set the query builder that will be used to get data to the grid
      *
-     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
      */
-    public function setSource(QueryBuilder $qb)
+    public function setSourceData($data)
     {
-        $this->qb = $qb;
+        $this->sourceData = $data;
         //generate hash
         $this->createHash();
     }
@@ -218,6 +217,10 @@ class Grid extends GridTools
         return $col;
     }
 
+    public function getContainer(){
+        return $this->container;
+    }
+    
     /**
      * Return an array with column definitions
      *
@@ -349,9 +352,9 @@ class Grid extends GridTools
     /**
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getQueryBuilder()
+    public function getQuery()
     {
-        return $this->qb;
+        return $this->query;
     }
     
     
@@ -380,19 +383,13 @@ class Grid extends GridTools
 
             $page = $this->request->query->get('page');
             $limit = $this->request->query->get('rows');
-            $sidx = $this->request->query->get('sidx');
-            $sord = $this->request->query->get('sord');
-            $search = $this->request->query->get('_search');
 
-            if ($sidx != '') {
-                $this->qb->orderBy($sidx, $sord);
-            }
-
+            /**
             if ($search) {
                 $this->generateFilters();
-            }
+            }*/
 
-            $pagination = $this->paginator->paginate($this->qb->getQuery()->setHydrationMode($this->hydrationMode), $page, $limit);
+            $pagination = $this->paginator->paginate($this->sourceData, $page, $limit);
 
             $nbRec = $pagination->getTotalItemCount();
 
@@ -411,7 +408,10 @@ class Grid extends GridTools
 
                 $val = array();
                 foreach ($this->columns as $c) {
-                    if (array_key_exists($c->getFieldName(), $row)) {
+                    $methodName = 'get'.$c->getFieldName();
+                    if (method_exists($row, $methodName)){
+                        $val[] = call_user_func(array( &$row, $methodName)); 
+                    } elseif (array_key_exists($c->getFieldName(), $row)) {
                         $val[] = $row[$c->getFieldName()];
                     } elseif ($c->getFieldValue()) {
                         $val[] = $c->getFieldValue();
@@ -550,8 +550,8 @@ class Grid extends GridTools
         return $this->templating;
     }
     
-    public function getSource(){
-        return $this->qb;
+    public function getSourceData(){
+        return $this->sourceData;
     }
     
     public function setGetDataFunctionResponse($response){

@@ -56,6 +56,7 @@ doctrine:
                 dql:
                     string_functions:
                         group_concat: Zizoo\MessageBundle\Extensions\DoctrineExtensions\Query\Mysql\GroupConcat
+        
                     
 
 liip_imagine:
@@ -74,3 +75,14 @@ zizoo_jq_grid_custom:
     datepicker_format: dd/mm/yy
     datepickerphp_format: d/m/Y
     
+    
+fos_message:
+    db_driver: orm
+    thread_class: Zizoo\MessageBundle\Entity\Thread
+    message_class: Zizoo\MessageBundle\Entity\Message
+    new_thread_form:
+        #type:   zizoo_message.new_thread_form.type
+        type:               zizoo_message.new_thread_multiple_form_type
+        handler:            zizoo_message.new_thread_multiple_form.handler
+        model:              Zizoo\MessageBundle\Form\Model\NewThreadMultipleMessage
+        

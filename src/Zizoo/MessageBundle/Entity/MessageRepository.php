@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class MessageRepository extends EntityRepository
 {
-    
+   
     public function getInboxMessagesQueryBuilder($profile, $showThreads=false){
         $qb = $this->createQueryBuilder('m')
                                         ->leftJoin('m.recipients', 'r')

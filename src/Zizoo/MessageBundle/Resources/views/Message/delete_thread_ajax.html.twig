@@ -1,0 +1,19 @@
+    <div>
+        <div class="delete_thread" id="{% if ajax %}delete_thread_inner_ajax{% else %}delete_thread_inner{% endif %}">
+            {% for flashMessage in app.session.flashbag.get('notice') %}
+                <div class="flash-notice">
+                    {{ flashMessage}}
+                </div>
+            {% endfor %}
+
+            <form id="delete_thread_form" novalidate="novalidate" action="{{ path('zizoo_delete_thread', {threadId: form.get('thread_id') }) }}" method="post" {{ form_enctype(form) }}>
+                <p>
+                    {% trans %}zizoo_message.label.confirm_message_delete{% endtrans %}
+                </p>
+                {{ form_widget(form) }}
+                <input type="submit" value="OK" />
+                <input type="button" value="Cancel" class="cancel_btn" />
+            </form>
+
+        </div>
+    </div>

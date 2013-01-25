@@ -1,0 +1,286 @@
+{# src/Zizoo/MessageBundle/Resources/views/Message/inbox.html.twig #}
+{% trans_default_domain "labels" %}
+{% extends 'ZizooMessageBundle::layout.html.twig' %}
+
+{% block body %}
+
+    <select id="box_select">
+        <option value="{{ path('inbox') }}" selected="selected">Inbox</option>
+        <option value="{{ path('sent') }}">Sent Messages</option>
+    </select>
+
+    <div>
+
+        {{jqgrid(grid)}}
+        
+    </div>
+
+    <div id="context_hidden" style="display: none">
+        <div id="delete_hidden" class="empty">{% render 'ZizooMessageBundle:Message:deleteMessage' with {ajax: true, inbox: true} %}</div>
+        <div id="thread_hidden" class="empty"></div>
+    </div>
+
+    <div class="contextMenu" id="contextMenu" style="display: none">
+        <ul style="width: 400px">
+            <li id="open">
+                <span class="ui-icon ui-icon-mail-open" style="float:left"></span>
+                <span style="font-size:11px; font-family:Verdana">Open</span>
+            </li>
+            <li id="mark_read">
+                <span class="ui-icon ui-icon-check" style="float:left"></span>
+                <span style="font-size:11px; font-family:Verdana" >Mark as read</span>
+            </li>
+            <li id="mark_unread">
+                <span class="ui-icon ui-icon-uncheck" style="float:left"></span>
+                <span style="font-size:11px; font-family:Verdana" >Mark as unread</span>
+            </li>
+            <li id="del">
+                <span class="ui-icon ui-icon-trash" style="float:left"></span>
+                <span style="font-size:11px; font-family:Verdana">Delete</span>
+            </li>
+        </ul>
+    </div>
+
+    <script type="text/javascript">
+    
+        function readFormat(cellValue, options, rowObject){
+            return ''+cellValue+'';
+        }
+    
+        function openDeleteDialog(){
+            $('#delete_message_inner_ajax').dialog({
+                modal: true,
+                closeOnEscape: false,
+                resizable: false
+            });
+        }
+
+        function closeDeleteDialog(){
+            $('#delete_message_inner_ajax').dialog('close');            
+            $('#delete_message_inner_ajax').unblock();
+        }
+    
+        function openThreadDialog(){
+            $('#view_thread_inner_ajax').dialog({
+                modal: true,
+                closeOnEscape: false,
+                resizable: true,
+                width: 600,
+                height: 800,
+                close: function(){
+                    $(this).dialog('destroy');
+                }
+            });
+        }
+
+        function closeThreadDialog(){
+            $('#view_thread_inner_ajax').dialog('close');            
+            $('#view_thread_inner_ajax').unblock();
+        }
+    
+        function deleteListeners(){
+            $(document).delegate('#delete_message_inner_ajax #delete_message_form', 'submit', function(){
+                $('#delete_message_inner_ajax').block({ message: '' });
+                $.ajax({
+                    type: 'post', 
+                    url: $('#delete_message_inner_ajax #delete_message_form').attr('action'),
+                    data:$('#delete_message_inner_ajax #delete_message_form').serialize(),
+                    success: function(data, textStatus, XHR){
+                        var deleteDiv = $(data).find('#delete_message_inner_ajax');
+                        if (deleteDiv.length > 0){
+                            $('#delete_message_inner_ajax').html(deleteDiv);
+                            $('#delete_message_inner_ajax').unblock();
+                        } else {
+                            closeDeleteDialog();
+                            reloadGrid();
+                        }
+                    },
+                    error: function(jqXHR, textStatus,errorThrown){
+                        closeDeleteDialog();
+                    }
+                });
+                return false;
+            });
+        }
+    
+        
+        function deleteMessagePopup(msgId){
+            $('#delete_message_inner_ajax #form_message_id').val(msgId);
+            $('#delete_message_inner_ajax .cancel_btn').unbind('click').click(function(){
+                closeDeleteDialog();
+            });
+            openDeleteDialog();
+        }
+    
+        
+        function threadListeners(){
+            $(document).delegate('#view_thread_inner_ajax #send_message_form', 'submit', function(){
+                $('#view_thread_inner_ajax').block({ message: '' });
+                $.ajax({
+                    type: 'post', 
+                    url: $('#view_thread_inner_ajax #send_message_form').attr('action'),
+                    data:$('#view_thread_inner_ajax #send_message_form').serialize(),
+                    success: function(data, textStatus, XHR){
+                        var threadDiv = $(data).find('#view_thread_inner_ajax');
+                        var replyDiv  = $(data).find('#reply_to_thread_inner_ajax');
+                        if (threadDiv.length > 0){
+                            $('#view_thread_inner_ajax').html(threadDiv);
+                            $('#view_thread_inner_ajax').unblock();
+                            reloadGrid();
+                        } else if (replyDiv.length > 0){
+                            $('#reply_to_thread_inner_ajax').html(replyDiv);
+                            $('#view_thread_inner_ajax').unblock();
+                        } else {
+                            closeThreadDialog();
+                            reloadGrid();
+                        }
+                    },
+                    error: function(jqXHR, textStatus,errorThrown){
+                        closeThreadDialog();
+                    }
+                });
+                return false;
+            });
+        }
+        
+        function viewThread(url){
+            $.blockUI({ message: '' });
+            $.ajax({
+                type: 'get', 
+                url: url,
+                success: function(data, textStatus, XHR){
+                    var threadDiv = $(data).find('#view_thread_inner_ajax');
+                    if (threadDiv.length > 0){
+                        $('#thread_hidden').html(threadDiv);
+                        $(document).delegate('#view_thread_inner_ajax #send_message_form .cancel_btn', 'click', function(){
+                            closeThreadDialog();
+                        });
+                        openThreadDialog();
+                    } else {
+                        closeThreadDialog();
+                    }
+                    reloadGrid();
+                    $.unblockUI();
+                },
+                error: function(jqXHR, textStatus,errorThrown){
+                    closeThreadDialog();
+                }
+            });
+        }
+    
+        function loadComplete(){
+            $("tr.jqgrow", this).contextMenu('contextMenu', {
+                bindings: {
+                    'open': function(trigger) {
+                        // trigger is the DOM element ("tr.jqgrow") which are triggered
+                        var msgId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_inboxid');
+                        var type  = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_inboxtype_int');
+                        messageOpen(msgId, type);
+                    },
+                    'mark_read': function(trigger) {
+                        // trigger is the DOM element ("tr.jqgrow") which are triggered
+                        messageRead(trigger.id, true);
+                    },
+                    'mark_unread': function(trigger) {
+                        // trigger is the DOM element ("tr.jqgrow") which are triggered
+                        messageRead(trigger.id, false);
+                    },
+                    'del': function(trigger) {
+                        var msgId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_inboxid');
+                        deleteMessagePopup(msgId);
+                        //window.location.href = '{{ path('delete_message')}}/'+msgId;
+                    }
+                },
+                onContextMenu: function(event/*, menu*/) {
+                    var rowId = $(event.target).closest("tr.jqgrow").attr("id");
+                    jQuery('#{{ grid.name|raw }}').jqGrid('setSelection', rowId);
+                    var isRead = jQuery('#{{ grid.name|raw }}').jqGrid('getCell',rowId,'{{ grid.name|raw }}read') != '';
+                    if (isRead){
+                        $('#contextMenu #mark_read').hide();
+                        $('#contextMenu #mark_unread').show();
+                    } else {
+                        $('#contextMenu #mark_read').show();
+                        $('#contextMenu #mark_unread').hide();
+                    }
+                    // disable menu for rows with even rowids
+                    //mark_read_unread_inner
+                    return true;
+                }
+            });
+        }
+    
+        
+        
+        function messageRead(rowId, read){
+            var msgId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', rowId, 'grid_inboxid');
+            $.ajax({
+                type: 'get', 
+                url: '{{ path('mark_received_message') }}/'+msgId+'/'+read,
+                success: function(data, textStatus, XHR){
+                },
+                error: function(jqXHR, textStatus,errorThrown){
+                }
+            });
+            if (read){
+                jQuery('#{{ grid.name|raw }} tr#'+rowId+' td div').removeClass('unread').addClass('read');
+                jQuery('#{{ grid.name|raw }}').jqGrid('setCell',rowId,'{{ grid.name|raw }}read', 'read');
+            } else {
+                jQuery('#{{ grid.name|raw }} tr#'+rowId+' td div').removeClass('read').addClass('unread');
+                jQuery('#{{ grid.name|raw }}').jqGrid('setCell',rowId,'{{ grid.name|raw }}read', null);
+            }
+        }
+    
+        function messageDoubleClick(rowId, rowIndex, colIndex, e){
+            var msgId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', rowId, 'grid_inboxid');
+            var type = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', rowId, 'grid_inboxtype_int');
+            messageOpen(msgId, type);
+        }
+        
+        function reloadGrid(){
+            var showThreads = jQuery('#showThreads_{{grid.name|raw}}').is(':checked');
+            var url;
+            if (showThreads){
+                url = '{{ grid.extraParams['url_threads'] }}';
+            } else {
+                url = '{{ grid.extraParams['url_no_threads'] }}';''
+            }
+            jQuery('#{{ grid.name|raw }}').jqGrid('setGridParam', { url: url } );
+            jQuery('#{{ grid.name|raw }}').trigger('reloadGrid');
+        }
+            
+        $(document).ready(function(){
+        
+            $('#box_select').change(function(){
+                $.blockUI({ message: '' });
+                window.location.href = $(this).val();
+            });
+        
+            jQuery('#{{ grid.name|raw }}').jqGrid('setGridParam', { ondblClickRow: messageDoubleClick } );
+            jQuery("#pager_{{ grid.name|raw }}_left table.navtable tbody tr").append(
+            '<td><div><input type="checkbox" id="showThreads_{{grid.name|raw}}" {{ grid.extraParams['show_threads'] }} /><label for="showThreads_{{grid.name|raw}}">Show threads</label></div></td>');
+            jQuery('#showThreads_{{grid.name|raw}}').change(reloadGrid);
+            jQuery('#{{ grid.name|raw }}').jqGrid('setGridParam', { loadComplete: loadComplete } );
+            
+            deleteListeners();
+            threadListeners();
+        });
+
+    </script>
+    
+    <style type="text/css">
+        #pager_{{ grid.name|raw }}_left table.navtable tbody tr label {
+            font-size: 11px;
+            display: inline;
+            margin-left: 2px;
+        }
+        
+        .unread {
+            font-weight: bolder;
+        }
+        
+        ul.ui-menu li .ui-icon {
+            position: static;
+        }
+    </style>
+
+{% endblock %}

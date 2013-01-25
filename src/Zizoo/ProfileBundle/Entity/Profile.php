@@ -65,18 +65,7 @@ class Profile
      * @ORM\Column(type="datetime")
      */
     protected $updated;
-    
-    
-    /**
-     * @ORM\OneToMany(targetEntity="Zizoo\MessageBundle\Entity\Message", mappedBy="sender_profile")
-     */
-    protected $outgoing_messages;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="Zizoo\MessageBundle\Entity\MessageRecipient", mappedBy="recipient_profile")
-     */
-    protected $incoming_messages;
-    
+   
     /**
      * @ORM\OneToOne(targetEntity="Zizoo\ProfileBundle\Entity\Profile\NotificationSettings", cascade={"persist"})
      */    
@@ -333,71 +322,6 @@ class Profile
         $this->addresses->removeElement($addresses);
     }
 
-    /**
-     * Add outgoing_messages
-     *
-     * @param \Zizoo\MessageBundle\Entity\Message $outgoingMessages
-     * @return Profile
-     */
-    public function addOutgoingMessage(\Zizoo\MessageBundle\Entity\Message $outgoingMessages)
-    {
-        $this->outgoing_messages[] = $outgoingMessages;
-    
-        return $this;
-    }
-
-    /**
-     * Remove outgoing_messages
-     *
-     * @param \Zizoo\MessageBundle\Entity\Message $outgoingMessages
-     */
-    public function removeOutgoingMessage(\Zizoo\MessageBundle\Entity\Message $outgoingMessages)
-    {
-        $this->outgoing_messages->removeElement($outgoingMessages);
-    }
-
-    /**
-     * Get outgoing_messages
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getOutgoingMessages()
-    {
-        return $this->outgoing_messages;
-    }
-
-    /**
-     * Add incoming_messages
-     *
-     * @param \Zizoo\MessageBundle\Entity\MessageRecipient $incomingMessages
-     * @return Profile
-     */
-    public function addIncomingMessage(\Zizoo\MessageBundle\Entity\MessageRecipient $incomingMessages)
-    {
-        $this->incoming_messages[] = $incomingMessages;
-    
-        return $this;
-    }
-
-    /**
-     * Remove incoming_messages
-     *
-     * @param \Zizoo\MessageBundle\Entity\MessageRecipient $incomingMessages
-     */
-    public function removeIncomingMessage(\Zizoo\MessageBundle\Entity\MessageRecipient $incomingMessages)
-    {
-        $this->incoming_messages->removeElement($incomingMessages);
-    }
-
-    /**
-     * Get incoming_messages
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getIncomingMessages()
-    {
-        return $this->incoming_messages;
-    }
     
     public function __toString(){
         return '' . $this->user . '';

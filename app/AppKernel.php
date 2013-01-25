@@ -23,6 +23,7 @@ class AppKernel extends Kernel
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new Liip\ImagineBundle\LiipImagineBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
+            new FOS\MessageBundle\FOSMessageBundle(),
             new Zizoo\BaseBundle\ZizooBaseBundle(),
             new Zizoo\BoatBundle\ZizooBoatBundle(),
             new Zizoo\UserBundle\ZizooUserBundle(),

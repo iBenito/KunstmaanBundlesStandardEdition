@@ -1,0 +1,17 @@
+<div>
+    <div class="new_thread" id="{% if ajax %}new_thread_inner_ajax{% else %}new_thread_inner{% endif %}">
+
+        
+
+        <h2>{% trans from 'FOSMessageBundle' %}send_new{% endtrans %}</h2>
+
+        <form action="{{ url('fos_message_thread_new') }}" method="post" id="new_thread_form">
+            {{ form_widget(form) }}
+
+            <input type="submit" />
+        </form>
+
+        
+        
+    </div>
+</div>

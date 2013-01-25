@@ -12,3 +12,7 @@
     {{ parent() }}
     <link href="{{ asset('bundles/zizoojqgridcustom/css/ui.jqgrid.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
+    
+{% block body %}
+    {% block fos_message_content %}{% endblock %}
+{% endblock body %}

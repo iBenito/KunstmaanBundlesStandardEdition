@@ -13,6 +13,78 @@ services:
         tags:
             - { name: twig.extension }
             
+    zizoo_message.new_thread_form.type:
+        class: Zizoo\MessageBundle\Form\Type\NewThreadMessageFormType
+        arguments:  ["@doctrine.orm.entity_manager"]
+    
+    zizoo_message.new_thread_multiple_form_type:
+        class: Zizoo\MessageBundle\Form\Type\NewThreadMultipleMessageFormType
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+    
+    fos_user.user_to_username_transformer:
+        class: Zizoo\UserBundle\Form\DataTransformer\UserToUsernameTransformer
+        arguments: ["@doctrine.orm.entity_manager"]
+      
+    zizoo_message.user_name_form_type:
+        class: Zizoo\MessageBundle\Form\Type\UsernameFormType
+        arguments: ["@fos_user.user_to_username_transformer"]
+        tags:
+            - { name: form.type, alias: zizoo_user_username }
+            
+    zizoo_message.user_name_multiple_form_type:
+        class: Zizoo\MessageBundle\Form\Type\UsernameMultipleFormType
+        arguments: ["@fos_user.user_to_username_transformer"]
+        tags:
+            - { name: form.type, alias: zizoo_user_multiple_username }        
+            
+            
+    zizoo_message.recipients_data_transformer:
+        class:  Zizoo\MessageBundle\DataTransformer\RecipientsDataTransformer
+        arguments: ["@fos_user.user_to_username_transformer"]
+        
+    zizoo_message.recipients_multiple_data_transformer:
+        class:  Zizoo\MessageBundle\DataTransformer\RecipientsMultipleDataTransformer
+        arguments: ["@fos_user.user_to_username_transformer"]
+        
+        
+    zizoo_message.thread_type_data_transformer:
+        class:  Zizoo\MessageBundle\Form\DataTransformer\ThreadTypeTransformer
+        arguments: ["@doctrine.orm.entity_manager"]
+            
+    zizoo_message.recipients_selector:
+        class:  Zizoo\MessageBundle\Form\Type\RecipientsType
+        arguments: ["@zizoo_message.recipients_multiple_data_transformer"]
+        tags:
+            - { name: form.type, alias: zizoo_recipients_selector }
+            
+    zizoo_message.thread_type_selector:
+        class:  Zizoo\MessageBundle\Form\Type\ThreadTypeType
+        arguments: ["@zizoo_message.thread_type_data_transformer"]
+        tags:
+            - { name: form.type, alias: zizoo_thread_type_selector }
+      
+    # not currently used
+    zizoo_message.new_thread_form.factory:
+        class:  Zizoo\MessageBundle\Form\Factory\NewThreadMessageFormFactory
+        arguments: ["@form.factory", "@fos_message.new_thread_form.type", "%fos_message.reply_form.name%", "%fos_message.reply_form.model%"]
+        
+        
+    zizoo_message.composer:
+        class: Zizoo\MessageBundle\Composer\Composer
+        arguments: ["@fos_message.message_manager", "@fos_message.thread_manager"]
+        
+    zizoo_message.new_thread_multiple_form.handler:
+        scope: request
+        class: Zizoo\MessageBundle\Form\Handler\NewThreadMultipleMessageFormHandler
+        arguments: ["@request", "@zizoo_message.composer", "@fos_message.sender", "@fos_message.participant_provider"]
+    
+    zizoo_message.message_event_listener:
+        class: Zizoo\MessageBundle\EventListener\MessageEventListener
+        arguments: ["@service_container"]
+        tags:
+            - { name: kernel.event_listener, event: fos_message.post_send, method: onMessageEvent } 
+    
+            
 #    zizoo_message.example:
 #        class: %zizoo_message.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]

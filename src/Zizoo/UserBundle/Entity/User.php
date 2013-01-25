@@ -2,6 +2,8 @@
 // src/Zizoo/UserBundle/Entity/User.php
 namespace Zizoo\UserBundle\Entity;
 
+use FOS\MessageBundle\Model\ParticipantInterface;
+
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
@@ -16,7 +18,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @UniqueEntity(fields="username", groups={"registration"}, message="zizoo_user.error.user_taken")
  * @UniqueEntity(fields="email", groups={"registration"}, message="zizoo_user.error.email_taken")
  */
-class User implements AdvancedUserInterface, \Serializable
+class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
 {
     
     /**
@@ -62,6 +64,18 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Column(name="fb_uid", type="string", length=255, nullable=true)
      */
     private $facebookUID;
+    
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Zizoo\MessageBundle\Entity\Contact", mappedBy="sender")
+     */
+    private $myContacts;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Zizoo\MessageBundle\Entity\Contact", mappedBy="recipient")
+     */
+    private $contactsWithMe;
+    
     
     public function isAccountNonExpired()
     {
@@ -370,5 +384,71 @@ class User implements AdvancedUserInterface, \Serializable
     
     public function __toString(){
         return '' . $this->username . '';
+    }
+
+    /**
+     * Add myContacts
+     *
+     * @param \Zizoo\MessageBundle\Entity\Contact $myContacts
+     * @return User
+     */
+    public function addMyContact(\Zizoo\MessageBundle\Entity\Contact $myContacts)
+    {
+        $this->myContacts[] = $myContacts;
+    
+        return $this;
+    }
+
+    /**
+     * Remove myContacts
+     *
+     * @param \Zizoo\MessageBundle\Entity\Contact $myContacts
+     */
+    public function removeMyContact(\Zizoo\MessageBundle\Entity\Contact $myContacts)
+    {
+        $this->myContacts->removeElement($myContacts);
+    }
+
+    /**
+     * Get myContacts
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMyContacts()
+    {
+        return $this->myContacts;
+    }
+
+    /**
+     * Add contactsWithMe
+     *
+     * @param \Zizoo\MessageBundle\Entity\Contact $contactsWithMe
+     * @return User
+     */
+    public function addContactsWithMe(\Zizoo\MessageBundle\Entity\Contact $contactsWithMe)
+    {
+        $this->contactsWithMe[] = $contactsWithMe;
+    
+        return $this;
+    }
+
+    /**
+     * Remove contactsWithMe
+     *
+     * @param \Zizoo\MessageBundle\Entity\Contact $contactsWithMe
+     */
+    public function removeContactsWithMe(\Zizoo\MessageBundle\Entity\Contact $contactsWithMe)
+    {
+        $this->contactsWithMe->removeElement($contactsWithMe);
+    }
+
+    /**
+     * Get contactsWithMe
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getContactsWithMe()
+    {
+        return $this->contactsWithMe;
     }
 }

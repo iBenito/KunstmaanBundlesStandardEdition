@@ -1,47 +1,15 @@
-inbox:
-    pattern:  /inbox/{messageId}
-    defaults: { _controller: ZizooMessageBundle:Message:inbox, messageId: null }
-
-inbox_data:
-    pattern:  /inbox-data
-    defaults: { _controller: ZizooMessageBundle:Message:inboxData }
+zizoo_delete_thread:
+    pattern: /delete-thread/{messageId}
+    defaults: { _controller: ZizooMessageBundle:Message:deleteForm, messageId: null, ajax: false}
     
-sent:
-    pattern:  /sent
-    defaults: { _controller: ZizooMessageBundle:Message:sent }
-
-#delete_sent_message:
-#    pattern: /delete-sent-message/{messageId}
-#    defaults: { _controller: ZizooMessageBundle:Message:deleteSentMessage, messageId: null, ajax: false}
-    
-#delete_received_message:
-#    pattern: /delete-received-message/{messageId}
-#    defaults: { _controller: ZizooMessageBundle:Message:deleteReceivedMessage, messageId: null, ajax: false}
-    
-delete_message:
-    pattern: /delete-message/{inbox}/{messageId}
-    defaults: { _controller: ZizooMessageBundle:Message:deleteMessage, messageId: null, ajax: false, inbox: false}
-    
-message_deleted:
-    pattern: /message_deleted
-    defaults: { _controller: ZizooMessageBundle:Message:messageDeleted}
-    
-mark_received_message:
-    pattern: /mark-received-message/{messageId}/{read}
-    defaults: { _controller: ZizooMessageBundle:Message:markReceivedMessage, messageId: null, read: false, ajax: false}
-    
-#open_received_message:
-#    pattern: /open-received-message/{messageId}
-#    defaults: { _controller: ZizooMessageBundle:Message:openReceivedMessage, messageId: null, inbox: true, ajax: false}
-    
-#open_sent_message:
-#    pattern: /open-sent-message/{messageId}
-#    defaults: { _controller: ZizooMessageBundle:Message:openSentMessage, messageId: null, inbox: false, ajax: false}
-    
-view_thread:
-    pattern: /view-thread/{messageId}/{redirect}
-    defaults: { _controller: ZizooMessageBundle:Message:viewThread, messageId: null, inbox: false, ajax: false, redirect: null}
-    
-reply_to_thread:
-    pattern: /reply-to-thread/
-    defaults: { _controller: ZizooMessageBundle:Message:replyToThread, lastMessageId: null, to: null, ajax: false, redirect: null}
+zizoo_mark_thread:
+    pattern: /mark-message/{threadId}/{read}
+    defaults: { _controller: ZizooMessageBundle:Message:markRead, threadId: null, read: true}
+   
+zizoo_message_thread_view:
+    pattern: /view/{threadId}
+    defaults: { _controller: FOSMessageBundle:Message:thread, threadId: null, ajax: false }
+   
+fos_message:
+    resource: "@FOSMessageBundle/Resources/config/routing.xml"
+    prefix: /

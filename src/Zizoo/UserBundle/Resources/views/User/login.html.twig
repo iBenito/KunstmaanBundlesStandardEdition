@@ -30,7 +30,9 @@
         {% endif %}
             
         <button type="submit" class="login_facebook_btn" href="{{ facebook.loginUrl({ scope: 'email', redirect_uri: url('login_facebook', {forward: current_route, ajax: ajax}), display: 'popup' }) }}">Login with FACEBOOK</button>
+        <br />
         
+        <a href="{{ path('invite') }}">Invite your friends</a>
     </div>
     <script type="text/javascript">
         $(document).ready(function(){

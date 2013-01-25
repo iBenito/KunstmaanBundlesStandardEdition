@@ -29,8 +29,7 @@ class BookingAgent {
     private function sendReservationMessage(Profile $profile, Reservation $reservation){
         $registerUser = $this->em->getRepository('ZizooUserBundle:User')->findOneByEmail($this->container->getParameter('email_register'));
         if (!$registerUser) return false;
-        //$body = print_r($reservation, true);
-        //Profile $sender, Profile $recipient, $body, $subject=null, Message $previous=null, $setRecipient=true
+        
         $message = $this->messenger->sendReservationMessageTo($reservation, $registerUser->getProfile(), $profile, 'Reservation details...', 'Your reservation');
         return $message;
     }
@@ -68,7 +67,7 @@ class BookingAgent {
                 $this->em->persist($reservation);
                 $this->em->flush();
                 
-                $this->sendReservationMessage($user->getProfile(), $reservation);
+                //$this->sendReservationMessage($user->getProfile(), $reservation);
                 return $reservation;
                 break;
             }

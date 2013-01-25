@@ -1,5 +1,5 @@
 {
-    "hash": "d4de89fdace23a21cc80a243cfb34a15",
+    "hash": "a5ed3f627bdd5367c37b0444708f1c9f",
     "packages": [
         {
             "name": "braintree/braintree_php",
@@ -530,17 +530,71 @@
             ]
         },
         {
-            "name": "imagine/Imagine",
-            "version": "v0.4.0",
+            "name": "friendsofsymfony/message-bundle",
+            "version": "dev-master",
+            "target-dir": "FOS/MessageBundle",
             "source": {
                 "type": "git",
-                "url": "https://github.com/avalanche123/Imagine",
-                "reference": "v0.4.0"
+                "url": "https://github.com/FriendsOfSymfony/FOSMessageBundle.git",
+                "reference": "a665d8ef50e1620f5d0706e5dac06a595e144938"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/avalanche123/Imagine/archive/v0.4.0.zip",
-                "reference": "v0.4.0",
+                "url": "https://github.com/FriendsOfSymfony/FOSMessageBundle/archive/a665d8ef50e1620f5d0706e5dac06a595e144938.zip",
+                "reference": "a665d8ef50e1620f5d0706e5dac06a595e144938",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": "2.1.*",
+                "symfony/twig-bundle": "2.1.*"
+            },
+            "suggest": {
+                "doctrine/doctrine-bundle": "dev-master",
+                "doctrine/mongodb-odm-bundle": "dev-master"
+            },
+            "time": "2013-01-15 09:49:29",
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "FOS\\MessageBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thibault Duplessis",
+                    "email": "thibault.duplessis@gmail.com",
+                    "homepage": "http://ornicar.github.com"
+                },
+                {
+                    "name": "FriendsOfSymfony Community",
+                    "homepage": "https://github.com/friendsofsymfony/FOSMessageBundle/contributors"
+                }
+            ],
+            "description": "Provides user-to-user messaging features for your Symfony2 application.",
+            "homepage": "https://github.com/FriendsOfSymfony/FOSMessageBundle",
+            "keywords": [
+                "symfony",
+                "message",
+                "messaging"
+            ]
+        },
+        {
+            "name": "imagine/Imagine",
+            "version": "v0.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/avalanche123/Imagine",
+                "reference": "v0.4.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/avalanche123/Imagine/archive/v0.4.1.zip",
+                "reference": "v0.4.1",
                 "shasum": ""
             },
             "require": {
@@ -549,14 +603,14 @@
             "require-dev": {
                 "sami/sami": "dev-master"
             },
-            "time": "2012-11-21 15:08:19",
+            "time": "2012-12-13 18:31:18",
             "type": "library",
             "autoload": {
                 "psr-0": {
                     "Imagine": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1020,18 +1074,18 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/liip/LiipImagineBundle.git",
-                "reference": "5567a0fefc7f562b01eaed85bd87ebb916b3917b"
+                "reference": "c60a954e7afd9da620472885f0b2991d6833c65f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/liip/LiipImagineBundle/archive/5567a0fefc7f562b01eaed85bd87ebb916b3917b.zip",
-                "reference": "5567a0fefc7f562b01eaed85bd87ebb916b3917b",
+                "url": "https://github.com/liip/LiipImagineBundle/archive/c60a954e7afd9da620472885f0b2991d6833c65f.zip",
+                "reference": "c60a954e7afd9da620472885f0b2991d6833c65f",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
                 "symfony/framework-bundle": ">=2.0.14,<2.3-dev",
-                "imagine/imagine": "<=0.4.0"
+                "imagine/imagine": "<=0.4.1"
             },
             "require-dev": {
                 "twig/twig": ">=1.0,<2.0-dev",
@@ -1040,14 +1094,14 @@
             "suggest": {
                 "twig/twig": ">=1.0,<2.0-dev"
             },
-            "time": "2013-01-09 15:43:59",
+            "time": "2013-01-22 10:06:02",
             "type": "symfony-bundle",
             "autoload": {
                 "psr-0": {
                     "Liip\\ImagineBundle": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1493,12 +1547,12 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/symfony/symfony.git",
-                "reference": "fada75c42051fde399a4aee30fb0eef757b8992a"
+                "reference": "bdc7e91865b4633b01e79ff91aadb58efccfa981"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/symfony/archive/fada75c42051fde399a4aee30fb0eef757b8992a.zip",
-                "reference": "fada75c42051fde399a4aee30fb0eef757b8992a",
+                "url": "https://github.com/symfony/symfony/archive/bdc7e91865b4633b01e79ff91aadb58efccfa981.zip",
+                "reference": "bdc7e91865b4633b01e79ff91aadb58efccfa981",
                 "shasum": ""
             },
             "require": {
@@ -1547,7 +1601,7 @@
                 "propel/propel1": "dev-master",
                 "monolog/monolog": ">=1.0,<1.3-dev"
             },
-            "time": "2013-01-20 08:33:14",
+            "time": "2013-01-22 07:14:57",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -1680,6 +1734,7 @@
     "stability-flags": {
         "doctrine/doctrine-fixtures-bundle": 20,
         "doctrine/doctrine-migrations-bundle": 20,
-        "braintree/braintree_php": 20
+        "braintree/braintree_php": 20,
+        "friendsofsymfony/message-bundle": 20
     }
 }

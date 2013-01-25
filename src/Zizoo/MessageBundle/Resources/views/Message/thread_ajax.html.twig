@@ -1,0 +1,50 @@
+<div>
+    <div class="view_thread" id="{% if ajax %}view_thread_inner_ajax{% else %}view_thread_inner{% endif %}">    
+        <h2>{{ thread.subject }}</h2>
+
+        {% for message in thread.messages %}
+            <div class="messenger_thread_message">
+                <div class="messenger_thread_message_info">
+                    {% trans with {'%sender%': message.sender|e, '%date%': message.createdAt|date} from 'FOSMessageBundle' %}message_info{% endtrans %}
+                </div>
+
+                <div class="messenger_thread_message_body" id="message_{{ message.id }}">
+                    {{ message.body }}
+                </div>
+                <div style="clear: both"></div>
+            </div>
+        {% endfor %}
+
+        <h3>{% trans from 'FOSMessageBundle' %}reply{% endtrans %}</h3>
+
+        <form action="{{ url('fos_message_thread_view', {'threadId': thread.id}) }}" id="send_message_form" method="post">
+            {{ form_widget(form) }}
+
+            <input type="submit" />
+        </form>
+
+        <style type="text/css">
+
+
+            .messenger_thread_message {
+                margin-bottom: 20px;
+                clear: both;
+            }
+
+            .messenger_thread_message .messenger_thread_message_info {
+                float: left;
+                margin-right: 50px;
+            }
+
+            .messenger_thread_message .messenger_thread_message_body {
+                float: left;
+                border-radius: 15px;
+                background-color: lightgrey;
+                padding: 20px;
+            }
+
+        </style>
+        
+    </div>
+
+</div>

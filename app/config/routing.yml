@@ -24,7 +24,7 @@ zizoo_base:
     
 zizoo_message:
     resource: "@ZizooMessageBundle/Resources/config/routing.yml"
-    prefix:   /account
+    prefix:   /account/message
 
 
 _imagine:

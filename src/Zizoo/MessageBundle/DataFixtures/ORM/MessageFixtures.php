@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 use Zizoo\ProfileBundle\Entity\Profile;
 use Zizoo\MessageBundle\Entity\Message;
-use Zizoo\MessageBundle\Entity\MessageRecipient;
+use Zizoo\MessageBundle\Entity\Thread;
 use Zizoo\MessageBundle\Service\Messenger;
 
 class MessageFixtures implements OrderedFixtureInterface, SharedFixtureInterface, ContainerAwareInterface
@@ -53,40 +53,37 @@ class MessageFixtures implements OrderedFixtureInterface, SharedFixtureInterface
         $profile2 = $this->getReference('profile-2');
         $profile3 = $this->getReference('profile-3');
         
-        $messenger = $this->container->get('messenger');
+        $composer       = $this->container->get('zizoo_message.composer');
+        $sender         = $this->container->get('fos_message.sender');
+        $threadTypeRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooMessageBundle:ThreadType');
         
         // Message thread 1 from profile 2 (Benny) to profile 1 (Alex)
-        //Profile $sender, Profile $recipient, $body, $subject=null, Message $previous=null, $setRecipient=true
-        $message = $messenger->sendMessageTo($profile2, $profile1, 'This is a test', 'First message!');
+        $message = $composer->newThread()
+                            ->setSender($profile2->getUser())
+                            ->addRecipient($profile1->getUser())
+                            ->setSubject('First thread!')
+                            ->setBody('This is a test message')
+                            ->setThreadType($threadTypeRepo->findOneByName('Inquiry'))
+                            ->getMessage();
+        $sender->send($message);
         
-        // Reply (thread 1) from profile 1 (Alex) to profile 2 (Benny), CC profile 3 (Sinan)
-        $recipients = new ArrayCollection();
-        $recipients->add($profile3);
-        //Profile $sender, ArrayCollection $recipients, $body, $subject=null, Message $previous=null, $setRecipient=true
-        $message2 = $messenger->sendMessage($profile1, $recipients, "It's working!! I'm copying Sinan in :-)", null, $message);
+        // Reply (thread 1) from profile 1 (Alex) to profile 2 (Benny)
+        $message = $composer->reply($message->getThread())
+                            ->setSender($profile1->getUser())
+                            ->setBody('This is the answer to the test message.')
+                            ->getMessage();
+        $sender->send($message);
                 
-        // Reply (thread 1) from profile 2 (Benny) to profile 1 (Alex) CC profile 3 (Sinan)
-        $recipients = new ArrayCollection();
-        $recipients->add($profile3);
-        //Profile $sender, ArrayCollection $recipients, $body, $subject=null, Message $previous=null, $setRecipient=true
-        $message3 = $messenger->sendMessage($profile2, $recipients, "Awesome!", null, $message2);
-        
-        
-        // Message thread 2 from profile 1 (Alex) to profile 2 (Benny), CC profile 3 (Sinan)
-        $recipients = new ArrayCollection();
-        $recipients->add($profile2);
-        $recipients->add($profile3);
-        //Profile $sender, ArrayCollection $recipients, $body, $subject=null, Message $previous=null, $setRecipient=true
-        $message4 = $messenger->sendMessage($profile1, $recipients, "Awesome!", '2nd thread');
-        
-        
-        // Message thread 3 from profile 1 (Alex) to profile 2 (Benny)
-        //Profile $sender, Profile $recipient, $body, $subject=null, Message $previous=null, $setRecipient=true
-        $message = $messenger->sendMessageTo($profile1, $profile2, 'Only to Benny', '3rd thread!');
-
-        // Message thread 4 from profile 2 (Benny) to profile 1 (Alex)
-        //Profile $sender, Profile $recipient, $body, $subject=null, Message $previous=null, $setRecipient=true
-        $message = $messenger->sendMessageTo($profile2, $profile1, 'Only to alex', '4th thread!');
+        // Message thread 2 from profile 1 (Alex) to profile 2 (Benny) and profile 3 (Sinan)
+        $message = $composer->newThread()
+                            ->setSender($profile1->getUser())
+                            ->addRecipient($profile2->getUser())
+                            ->addRecipient($profile3->getUser())
+                            ->setSubject('2nd thread!')
+                            ->setBody('Benny and Sinan should receive this')
+                            ->setThreadType($threadTypeRepo->findOneByName('Inquiry'))
+                            ->getMessage();
+        $sender->send($message);
     }
 
     public function getOrder()
@@ -94,7 +91,7 @@ class MessageFixtures implements OrderedFixtureInterface, SharedFixtureInterface
         return 6;
     }
         
-        /**
+    /**
      * Set the reference entry identified by $name
      * and referenced to managed $object. If $name
      * already is set, it overrides it

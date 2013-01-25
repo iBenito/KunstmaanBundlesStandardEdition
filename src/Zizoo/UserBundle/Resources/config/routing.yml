@@ -105,6 +105,12 @@ change_password:
   requirements:
         _method:  GET|POST 
         
+invite:
+  pattern:    /account/invite/
+  defaults:   {_controller: ZizooUserBundle:User:inviteFriends }
+  requirements:
+        _method:  GET|POST 
+        
 forward:
   pattern:    /forward/{action}
   defaults:   {_controller: ZizooUserBundle:Registration:forward }

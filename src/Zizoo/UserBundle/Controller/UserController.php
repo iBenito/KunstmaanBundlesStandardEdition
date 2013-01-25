@@ -6,6 +6,8 @@ namespace Zizoo\UserBundle\Controller;
 use Zizoo\UserBundle\Entity\User;
 use Zizoo\UserBundle\Form\Type\UserForgotPasswordType;
 use Zizoo\UserBundle\Form\Type\UserNewPasswordType;
+use Zizoo\UserBundle\Form\Type\InvitationType;
+use Zizoo\UserBundle\Form\Model\Invitation;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -289,6 +291,36 @@ class UserController extends Controller
    
         }
         return $this->render('ZizooUserBundle:User:change_password.html.twig', array('form' => $form->createView()));
+    }
+    
+    
+    
+    public function inviteFriendsAction(){
+        $user       = $this->getUser();
+        $request    = $this->getRequest();
+        $isPost     = $request->isMethod('POST');
+        $ajax       = $request->isXmlHttpRequest();      
+        $form       = $this->createForm(new InvitationType(), new Invitation());
+        
+        // If submit
+        if ($isPost) {
+            $form->bindRequest($request);
+            
+            $invitation = $form->getData();
+            
+            if ($form->isValid()){
+                $messenger = $this->get('messenger');
+                $messenger->sendInvitationEmail($invitation, $user);
+                $trans = $this->get('translator');
+                $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.friends_invited'));
+                return $this->redirect($this->generateUrl('invite', array('form' => $form)));
+            }
+        }
+        
+        return $this->container->get('templating')->renderResponse('ZizooUserBundle:User:invite.html.twig', array(
+            'form'  => $form->createView(),
+            'ajax'  => $ajax
+        ));
     }
    
 }

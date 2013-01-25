@@ -63,4 +63,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $this->getEntityName() === $class || is_subclass_of($class, $this->getEntityName());
     }
     
+    public function getAllExcept(User $user){
+        $q = $this
+            ->createQueryBuilder('u')
+            ->select('u')
+            ->where('u.id != :id')
+            ->setParameter('id', $user->getID())
+            ->getQuery();
+        return $q->getResult();
+    }
+    
 }
