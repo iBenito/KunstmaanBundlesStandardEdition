@@ -1074,18 +1074,18 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/liip/LiipImagineBundle.git",
-                "reference": "c60a954e7afd9da620472885f0b2991d6833c65f"
+                "reference": "c35ba168963003a65dbe612e538ef9d58c1f792a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/liip/LiipImagineBundle/archive/c60a954e7afd9da620472885f0b2991d6833c65f.zip",
-                "reference": "c60a954e7afd9da620472885f0b2991d6833c65f",
+                "url": "https://github.com/liip/LiipImagineBundle/archive/c35ba168963003a65dbe612e538ef9d58c1f792a.zip",
+                "reference": "c35ba168963003a65dbe612e538ef9d58c1f792a",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
                 "symfony/framework-bundle": ">=2.0.14,<2.3-dev",
-                "imagine/imagine": "<=0.4.1"
+                "imagine/imagine": "0.4.*"
             },
             "require-dev": {
                 "twig/twig": ">=1.0,<2.0-dev",
@@ -1094,7 +1094,7 @@
             "suggest": {
                 "twig/twig": ">=1.0,<2.0-dev"
             },
-            "time": "2013-01-22 10:06:02",
+            "time": "2013-01-25 10:33:58",
             "type": "symfony-bundle",
             "autoload": {
                 "psr-0": {
@@ -1434,12 +1434,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/MonologBundle",
-                "reference": "v2.2.0-BETA1"
+                "reference": "v2.1.7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/MonologBundle/archive/v2.2.0-BETA1.zip",
-                "reference": "v2.2.0-BETA1",
+                "url": "https://github.com/symfony/MonologBundle/archive/v2.1.7.zip",
+                "reference": "v2.1.7",
                 "shasum": ""
             },
             "require": {
