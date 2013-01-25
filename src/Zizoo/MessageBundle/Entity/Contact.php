@@ -4,6 +4,8 @@ namespace Zizoo\MessageBundle\Entity;
 
 use Zizoo\UserBundle\Entity\User;
 
+use FOS\MessageBundle\Model\ThreadInterface;
+
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
