@@ -5,6 +5,7 @@ namespace Zizoo\MessageBundle\Entity;
 use Zizoo\UserBundle\Entity\User;
 
 use FOS\MessageBundle\Model\ThreadInterface;
+use FOS\MessageBundle\Model\MessageMetadata as ModelMessageMetadata;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
