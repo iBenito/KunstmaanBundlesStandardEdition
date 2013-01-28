@@ -17,8 +17,13 @@
         <h3>{{ boat.name }}</h3>
         <p>{% trans %}zizoo_address.label.cities{% endtrans %}: 
             <ul>
-                {% for address in boat.addresses %}
-                    <li>{{ address.locality }}</li>
+                {% if boat.address|duplicateCity == false %}
+                    <li>{{ boat.address.locality }}</li>
+                {% endif %}
+                {% for availability in boat.availability %}
+                    {% if availability.address|duplicateCity == false %}
+                        <li>{{ availability.address.locality }}</li>
+                    {% endif %}
                 {% endfor %}
             </ul>
         </p>

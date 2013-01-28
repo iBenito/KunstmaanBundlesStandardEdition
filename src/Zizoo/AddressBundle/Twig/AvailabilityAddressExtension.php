@@ -17,6 +17,11 @@ class AvailabilityAddressExtension extends \Twig_Extension
     protected $geoLocations;
     protected $cities;
        
+    public function __construct() {
+        $this->geoLocations = array();
+        $this->cities       = array();
+    }
+    
     public function resetDuplicates(){
         $this->geoLocations = array();
         $this->cities = array();
