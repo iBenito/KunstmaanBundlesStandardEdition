@@ -2,13 +2,8 @@ parameters:
 #    zizoo_address.example.class: Zizoo\AddressBundle\Example
 
 services:
-    zizoo_boat.twig.image_extension:
-        class: Zizoo\BoatBundle\Twig\ImageExtension
-        tags:
-            - { name: twig.extension }
-            
-    zizoo_boat.twig.boat_extension:
-        class: Zizoo\BoatBundle\Twig\BoatExtension
+    zizoo_address.twig.availability_address_extension:
+        class: Zizoo\AddressBundle\Twig\AvailabilityAddressExtension
         tags:
             - { name: twig.extension }
 #    zizoo_address.example:

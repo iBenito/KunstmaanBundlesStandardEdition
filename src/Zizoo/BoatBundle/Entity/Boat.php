@@ -101,8 +101,11 @@ class Boat
     public function __construct()
     {
         
-        $this->image = new ArrayCollection();
-        $this->reservation = new ArrayCollection();
+        $this->image        = new ArrayCollection();
+        $this->reservation  = new ArrayCollection();
+        $this->created      = new \DateTime();
+        $this->updated      = new \DateTime();
+        $this->status       = 0;
     }
     
     /**

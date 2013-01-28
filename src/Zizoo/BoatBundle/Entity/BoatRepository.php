@@ -37,7 +37,9 @@ class BoatRepository extends EntityRepository
      * @return Doctrine\ORM\AbstractQuery[] Results
      * @author Alex Fuckert <alexf83@gmail.com>
      */
-    public function searchBoatAvailability($search='-1', $numGuests='')
+    public function searchBoatAvailability($search='-1', $numGuests='', 
+                                            $numCabinsFrom='', $numCabinsTo='',
+                                            $lengthFrom='', $lengthTo='')
     {
         // Join boat, image, address, country and reservation
         $qb = $this->createQueryBuilder('b')
@@ -46,11 +48,13 @@ class BoatRepository extends EntityRepository
                    ->leftJoin('b.address', 'a')
                    ->leftJoin('b.reservation', 'r')
                    ->leftJoin('b.availability', 'av')
-                   ->leftJoin('b.address', 'av_a')
+                   ->leftJoin('b.address', 'b_a')
+                   ->leftJoin('av.address', 'av_a')
+                   ->leftJoin('av_a.country', 'av_c')
                    ->leftJoin('a.country', 'c');
         
-        // Optionally search by location
-        $firstWhere = false;
+        // Optionally search by boat location or boat availability location
+        $firstWhere = true;
         if ($search!='-1'){
             $qb->where('a.locality = :search')
                ->orWhere('a.subLocality = :search')
@@ -61,9 +65,9 @@ class BoatRepository extends EntityRepository
                ->orWhere('av_a.subLocality = :search')
                ->orWhere('av_a.state = :search')
                ->orWhere('av_a.province = :search')
-               ->orWhere('av_a.printableName = :search')
+               ->orWhere('av_c.printableName = :search')
                ->setParameter('search', $search);
-            $firstWhere = true;
+            $firstWhere = false;
         }
 
         // Optionally restrict by number of guests
@@ -74,9 +78,48 @@ class BoatRepository extends EntityRepository
                 $qb->andWhere('b.nr_guests >= :num_guests');
             }
             $qb->setParameter('num_guests', $numGuests);
-            $firstWhere = true;
+            $firstWhere = false;
         }
         
+        // Optionally restrict by boat length
+        if ($lengthFrom!=''){
+            if ($firstWhere){
+                $qb->where('b.length >= :length_from');
+            } else {
+                $qb->andWhere('b.length >= :length_from');
+            }
+            $qb->setParameter('length_from', $lengthFrom);
+            $firstWhere = false;
+        }
+        if ($lengthTo!=''){
+            if ($firstWhere){
+                $qb->where('b.length <= :length_to');
+            } else {
+                $qb->andWhere('b.length <= :length_to');
+            }
+            $qb->setParameter('length_to', $lengthTo);
+            $firstWhere = false;
+        }
+        
+        // Optionally restrict by number of cabins
+        if ($numCabinsFrom!=''){
+            if ($firstWhere){
+                $qb->where('b.cabins >= :num_cabins_from');
+            } else {
+                $qb->andWhere('b.cabins >= :num_cabins_from');
+            }
+            $qb->setParameter('num_cabins_from', $numCabinsFrom);
+            $firstWhere = false;
+        }
+        if ($numCabinsTo!=''){
+            if ($firstWhere){
+                $qb->where('b.cabins <= :num_cabins_to');
+            } else {
+                $qb->andWhere('b.cabins <= :num_cabins_to');
+            }
+            $qb->setParameter('num_cabins_to', $numCabinsTo);
+            $firstWhere = false;
+        }
         
         //$qb->getQuery();
         
@@ -91,6 +134,14 @@ class BoatRepository extends EntityRepository
                             'av.id' => SortableNullsWalker::NULLS_LAST,
                         ))
                   ->getResult();
+    }
+    
+    
+    public function getMaxBoatValues(){
+        $qb = $this->createQueryBuilder('b')
+                   ->select('MAX(b.cabins) as max_cabins, MAX(b.length) as max_length');
+        
+        return $qb->getQuery()->getSingleResult();
     }
     
     

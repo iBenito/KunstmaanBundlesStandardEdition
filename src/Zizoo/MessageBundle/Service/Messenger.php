@@ -48,7 +48,7 @@ class Messenger {
         $this->container->get('mailer')->send($email);
     }
     
-    public function sendNotificationBookingEmail(Reservation $reservation, Profile $from, Profile $to){
+    public function sendNotificationBookingEmail(User $to, Reservation $reservation){
         //$messageLink = $this->container->get('router')->generate('view_thread', array('messageId' => $message->getId()));
         $twig = $this->container->get('twig');
         $template = $twig->loadTemplate('ZizooBookingBundle:Email:new_booking.html.twig');
@@ -60,7 +60,7 @@ class Messenger {
         $email = \Swift_Message::newInstance()
             ->setSubject($subject)
             ->setFrom($this->container->getParameter('email_info'))
-            ->setTo($to->getUser()->getEmail());
+            ->setTo($to->getEmail());
 
         if (!empty($htmlBody)) {
             $email->setBody($htmlBody, 'text/html')
@@ -73,7 +73,7 @@ class Messenger {
     }
     
     
-    public function sendInvitationEmail(Invitation $invitation, User $from){
+    public function sendInvitationEmail($to, User $from){
         $inviteLink = $this->container->get('router')->generate('ZizooBaseBundle_homepage', array(), true);
         $twig = $this->container->get('twig');
         $template = $twig->loadTemplate('ZizooUserBundle:Email:invite.html.twig');
@@ -88,13 +88,33 @@ class Messenger {
         $email = \Swift_Message::newInstance()
             ->setSubject($subject)
             ->setFrom($this->container->getParameter('email_info'))
-            ->setTo($invitation->getEmail1());
+            ->setTo($to);
 
-        if ($invitation->getEmail2()!='') $email->addTo($invitation->getEmail2());
-        if ($invitation->getEmail3()!='') $email->addTo($invitation->getEmail3());
-        if ($invitation->getEmail4()!='') $email->addTo($invitation->getEmail4());
-        if ($invitation->getEmail5()!='') $email->addTo($invitation->getEmail5());
-        
+        if (!empty($htmlBody)) {
+            $email->setBody($htmlBody, 'text/html')
+                ->addPart($textBody, 'text/plain');
+        } else {
+            $email->setBody($textBody);
+        }
+
+        $this->container->get('mailer')->send($email);
+    }
+    
+    public function sendRegistrationEmail(User $to){
+        $link = $this->container->get('router')->generate('ZizooBaseBundle_homepage', array(), true);
+        $twig = $this->container->get('twig');
+        $template = $twig->loadTemplate('ZizooUserBundle:Email:welcome.html.twig');
+        $context = array(   'link'      => $link,
+                            'recipient' => $to);
+        $subject = $template->renderBlock('subject', $context);
+        $textBody = $template->renderBlock('body_text', $context);
+        $htmlBody = $template->renderBlock('body_html', $context);
+
+        $email = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($this->container->getParameter('email_register'))
+            ->setTo($to->getEmail());
+
         if (!empty($htmlBody)) {
             $email->setBody($htmlBody, 'text/html')
                 ->addPart($textBody, 'text/plain');
@@ -105,6 +125,97 @@ class Messenger {
         $this->container->get('mailer')->send($email);
     }
         
+    
+    /**
+     * Send email to registration user, with activation link
+     * 
+     * @param Zizoo\UserBundle\Entity\User $user
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
+    public function sendConfirmationEmail(User $user){
+        $activationLink = $this->container->get('router')->generate('confirm', array('token' => $user->getConfirmationToken(), 'email' => $user->getEmail()), true);
+        $twig = $this->container->get('twig');
+        $template = $twig->loadTemplate('ZizooUserBundle:Email:confirm.html.twig');
+        $context = array('link' => $activationLink);
+        $subject = $template->renderBlock('subject', $context);
+        $textBody = $template->renderBlock('body_text', $context);
+        $htmlBody = $template->renderBlock('body_html', $context);
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($this->container->getParameter('email_register'))
+            ->setTo($user->getEmail());
+
+        if (!empty($htmlBody)) {
+            $message->setBody($htmlBody, 'text/html')
+                ->addPart($textBody, 'text/plain');
+        } else {
+            $message->setBody($textBody);
+        }
+
+        $this->container->get('mailer')->send($message);
+    }
+    
+    
+    
+    /**
+     * Send email to user with link for generating new password.
+     * 
+     * @param Zizoo\UserBundle\Entity\User $user
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
+    public function sendForgotPasswordEmail(User $user){
+        $passwordLink = $this->container->get('router')->generate('reset_password', array('token' => $user->getConfirmationToken(), 'email' => $user->getEmail()), true);
+        $twig = $this->container->get('twig');
+        $template = $twig->loadTemplate('ZizooUserBundle:Email:password_confirm.html.twig');
+        $context = array('link' => $passwordLink);
+        $subject = $template->renderBlock('subject', $context);
+        $textBody = $template->renderBlock('body_text', $context);
+        $htmlBody = $template->renderBlock('body_html', $context);
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($this->container->getParameter('email_password'))
+            ->setTo($user->getEmail());
+
+        if (!empty($htmlBody)) {
+            $message->setBody($htmlBody, 'text/html')
+                ->addPart($textBody, 'text/plain');
+        } else {
+            $message->setBody($textBody);
+        }
+
+        $this->container->get('mailer')->send($message);
+    }
+    
+    /**
+     * Send email to user with new password.
+     * 
+     * @param Zizoo\UserBundle\Entity\User $user
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
+    public function sendNewPasswordEmail(User $user, $pass){
+        $twig = $this->container->get('twig');
+        $template = $twig->loadTemplate('ZizooUserBundle:Email:password_new.html.twig');
+        $context = array('pass' => $pass);
+        $subject = $template->renderBlock('subject', $context);
+        $textBody = $template->renderBlock('body_text', $context);
+        $htmlBody = $template->renderBlock('body_html', $context);
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($this->container->getParameter('email_password'))
+            ->setTo($user->getEmail());
+
+        if (!empty($htmlBody)) {
+            $message->setBody($htmlBody, 'text/html')
+                ->addPart($textBody, 'text/plain');
+        } else {
+            $message->setBody($textBody);
+        }
+
+        $this->container->get('mailer')->send($message);
+    }
     
 }
 ?>

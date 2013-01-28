@@ -96,7 +96,7 @@ $(document).ready(function(){
 
 
     $('#search_form').on('submit', function(){
-        updateSearch();
+        updateSearch(1);
         return false;
     });
 

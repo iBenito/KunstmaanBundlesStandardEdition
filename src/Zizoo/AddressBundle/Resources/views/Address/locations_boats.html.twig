@@ -1,13 +1,17 @@
 {% trans_default_domain "labels" %}
+{% set boats_per_line = 3 %}
 {% for boat in boats %}
+    {% set x = boat|resetDuplicates %}
     {% if loop.index0 % page_size == 0 %}
-    <div class="page{% if (loop.index0 / page_size)+1 == page %} current {% endif %}" id="page_{{ (loop.index0 / page_size)+1 }}">
+        <div class="page{% if (loop.index0 / page_size)+1 == page %} current {% endif %}" id="page_{{ (loop.index0 / page_size)+1 }}">
+        {% set page_index = 0 %}
     {% endif %}
+        {% set page_index = page_index + 1 %}
         <article class="boat{% if boat|bookable(res_from, res_to)==false %} booked{% endif %}">
             <header>
                 <h2>{{ boat.title }}</h2>
             </header>
-            <div>
+            <div class="boat_description">
                 <p>{{ boat.description }}</p>
             </div>
 
@@ -16,8 +20,13 @@
                 <h3>{{ boat.name }}</h3>
                 <p>{% trans %}zizoo_address.label.cities{% endtrans %}: 
                     <ul>
+                        {% if boat.address|duplicateCity == false %}
+                            <li>{{ boat.address.locality }}</li>
+                        {% endif %}
                         {% for availability in boat.availability %}
-                            <li>{{ availability.address.locality }}</li>
+                            {% if availability.address|duplicateCity == false %}
+                                <li>{{ availability.address.locality }}</li>
+                            {% endif %}
                         {% endfor %}
                     </ul>
                 </p>
@@ -42,7 +51,11 @@
                 {% endfor %}
             </section>
         </article>
+    {% if page_index % boats_per_line == 0 %}
+        <div style="clear: both"></div>
+    {% endif %}
     {% if loop.index % page_size == 0 or loop.last %}
+        <div style="clear: both"></div>
     </div>
     {% endif %}
 {% endfor %}
@@ -64,27 +77,30 @@
         {% set index = 0 %}
         mc.clearMarkers();
         {% for boat in boats %}
-            {% if boat|bookable(res_from, res_to)==true %}
+            {% set x = boat|resetDuplicates %}
+            {% if boat|bookable(res_from, res_to)==true%}
                 {% for availability in boat.availability %}
-                    infoWindows.push(new google.maps.InfoWindow({
-                        content: {% include "ZizooAddressBundle:Address:locations_boat_info_window.html.twig" with {'boat': boat } %}
-                    }));
-                    markers.push(new google.maps.Marker({
-                        title: '{{ boat.name }}',
-                        position: new google.maps.LatLng(
-                             {{ availability.address.lat }}, {{ availability.address.lng }}),
-                             clickable: true,
-                             draggable: false,
-                             flat: true
-                    }));
-                    google.maps.event.addListener(markers[{{ index }}], 'click', function() {
-                        if (lastOpenWindow!=-1){
-                            infoWindows[lastOpenWindow].close();
-                        }
-                        infoWindows[{{ index }}].open(map, markers[{{ index }}]);
-                        lastOpenWindow = {{ index }};
-                      });
-                      {% set index = index + 1 %}
+                    {% if availability.address|duplicateLocation == false %}
+                        infoWindows.push(new google.maps.InfoWindow({
+                            content: {% include "ZizooAddressBundle:Address:locations_boat_info_window.html.twig" with {'boat': boat } %}
+                        }));
+                        markers.push(new google.maps.Marker({
+                            title: '{{ boat.name }}',
+                            position: new google.maps.LatLng(
+                                 {{ availability.address.lat }}, {{ availability.address.lng }}),
+                                 clickable: true,
+                                 draggable: false,
+                                 flat: true
+                        }));
+                        google.maps.event.addListener(markers[{{ index }}], 'click', function() {
+                            if (lastOpenWindow!=-1){
+                                infoWindows[lastOpenWindow].close();
+                            }
+                            infoWindows[{{ index }}].open(map, markers[{{ index }}]);
+                            lastOpenWindow = {{ index }};
+                          });
+                          {% set index = index + 1 %}
+                    {% endif %}
                 {% endfor %}
             {% endif %}
         {% endfor %}

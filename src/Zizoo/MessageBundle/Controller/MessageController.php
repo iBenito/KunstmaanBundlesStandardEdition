@@ -348,6 +348,12 @@ class MessageController extends BaseController
         $formHandler = $this->container->get('fos_message.new_thread_form.handler');
 
         if ($message = $formHandler->process($form)) {
+            $messenger = $this->container->get('messenger');
+            $sender     = $message->getSender();
+            $recipients = $message->getThread()->getOtherParticipants($sender);
+            foreach ($recipients as $recipient){
+                $messenger->sendNotificationMessageEmail($sender->getProfile(), $recipient->getProfile(), $message);
+            }
             return new RedirectResponse($this->container->get('router')->generate('fos_message_thread_view', array(
                 'threadId' => $message->getThread()->getId()
             )));

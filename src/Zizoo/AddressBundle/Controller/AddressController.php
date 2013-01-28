@@ -109,17 +109,26 @@ class AddressController extends Controller
      */
     public function locationsAction(Request $request){
         $page       = $request->query->get('page', '1');
-        $pageSize   = $request->query->get('page_size', '2');
+        $pageSize   = $request->query->get('page_size', '9');
         $search     = $request->query->get('search', '-1');
         $resFrom    = $request->query->get('reservation_from', '');
         $resTo      = $request->query->get('reservation_to', '');
         $numGuests  = $request->query->get('num_guests', '');
         
-              
+        // Filter
+        $numCabinsFrom  = $request->query->get('num_cabins_from', '');
+        $numCabinsTo    = $request->query->get('num_cabins_to', '');
+        $lengthFrom     = $request->query->get('length_from', '');
+        $lengthTo       = $request->query->get('length_to', '');
+        
         $em = $this->getDoctrine()
                    ->getEntityManager();
         
-        $availableBoats = $em->getRepository('ZizooBoatBundle:Boat')->searchBoatAvailability($search, $numGuests);
+        $maxBoatValues   = $em->getRepository('ZizooBoatBundle:Boat')->getMaxBoatValues();
+        
+        $availableBoats = $em->getRepository('ZizooBoatBundle:Boat')->searchBoatAvailability($search, $numGuests, 
+                                                                                            $numCabinsFrom, $numCabinsTo,
+                                                                                            $lengthFrom, $lengthTo);
         $numAvailableBoats = count($availableBoats);
         $numPages = floor($numAvailableBoats / $pageSize);
         if ($numAvailableBoats % $pageSize > 0){
@@ -135,7 +144,9 @@ class AddressController extends Controller
                 'current'       => $search,
                 'res_from'      => $resFrom,
                 'res_to'        => $resTo,
-                'num_guests'    => $numGuests
+                'num_guests'    => $numGuests,
+                'max_length'    => $maxBoatValues['max_length'],
+                'max_cabins'    => $maxBoatValues['max_cabins']
             ));
         } else {
             return $this->render('ZizooAddressBundle:Address:locations.html.twig', array(
@@ -146,7 +157,9 @@ class AddressController extends Controller
                 'current'       => $search,
                 'res_from'      => $resFrom,
                 'res_to'        => $resTo,
-                'num_guests'    => $numGuests
+                'num_guests'    => $numGuests,
+                'max_length'    => $maxBoatValues['max_length'],
+                'max_cabins'    => $maxBoatValues['max_cabins']
             ));
         }
         

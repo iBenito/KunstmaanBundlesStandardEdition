@@ -23,6 +23,9 @@ class AvailabilityAddress extends AddressBase {
      */
     protected $lng;
 
+    
+    protected $geoHash;
+    
     /**
      * Set boat
      *
@@ -156,7 +159,8 @@ class AvailabilityAddress extends AddressBase {
 
             $this->setLat($geoLocation->lat);
             $this->setLng($geoLocation->lng);
+           
         }
     }
-    
+            
 }

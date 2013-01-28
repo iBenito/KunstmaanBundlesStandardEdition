@@ -27,51 +27,6 @@ use Zizoo\ProfileBundle\Entity\Profile;
 class RegistrationController extends Controller
 {
     
-    private function sendRegistrationEmail($profile){
-        $messenger = $this->container->get('messenger');
-        
-        $em = $this->getDoctrine()
-                    ->getEntityManager();
-        
-        $registerUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($this->container->getParameter('email_register'));
-        if (!$registerUser) return false;
-        
-        $message = $messenger->sendMessageTo($registerUser->getProfile(), $profile, 'Welcome message...', 'Welcome to Zizoo!');
-        return $message;
-    }
-    
-    
-    /**
-     * Send email to registration user, with activation link
-     * 
-     * @param Zizoo\UserBundle\Entity\User $user
-     * @author Alex Fuckert <alexf83@gmail.com>
-     */
-    private function sendConfirmationEmail($user){
-        $activationLink = $this->generateUrl('confirm', array('token' => $user->getConfirmationToken(), 'email' => $user->getEmail()), true);
-        $twig = $this->container->get('twig');
-        $template = $twig->loadTemplate('ZizooUserBundle:Registration:email_confirm.html.twig');
-        $context = array('link' => $activationLink);
-        $subject = $template->renderBlock('subject', $context);
-        $textBody = $template->renderBlock('body_text', $context);
-        $htmlBody = $template->renderBlock('body_html', $context);
-
-        $message = \Swift_Message::newInstance()
-            ->setSubject($subject)
-            ->setFrom($this->container->getParameter('email_register'))
-            ->setTo($user->getEmail());
-
-        if (!empty($htmlBody)) {
-            $message->setBody($htmlBody, 'text/html')
-                ->addPart($textBody, 'text/plain');
-        } else {
-            $message->setBody($textBody);
-        }
-
-        $this->get('mailer')->send($message);
-    }
-    
-    
     private function doLogin($user, $url=null){
         $token = new UsernamePasswordToken($user, $user->getPassword(), 'main', $user->getRoles());
         $securityContext = $this->get('security.context');
@@ -117,7 +72,8 @@ class RegistrationController extends Controller
                 $em->persist($user);
                 $em->flush();
 
-                $this->sendConfirmationEmail($user);
+                $messenger = $this->get('messenger');
+                $messenger->sendConfirmationEmail($user);
 
                 return $this->redirect($this->generateUrl('submitted'));
             } else {
@@ -213,7 +169,8 @@ class RegistrationController extends Controller
             return $this->redirect($this->generateUrl('submitted'));
         }
         if ($request->isMethod('POST')) {
-            $this->sendConfirmationEmail($user);
+            $messenger = $this->get('messenger');
+            $messenger->sendConfirmationEmail($user);
             return $this->redirect($this->generateUrl('submitted'));
         }
         return $this->render('ZizooUserBundle:Registration:resend_confirmation.html.twig');
@@ -246,7 +203,9 @@ class RegistrationController extends Controller
             $em->persist($profile);
             $em->persist($user);
             $em->flush();
-            $this->sendRegistrationEmail($profile);
+            
+            $messenger = $this->container->get('messenger');        
+            $message = $messenger->sendRegistrationEmail($user);
             
             return $this->doLogin($user, $this->generateUrl('confirmed'));
             //return $this->redirect($this->generateUrl('confirmed'));
@@ -385,7 +344,9 @@ class RegistrationController extends Controller
                     $em->persist($profile);
                     $em->persist($user);
                     $em->flush();
-                    $this->sendRegistrationEmail($profile);
+                    
+                    $messenger = $this->get('messenger');
+                    $messenger->sendRegistrationEmail($user);
                     
                     return $this->doLogin($user, $this->generateUrl('register_facebook_success'));
                     //return $this->redirect($this->generateUrl('submitted'));

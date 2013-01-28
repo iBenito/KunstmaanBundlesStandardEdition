@@ -135,8 +135,9 @@ class UserController extends Controller
             
             $em->persist($user);
             $em->flush();
-
-            $this->sendForgotPasswordEmail($user);
+            
+            $messenger = $this->get('messenger');
+            $messenger->sendForgotPasswordEmail($user);
             
             return $this->redirect($this->generateUrl('reset_password_email'));
         }
@@ -176,7 +177,9 @@ class UserController extends Controller
             $user->setPassword($password);
             $em->persist($user);
             $em->flush();
-            $this->sendNewPasswordEmail($user, $pass_plain);
+            
+            $messenger = $this->get('messenger');
+            $messenger->sendNewPasswordEmail($user, $pass_plain);
             return $this->render('ZizooUserBundle:User:reset_password_confirm.html.twig');
         } else {
             return $this->redirect($this->generateUrl('login'));
@@ -189,68 +192,9 @@ class UserController extends Controller
      * @author Alex Fuckert <alexf83@gmail.com>
      */
     public function resetPasswordConfirmAction(){
-        return $this->render('ZizooUserBundle:User:reset_password_email.html.twig');
+        return $this->render('ZizooUserBundle:Email:reset_password.html.twig');
     }
     
-    
-    /**
-     * Send email to user with link for generating new password.
-     * 
-     * @param Zizoo\UserBundle\Entity\User $user
-     * @author Alex Fuckert <alexf83@gmail.com>
-     */
-    private function sendForgotPasswordEmail($user){
-        $passwordLink = $this->generateUrl('reset_password', array('token' => $user->getConfirmationToken(), 'email' => $user->getEmail()), true);
-        $twig = $this->container->get('twig');
-        $template = $twig->loadTemplate('ZizooUserBundle:User:email_password_confirm.html.twig');
-        $context = array('link' => $passwordLink);
-        $subject = $template->renderBlock('subject', $context);
-        $textBody = $template->renderBlock('body_text', $context);
-        $htmlBody = $template->renderBlock('body_html', $context);
-
-        $message = \Swift_Message::newInstance()
-            ->setSubject($subject)
-            ->setFrom($this->container->getParameter('email_password'))
-            ->setTo($user->getEmail());
-
-        if (!empty($htmlBody)) {
-            $message->setBody($htmlBody, 'text/html')
-                ->addPart($textBody, 'text/plain');
-        } else {
-            $message->setBody($textBody);
-        }
-
-        $this->get('mailer')->send($message);
-    }
-    
-    /**
-     * Send email to user with new password.
-     * 
-     * @param Zizoo\UserBundle\Entity\User $user
-     * @author Alex Fuckert <alexf83@gmail.com>
-     */
-    private function sendNewPasswordEmail($user, $pass){
-        $twig = $this->container->get('twig');
-        $template = $twig->loadTemplate('ZizooUserBundle:User:email_password_new.html.twig');
-        $context = array('pass' => $pass);
-        $subject = $template->renderBlock('subject', $context);
-        $textBody = $template->renderBlock('body_text', $context);
-        $htmlBody = $template->renderBlock('body_html', $context);
-
-        $message = \Swift_Message::newInstance()
-            ->setSubject($subject)
-            ->setFrom($this->container->getParameter('email_password'))
-            ->setTo($user->getEmail());
-
-        if (!empty($htmlBody)) {
-            $message->setBody($htmlBody, 'text/html')
-                ->addPart($textBody, 'text/plain');
-        } else {
-            $message->setBody($textBody);
-        }
-
-        $this->get('mailer')->send($message);
-    }
     
     /**
      * Change password. Must only be allowed when user is logged in!
@@ -294,7 +238,6 @@ class UserController extends Controller
     }
     
     
-    
     public function inviteFriendsAction(){
         $user       = $this->getUser();
         $request    = $this->getRequest();
@@ -309,10 +252,57 @@ class UserController extends Controller
             $invitation = $form->getData();
             
             if ($form->isValid()){
-                $messenger = $this->get('messenger');
-                $messenger->sendInvitationEmail($invitation, $user);
-                $trans = $this->get('translator');
-                $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.friends_invited'));
+                $messenger  = $this->get('messenger');
+                $trans      = $this->get('translator');
+                $em         = $this->getDoctrine()
+                                    ->getEntityManager();
+                
+                $inviteEmail = $invitation->getEmail1();
+                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
+                if ($inviteUser){
+                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
+                } else if ($inviteEmail!='') {
+                    $messenger->sendInvitationEmail($inviteEmail, $user);
+                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
+                }
+                
+                $inviteEmail = $invitation->getEmail2();
+                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
+                if ($inviteUser){
+                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
+                } else if ($inviteEmail!='') {
+                    $messenger->sendInvitationEmail($inviteEmail, $user);
+                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
+                }
+                
+                $inviteEmail = $invitation->getEmail3();
+                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
+                if ($inviteUser){
+                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
+                } else if ($inviteEmail!='') {
+                    $messenger->sendInvitationEmail($inviteEmail, $user);
+                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
+                }
+                
+                $inviteEmail = $invitation->getEmail4();
+                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
+                if ($inviteUser){
+                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
+                } else if ($inviteEmail!='') {
+                    $messenger->sendInvitationEmail($inviteEmail, $user);
+                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
+                }
+                
+                $inviteEmail = $invitation->getEmail5();
+                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
+                if ($inviteUser){
+                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
+                } else if ($inviteEmail!='') {
+                    $messenger->sendInvitationEmail($inviteEmail, $user);
+                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
+                }
+                
+
                 return $this->redirect($this->generateUrl('invite', array('form' => $form)));
             }
         }

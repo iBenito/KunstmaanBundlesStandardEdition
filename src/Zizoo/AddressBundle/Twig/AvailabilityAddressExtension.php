@@ -1,18 +1,44 @@
 <?php
 
-namespace Zizoo\BoatBundle\Twig;
+namespace Zizoo\AddressBundle\Twig;
 
 
-class BoatExtension extends \Twig_Extension
+class AvailabilityAddressExtension extends \Twig_Extension
 {
     public function getFilters()
     {
         return array(
-            'reservationExists' => new \Twig_Filter_Method($this, 'reservationExists'),
-            'bookable' => new \Twig_Filter_Method($this, 'bookable'),
+            'resetDuplicates' => new \Twig_Filter_Method($this, 'resetDuplicates'),
+            'duplicateLocation' => new \Twig_Filter_Method($this, 'duplicateLocation'),
+            'duplicateCity' => new \Twig_Filter_Method($this, 'duplicateCity')
         );
     }
     
+    protected $geoLocations;
+    protected $cities;
+       
+    public function resetDuplicates(){
+        $this->geoLocations = array();
+        $this->cities = array();
+    }
+    
+    public function duplicateLocation($address){
+        $lat = $address->getLat();
+        $lng = $address->getLng();
+        if ($lat==null || $lng==null) return true;
+        $hash = md5($lat.';'.$lng);
+        if (array_key_exists($hash, $this->geoLocations)) return true;
+        $this->geoLocations[$hash] = '';
+        return false;
+    }
+    
+    public function duplicateCity($address){
+        $city = $address->getLocality();
+        if (array_key_exists($city, $this->cities)) return true;
+        $this->cities[$city] = '';
+        return false;
+    }
+
     public function reservationExists($boat, $from, $to){
         if ($from=='' || $to=='') return false;
         $reservations = $boat->getReservation();
@@ -51,7 +77,7 @@ class BoatExtension extends \Twig_Extension
     
     public function getName()
     {
-        return 'boat_extension';
+        return 'availability_address_extension';
     }
 }
 ?>
