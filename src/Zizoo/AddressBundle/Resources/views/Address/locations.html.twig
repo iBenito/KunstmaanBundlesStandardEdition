@@ -1,5 +1,6 @@
 {# src/Zizoo/AddressBundle/Resources/views/Address/locations_test.html.twig #}
 {% trans_default_domain "labels" %}
+{% form_theme form 'ZizooAddressBundle:Form:fields.html.twig' %}
 {% extends 'ZizooAddressBundle::layout.html.twig' %}
 
 {% block javascripts %}
@@ -21,20 +22,22 @@
 
 {% block body %}
 <form id="search_form" action="{{ path('zizoo_address_locations') }}" method="get">
-    {% render "ZizooAddressBundle:Address:uniqueLocations" with {'current': current} %}
-    <input type="hidden" value="1" name="page" id="page" />
-    <input type="hidden" value="" name="num_cabins_from" id="num_cabins_from" />
-    <input type="hidden" value="" name="num_cabins_to" id="num_cabins_to" />
-    <input type="hidden" value="" name="length_from" id="length_from" />
-    <input type="hidden" value="" name="length_to" id="length_to" />
+    {{ form_widget(form.location) }}
+    {{ form_widget(form.page) }}
+    {{ form_widget(form.reservation_from) }}
+    {{ form_widget(form.reservation_to) }}
+    {{ form_widget(form.num_guests) }}
+    {{ form_widget(form.length_from) }}
+    {{ form_widget(form.length_to) }}
+    {{ form_widget(form.num_cabins_from) }}
+    {{ form_widget(form.num_cabins_to) }}
     <input type="submit" value="Search" />
-</form>
+
 <div id="map"></div>
 <div id="map_div">
     
         
     <script type="text/javascript">
-        var currentPage = {{ page }};
         
         function doBlock(block){
             if (block){
@@ -50,7 +53,7 @@
         
         function updateSearch(page){
             doBlock(true);
-            $('#search_form #page').val(page);
+            $('#search_form #zizoo_boat_search_page').val(page);
                         
             var index   = $('#unique_locations :selected').index();
             var type    = null;
@@ -89,30 +92,39 @@
                 max: {{ max_length }},
                 values: [ 1, {{ max_length }} ],
                 slide: function( event, ui ) {
-                    $( "#length_from" ).val(ui.values[ 0 ]);
-                    $( "#length_to" ).val(ui.values[ 1 ]);
+                    $( "#zizoo_boat_search_length_from" ).val(ui.values[ 0 ]);
+                    $( "#zizoo_boat_search_length_to" ).val(ui.values[ 1 ]);
                     $( "#length_text" ).val(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
                 },
                 stop: function( event, ui ){
                     updateSearch(1);
                 }
             });
-            
+
             $( "#num_cabins_slider" ).slider({
                 range: true,
                 min: 1,
                 max: {{ max_cabins }},
                 values: [ 1, {{ max_cabins }} ],
                 slide: function( event, ui ) {
-                    $( "#num_cabins_from" ).val(ui.values[ 0 ]);
-                    $( "#num_cabins_to" ).val(ui.values[ 1 ]);
+                    $( "#zizoo_boat_search_num_cabins_from" ).val(ui.values[ 0 ]);
+                    $( "#zizoo_boat_search_num_cabins_to" ).val(ui.values[ 1 ]);
                     $( "#num_cabins_text" ).val(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
                 },
                 stop: function( event, ui ){
                     updateSearch(1);
                 }
             });
-                        
+
+
+            $('#boat_type_filter input[type="checkbox"]').change(function(){
+                updateSearch(1);
+            });
+
+            $( "#zizoo_boat_search_reservation_from" ).attr('placeholder', 'From');
+            $( "#zizoo_boat_search_reservation_to" ).attr('placeholder', 'Until');
+            $( "#zizoo_boat_search_num_guests" ).attr('placeholder', 'Number of people');
+
             $('#filter').show();
         });
 
@@ -122,6 +134,9 @@
             {% include "ZizooAddressBundle:Address:locations_boats.html.twig" with {'page': page, 'page_size': page_size } %}
         </div>
         <div id="filter" style="display: none">
+            <div id="boat_type_filter">
+                {{ form_widget(form.boat_type) }}
+            </div>
             <div id="length_filter">
                 <label for="length_text">Boat Length:</label>
                 <input type="text" id="length_text" value="1 - {{ max_length }}"/>
@@ -165,7 +180,22 @@
             right: 0;
             width: 294px;
         }
+        
+        #zizoo_boat_search_boat_type_boat_type input {
+            float: left;
+            clear: left;
+            margin-right: 5px;
+        }
+        
+        #zizoo_boat_search_boat_type_boat_type label {
+            float: left;
+        }
+        
+        #length_filter {
+            clear: both;
+        }
     </style>
     
 </div>
+</form>
 {% endblock %}

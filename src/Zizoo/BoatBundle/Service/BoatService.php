@@ -2,6 +2,7 @@
 namespace Zizoo\BoatBundle\Service;
 
 use Zizoo\BoatBundle\Entity\Boat;
+use Zizoo\BoatBundle\Entity\BoatType;
 use Zizoo\BoatBundle\Entity\Availability;
 use Zizoo\BoatBundle\Entity\Image;
 
@@ -35,7 +36,7 @@ class BoatService {
         }
     }
     
-    public function createBoat($name, $title, $description, $brand, $model, $length, $cabins, $numGuests, BoatAddress $address, ArrayCollection $availabilities=null){
+    public function createBoat($name, $title, $description, $brand, $model, $length, $cabins, $numGuests, BoatAddress $address, BoatType $boatType, ArrayCollection $availabilities=null){
         $boat = new Boat();
         $boat->setName($name);
         $boat->setTitle($title);
@@ -45,6 +46,7 @@ class BoatService {
         $boat->setLength($length);
         $boat->setCabins($cabins);
         $boat->setNrGuests($numGuests);
+        $boat->setBoatType($boatType);
         
         $address->fetchGeo();
         $address->setBoat($boat);
@@ -61,7 +63,12 @@ class BoatService {
         return $boat;
     }
     
-    
+    public function createBoatType($name, $order){
+        $boatType = new BoatType($name, $order);
+        $this->em->persist($boatType);
+        $this->em->flush($boatType);
+        return $boatType;
+    }
     
 }
 ?>

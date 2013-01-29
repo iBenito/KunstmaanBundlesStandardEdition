@@ -29,7 +29,7 @@ class ThreadTypeTransformer implements DataTransformerInterface
             return null;
         }
         
-        if (!$value instanceof ThreadType) {
+        if (!$threadType instanceof ThreadType) {
             throw new UnexpectedTypeException($value, 'Zizoo\UserBundle\Entity\ThreadType');
         }
 

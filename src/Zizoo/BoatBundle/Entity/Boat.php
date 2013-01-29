@@ -89,6 +89,12 @@ class Boat
     protected $availability;
     
     /**
+     * @ORM\ManyToOne(targetEntity="Zizoo\BoatBundle\Entity\BoatType")
+     * @ORM\JoinColumn(name="boat_type", referencedColumnName="id")
+     */
+    protected $boatType;
+    
+    /**
      * @ORM\Column(type="datetime")
      */
     protected $created;
@@ -552,5 +558,29 @@ class Boat
     public function getAddress()
     {
         return $this->address;
+    }
+    
+    
+    /**
+     * Set type
+     *
+     * @param BoatType $type
+     * @return Message
+     */
+    public function setBoatType($type)
+    {
+        $this->boatType = $type;
+    
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return BoatType 
+     */
+    public function getBoatType()
+    {
+        return $this->boatType;
     }
 }

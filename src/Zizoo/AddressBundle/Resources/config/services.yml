@@ -6,6 +6,17 @@ services:
         class: Zizoo\AddressBundle\Twig\AvailabilityAddressExtension
         tags:
             - { name: twig.extension }
+            
+    zizoo_address.search_boat_type:
+        class:  Zizoo\AddressBundle\Form\Type\SearchBoatType
+        arguments: ["@service_container"]
+        tags:
+            - { name: form.type, alias: zizoo_boat_search }
+            
+    zizoo_address.unique_locations_type:
+        class:  Zizoo\AddressBundle\Form\Type\UniqueLocationsType
+        tags:
+            - { name: form.type, alias: zizoo_unique_locations }
 #    zizoo_address.example:
 #        class: %zizoo_address.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]

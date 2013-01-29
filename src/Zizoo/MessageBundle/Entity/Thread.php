@@ -68,7 +68,7 @@ class Thread extends BaseThread
     /**
      * Set type
      *
-     * @param integer $type
+     * @param ThreadType $type
      * @return Message
      */
     public function setThreadType($type)
@@ -81,7 +81,7 @@ class Thread extends BaseThread
     /**
      * Get type
      *
-     * @return integer 
+     * @return ThreadType 
      */
     public function getThreadType()
     {

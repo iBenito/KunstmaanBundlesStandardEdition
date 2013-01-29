@@ -42,10 +42,10 @@
     opacity: 0.5;
 }
 
-#unique_locations_chzn .country, #unique_locations .country {
+#zizoo_boat_search_location_chzn .country, #zizoo_boat_search_location .country {
     font-weight: bold;
 }
 
-#unique_locations_chzn .sub, #unique_locations .sub {
+#zizoo_boat_search_location_chzn .sub, #zizoo_boat_search_location .sub {
     padding-left: 15px;
 }

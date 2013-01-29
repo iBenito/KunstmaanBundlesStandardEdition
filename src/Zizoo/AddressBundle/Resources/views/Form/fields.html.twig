@@ -1,0 +1,82 @@
+{# src/Zizoo/AddressBundle/Resources/views/Form/fields.html.twig #}
+{% block zizoo_unique_locations_widget %}
+{% spaceless %}
+    {% if expanded %}
+        {{ block('zizoo_unique_locations_widget_expanded') }}
+    {% else %}
+        {{ block('zizoo_unique_locations_widget_collapsed') }}
+    {% endif %}
+{% endspaceless %}
+{% endblock zizoo_unique_locations_widget %}
+
+{% block zizoo_unique_locations_widget_expanded %}
+{% spaceless %}
+    <div {{ block('widget_container_attributes') }}>
+    {% for child in form %}
+        {{ form_widget(child) }}
+        {{ form_label(child) }}
+    {% endfor %}
+    </div>
+{% endspaceless %}
+{% endblock zizoo_unique_locations_widget_expanded %}
+
+{% block zizoo_unique_locations_widget_collapsed %}
+{% spaceless %}
+    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+        {% if empty_value is not none %}
+            <option value="">{{ empty_value|trans({}, translation_domain) }}</option>
+        {% endif %}
+        {% if preferred_choices|length > 0 %}
+            {% set options = preferred_choices %}
+            {{ block('zizoo_unique_locations_widget_options') }}
+            {% if choices|length > 0 and separator is not none %}
+                <option disabled="disabled">{{ separator }}</option>
+            {% endif %}
+        {% endif %}
+        {% set options = choices %}
+        {{ block('zizoo_unique_locations_widget_options') }}
+   </select>
+{% endspaceless %}
+{% endblock zizoo_unique_locations_widget_collapsed %}
+
+{% block zizoo_unique_locations_widget_options %}
+{% spaceless %}
+    {% for index,choice in options %}
+        {% if choice is iterable %}
+            {% set country = index %}
+            {% set countryData = choice %}
+            <option value="{{ country }}" class="country" search="{{ country }}" {% if country == value %}selected="selected"{% endif %}>{{ country }}</option>
+            {% for index,data in countryData %}
+                {% if data is iterable %}
+                    {% set locationData = data %}
+                    {{ block('zizoo_unique_locations_widget_location_options') }}
+                {% endif %}
+            {% endfor %}
+        {% else %}
+        {% endif %}
+    {% endfor %}
+{% endspaceless %}
+{% endblock zizoo_unique_locations_widget_options %}
+                    
+                    
+{% block zizoo_unique_locations_widget_location_options %}
+{% spaceless %}
+    {% for index,choice in data %}
+        {% if choice is iterable %}
+            {% set location = index %}
+            {% set locationData = choice %}
+            {% set search = '' %}
+            {% set value = '' %}
+            {% for index,data in locationData %}
+                {% if data.value == 'search' %}
+                    {% set search = data.label %}
+                {% else %}
+                    {% set value = data.label %}
+                {% endif %}
+            {% endfor %}
+            <option value="{{ value }}" class="sub" search="{{ search }}" {% if country == value %}selected="selected"{% endif %}>{{ value }}</option>
+        {% else %}
+        {% endif %}
+    {% endfor %}
+{% endspaceless %}
+{% endblock zizoo_unique_locations_widget_location_options %}
