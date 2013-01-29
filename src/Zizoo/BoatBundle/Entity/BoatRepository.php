@@ -125,7 +125,8 @@ class BoatRepository extends EntityRepository
         
         // Optionally restrict by boat type
         if ($searchBoat->boatTypeSelected()){           
-            $boatTypes = $searchBoat->getBoatType()['boat_type'];
+            $boatTypes = $searchBoat->getBoatType();
+            $boatTypes = $boatTypes['boat_type'];
             $boatTypeIds = array();
             foreach ($boatTypes as $boatType){
                 $boatTypeIds[] = $boatType->getId();
