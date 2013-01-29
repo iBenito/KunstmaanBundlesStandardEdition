@@ -55,15 +55,15 @@
             doBlock(true);
             $('#search_form #zizoo_boat_search_page').val(page);
                         
-            var index   = $('#unique_locations :selected').index();
+            var index   = $('#zizoo_boat_search_location :selected').index();
             var type    = null;
             var val     = null;
             var search  = null;
             
             if (index>0){
-                type = $('#unique_locations option:nth-of-type('+(index+1)+')').attr('class');
-                search = $('#unique_locations option:nth-of-type('+(index+1)+')').attr('search');
-                val  = $('#unique_locations').val();
+                type = $('#zizoo_boat_search_location option:nth-of-type('+(index+1)+')').attr('class');
+                search = $('#zizoo_boat_search_location option:nth-of-type('+(index+1)+')').attr('search');
+                val  = $('#zizoo_boat_search_location').val();
             }
             
             $.ajax({
