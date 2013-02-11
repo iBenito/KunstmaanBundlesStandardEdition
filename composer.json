@@ -23,7 +23,8 @@
         "liip/imagine-bundle": "*",
         "knplabs/knp-paginator-bundle": "*",
         "braintree/braintree_php": "dev-master",
-        "friendsofsymfony/message-bundle": "dev-master"
+        "friendsofsymfony/message-bundle": "dev-master",
+        "punkave/symfony2-file-uploader-bundle": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [

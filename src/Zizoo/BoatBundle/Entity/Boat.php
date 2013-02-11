@@ -17,6 +17,12 @@ class Boat
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+        
+    /**
+     * @ORM\ManyToOne(targetEntity="Zizoo\UserBundle\Entity\User", inversedBy="boats")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $user;
     
     /**
      * @ORM\Column(type="text")
@@ -118,6 +124,29 @@ class Boat
         return $this->id;
     }
 
+    /**
+     * Set user
+     *
+     * @param \Zizoo\UserBundle\Entity\User $user
+     * @return Boat
+     */
+    public function setUser(\Zizoo\UserBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+    
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \Zizoo\UserBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+    
     /**
      * Set title
      *

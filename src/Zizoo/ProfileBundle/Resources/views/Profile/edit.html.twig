@@ -1,0 +1,9 @@
+{% extends 'ZizooProfileBundle::layout.html.twig' %}
+
+{% block body %}
+
+    {% block edit_form %}
+        {% render 'ZizooProfileBundle:Profile:editWidget' with { 'profile': profile } %}
+    {% endblock %}
+
+{% endblock %}

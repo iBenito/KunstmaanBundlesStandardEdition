@@ -59,13 +59,11 @@ class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
      */
     private $confirmationToken;
     
-    
     /**
      * @ORM\Column(name="fb_uid", type="string", length=255, nullable=true)
      */
     private $facebookUID;
-    
-    
+     
     /**
      * @ORM\OneToMany(targetEntity="Zizoo\MessageBundle\Entity\Contact", mappedBy="sender")
      */
@@ -98,20 +96,27 @@ class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
     }
     
     /**
-     * @ORM\OneToOne(targetEntity="\Zizoo\ProfileBundle\Entity\Profile", mappedBy="user")
-     **/
-    private $profile;
-    
-    /**
      * @ORM\ManyToMany(targetEntity="Group", inversedBy="users")
      *
      */
     private $groups;
 
+    /**
+     * @ORM\OneToOne(targetEntity="\Zizoo\ProfileBundle\Entity\Profile", mappedBy="user")
+     **/
+    private $profile;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="\Zizoo\BoatBundle\Entity\Boat", mappedBy="user")
+     */
+    private $boats;
+    
     public function __construct()
     {
         $this->isActive = false;
         $this->groups = new ArrayCollection();
+        
+        $this->boats = new ArrayCollection();
     }
 
 
@@ -175,8 +180,6 @@ class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
         ) = unserialize($serialized);
     }
     
-  
-
     /**
      * Get id
      *
@@ -451,4 +454,35 @@ class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
     {
         return $this->contactsWithMe;
     }
+    
+    /**
+     * Add boat
+     *
+     * @param \Zizoo\BoatBundle\Entity\Boat
+     * @return User
+     */
+    public function addBoat(\Zizoo\BoatBundle\Entity\Boat $boat) {
+        $this->boats[] = $boat;
+
+        return $this;
+    }
+
+    /**
+     * Remove boat
+     *
+     * @param \Zizoo\BoatBundle\Entity\Boat $boat
+     */
+    public function removeBoat(\Zizoo\BoatBundle\Entity\Boat $boat) {
+        $this->boats->removeElement($boat);
+    }
+
+    /**
+     * Get boats
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getBoats() {
+        return $this->boats;
+    }
+    
 }

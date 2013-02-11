@@ -1,0 +1,13 @@
+{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
+    
+{% block dashboard_page_title %}Boats{% endblock %}
+
+{% block content %}
+    {% for boat in boats %}    
+        <h3>{{ boat.name }}</h3>
+        <p>{{ boat.title }}</p>
+        {% include 'ZizooBoatBundle:Image:index.html.twig' with { 'images': boat.image } %}
+    {% else %}
+        <p>There are no boats available</p>
+    {% endfor %} 
+{% endblock %}

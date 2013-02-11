@@ -31,7 +31,8 @@ class AppKernel extends Kernel
             new Zizoo\ProfileBundle\ZizooProfileBundle(),
             new Zizoo\AddressBundle\ZizooAddressBundle(),
             new Zizoo\MessageBundle\ZizooMessageBundle(),
-            new Zizoo\JqGridCustomBundle\ZizooJqGridCustomBundle()
+            new Zizoo\JqGridCustomBundle\ZizooJqGridCustomBundle(),
+            new PunkAve\FileUploaderBundle\PunkAveFileUploaderBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

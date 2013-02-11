@@ -1,0 +1,5 @@
+{% extends 'ZizooBoatBundle::layout.html.twig' %}
+
+{% block body %}
+    {% render 'ZizooBoatBundle:Boat:boatFormWidget' with { 'boat': boat, 'formAction': formAction } %}
+{% endblock %}

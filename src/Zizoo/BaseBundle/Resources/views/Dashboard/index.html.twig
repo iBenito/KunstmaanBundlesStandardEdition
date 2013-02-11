@@ -1,25 +1,3 @@
-{% extends 'ZizooBaseBundle:Page:index.html.twig' %}
+{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
 
-{% block title %}{{ user.username }}{% endblock %}
-
-{% block body %}
-    <h1>Welcome {{ user.profile.firstName }}</h1>
-    
-    {% block dashboard_navigation %}
-        <div class="dashboard_navigation">
-            <ul class="nav">
-              <li class="active"><a href="{{ path('ZizooBaseBundle_dashboard') }}">Dashboard</a></li>
-              <li><a href="{{ path('fos_message_inbox') }}">Inbox</a></li>
-              <li><a href="{{ path('fos_message_sent') }}">Sent Messages</a></li>
-              <li><a href="{{ path('ZizooBaseBundle_profile') }}">Profile</a></li>
-              <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Bookings</a></li>
-              <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Boats</a></li>
-              <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Skills</a></li>
-              <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Settings</a></li>
-            </ul>
-        </div>
-    {% endblock %}
-    
-    {% block row %}{% endblock %}
-
-{% endblock %}
+{% block dashboard_page_title %}Main Dashboard{% endblock %}

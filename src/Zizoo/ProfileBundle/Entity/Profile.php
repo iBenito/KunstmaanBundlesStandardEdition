@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity(repositoryClass="Zizoo\ProfileBundle\Entity\ProfileRepository")
  * @ORM\Table(name="profile")
+ * @ORM\HasLifecycleCallbacks
  */
 class Profile
 {
@@ -39,7 +40,6 @@ class Profile
      * @ORM\Column(type="text", nullable=true)
      */
     protected $about;
-
   
     /**
      * @ORM\OneToMany(targetEntity="Zizoo\AddressBundle\Entity\ProfileAddress", mappedBy="profile")
@@ -55,6 +55,11 @@ class Profile
      * @ORM\Column(type="string", nullable=true)
      */
     protected $picture;
+    
+    /**
+     * 
+     */
+    public $file;
     
     /**
      * @ORM\Column(type="datetime")
@@ -81,6 +86,29 @@ class Profile
         return $this->id;
     }
 
+    /**
+     * Set user
+     *
+     * @param \Zizoo\UserBundle\Entity\User $user
+     * @return Profile
+     */
+    public function setUser(\Zizoo\UserBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+    
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \Zizoo\UserBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+    
     /**
      * Set firstName
      *
@@ -195,7 +223,91 @@ class Profile
     {
         return $this->picture;
     }
+    
+    /**
+     * File upload pre processing
+     * 
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function preUpload()
+    {
+        if (null !== $this->file) {
+            // do whatever you want to generate a unique name
+            $filename = sha1(uniqid(mt_rand(), true));
+            $this->picture = $filename.'.'.$this->file->guessExtension();
+        }
+    }
+   
+    /**
+     * File upload
+     * 
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function uploadPicture()
+    {
+        // the file property can be empty if the field is not required
+        if (null === $this->file) {
+            return;
+        }
 
+        // move takes the target directory and then the
+        // target filename to move to
+        // compute a random name and try to guess the extension (more secure)
+        $extension = $this->file->guessExtension();
+        if (!$extension) {
+            // extension cannot be guessed
+            $extension = 'bin';
+        }
+        
+        $this->file->move(
+            $this->getUploadRootDir(),
+            $this->picture
+        );
+
+        // clean up the file property as you won't need it anymore
+        $this->file = null;
+    }
+    
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeUpload()
+    {
+        if ($file = $this->getAbsolutePath()) {
+            unlink($file);
+        }
+    }
+    
+    public function getAbsolutePath()
+    {
+        return null === $this->picture
+            ? null
+            : $this->getUploadRootDir().'/'.$this->picture;
+    }
+
+    public function getWebPath()
+    {
+        return null === $this->picture
+            ? null
+            : $this->getUploadDir().'/'.$this->picture;
+    }
+
+    protected function getUploadRootDir()
+    {
+        // the absolute directory path where uploaded
+        // documents should be saved
+        return __DIR__.'/../../../../web/'.$this->getUploadDir();
+    }
+
+    protected function getUploadDir()
+    {
+        // get rid of the __DIR__ so it doesn't screw up
+        // when displaying uploaded doc/image in the view.
+        return 'images/profile/'.$this->id;
+    }
+    
     /**
      * Set created
      *
@@ -241,29 +353,7 @@ class Profile
     {
         return $this->updated;
     }
-
-    /**
-     * Set user
-     *
-     * @param \Zizoo\UserBundle\Entity\User $user
-     * @return Profile
-     */
-    public function setUser(\Zizoo\UserBundle\Entity\User $user = null)
-    {
-        $this->user = $user;
     
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \Zizoo\UserBundle\Entity\User 
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
     /**
      * Constructor
      */
