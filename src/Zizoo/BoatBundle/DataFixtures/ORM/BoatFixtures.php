@@ -68,11 +68,9 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat1Availability->setAddress($boat1AvailabilityAddress);
         $from = new \DateTime();
         $from->modify( 'first day of last month' );
-        $from->setTime(0,0,0);
         $boat1Availability->setAvailableFrom($from);
         $to = new \DateTime();
         $to->modify( 'last day of next month' );
-        $to->setTime(23,59,59);
         $boat1Availability->setAvailableUntil($to);
         $boat1Availability->setPrice(9.99);
         
@@ -98,11 +96,9 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         
         $from = new \DateTime();
         $from->modify( 'first day of january' );
-        $from->setTime(0,0,0);
         $boat2Availability->setAvailableFrom($from);
         $to = new \DateTime();
         $to->modify( 'last day of march' );
-        $to->setTime(23,59,59);
         $boat2Availability->setAvailableUntil($to);
         $boat2Availability->setPrice(6.66);
         
@@ -113,11 +109,9 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         
         $from = new \DateTime();
         $from->modify( 'first day of april' );
-        $from->setTime(0,0,0);
         $boat2Availability2->setAvailableFrom($from);
         $to = new \DateTime();
         $to->modify( 'last day of april' );
-        $to->setTime(23,59,59);
         $boat2Availability2->setAvailableUntil($to);
         $boat2Availability2->setPrice(6.66);
         
@@ -133,12 +127,10 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat2Availability3->setAddress($boat2Availability3Address);
         
         $from = new \DateTime();
-        $from->modify( 'first day of april' );
-        $from->setTime(0,0,0);
+        $from->modify( 'first day of june' );
         $boat2Availability3->setAvailableFrom($from);
         $to = new \DateTime();
-        $to->modify( 'last day of april' );
-        $to->setTime(23,59,59);
+        $to->modify( 'last day of june' );
         $boat2Availability3->setAvailableUntil($to);
         $boat2Availability3->setPrice(6.66);
         
@@ -178,7 +170,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $this->addReference('boat-4', $boat4);
         
         
-        
+        /**
         // Load test
         for ($i=0; $i<100; $i++){
             $boat1Address = new BoatAddress();
@@ -206,6 +198,8 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
             $boat1 = $boatService->createBoat('Sandali', 'The Ocean Explorer', $description, 'Seasy', '911', 5, 6, 12, 
                                                 $boat1Address, $boatTypeRepo->findOneByName('Yacht'), new ArrayCollection(array($boat1Availability)));
         }
+         
+         */
                 
     }
 

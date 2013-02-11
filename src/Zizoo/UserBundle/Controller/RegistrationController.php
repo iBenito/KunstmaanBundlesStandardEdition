@@ -5,7 +5,6 @@ namespace Zizoo\UserBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 use Zizoo\UserBundle\Form\Type\FacebookNewRegistrationType;
@@ -55,24 +54,10 @@ class RegistrationController extends Controller
             $data = $form->getData();
             $user = $data->getUser();
             if ($form->isValid()) {
+                $userService    = $this->get('user_service');
+                $messenger      = $this->get('messenger');
                 
-                $user->setSalt(md5(time()));
-                $encoder = new MessageDigestPasswordEncoder('sha512', true, 10);
-                $password = $encoder->encodePassword($user->getPassword(), $user->getSalt());
-                $user->setPassword($password);
-                $user->setConfirmationToken(uniqid());
-                $em = $this->getDoctrine()
-                           ->getEntityManager();
-                
-                $zizooUserGroup = $em->getRepository('ZizooUserBundle:Group')->findOneByRole('ROLE_ZIZOO_USER');
-                
-                $user->addGroup($zizooUserGroup);
-                                
-                $em->persist($zizooUserGroup);
-                $em->persist($user);
-                $em->flush();
-
-                $messenger = $this->get('messenger');
+                $user = $userService->registerUser($user);
                 $messenger->sendConfirmationEmail($user);
 
                 return $this->redirect($this->generateUrl('submitted'));
@@ -184,31 +169,14 @@ class RegistrationController extends Controller
      * @author Alex Fuckert <alexf83@gmail.com>
      */
     public function confirmAction($token, $email){
-        $em = $this->getDoctrine()
-                   ->getEntityManager();
+        $userService = $this->get('user_service');
+        $user = $userService->confirmUser($token, $email);
         
-        $user = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($email);
-        
-        if ($user && $user->getConfirmationToken()===$token){
-            $user->setConfirmationToken(null);
-            $user->setIsActive(1);
-            
-            $profile = new Profile();
-            $profile->setFirstName('');
-            $profile->setLastName('');
-            $profile->setCreated(new \DateTime());
-            $profile->setUpdated($profile->getCreated());
-            $profile->setUser($user);
-            
-            $em->persist($profile);
-            $em->persist($user);
-            $em->flush();
-            
+        if ($user){
             $messenger = $this->container->get('messenger');        
             $message = $messenger->sendRegistrationEmail($user);
             
             return $this->doLogin($user, $this->generateUrl('confirmed'));
-            //return $this->redirect($this->generateUrl('confirmed'));
         } else {
             return $this->redirect($this->generateUrl('register'));
         }
@@ -313,89 +281,61 @@ class RegistrationController extends Controller
         }
         
         if ($isPost) {
+            
             $form = $this->createForm(new FacebookNewRegistrationType());
             $form->bindRequest($request);
-
+            
             $data = $form->getData();
             $user = $data->getUser();
-            if ($user->getFacebookUID()==$obj['id'] && $user->getEmail()==$obj['email']){
-                if ($form->isValid()) {
-
-                    $user->setSalt(md5(time()));
-                    $encoder = new MessageDigestPasswordEncoder('sha512', true, 10);
-                    $password = $encoder->encodePassword($user->getPassword(), $user->getSalt());
-                    $user->setPassword($password);
-                    $user->setIsActive(1);
-                    $em = $this->getDoctrine()
-                               ->getEntityManager();
-
-                    $zizooUserGroup = $em->getRepository('ZizooUserBundle:Group')->findOneByRole('ROLE_ZIZOO_USER');
-
-                    $user->addGroup($zizooUserGroup);
-
-                    $profile = new Profile();
-                    $profile->setFirstName($obj['first_name']);
-                    $profile->setLastName($obj['last_name']);
-                    $profile->setCreated(new \DateTime());
-                    $profile->setUpdated($profile->getCreated());
-                    $profile->setUser($user);
-                    
-                    $em->persist($zizooUserGroup);
-                    $em->persist($profile);
-                    $em->persist($user);
-                    $em->flush();
-                    
-                    $messenger = $this->get('messenger');
+            
+            if ($form->isValid()){
+                $userService    = $this->get('user_service');
+                $messenger      = $this->get('messenger');
+                
+                $user = $userService->registerFacebookUser($user, $obj);
+                if ($user){
                     $messenger->sendRegistrationEmail($user);
-                    
                     return $this->doLogin($user, $this->generateUrl('register_facebook_success'));
-                    //return $this->redirect($this->generateUrl('submitted'));
                 } else {
-                    // Form is not valid. Check if the user is valid. If not, see if it's because the user already exists and hasn't completed registration (i.e. confirmation)
-                    // If that is the case, forward to "resend_confirmation". 
-                    // Maybe this shouldn't be done automatically? But it's hard to get the "Have you previously signed up" message below the right form control (i.e. username or email)
-                    $em = $this->getDoctrine()
-                                ->getEntityManager();
+                    return $this->redirect($this->generateUrl('register', array('relogin' => true,
+                                                                                'ajax'    => $request->isXmlHttpRequest())));
+                }
+                
+            } else {
+                // Form is not valid. Check if the user is valid. If not, see if it's because the user already exists and hasn't completed registration (i.e. confirmation)
+                // If that is the case, forward to "resend_confirmation". 
+                // Maybe this shouldn't be done automatically? But it's hard to get the "Have you previously signed up" message below the right form control (i.e. username or email)
+                $em = $this->getDoctrine()
+                            ->getEntityManager();
 
-                    // Validate user
-                    $validator = $this->get('validator');
-                    $errors = $validator->validate($user, 'registration');
-                    $num_errors = $errors->count();
+                // Validate user
+                $validator = $this->get('validator');
+                $errors = $validator->validate($user, 'registration');
+                $num_errors = $errors->count();
 
-                    // See if invalid because user already taken.
-                    $possibleUnconfirmedUser = null;
-                    for ($i=0; $i<$num_errors; $i++){
-                        $msgTemplate = $errors->get($i)->getMessageTemplate();
-                        if ($msgTemplate=='zizoo_user.error.user_taken'){
-                            $username = $errors->get($i)->getRoot()->getUsername();
-                            if ($username){
-                                $possibleUnconfirmedUser = $em->getRepository('ZizooUserBundle:User')->findOneByUsername($username);
-                                // If username already taken and not yet confirmed, forward.
-                                if ($possibleUnconfirmedUser->getConfirmationToken()!=null && !$possibleUnconfirmedUser->getIsActive()){
-                                    return $this->render('ZizooUserBundle:Registration:register_facebook_new.html.twig', array('form'                   => $form->createView(), 
-                                                                                                                                'facebook'              => $facebook, 
-                                                                                                                                'data'                  => $obj, 
-                                                                                                                                'unconfirmed_user'      => $possibleUnconfirmedUser, 
-                                                                                                                                'unconfirmed_email'     => false, 
-                                                                                                                                'unconfirmed_username'  => true,
-                                                                                                                                'ajax'                  => $request->isXmlHttpRequest()));
-                                }
+                // See if invalid because user already taken.
+                $possibleUnconfirmedUser = null;
+                for ($i=0; $i<$num_errors; $i++){
+                    $msgTemplate = $errors->get($i)->getMessageTemplate();
+                    if ($msgTemplate=='zizoo_user.error.user_taken'){
+                        $username = $errors->get($i)->getRoot()->getUsername();
+                        if ($username){
+                            $possibleUnconfirmedUser = $em->getRepository('ZizooUserBundle:User')->findOneByUsername($username);
+                            // If username already taken and not yet confirmed, forward.
+                            if ($possibleUnconfirmedUser->getConfirmationToken()!=null && !$possibleUnconfirmedUser->getIsActive()){
+                                return $this->render('ZizooUserBundle:Registration:register_facebook_new.html.twig', array('form'                   => $form->createView(), 
+                                                                                                                            'facebook'              => $facebook, 
+                                                                                                                            'data'                  => $obj, 
+                                                                                                                            'unconfirmed_user'      => $possibleUnconfirmedUser, 
+                                                                                                                            'unconfirmed_email'     => false, 
+                                                                                                                            'unconfirmed_username'  => true,
+                                                                                                                            'ajax'                  => $request->isXmlHttpRequest()));
                             }
                         }
                     }
-
                 }
-                return $this->render('ZizooUserBundle:Registration:register_facebook_new.html.twig', array('form'                   => $form->createView(), 
-                                                                                                            'facebook'              => $facebook, 
-                                                                                                            'data'                  => $obj, 
-                                                                                                            'unconfirmed_user'      => null, 
-                                                                                                            'unconfirmed_email'     => false, 
-                                                                                                            'unconfirmed_username'  => false,
-                                                                                                            'ajax'                  => $request->isXmlHttpRequest()));
-            } else {
-                return $this->redirect($this->generateUrl('register', array('relogin' => true,
-                                                                            'ajax'    => $request->isXmlHttpRequest())));
             }
+               
         }
         $user = new User();
       
@@ -438,6 +378,8 @@ class RegistrationController extends Controller
                                                                                           'ajax'    => $request->isXmlHttpRequest() ));
         }
         
+        
+        
         $em = $this->getDoctrine()
                    ->getEntityManager();
         
@@ -448,61 +390,50 @@ class RegistrationController extends Controller
         }
         
         
-        if ($isPost) {
+        if ($isPost) {        
+            
             $form = $this->createForm(new FacebookLinkRegistrationType());
             $form->bindRequest($request);
-
             $data = $form->getData();
             $linkUser = $data->getUser();
-            if ($linkUser->getFacebookUID()==$obj['id'] && $linkUser->getEmail()==$obj['email']){
-                if ($form->isValid()) {
-
-                    $existingUser->setFacebookUID($obj['id']);
-                    $existingUser->setIsActive(1);
-                    $existingUser->setConfirmationToken(null);
-                    $em->persist($existingUser);
-                    $em->flush();
-                    
+            
+            if ($form->isValid()){
+                $userService = $this->get('user_service');
+                $user = $userService->linkFacebookUser($linkUser, $obj);
+                
+                if ($user){
                     return $this->doLogin($existingUser, $this->generateUrl('register_facebook_merged'));
                 } else {
-                    // Form is not valid. Check if the user is valid. If not, see if it's because the user already exists and hasn't completed registration (i.e. confirmation)
-                    // If that is the case, forward to "resend_confirmation". 
-                    // Maybe this shouldn't be done automatically? But it's hard to get the "Have you previously signed up" message below the right form control (i.e. username or email)
-                    $em = $this->getDoctrine()
-                                ->getEntityManager();
+                    return $this->redirect($this->generateUrl('register', array('relogin' => true,
+                                                                                'ajax'    => $request->isXmlHttpRequest())));
+                }
+            } else {
+                // Form is not valid. Check if the user is valid. If not, see if it's because the user already exists and hasn't completed registration (i.e. confirmation)
+                // If that is the case, forward to "resend_confirmation". 
+                // Maybe this shouldn't be done automatically? But it's hard to get the "Have you previously signed up" message below the right form control (i.e. username or email)
+                $em = $this->getDoctrine()
+                            ->getEntityManager();
 
-                    // Validate user
-                    $validator = $this->get('validator');
-                    $errors = $validator->validate($existingUser, 'fb_link');
-                    $num_errors = $errors->count();
+                // Validate user
+                $validator = $this->get('validator');
+                $errors = $validator->validate($existingUser, 'fb_link');
+                $num_errors = $errors->count();
 
-                    // See if invalid because user already taken.
-                    $possibleUnconfirmedUser = null;
-                    for ($i=0; $i<$num_errors; $i++){
-                        $msgTemplate = $errors->get($i)->getMessageTemplate();
-                        if ($msgTemplate=='zizoo_user.error.user_taken'){
-                            $username = $errors->get($i)->getRoot()->getUsername();
-                            if ($username){
-                                $possibleUnconfirmedUser = $em->getRepository('ZizooUserBundle:User')->findOneByUsername($username);
-                                // If username already taken and not yet confirmed, forward.
-                                if ($possibleUnconfirmedUser->getConfirmationToken()!=null && !$possibleUnconfirmedUser->getIsActive()){
-                                    return $this->render('ZizooUserBundle:Registration:register_facebook_link.html.twig', array('form' => $form->createView(), 'facebook' => $facebook, 'data' => $obj, 'unconfirmed_user' => $possibleUnconfirmedUser, 'unconfirmed_email' => false, 'unconfirmed_username' => true));
-                                }
+                // See if invalid because user already taken.
+                $possibleUnconfirmedUser = null;
+                for ($i=0; $i<$num_errors; $i++){
+                    $msgTemplate = $errors->get($i)->getMessageTemplate();
+                    if ($msgTemplate=='zizoo_user.error.user_taken'){
+                        $username = $errors->get($i)->getRoot()->getUsername();
+                        if ($username){
+                            $possibleUnconfirmedUser = $em->getRepository('ZizooUserBundle:User')->findOneByUsername($username);
+                            // If username already taken and not yet confirmed, forward.
+                            if ($possibleUnconfirmedUser->getConfirmationToken()!=null && !$possibleUnconfirmedUser->getIsActive()){
+                                return $this->render('ZizooUserBundle:Registration:register_facebook_link.html.twig', array('form' => $form->createView(), 'facebook' => $facebook, 'data' => $obj, 'unconfirmed_user' => $possibleUnconfirmedUser, 'unconfirmed_email' => false, 'unconfirmed_username' => true));
                             }
                         }
                     }
-
                 }
-                return $this->render('ZizooUserBundle:Registration:register_facebook_link.html.twig', array('form' => $form->createView(), 
-                                                                                                            'facebook' => $facebook, 
-                                                                                                            'data' => $obj, 
-                                                                                                            'unconfirmed_user' => null, 
-                                                                                                            'unconfirmed_email' => false, 
-                                                                                                            'unconfirmed_username' => false,
-                                                                                                            'ajax'    => $request->isXmlHttpRequest()));
-            } else {
-                return $this->redirect($this->generateUrl('register', array('relogin' => true,
-                                                                            'ajax'    => $request->isXmlHttpRequest())));
             }
         }
         
@@ -513,7 +444,7 @@ class RegistrationController extends Controller
         } else {
             $username = preg_replace('/\s+/', '', $obj['name']);
         }
-        $user->setUsername($username);
+        $user->setUsername($existingUser->getUsername());
         $user->setEmail($obj['email']);
         $user->setFacebookUID($obj['id']);
         $pass_plain = uniqid();

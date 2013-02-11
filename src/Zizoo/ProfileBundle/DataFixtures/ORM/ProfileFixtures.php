@@ -65,8 +65,21 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
         return false;
     }
     
+    private function initialisePaymentCustomers(){        
+        $userService = $this->container->get('user_service');
+        
+        $customers = \Braintree_Customer::all();
+        foreach ($customers as $customer){
+            \Braintree_Customer::delete($customer->id);
+        }
+        
+        $userService->getPaymentUser($this->getReference('user-1'));
+        $userService->getPaymentUser($this->getReference('user-2'));
+        $userService->getPaymentUser($this->getReference('user-3'));
+    }
+    
     public function load(ObjectManager $manager)
-    {
+    {        
         $notificationUsers = array();
         if (array_key_exists('notification_users', $this->container->parameters)){
             $notificationUsers = $this->container->parameters['notification_users'];
@@ -171,6 +184,7 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
         
         $this->addReference('profile-2', $profile);
         
+        
         $ref = 'user-3';
         $profile = new Profile();
         $profile->setFirstName('Sinan');
@@ -216,6 +230,7 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
         
         $manager->flush();
 
+        $this->initialisePaymentCustomers();
     }
 
     public function getOrder()

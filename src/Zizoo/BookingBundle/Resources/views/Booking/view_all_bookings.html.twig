@@ -1,0 +1,48 @@
+{% extends 'ZizooBookingBundle::layout.html.twig' %}
+{% trans_default_domain "labels" %}
+
+{% block title %}Your bookings{% endblock %}
+
+{% block body %}
+
+    {% if reservations %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Boat</th>
+                    <th>Reservation Date</th>
+                    <th>Check In</th>
+                    <th>Check Out</th>
+                    <th>Number of Guests</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for reservation in reservations %}
+                <tr>
+                    <td><a href="{{ path('zizoo_view_booking', {id: reservation.boat.id}) }}">{{ reservation.boat.name }}</a></td>
+                    <td>{{ reservation.created|date }}</td>
+                    <td>{{ reservation.checkIn|date }}</td>
+                    <td>{{ reservation.checkOut|date }}</td>
+                    <td>{{ reservation.nrGuests }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+    You have no bookings.
+    {% endif %}
+
+
+    <br />
+
+    
+    <script type="text/javascript">
+               
+        $(document).ready(function(){            
+            
+            
+
+        });
+    </script>
+
+{% endblock %}

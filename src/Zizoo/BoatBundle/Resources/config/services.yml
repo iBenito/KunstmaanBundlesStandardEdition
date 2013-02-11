@@ -12,6 +12,11 @@ services:
         tags:
             - { name: twig.extension }
             
+    zizoo_boat.twig.availability_extension:
+        class: Zizoo\BoatBundle\Twig\AvailabilityExtension
+        tags:
+            - { name: twig.extension }
+
     boat_service:
         class:  Zizoo\BoatBundle\Service\BoatService
         arguments: 
@@ -28,6 +33,17 @@ services:
         arguments: ["@service_container"]
         tags:
             - { name: form.type, alias: zizoo_boat_type_selector }
+            
+    zizoo_boat.book_boat_type:
+        class:  Zizoo\BoatBundle\Form\Type\BookBoatType
+        tags:
+            - { name: form.type, alias: zizoo_boat_book }
+            
+    zizoo_boat.book_boat_validator:
+        class: Zizoo\BoatBundle\Validator\Constraints\BookBoatValidator
+        arguments: ["@service_container"]
+        tags:
+            - { name: validator.constraint_validator, alias: validator.book_boat_validator }
 #    zizoo_boat.example:
 #        class: %zizoo_boat.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]

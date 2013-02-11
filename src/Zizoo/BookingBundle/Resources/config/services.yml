@@ -8,6 +8,22 @@ services:
             entityManager:  "@doctrine.orm.entity_manager"
             messenger:      "@messenger"
             container:      "@service_container"
+            
+    zizoo_booking.twig.book_boat_extension:
+        class: Zizoo\BookingBundle\Twig\BookBoatExtension
+        tags:
+            - { name: twig.extension }
+            
+    zizoo_booking.twig.reservation_extension:
+        class: Zizoo\BookingBundle\Twig\ReservationExtension
+        tags:
+            - { name: twig.extension }
+            
+    zizoo_booking.booking_type:
+        class:  Zizoo\BookingBundle\Form\Type\BookingType
+        arguments: ["@service_container"]
+        tags:
+            - { name: form.type, alias: zizoo_booking_type }
 #    zizoo_booking.example:
 #        class: %zizoo_booking.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]

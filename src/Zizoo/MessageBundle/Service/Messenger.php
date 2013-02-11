@@ -49,10 +49,10 @@ class Messenger {
     }
     
     public function sendNotificationBookingEmail(User $to, Reservation $reservation){
-        //$messageLink = $this->container->get('router')->generate('view_thread', array('messageId' => $message->getId()));
+        $bookingLink = $this->container->get('router')->generate('zizoo_view_booking', array('id' => $reservation->getId()), true);
         $twig = $this->container->get('twig');
         $template = $twig->loadTemplate('ZizooBookingBundle:Email:new_booking.html.twig');
-        $context = array(   'booking'      => $reservation->getId(),);
+        $context = array(   'bookingLink'      => $bookingLink );
         $subject = $template->renderBlock('subject', $context);
         $textBody = $template->renderBlock('body_text', $context);
         $htmlBody = $template->renderBlock('body_html', $context);

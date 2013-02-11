@@ -19,7 +19,7 @@ class Availability
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Zizoo\BoatBundle\Entity\Boat", inversedBy="availability")
@@ -30,19 +30,19 @@ class Availability
     /**
      * @ORM\Column(type="datetime")
      */
-    private $available_from;
+    protected $available_from;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $available_until;
+    protected $available_until;
 
     /**
      * @var float
      *
-     * @ORM\Column(type="decimal", precision=10, scale=2)
+     * @ORM\Column(type="decimal", precision=19, scale=4)
      */
-    private $price;
+    protected $price;
 
 
     /**
@@ -70,6 +70,7 @@ class Availability
      */
     public function setAvailableFrom($availableFrom)
     {
+        $availableFrom->setTime(0,0,0);
         $this->available_from = $availableFrom;
     
         return $this;
@@ -93,6 +94,7 @@ class Availability
      */
     public function setAvailableUntil($availableUntil)
     {
+        $availableUntil->setTime(23,59,59);
         $this->available_until = $availableUntil;
     
         return $this;

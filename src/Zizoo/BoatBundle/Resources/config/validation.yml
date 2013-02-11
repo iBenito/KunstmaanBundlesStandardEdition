@@ -1,0 +1,3 @@
+Zizoo\BoatBundle\Form\Model\BookBoat:
+    constraints:
+        - Zizoo\BoatBundle\Validator\Constraints\BookBoat: ~

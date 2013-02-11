@@ -3,11 +3,10 @@ You have made a booking on Zizoo
 {% endblock %}
 {% block body_text %}
 Your new booking:
-{{booking}}
+{{bookingLink}}
 {% endblock %}
 {% block body_html %}
-<p>Your new booking:</p>
-<p>{{booking}}</p>
+<p>Your new <a href="{{ bookingLink }}">booking</a></p>
 {% endblock %}
 
 

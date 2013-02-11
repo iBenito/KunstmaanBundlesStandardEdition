@@ -12,4 +12,18 @@ use Doctrine\ORM\EntityRepository;
  */
 class CountryRepository extends EntityRepository
 {
+    
+    public function allCountriesAsSelect(){
+        $qb = $this->createQueryBuilder('country')
+                    ->select('country.iso as countryISO, country.printableName as countryName')
+                    ->addOrderBy('country.printableName', 'asc');
+
+        $selectCountries = array();
+        $countries = $qb->getQuery()->getResult();
+        foreach ($countries as $country){
+            $selectCountries[$country['countryISO']] = $country['countryName'];
+        }
+        return $selectCountries;
+    }
+    
 }

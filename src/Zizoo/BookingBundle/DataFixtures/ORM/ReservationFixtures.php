@@ -60,7 +60,9 @@ class ReservationFixtures implements OrderedFixtureInterface, SharedFixtureInter
             $from->modify('+1 week');
             $to->modify('-1 week');
             
-            $reservation = $bookingAgent->makeReservation($boat1, $user1, $from, $to, (float)9.99);
+            $interval = $from->diff($to);
+            $price = $interval->d * $availability->getPrice();
+            $reservation = $bookingAgent->makeReservation($boat1, $user1, $from, $to, (float)$price);
         }
         
 

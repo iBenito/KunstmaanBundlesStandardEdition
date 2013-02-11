@@ -63,7 +63,7 @@
     {% if num_pages > 1 %}
         <ul id="paging">
         {% for i in range(1, num_pages) %}
-            <li class="{{ i }}"><a href="{{ path('zizoo_address_locations') }}?zizoo_boat_search[page]={{ i }}&zizoo_boat_search[location]={{ form.get('location') }}&zizoo_boat_search[reservation_from]={{ form.get('reservation_from') }}&zizoo_boat_search[reservation_to]={{ form.get('reservation_to') }}&zizoo_boat_search[num_guests]={{ form.get('num_guests') }}">Page {{ i }}</a></li>
+            <li class="{{ i }}"><a href="{{ path('zizoo_address_locations') }}?zizoo_boat_search[page]={{ i }}&zizoo_boat_search[location]={{ form.vars.value.location }}&zizoo_boat_search[reservation_from]={{ form.vars.value.reservationFrom is empty ? "" : form.vars.value.reservationFrom|date }}&zizoo_boat_search[reservation_to]={{ form.vars.value.reservationTo is empty ? "" : form.vars.value.reservationTo|date }}&zizoo_boat_search[num_guests]={{ form.vars.value.numGuests }}">Page {{ i }}</a></li>
         {% endfor %}
         </ul>
     {% endif %}

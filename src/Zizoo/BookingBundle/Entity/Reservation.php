@@ -34,6 +34,11 @@ class Reservation
     protected $check_out;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    protected $nr_guests;
+    
+    /**
      * @ORM\Column(type="smallint")
      */
     private $status;
@@ -47,6 +52,24 @@ class Reservation
      * @ORM\Column(type="datetime")
      */
     protected $updated;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Zizoo\UserBundle\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     **/
+    protected $renter;
+    
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="cost", type="decimal", precision=19, scale=4)
+     */
+    protected $cost;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Zizoo\BookingBundle\Entity\Payment", mappedBy="reservation")
+     */
+    protected $payment;
     
     public function __construct()
     {
@@ -202,4 +225,107 @@ class Reservation
         return $this->status;
     }
 
+
+    /**
+     * Set renter
+     *
+     * @param \Zizoo\UserBundle\Entity\User $renter
+     * @return Reservation
+     */
+    public function setRenter(\Zizoo\UserBundle\Entity\User $renter = null)
+    {
+        $this->renter = $renter;
+    
+        return $this;
+    }
+
+    /**
+     * Get renter
+     *
+     * @return \Zizoo\UserBundle\Entity\User 
+     */
+    public function getRenter()
+    {
+        return $this->renter;
+    }
+
+    /**
+     * Set cost
+     *
+     * @param float $cost
+     * @return Reservation
+     */
+    public function setCost($cost)
+    {
+        $this->cost = $cost;
+    
+        return $this;
+    }
+
+    /**
+     * Get cost
+     *
+     * @return float 
+     */
+    public function getCost()
+    {
+        return $this->cost;
+    }
+
+
+    /**
+     * Add payment
+     *
+     * @param \Zizoo\BookingBundle\Entity\Payment $payment
+     * @return Reservation
+     */
+    public function addPayment(\Zizoo\BookingBundle\Entity\Payment $payment)
+    {
+        $this->payment[] = $payment;
+    
+        return $this;
+    }
+
+    /**
+     * Remove payment
+     *
+     * @param \Zizoo\BookingBundle\Entity\Payment $payment
+     */
+    public function removePayment(\Zizoo\BookingBundle\Entity\Payment $payment)
+    {
+        $this->payment->removeElement($payment);
+    }
+
+    /**
+     * Get payment
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPayment()
+    {
+        return $this->payment;
+    }
+
+    /**
+     * Set nr_guests
+     *
+     * @param integer $nrGuests
+     * @return Reservation
+     */
+    public function setNrGuests($nrGuests)
+    {
+        $this->nr_guests = $nrGuests;
+    
+        return $this;
+    }
+
+    /**
+     * Get nr_guests
+     *
+     * @return integer 
+     */
+    public function getNrGuests()
+    {
+        return $this->nr_guests;
+    }
 }

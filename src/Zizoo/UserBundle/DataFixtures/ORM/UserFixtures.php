@@ -48,7 +48,6 @@ class UserFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
     
     public function load(ObjectManager $manager)
     {
-
         $encoderRegister = new MessageDigestPasswordEncoder('sha512', true, 10);
         $user_register = new User();
         $user_register->setUsername('zizoo_registration');

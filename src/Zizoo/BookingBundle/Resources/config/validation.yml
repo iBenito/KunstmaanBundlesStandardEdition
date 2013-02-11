@@ -1,0 +1,29 @@
+Zizoo\BookingBundle\Form\Model\CreditCard:
+    properties:
+        cardHolder:
+            - NotBlank: { message: zizoo_booking.error.cardholder_not_blank, groups: [booking] }
+            
+        creditCardNumber:
+            - NotBlank: { message: zizoo_booking.error.credit_card_number_not_blank, groups: [booking] }
+            - MinLength: { limit: 16, message: zizoo_booking.error.credit_card_number_min_length, groups: [booking] }
+        
+        cvv:
+            - NotBlank: { message: zizoo_booking.error.cvv_not_blank, groups: [booking] }
+            - MinLength: { limit: 5, message: zizoo_booking.error.cvv_min_length, groups: [booking] }
+      
+Zizoo\BookingBundle\Form\Model\BillingAddress:
+    properties:
+        firstName:
+            - NotBlank: { message: zizoo_booking.error.first_name_not_blank, groups: [booking] }
+        
+        lastName:
+            - NotBlank: { message: zizoo_booking.error.last_name_not_blank, groups: [booking] }
+            
+        streetAddress:
+            - NotBlank: { message: zizoo_booking.error.street_address_not_blank, groups: [booking] }
+            
+        locality:
+            - NotBlank: { message: zizoo_booking.error.locality_not_blank, groups: [booking] }
+            
+        postalCode:
+            - NotBlank: { message: zizoo_booking.error.postal_code_not_blank, groups: [booking] }

@@ -4,3 +4,10 @@ ZizooBoatBundle_boat_show:
     requirements:
         _method:  GET
         id: \d+
+        
+ZizooBoatBundle_booking_widget:
+    pattern:  /booking_widget/{id}
+    defaults: { _controller: ZizooBoatBundle:Boat:bookingWidget }
+    requirements:
+        _method:  GET
+        id: \d+

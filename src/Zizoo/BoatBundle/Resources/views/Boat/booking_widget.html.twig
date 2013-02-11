@@ -1,0 +1,131 @@
+<div id="booking_widget">
+    <form id="availability_form" action="{{ url }}" method="get">
+        {% if availability %} 
+        <div id="booking_price_container">
+            <label for="booking_price">Price</label>
+            <div id="booking_price">{{ book_boat|BookBoat_price(availability)}}</div>
+        </div>
+        {% else %}
+        <div id="booking_price_container" style="display: none">
+            <label for="booking_price">Price</label>
+            <div id="booking_price">...</div>
+        </div>
+        <input type="hidden" name="url" value="{{ url }}" />
+        <input type="hidden" name="ajax_url" value="{{ ajax_url }}" />
+        {% endif %}
+            
+        {{ form_widget(form) }}
+            
+        <noscript>
+            <button type="submit">Calculate</button>
+        </noscript>
+    </form>
+    {% if valid == true %}
+        <form id="booking_form" action="{{ book_url }}" method="get">
+            <input name="zizoo_boat_book[reservation_from]" type="hidden" value="{{ form.vars.value.reservationFrom is empty ? "" : form.vars.value.reservationFrom|date }}" />
+            <input name="zizoo_boat_book[reservation_to]" type="hidden" value="{{ form.vars.value.reservationTo is empty ? "" : form.vars.value.reservationTo|date }}" />
+            <input name="zizoo_boat_book[num_guests]" type="hidden" value="{{ form.vars.value.numGuests }}" />
+            <button type="submit" id="book_btn">Book It</button>
+        </form>
+    {% endif %}
+</div>
+
+<style type="text/css">
+    
+</style>
+
+<script type="text/javascript">
+    
+    function reloadWidget(){
+        if ($('#zizoo_boat_book_reservation_from').val()=='' || $('#zizoo_boat_book_reservation_to').val()=='') {
+            $('#booking_price').html('...');
+            return;
+        }
+        $('#booking_widget').block({ message: null });
+        $.ajax({
+            type: "GET",
+            url: '{{ ajax_url }}',
+            data: $('#availability_form').serialize(),
+            success: function (data, textStatus, jqXHR){
+                $('#booking_widget').html(data);
+                $('#booking_widget').unblock();
+            }
+        });
+    }
+    
+    $(document).ready(function(){
+        $('#zizoo_boat_book_reservation_from').change(function(){
+            reloadWidget();
+        });
+        
+        $('#zizoo_boat_book_reservation_to').change(function(){
+            reloadWidget();
+        });
+        
+        $('#zizoo_boat_book_num_guests').change(function(){
+            reloadWidget();
+        });
+        
+        $('#booking_form').submit(function(){
+            window.location.href = $('#booking_form').attr('action');
+            return false;
+        });
+
+
+        $('#booking_price_container, #book_btn').show();
+
+        var clearBtnFnc1 = function(input) {
+            setTimeout(function() {
+                var buttonPane = $( input )
+                    .datepicker( "widget" )
+                    .find( ".ui-datepicker-buttonpane" );
+                var btn = $( '<button class="ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all" type="button">Clear</button>');
+                btn.unbind("click")  .bind("click", function () {  
+                    $.datepicker._clearDate( input ); 
+                });
+                btn.appendTo(buttonPane);
+            }, 1 );
+        };
+
+        var clearBtnFnc2 = function(yes, month, inst) {
+            setTimeout(function() {
+                var buttonPane = $( this )
+                    .datepicker( "widget" )
+                    .find( ".ui-datepicker-buttonpane" );
+                var btn = $( '<button class="ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all" type="button">Clear</button>');
+                btn.unbind("click")  .bind("click", function () {  
+                   $.datepicker._clearDate( inst.input ); 
+                });
+                btn.appendTo(buttonPane);
+            }, 1 );
+        };
+
+        $( "#zizoo_boat_book_reservation_from" ).datepicker({
+            defaultDate: "+1d",
+            changeMonth: true,
+            numberOfMonths: 1,
+            showAnim: 'slideDown',
+            dateFormat: 'dd/mm/yy',
+            showButtonPanel: true,
+            beforeShow: clearBtnFnc1,
+            onChangeMonthYear: clearBtnFnc2,
+            onClose: function( selectedDate ) {
+                $( "#zizoo_boat_book_reservation_to" ).datepicker( "option", "minDate", selectedDate );
+            }
+        });
+        $( "#zizoo_boat_book_reservation_to" ).datepicker({
+            defaultDate: "+1d",
+            changeMonth: true,
+            numberOfMonths: 1,
+            showAnim: 'slideDown',
+            dateFormat: 'dd/mm/yy',
+            showButtonPanel: true,
+            beforeShow: clearBtnFnc1,
+            onChangeMonthYear: clearBtnFnc2,
+            onClose: function( selectedDate ) {
+                $( "#zizoo_boat_bok_reservation_from" ).datepicker( "option", "maxDate", selectedDate );
+            }
+        });
+
+    });
+</script>
