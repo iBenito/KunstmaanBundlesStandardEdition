@@ -11,7 +11,7 @@ class PageController extends Controller {
     public function indexAction() 
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $boats = $em->getRepository('ZizooBoatBundle:Boat')->getBoats();
+        $boats = $em->getRepository('ZizooBoatBundle:Boat')->getBoats(3);
         
         $user = $this->getUser();
 
@@ -59,6 +59,11 @@ class PageController extends Controller {
         ));
     }
     
+    /**
+     * Feedback form
+     * 
+     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     */
     public function feedbackAction()
     {
         $user = $this->getUser();

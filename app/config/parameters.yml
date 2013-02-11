@@ -9,3 +9,4 @@ parameters:
 
     locale:            en
     secret:            YGREfaHmfclAfUpSlwRTL0sWAUQJxMrfcJ9XpbHjHWIx6ry2ZlC4lwNMBLL5GBKp
+    remember_me_secret: fuckadoodledoo

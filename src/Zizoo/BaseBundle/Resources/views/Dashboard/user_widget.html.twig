@@ -1,0 +1,26 @@
+{% trans_default_domain "labels" %}
+
+<div id="dashboard_user">
+    <div class="avatar">
+        {% if user.profile.picture is not null %}
+            <img src="{{ asset(user.profile|pictureWebPath) }}" alt="image not found" class="large" />
+        {% endif %}
+    </div>
+    <h1>{{ user.profile.firstName }} {{ user.profile.lastName }}</h1>
+
+    <a id="add_boat" href="{{ path('ZizooBaseBundle_dashboard_boat_new') }}">Add Boat</a>
+    <a id="add_skills" href="{{ path('ZizooBaseBundle_dashboard_skills') }}">Add Skills</a>
+</div>
+
+<div class="dashboard_navigation">
+    <ul class="nav">
+      <li class="active"><a href="{{ path('ZizooBaseBundle_dashboard') }}">Dashboard</a></li>
+      <li><a href="{{ path('fos_message_inbox') }}">Inbox</a></li>
+      <li><a href="{{ path('fos_message_sent') }}">Sent Messages</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_dashboard_profile') }}">Profile</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_dashboard_trips') }}">Trips</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_dashboard_boats') }}">Boats</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_dashboard_skills') }}">Skills</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_dashboard_account') }}">Account</a></li>
+    </ul>
+</div>

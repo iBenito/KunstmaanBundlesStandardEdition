@@ -4,7 +4,7 @@ zizoo_address:
 
 zizoo_profile:
     resource: "@ZizooProfileBundle/Resources/config/routing.yml"
-    prefix:   /account
+    prefix:   /profile
 
 zizoo_booking:
     resource: "@ZizooBookingBundle/Resources/config/routing.yml"

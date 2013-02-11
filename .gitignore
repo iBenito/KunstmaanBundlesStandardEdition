@@ -1,10 +1,7 @@
-/nbproject/private/
 /app/cache
 /app/logs
 /web/media
 /app/config/config_dev_local.yml
 /app/config/parameters_local.yml
-vendor
-bundles
-/nbproject/project.properties
-/nbproject/project.xml
+/nbproject
+/vendor

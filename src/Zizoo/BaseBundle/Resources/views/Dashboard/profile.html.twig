@@ -1,26 +1,5 @@
-{% extends 'ZizooBaseBundle:Page:index.html.twig' %}
+{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
 
-{% block title %}{{ user.profile.firstName }}{% endblock %}
+{% block dashboard_page_title %}Profile{% endblock %}
 
-{% block body %}
-
-    {% block dashboard_navigation %}
-        <div class="dashboard_navigation">
-            <ul class="nav">
-              <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Dashboard</a></li>
-              <li><a href="{{ path('fos_message_inbox') }}">Inbox</a></li>
-              <li><a href="{{ path('fos_message_sent') }}">Sent Messages</a></li>
-              <li class="active"><a href="{{ path('ZizooBaseBundle_dashboard') }}">Profile</a></li>
-              <li><a href="{{ path('zizoo_view_all_booking') }}">Bookings</a></li>
-              <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Boats</a></li>
-              <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Skills</a></li>
-              <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Settings</a></li>
-            </ul>
-        </div>
-    {% endblock %}
-
-    {% include 'ZizooProfileBundle:Profile:show.html.twig' with { 'user': user } %}
-    
-    {% block row %}{% endblock %}
-
-{% endblock %}
+{% block content %}{% render 'ZizooProfileBundle:Profile:editWidget' with { 'profile': profile, 'formPath': formPath } %}{% endblock %}

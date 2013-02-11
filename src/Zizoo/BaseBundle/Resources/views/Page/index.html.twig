@@ -5,9 +5,9 @@
     <div class="span8 hero-unit">
         <h1>Boats!</h1>
         {% for boat in boats %}    
-            <h2><a href="{{ path('ZizooBoatBundle_boat_show', { 'id': boat.id }) }}">{{ boat.name }}</a></h2>
+            <h2><a href="{{ path('ZizooBoatBundle_show', { 'id': boat.id }) }}">{{ boat.name }}</a></h2>
         {% else %}
-            <p>There are no blog entries for symblog</p>
+            <p>There are no boats available</p>
         {% endfor %}
         <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
     </div>

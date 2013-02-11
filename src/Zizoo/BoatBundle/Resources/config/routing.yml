@@ -1,8 +1,42 @@
-ZizooBoatBundle_boat_show:
-    pattern:  /{id}
+ZizooBoatBundle_show:
+    pattern:  /{id}/show
     defaults: { _controller: ZizooBoatBundle:Boat:show }
     requirements:
         _method:  GET
+        id: \d+
+
+ZizooBoatBundle_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: ZizooBoatBundle:Boat:edit }
+    requirements:
+        _method:  GET
+        id: \d+
+
+ZizooBoatBundle_new:
+    pattern:  /new
+    defaults: { _controller: ZizooBoatBundle:Boat:new }
+
+ZizooBoatBundle_upload:
+    pattern:  /upload
+    defaults: { _controller: ZizooBoatBundle:Boat:upload }
+    
+ZizooBoatBundle_create:
+    pattern:  /create
+    defaults: { _controller: ZizooBoatBundle:Boat:create }
+    requirements: { _method: POST }
+    
+ZizooBoatBundle_update:
+    pattern:  /{id}/update
+    defaults: { _controller: ZizooBoatBundle:Boat:update }
+    requirements: 
+        _method: POST 
+        id: \d+
+    
+ZizooBoatBundle_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: ZizooBoatBundle:Boat:delete }
+    requirements: 
+        _method: POST 
         id: \d+
         
 ZizooBoatBundle_booking_widget:
