@@ -2,7 +2,11 @@
 
 namespace Zizoo\AddressBundle\Controller;
 
+use Zizoo\AddressBundle\Form\Model\SearchBoat;
+use Zizoo\AddressBundle\Form\Type\SearchBoatType;
 use Zizoo\BoatBundle\Entity\Boat;
+use Zizoo\BoatBundle\Form\Type\BoatTypeType;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -62,37 +66,9 @@ class AddressController extends Controller
         
         $locations = $em->getRepository('ZizooAddressBundle:BoatAddress')->getUniqueLocations();
         
-        
-        $groupedLocations = array();
-        foreach ($locations as $location){
-            $countryName    = $location['countryName'];
-            $locality       = $location['locality'];
-            $subLocality    = $location['subLocality'];
-            $state          = $location['state'];
-            $province       = $location['province'];
-            if (!array_key_exists($countryName, $groupedLocations)){
-                $groupedLocations[$countryName] = array('name' => $countryName, 'locations' => array());
-            }
-            if ($locality && !array_key_exists($locality, $groupedLocations[$countryName]['locations'])){
-                $groupedLocations[$countryName]['locations'][$locality] = array('location' => $locality, 'search' => $this->getFormattedAddress($location));
-            }
-            if ($subLocality && !array_key_exists($subLocality, $groupedLocations[$countryName]['locations'])){
-                $groupedLocations[$countryName]['locations'][$subLocality] = array('location' => $subLocality, 'search' => $this->getFormattedAddress($location));
-            } 
-            if ($state && !array_key_exists($state, $groupedLocations[$countryName]['locations'])){
-                $groupedLocations[$countryName]['locations'][$state] = array('location' => $state, 'search' => $this->getFormattedAddress($location));
-            }
-            if ($province && !array_key_exists($province, $groupedLocations[$countryName]['locations'])){
-                $groupedLocations[$countryName]['locations'][$province] = array('location' => $province, 'search' => $this->getFormattedAddress($location));
-            }
-        }
-
-        foreach ($groupedLocations as $country => $groupedLocation){
-            ksort($groupedLocations[$country]['locations']);
-        }
 
         return $this->render('ZizooAddressBundle:Address:unique_locations.html.twig', array(
-            'unique_locations' => $groupedLocations,
+            'unique_locations' => $locations,
             'current'          => $current
         ));
     }
@@ -107,59 +83,54 @@ class AddressController extends Controller
      * @param \Symfony\Component\HttpFoundation\Request $request    Used to check if AJAX request
      * @author Alex Fuckert <alexf83@gmail.com>
      */
-    public function locationsAction(Request $request){
-        $page       = $request->query->get('page', '1');
+    public function locationsAction(Request $request){       
+        $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat());
+        
+        $form->bindRequest($request);
+        $searchBoat = $form->getData();
+        
+        // hack for location search
+        $boatSearch = $request->query->get('zizoo_boat_search', null);
+        if ($boatSearch){
+            $searchBoat->setLocation($boatSearch['location']);
+        } 
+        if (!$searchBoat->getPage()){
+            $searchBoat->setPage(1);
+        }
+        
         $pageSize   = $request->query->get('page_size', '9');
-        $search     = $request->query->get('search', '-1');
-        $resFrom    = $request->query->get('reservation_from', '');
-        $resTo      = $request->query->get('reservation_to', '');
-        $numGuests  = $request->query->get('num_guests', '');
-        
-        // Filter
-        $numCabinsFrom  = $request->query->get('num_cabins_from', '');
-        $numCabinsTo    = $request->query->get('num_cabins_to', '');
-        $lengthFrom     = $request->query->get('length_from', '');
-        $lengthTo       = $request->query->get('length_to', '');
-        
+
         $em = $this->getDoctrine()
                    ->getEntityManager();
         
         $maxBoatValues   = $em->getRepository('ZizooBoatBundle:Boat')->getMaxBoatValues();
         
-        $availableBoats = $em->getRepository('ZizooBoatBundle:Boat')->searchBoatAvailability($search, $numGuests, 
-                                                                                            $numCabinsFrom, $numCabinsTo,
-                                                                                            $lengthFrom, $lengthTo);
+        $availableBoats = $em->getRepository('ZizooBoatBundle:Boat')->searchBoatAvailability($searchBoat);
         $numAvailableBoats = count($availableBoats);
         $numPages = floor($numAvailableBoats / $pageSize);
         if ($numAvailableBoats % $pageSize > 0){
             $numPages++;
         }
-        
+
         if ($request->isXmlHttpRequest()){
             return $this->render('ZizooAddressBundle:Address:locations_boats.html.twig', array(
-                'boats'         => $availableBoats,
-                'page'          => $page,
-                'page_size'     => $pageSize,
-                'num_pages'     => $numPages,
-                'current'       => $search,
-                'res_from'      => $resFrom,
-                'res_to'        => $resTo,
-                'num_guests'    => $numGuests,
-                'max_length'    => $maxBoatValues['max_length'],
-                'max_cabins'    => $maxBoatValues['max_cabins']
+                'boats'             => $availableBoats,
+                'page'              => $searchBoat->getPage(),
+                'page_size'         => $pageSize,
+                'num_pages'         => $numPages,                
+                'max_length'        => $maxBoatValues['max_length'],
+                'max_cabins'        => $maxBoatValues['max_cabins'],
+                'form'              => $form->createView()
             ));
         } else {
             return $this->render('ZizooAddressBundle:Address:locations.html.twig', array(
-                'boats'         => $availableBoats,
-                'page'          => $page,
-                'page_size'     => $pageSize,
-                'num_pages'     => $numPages,
-                'current'       => $search,
-                'res_from'      => $resFrom,
-                'res_to'        => $resTo,
-                'num_guests'    => $numGuests,
-                'max_length'    => $maxBoatValues['max_length'],
-                'max_cabins'    => $maxBoatValues['max_cabins']
+                'boats'             => $availableBoats,
+                'page'              => $searchBoat->getPage(),
+                'page_size'         => $pageSize,
+                'num_pages'         => $numPages,
+                'max_length'        => $maxBoatValues['max_length'],
+                'max_cabins'        => $maxBoatValues['max_cabins'],
+                'form'              => $form->createView()
             ));
         }
         

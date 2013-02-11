@@ -3,6 +3,7 @@
 namespace Zizoo\BoatBundle\Entity;
 
 use Zizoo\BoatBundle\Extensions\DoctrineExtensions\CustomWalker\SortableNullsWalker;
+use Zizoo\AddressBundle\Form\Model\SearchBoat;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\Query;
@@ -37,109 +38,128 @@ class BoatRepository extends EntityRepository
      * @return Doctrine\ORM\AbstractQuery[] Results
      * @author Alex Fuckert <alexf83@gmail.com>
      */
-    public function searchBoatAvailability($search='-1', $numGuests='', 
-                                            $numCabinsFrom='', $numCabinsTo='',
-                                            $lengthFrom='', $lengthTo='')
+    public function searchBoatAvailability(SearchBoat $searchBoat)
     {
         // Join boat, image, address, country and reservation
-        $qb = $this->createQueryBuilder('b')
-                   ->select('b, i, a, av, c, r')
-                   ->leftJoin('b.image', 'i')
-                   ->leftJoin('b.address', 'a')
-                   ->leftJoin('b.reservation', 'r')
-                   ->leftJoin('b.availability', 'av')
-                   ->leftJoin('b.address', 'b_a')
-                   ->leftJoin('av.address', 'av_a')
-                   ->leftJoin('av_a.country', 'av_c')
-                   ->leftJoin('a.country', 'c');
+        $qb = $this->createQueryBuilder('boat')
+                   ->select('boat, image, address, availability, country, reservation, boat_type')
+                   ->leftJoin('boat.image', 'image')
+                   ->leftJoin('boat.address', 'address')
+                   ->leftJoin('boat.reservation', 'reservation')
+                   ->leftJoin('boat.availability', 'availability')
+                   ->leftJoin('boat.address', 'boat_address')
+                   ->leftJoin('availability.address', 'availability_address')
+                   ->leftJoin('availability_address.country', 'availability_country')
+                   ->leftJoin('address.country', 'country')
+                   ->leftJoin('boat.boatType', 'boat_type');
         
         // Optionally search by boat location or boat availability location
         $firstWhere = true;
-        if ($search!='-1'){
-            $qb->where('a.locality = :search')
-               ->orWhere('a.subLocality = :search')
-               ->orWhere('a.state = :search')
-               ->orWhere('a.province = :search')
-               ->orWhere('c.printableName = :search')
-               ->orWhere('av_a.locality = :search')
-               ->orWhere('av_a.subLocality = :search')
-               ->orWhere('av_a.state = :search')
-               ->orWhere('av_a.province = :search')
-               ->orWhere('av_c.printableName = :search')
-               ->setParameter('search', $search);
+        if ($searchBoat->getLocation()){
+            $qb->where('address.locality = :search')
+               ->orWhere('address.subLocality = :search')
+               ->orWhere('address.state = :search')
+               ->orWhere('address.province = :search')
+               ->orWhere('country.printableName = :search')
+               ->orWhere('availability_address.locality = :search')
+               ->orWhere('availability_address.subLocality = :search')
+               ->orWhere('availability_address.state = :search')
+               ->orWhere('availability_address.province = :search')
+               ->orWhere('availability_country.printableName = :search')
+               ->setParameter('search', $searchBoat->getLocation());
             $firstWhere = false;
         }
-
+        
+        // Optionally restrict by boat type
+        
         // Optionally restrict by number of guests
-        if ($numGuests!=''){
+        if ($searchBoat->getNumGuests()){
             if ($firstWhere){
-                $qb->where('b.nr_guests >= :num_guests');
+                $qb->where('boat.nr_guests >= :num_guests');
             } else {
-                $qb->andWhere('b.nr_guests >= :num_guests');
+                $qb->andWhere('boat.nr_guests >= :num_guests');
             }
-            $qb->setParameter('num_guests', $numGuests);
+            $qb->setParameter('num_guests', $searchBoat->getNumGuests());
             $firstWhere = false;
         }
         
         // Optionally restrict by boat length
-        if ($lengthFrom!=''){
+        if ($searchBoat->getLengthFrom()){
             if ($firstWhere){
-                $qb->where('b.length >= :length_from');
+                $qb->where('boat.length >= :length_from');
             } else {
-                $qb->andWhere('b.length >= :length_from');
+                $qb->andWhere('boat.length >= :length_from');
             }
-            $qb->setParameter('length_from', $lengthFrom);
+            $qb->setParameter('length_from', $searchBoat->getLengthFrom());
             $firstWhere = false;
         }
-        if ($lengthTo!=''){
+        if ($searchBoat->getLengthTo()){
             if ($firstWhere){
-                $qb->where('b.length <= :length_to');
+                $qb->where('boat.length <= :length_to');
             } else {
-                $qb->andWhere('b.length <= :length_to');
+                $qb->andWhere('boat.length <= :length_to');
             }
-            $qb->setParameter('length_to', $lengthTo);
+            $qb->setParameter('length_to', $searchBoat->getLengthTo());
             $firstWhere = false;
         }
         
         // Optionally restrict by number of cabins
-        if ($numCabinsFrom!=''){
+        if ($searchBoat->getNumCabinsFrom()){
             if ($firstWhere){
-                $qb->where('b.cabins >= :num_cabins_from');
+                $qb->where('boat.cabins >= :num_cabins_from');
             } else {
-                $qb->andWhere('b.cabins >= :num_cabins_from');
+                $qb->andWhere('boat.cabins >= :num_cabins_from');
             }
-            $qb->setParameter('num_cabins_from', $numCabinsFrom);
+            $qb->setParameter('num_cabins_from', $searchBoat->getNumCabinsFrom());
             $firstWhere = false;
         }
-        if ($numCabinsTo!=''){
+        if ($searchBoat->getNumCabinsTo()){
             if ($firstWhere){
-                $qb->where('b.cabins <= :num_cabins_to');
+                $qb->where('boat.cabins <= :num_cabins_to');
             } else {
-                $qb->andWhere('b.cabins <= :num_cabins_to');
+                $qb->andWhere('boat.cabins <= :num_cabins_to');
             }
-            $qb->setParameter('num_cabins_to', $numCabinsTo);
+            $qb->setParameter('num_cabins_to', $searchBoat->getNumCabinsTo());
             $firstWhere = false;
+        }
+        
+        // Optionally restrict by boat type
+        if ($searchBoat->boatTypeSelected()){           
+            $boatTypes = $searchBoat->getBoatType();
+            $boatTypes = $boatTypes['boat_type'];
+            $boatTypeIds = array();
+            foreach ($boatTypes as $boatType){
+                $boatTypeIds[] = $boatType->getId();
+            }
+            if ($firstWhere){
+                $qb->where('boat.boatType IN (:boat_types)');
+            } else {
+                $qb->andWhere('boat.boatType IN (:boat_types)');
+            }
+            $qb->setParameter('boat_types', $boatTypeIds);
+            $firstWhere = false;
+            
         }
         
         //$qb->getQuery();
         
          
-        $qb->addOrderBy('av.id', 'desc');
+        $qb->addOrderBy('availability.id', 'desc');
 
         
         return $qb->getQuery()
                   ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'Zizoo\BoatBundle\Extensions\DoctrineExtensions\CustomWalker\SortableNullsWalker')
                   ->setHint('SortableNullsWalker.fields',
                         array(
-                            'av.id' => SortableNullsWalker::NULLS_LAST,
+                            'availability.id' => SortableNullsWalker::NULLS_LAST,
                         ))
                   ->getResult();
     }
     
     
     public function getMaxBoatValues(){
-        $qb = $this->createQueryBuilder('b')
-                   ->select('MAX(b.cabins) as max_cabins, MAX(b.length) as max_length');
+        $qb = $this->createQueryBuilder('boat')
+                   ->select('MAX(boat.cabins) as max_cabins, MAX(boat.length) as max_length');
         
         return $qb->getQuery()->getSingleResult();
     }

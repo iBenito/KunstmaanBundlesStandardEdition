@@ -7,7 +7,7 @@
         {% set page_index = 0 %}
     {% endif %}
         {% set page_index = page_index + 1 %}
-        <article class="boat{% if boat|bookable(res_from, res_to)==false %} booked{% endif %}">
+        <article class="boat{% if boat|bookable(form.get('reservation_from'), form.get('reservation_to'))==false %} booked{% endif %}">
             <header>
                 <h2>{{ boat.title }}</h2>
             </header>
@@ -63,7 +63,7 @@
     {% if num_pages > 1 %}
         <ul id="paging">
         {% for i in range(1, num_pages) %}
-            <li class="{{ i }}"><a href="{{ path('zizoo_address_locations') }}?page={{ i }}&search={{ current }}&reservation_from={{ res_from }}&reservation_to={{ res_to }}&num_guests={{ num_guests }}">Page {{ i }}</a></li>
+            <li class="{{ i }}"><a href="{{ path('zizoo_address_locations') }}?zizoo_boat_search[page]={{ i }}&zizoo_boat_search[location]={{ form.get('location') }}&zizoo_boat_search[reservation_from]={{ form.get('reservation_from') }}&zizoo_boat_search[reservation_to]={{ form.get('reservation_to') }}&zizoo_boat_search[num_guests]={{ form.get('num_guests') }}">Page {{ i }}</a></li>
         {% endfor %}
         </ul>
     {% endif %}
@@ -78,7 +78,7 @@
         mc.clearMarkers();
         {% for boat in boats %}
             {% set x = boat|resetDuplicates %}
-            {% if boat|bookable(res_from, res_to)==true%}
+            {% if boat|bookable(form.get('reservation_from'), form.get('reservation_to'))==true%}
                 {% for availability in boat.availability %}
                     {% if availability.address|duplicateLocation == false %}
                         infoWindows.push(new google.maps.InfoWindow({

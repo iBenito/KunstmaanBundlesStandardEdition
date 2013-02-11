@@ -18,6 +18,16 @@ services:
             entityManager:  "@doctrine.orm.entity_manager"
             messenger:      "@messenger"
             container:      "@service_container"
+    
+    zizoo_boat.boat_type_data_transformer:
+        class:  Zizoo\BoatBundle\Form\DataTransformer\BoatTypeTransformer
+        arguments: ["@doctrine.orm.entity_manager"]
+    
+    zizoo_boat.boat_type_selector:
+        class:  Zizoo\BoatBundle\Form\Type\BoatTypeType
+        arguments: ["@service_container"]
+        tags:
+            - { name: form.type, alias: zizoo_boat_type_selector }
 #    zizoo_boat.example:
 #        class: %zizoo_boat.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]

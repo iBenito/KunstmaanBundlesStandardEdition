@@ -39,7 +39,7 @@ $(document).ready(function(){
 
     //$('#unique_locations, #reservation_from, #reservation_to').attr('autocomplete', 'true');
 
-    $('#unique_locations').chosen();
+    $('#zizoo_boat_search_location').chosen();
     
     var clearBtnFnc1 = function(input) {
             setTimeout(function() {
@@ -67,7 +67,7 @@ $(document).ready(function(){
             }, 1 );
         };
 
-    $( "#reservation_from" ).datepicker({
+    $( "#zizoo_boat_search_reservation_from" ).datepicker({
         defaultDate: "+1d",
         changeMonth: true,
         numberOfMonths: 1,
@@ -80,7 +80,7 @@ $(document).ready(function(){
             $( "#reservation_to" ).datepicker( "option", "minDate", selectedDate );
         }
     });
-    $( "#reservation_to" ).datepicker({
+    $( "#zizoo_boat_search_reservation_to" ).datepicker({
         defaultDate: "+1d",
         changeMonth: true,
         numberOfMonths: 1,
@@ -90,11 +90,11 @@ $(document).ready(function(){
         beforeShow: clearBtnFnc1,
         onChangeMonthYear: clearBtnFnc2,
         onClose: function( selectedDate ) {
-            $( "#reservation_from" ).datepicker( "option", "maxDate", selectedDate );
+            $( "#zizoo_boat_search_reservation_from" ).datepicker( "option", "maxDate", selectedDate );
         }
     });
-
-
+    
+   
     $('#search_form').on('submit', function(){
         updateSearch(1);
         return false;
