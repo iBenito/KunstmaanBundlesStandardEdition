@@ -94,7 +94,7 @@
                 slide: function( event, ui ) {
                     $( "#zizoo_boat_search_length_from" ).val(ui.values[ 0 ]);
                     $( "#zizoo_boat_search_length_to" ).val(ui.values[ 1 ]);
-                    $( "#length_text" ).val(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+                    $( "#length_text" ).html(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
                 },
                 stop: function( event, ui ){
                     updateSearch(1);
@@ -109,7 +109,7 @@
                 slide: function( event, ui ) {
                     $( "#zizoo_boat_search_num_cabins_from" ).val(ui.values[ 0 ]);
                     $( "#zizoo_boat_search_num_cabins_to" ).val(ui.values[ 1 ]);
-                    $( "#num_cabins_text" ).val(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+                    $( "#num_cabins_text" ).html(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
                 },
                 stop: function( event, ui ){
                     updateSearch(1);
@@ -129,24 +129,24 @@
         });
 
     </script>
-    <div id="results_container">
-        
-        <div id="filter" style="display: none">
+    <div id="results_container" class="row-fluid">
+        <div id="filter" style="display: none" class="span3 well pull-right">
             <div id="boat_type_filter">
                 {{ form_widget(form.boat_type) }}
             </div>
             <div id="length_filter">
                 <label for="length_text">Boat Length:</label>
-                <input type="text" id="length_text" value="1 - {{ max_length }}"/>
+                <div id="length_text">1 - {{ max_length }}</div>
                 <div id="length_slider"></div>
             </div>
             <div id="num_cabins_filter">
                 <label for="num_cabins_text">Number of cabins:</label>
-                <input type="text" id="num_cabins_text" value="1 - {{ max_cabins }}"/>
+                <div id="num_cabins_text">1 - {{ max_cabins }}</div>
                 <div id="num_cabins_slider"></div>
             </div>
         </div>
-        <div id="boats" class="grid">
+
+        <div id="boats" class="span9 grid pull-left">
             {% include "ZizooAddressBundle:Address:locations_boats.html.twig" with {'page': page, 'page_size': page_size } %}
         </div>
     </div>
@@ -161,8 +161,7 @@
         }
 
         #boats {
-            width: 876px;
-            float: left;
+            margin-left: 0;
         }
 
         #boats.grid .boat {
@@ -188,8 +187,7 @@
         }
         
         #filter {
-            float: right;
-            width: 294px;
+           
         }
         
         #zizoo_boat_search_boat_type_boat_type input {

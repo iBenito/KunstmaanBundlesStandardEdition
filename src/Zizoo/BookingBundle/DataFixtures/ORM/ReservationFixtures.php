@@ -2,6 +2,13 @@
 
 namespace Zizoo\BookingBundle\DataFixtures\ORM;
 
+use Zizoo\BookingBundle\Entity\Reservation;
+use Zizoo\BoatBundle\Entity\Boat;
+use Zizoo\BoatBundle\Form\Model\BookBoat;
+use Zizoo\BookingBundle\Form\Model\Booking;
+use Zizoo\BookingBundle\Form\Model\CreditCard;
+use Zizoo\BookingBundle\Form\Model\BillingAddress;
+
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\DataFixtures\FixtureInterface;
@@ -11,8 +18,6 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 
-use Zizoo\BookingBundle\Entity\Reservation;
-use Zizoo\BoatBundle\Entity\Boat;
 
 class ReservationFixtures implements OrderedFixtureInterface, SharedFixtureInterface, ContainerAwareInterface
 {
@@ -47,10 +52,58 @@ class ReservationFixtures implements OrderedFixtureInterface, SharedFixtureInter
     public function load(ObjectManager $manager)
     {
         
-        $bookingAgent = $this->container->get('booking_agent');
         
+        $bookingAgent = $this->container->get('booking_agent');
         $boat1 = $this->getReference('boat-1');
         $user1 = $this->getReference('user-1');
+        
+        $availabilities = $boat1->getAvailability();
+        if ($availabilities && $availabilities->offsetExists(0)){
+            $availability = $availabilities->first();
+            $from   = clone $availability->getAvailableFrom();
+            $to     = clone $availability->getAvailableUntil();
+            $from->modify('+1 week');
+            $to->modify('-1 week');
+            
+            $bookBoat = new BookBoat($boat1->getID());
+            $bookBoat->setNumGuests(5);
+            $bookBoat->setReservationFrom($from);
+            $bookBoat->setReservationTo($to);
+            
+            $interval = $from->diff($to);
+            $price = $interval->d * $availability->getPrice();
+            
+            $profile = $user1->getProfile();
+            
+            $expiryDate = clone $availability->getAvailableUntil();
+            $expiryDate->modify('+2 years');
+            $creditCard = new CreditCard();
+            $creditCard->setCVV('123');
+            $creditCard->setCardHolder($profile->getFirstName() . ' ' . $profile->getLastName());
+            $creditCard->setCreditCardNumber('4111111111111111');
+            $creditCard->setExpiryMonth($expiryDate->format('m'));
+            $creditCard->setExpiryYear($expiryDate->format('Y'));
+            
+            $billingAddress = new BillingAddress();
+            $billingAddress->setCountryCodeAlpha2($manager->merge($this->getReference('countryDE'))->getIso());
+            $billingAddress->setExtendedAddress('');
+            $billingAddress->setFirstName('Mr');
+            $billingAddress->setLastName('Smith');
+            $billingAddress->setLocality('Berlin');
+            $billingAddress->setPostalCode('12345');
+            $billingAddress->setRegion('');
+            $billingAddress->setStreetAddress('Hauptstrasse 1');
+            
+            $booking = new Booking();
+            $booking->setCreditCard($creditCard);
+            $booking->setBilling($billingAddress);
+            
+            $bookingAgent->braintreeMakeReservation($user1, $booking, $price, $bookBoat, $boat1);
+        }
+        
+        
+        /**
+        
         
         $availabilities = $boat1->getAvailability();
         if ($availabilities && $availabilities->offsetExists(0)){
@@ -64,7 +117,7 @@ class ReservationFixtures implements OrderedFixtureInterface, SharedFixtureInter
             $price = $interval->d * $availability->getPrice();
             $reservation = $bookingAgent->makeReservation($boat1, $user1, $from, $to, (float)$price);
         }
-        
+        */
 
     }
 

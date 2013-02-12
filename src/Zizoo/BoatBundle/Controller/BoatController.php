@@ -31,7 +31,7 @@ class BoatController extends Controller
             throw $this->createNotFoundException('Unable to find boat post.');
         }        
         $request = $this->getRequest();
-        $request->query->set('url', $this->generateUrl('ZizooBoatBundle_boat_show', array('id' => $id)));
+        $request->query->set('url', $this->generateUrl('ZizooBoatBundle_show', array('id' => $id)));
         $request->query->set('ajax_url', $this->generateUrl('ZizooBoatBundle_booking_widget', array('id' => $id, 'request' => $request)));
         return $this->render('ZizooBoatBundle:Boat:show.html.twig', array(
             'boat'      => $boat,

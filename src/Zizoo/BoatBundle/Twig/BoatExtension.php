@@ -2,14 +2,16 @@
 
 namespace Zizoo\BoatBundle\Twig;
 
-
 class BoatExtension extends \Twig_Extension
 {
+    
     public function getFilters()
     {
         return array(
             'reservationExists' => new \Twig_Filter_Method($this, 'reservationExists'),
             'bookable' => new \Twig_Filter_Method($this, 'bookable'),
+            'availableDates' => new \Twig_Filter_Method($this, 'availableDates'),
+            'bookedDates' => new \Twig_Filter_Method($this, 'bookedDates'),
         );
     }
     
@@ -23,7 +25,8 @@ class BoatExtension extends \Twig_Extension
         foreach ($reservations as $reservation){
             $checkIn = $reservation->getCheckIn();
             $checkout = $reservation->getCheckOut();
-            $inRange = !(($from < $checkIn && $to < $checkout) || ($from > $checkIn && $to > $checkout));
+            $inRange = ($from < $checkout) && ($to > $checkIn);
+            //$inRange = !(($from < $checkIn && $to < $checkout) || ($from > $checkIn && $to > $checkout));
             if ($inRange) return true;
         }
         return false;
@@ -47,6 +50,71 @@ class BoatExtension extends \Twig_Extension
             }
         }
         return false;
+    }
+    
+    public function availableDates2($boat)
+    {
+        $arr = array();
+        $availabilities = $boat->getAvailability();
+        foreach ($availabilities as $availability){
+            $from   = clone $availability->getAvailableFrom();
+            $to     = $availability->getAvailableUntil();
+            
+            do {
+                $arr[] = 'new Date('.$from->format('Y,m,d').')';
+                $from = $from->modify('+1 day');
+            } while ($from <= $to);
+            
+        }        
+        return '[' . implode(",", $arr) . ']';
+    }
+    
+    public function availableDates($boat)
+    {
+        $arr = array();
+        $reservations = $boat->getReservation();
+        $availabilities = $boat->getAvailability();
+        foreach ($availabilities as $availability){
+            $availableFrom  = clone $availability->getAvailableFrom();
+            $availableUntil = $availability->getAvailableUntil();
+            
+            do {
+                foreach ($reservations as $reservation){
+                    $reservedFrom   = clone $reservation->getCheckIn();
+                    $reservedUntil  = $reservation->getCheckOut();
+
+                    if ($availableFrom < $reservedFrom || $availableFrom > $reservedUntil){
+                        $arr[] = array($availableFrom->format('Y'), $availableFrom->format('m'), $availableFrom->format('d'));
+                        //$arr[] = 'new Date('.$availableFrom->format('Y,m,d').')';
+                    } else {
+                        $availableFrom = clone $reservedUntil;
+                        break;
+                    }
+                    
+                   
+                } 
+                $availableFrom = $availableFrom->modify('+1 day');
+            } while ($availableFrom <= $availableUntil);
+            
+        }        
+        return json_encode($arr);
+        //return '[' . implode(",", $arr) . ']';
+    }
+    
+    public function bookedDates($boat)
+    {
+        $arr = array();
+        $reservations = $boat->getReservation();
+        foreach ($reservations as $reservation){
+            $from   = clone $reservation->getCheckIn();
+            $to     = $reservation->getCheckOut();
+            
+            do {
+                $arr[] = array($from->format('Y'), $from->format('m'), $from->format('d'));
+                $from = $from->modify('+1 day');
+            } while ($from < $to);
+        }
+        return json_encode($arr);
     }
     
     public function getName()

@@ -1,7 +1,7 @@
 {# src/Zizoo/AddressBundle/Resources/views/Address/locations_boat_info_window.html.twig #}
 {% trans_default_domain "labels" %}
 '<div class="marker">'+
-'   <h2 class="marker_heading"><a href="{{ path('ZizooBoatBundle_boat_show', { 'id': boat.id }) }}">{{ boat.name }}: {{ boat.title }}</a></h2>'+
+'   <h2 class="marker_heading"><a href="{{ path('ZizooBoatBundle_show', { 'id': boat.id }) }}">{{ boat.name }}: {{ boat.title }}</a></h2>'+
 '   <div id="marker_content">'+
 '       <div class="marker_images">'+
         {% for image in boat.image %}

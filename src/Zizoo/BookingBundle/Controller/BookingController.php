@@ -94,7 +94,7 @@ class BookingController extends Controller
         $validator = $this->get('zizoo_boat.book_boat_validator');
         $errors = $validator->validate($bookBoat, new \Zizoo\BoatBundle\Validator\Constraints\BookBoat());
         if ($errors || !$availability){
-            return $this->redirect($this->generateUrl('ZizooBoatBundle_boat_show', array('id' => $boat->getId())));
+            return $this->redirect($this->generateUrl('ZizooBoatBundle_show', array('id' => $boat->getId())));
         }
         
         // Calculate price
