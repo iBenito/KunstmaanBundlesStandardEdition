@@ -85,7 +85,7 @@ class BookingAgent {
                 }
                 $interval = $from->diff($to);
                 $actualCost = $interval->d * $availability->getPrice();
-                if (bccomp($actualCost, $intendedPrice, 3)!=0){
+                if (\bccomp($actualCost, $intendedPrice, 3)!=0){
                 //if ($actualCost!=$intendedPrice){
                     throw new InvalidReservationException('Price mismatch: '.$intendedPrice.'!='.$actualCost);
                 }
