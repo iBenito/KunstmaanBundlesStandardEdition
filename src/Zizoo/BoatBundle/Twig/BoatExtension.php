@@ -93,6 +93,9 @@ class BoatExtension extends \Twig_Extension
                     
                    
                 } 
+                if ($reservations->count()==0){
+                    $arr[] = array($availableFrom->format('Y'), $availableFrom->format('m'), $availableFrom->format('d'));
+                }
                 $availableFrom = $availableFrom->modify('+1 day');
             } while ($availableFrom <= $availableUntil);
             
