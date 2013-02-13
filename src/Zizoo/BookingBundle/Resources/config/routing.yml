@@ -1,26 +1,16 @@
-zizoo_booking_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: ZizooBookingBundle:Default:index }
-
-zizoo_book:
+ZizooBookingBundle_book:
     pattern: /book/
     defaults: { _controller: ZizooBookingBundle:Booking:book }
     requirements:
         _method:  GET|POST
                 
-zizoo_book_tr_confirm:
-    pattern: /book/tr-confirm
-    defaults: { _controller: ZizooBookingBundle:Booking:bookTRConfirm }
-    requirements:
-        _method:  GET
-        
-zizoo_view_booking:
+ZizooBookingBundle_view_booking:
     pattern: /booking/{id}
     defaults: { _controller: ZizooBookingBundle:Booking:viewReservation }
     requirements:
         _method:  GET
         
-zizoo_view_all_booking:
+ZizooBookingBundle_view_all_bookings:
     pattern: /bookings
     defaults: { _controller: ZizooBookingBundle:Booking:viewAllReservations }
     requirements:

@@ -10,7 +10,7 @@ class BoatExtension extends \Twig_Extension
         return array(
             'reservationExists' => new \Twig_Filter_Method($this, 'reservationExists'),
             'bookable' => new \Twig_Filter_Method($this, 'bookable'),
-            'availableDates' => new \Twig_Filter_Method($this, 'availableDates'),
+            'availableDates' => new \Twig_Filter_Method($this, 'availableDates2'),
             'bookedDates' => new \Twig_Filter_Method($this, 'bookedDates'),
         );
     }
@@ -61,12 +61,13 @@ class BoatExtension extends \Twig_Extension
             $to     = $availability->getAvailableUntil();
             
             do {
-                $arr[] = 'new Date('.$from->format('Y,m,d').')';
+                $arr[] = array($from->format('Y'), $from->format('m'), $from->format('d'));
                 $from = $from->modify('+1 day');
             } while ($from <= $to);
             
         }        
-        return '[' . implode(",", $arr) . ']';
+        //return '[' . implode(",", $arr) . ']';
+        return json_encode($arr);
     }
     
     public function availableDates($boat)
@@ -83,7 +84,9 @@ class BoatExtension extends \Twig_Extension
                     $reservedFrom   = clone $reservation->getCheckIn();
                     $reservedUntil  = $reservation->getCheckOut();
 
-                    if ($availableFrom < $reservedFrom || $availableFrom > $reservedUntil){
+                    $inRange = ($availableFrom < $reservedUntil) && ($reservedUntil > $reservedFrom);
+                    //if ($availableFrom < $reservedFrom || $availableFrom > $reservedUntil){
+                    if (!$inRange){
                         $arr[] = array($availableFrom->format('Y'), $availableFrom->format('m'), $availableFrom->format('d'));
                         //$arr[] = 'new Date('.$availableFrom->format('Y,m,d').')';
                     } else {
@@ -113,7 +116,7 @@ class BoatExtension extends \Twig_Extension
             $to     = $reservation->getCheckOut();
             
             do {
-                $arr[] = array($from->format('Y'), $from->format('m'), $from->format('d'));
+                $arr[$from->format('Y').'_'.$from->format('m').'_'.$from->format('d')] = array($from->format('Y'), $from->format('m'), $from->format('d'));
                 $from = $from->modify('+1 day');
             } while ($from < $to);
         }

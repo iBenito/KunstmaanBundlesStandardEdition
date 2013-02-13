@@ -6,7 +6,7 @@
 
     <div class="login" id="{% if ajax %}login_inner_ajax{% else %}login_inner{% endif %}">
 
-        <form action="{{ path('login_check') }}" method="post" class="login_form">
+        <form action="{{ path('ZizooUserBundle_login_check') }}" method="post" class="login_form">
             <label for="username">{% trans %}zizoo_user.label.username_or_email{% endtrans %}:</label>
             <input type="text" id="username" name="_username" value="{{ last_username }}" />
 
@@ -26,13 +26,13 @@
         
         {% if error %}
             <div>{{ error.message }}</div>
-            <a class="forgot_password_link" href="{{ path('forgot_password') }}">{% trans %}zizoo_user.label.forgot_password{% endtrans %}</a>
+            <a class="forgot_password_link" href="{{ path('ZizooUserBundle_forgot_password') }}">{% trans %}zizoo_user.label.forgot_password{% endtrans %}</a>
         {% endif %}
             
-        <button type="submit" class="login_facebook_btn" href="{{ facebook.loginUrl({ scope: 'email', redirect_uri: url('login_facebook', {forward: current_route, ajax: ajax}), display: 'popup' }) }}">Login with FACEBOOK</button>
+        <button type="submit" class="login_facebook_btn" href="{{ facebook.loginUrl({ scope: 'email', redirect_uri: url('ZizooUserBundle_login_facebook', {forward: current_route, ajax: ajax}), display: 'popup' }) }}">Login with FACEBOOK</button>
         <br />
         
-        <a href="{{ path('invite') }}">Invite your friends</a>
+        <a href="{{ path('ZizooUserBundle_invite') }}">Invite your friends</a>
     </div>
     <script type="text/javascript">
         $(document).ready(function(){

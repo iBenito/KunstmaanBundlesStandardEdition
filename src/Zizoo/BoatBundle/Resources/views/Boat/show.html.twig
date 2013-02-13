@@ -224,18 +224,24 @@
             }
             Date.prototype.getMonthFormatted = function() {
                 var month = this.getMonth();
-                return month < 10 ? '0' + (month+1) : (month+1); // ('' + month) for string result
+                return month < 9 ? '0' + (month+1) : (month+1); // ('' + month) for string result
             }
             
             var availableDates  = {{ boat|availableDates|raw}};
+            var bookedDates     = {{ boat|bookedDates|raw}};
             $.extend($.datepick, {
                 zizoo: function(date) {
                     var i;
                     for (i=0; i<availableDates.length; i++){
-                        //if (date.getFullYear()==availableDates[i].getFullYear() && date.getMonth()==availableDates[i].getMonth()-1 && date.getDate()-1==availableDates[i].getDate())
                         if (date.getFullYear()==availableDates[i][0] && date.getMonthFormatted()==availableDates[i][1] && date.getDateFormatted()==availableDates[i][2])
                         {
-                            return {selectable: true};
+                            
+                            if (bookedDates[availableDates[i][0]+'_'+availableDates[i][1]+'_'+availableDates[i][2]] == undefined){
+                                return {selectable: true};
+                            } else {
+                                console.log(bookedDates[availableDates[i][0]+'_'+availableDates[i][1]+'_'+availableDates[i][2]]);
+                                return {selectable: false};
+                            }
                             
                         }
                     }

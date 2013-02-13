@@ -19,62 +19,6 @@ class AddressController extends Controller
     }
     
     /**
-     * Get formatted address, used for geocoding an address when the user searches for a location.
-     * @param type $location    Array containing locality, subLocality, state, province, countryName
-     * @author Alex Fuckert <alexf83@gmail.com>
-     */
-    private function getFormattedAddress($location){
-        $address = array();
-        
-        $locality = $location['locality'];
-        if ($locality && $locality!=''){
-            $address[] = $locality;
-        }
-        
-        $subLocality = $location['subLocality'];
-        if ($subLocality && $subLocality!=''){
-            $address[] = $subLocality;
-        }
-        
-        $state = $location['state'];
-        if ($state && $state!=''){
-            $address[] = $state;
-        }
-        
-        $province = $location['province'];
-        if ($province && $province!=''){
-            $address[] = $province;
-        }
-        
-        $country = $location['countryName'];
-        if ($country && $country!=''){
-            $address[] = $country;
-        }
-        
-        return implode(',', $address);
-    }
-    
-    /**
-     * Show all unique locations (country, locality, sub locality, state, province) in a select dropdown.
-     * 
-     * @param type $current Currently selected location
-     * @author Alex Fuckert <alexf83@gmail.com>
-     */
-    public function uniqueLocationsAction($current){
-        $em = $this->getDoctrine()
-                   ->getEntityManager();
-        
-        $locations = $em->getRepository('ZizooAddressBundle:BoatAddress')->getUniqueLocations();
-        
-
-        return $this->render('ZizooAddressBundle:Address:unique_locations.html.twig', array(
-            'unique_locations' => $locations,
-            'current'          => $current
-        ));
-    }
-        
-    
-    /**
      * Displays the locations page. Allows user to search by location, date range and number of people.
      * Displays results on Google Maps and as list. List is paged on the client-side, since we have to fetch all boats
      * to display on the map according to search criteria anyway.

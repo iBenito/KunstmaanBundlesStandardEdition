@@ -86,7 +86,7 @@
             $('#login_inner_ajax').block({ message: '' });
             $.ajax({
                 type: 'post', 
-                url: '{{ path('login_check') }}',
+                url: '{{ path('ZizooUserBundle_login_check') }}',
                 data:$('#login_inner_ajax .login_form').serialize(),
                 success: function(data, textStatus, XHR){
                     var login = $(data).find('#login_inner_ajax');
@@ -103,7 +103,7 @@
                                 $.blockUI({ message: '' });
                                 $.ajax({
                                     type: 'get',
-                                    url: '{{ path('forgot_password') }}',
+                                    url: '{{ path('ZizooUserBundle_forgot_password') }}',
                                     success: function(data, textStatus, XHR){
                                         $('#forgot_password_hidden').removeClass('empty').html($(data).find('#forgot_password_inner_ajax'));
                                         openForgotPasswordDialog();
@@ -132,7 +132,7 @@
                 $.blockUI({ message: '' });
                 $.ajax({
                     type: 'get',
-                    url: '{{ path('login') }}',
+                    url: '{{ path('ZizooUserBundle_login') }}',
                     success: function(data, textStatus, XHR){
                         $('#login_hidden').removeClass('empty').html($(data).find('#login_inner_ajax'));
                         $('#login_inner_ajax .login_facebook_btn').click(function(){
@@ -158,7 +158,7 @@
             $('#register_inner_ajax').block({ message: '' });
             $.ajax({
                 type: 'post', 
-                url: '{{ path('register') }}',
+                url: '{{ path('ZizooUserBundle_register') }}',
                 data: $('#register_inner_ajax .register_form').serialize(),
                 success: function(data, textStatus, XHR){
                     $('#register_inner_ajax').html($(data).find('#register_inner_ajax'));
@@ -179,7 +179,7 @@
                 $.blockUI({ message: '' });
                 $.ajax({
                     type: 'get',
-                    url: '{{ path('register') }}',
+                    url: '{{ path('ZizooUserBundle_register') }}',
                     success: function(data, textStatus, XHR){
                         $('#register_hidden').removeClass('empty').html($(data).find('#register_inner_ajax'));
                         $('#register_hidden .register_email').hide();
@@ -234,7 +234,7 @@
             $('#forgot_password_inner_ajax').block({ message: '' });
             $.ajax({
                 type: 'post', 
-                url: '{{ path('forgot_password') }}',
+                url: '{{ path('ZizooUserBundle_forgot_password') }}',
                 data:$('#forgot_password_inner_ajax .forgot_password_form').serialize(),
                 success: function(data, textStatus, XHR){
                     var p = $(data).find('#forgot_password_inner_ajax');
@@ -246,13 +246,13 @@
         
     }
     
-    function register_facebook_newCallback(){
+    function ZizooUserBundle_register_facebook_newCallback(){
         //closeRegisterDialog();
         closeAllDialogs();
         $.blockUI({ message: '' });
         $.ajax({
             type: 'get',
-            url: '{{ path('register_facebook_new') }}',
+            url: '{{ path('ZizooUserBundle_register_facebook_new') }}',
             success: function(data, textStatus, XHR){
                 $('#facebook_register_hidden').removeClass('empty').html($(data).find('#facebook_register_inner_ajax'));
                 $.unblockUI();
@@ -261,13 +261,13 @@
         });
     }
     
-    function register_facebook_linkCallback(){
+    function ZizooUserBundle_register_facebook_linkCallback(){
         //closeRegisterDialog();
         closeAllDialogs();
         $.blockUI({ message: '' });
         $.ajax({
             type: 'get',
-            url: '{{ path('register_facebook_link') }}',
+            url: '{{ path('ZizooUserBundle_register_facebook_link') }}',
             success: function(data, textStatus, XHR){
                 $('#facebook_register_hidden').removeClass('empty').html($(data).find('#facebook_register_inner_ajax'));
                 $.unblockUI();
@@ -276,16 +276,16 @@
         });
     }
         
-    function loginCallback(){
+    function ZizooUserBundle_loginCallback(){
         //closeLoginDialog();
         closeAllDialogs();
         getLoginWidget();
     }
     
-    function login_facebook_failCallback(){
+    function ZizooUserBundle_login_facebook_failCallback(){
         $.ajax({
             type: 'get',
-            url: '{{ path('login_facebook_fail') }}',
+            url: '{{ path('ZizooUserBundle_login_facebook_fail') }}',
             success: function(data, textStatus, XHR){
                 $('#login_inner_ajax').html($(data).find('#login_inner_ajax'));
                 $('#login_inner_ajax .logout_facebook_btn').click(function(){
@@ -303,7 +303,7 @@
         getLoginWidget();
     }
     
-    function login_facebookCallback(){
+    function ZizooUserBundle_login_facebookCallback(){
         //closeLoginDialog();
         closeAllDialogs();
     }

@@ -49,7 +49,7 @@ class Messenger {
     }
     
     public function sendNotificationBookingEmail(User $to, Reservation $reservation){
-        $bookingLink = $this->container->get('router')->generate('zizoo_view_booking', array('id' => $reservation->getId()), true);
+        $bookingLink = $this->container->get('router')->generate('ZizooBookingBundle_view_booking', array('id' => $reservation->getId()), true);
         $twig = $this->container->get('twig');
         $template = $twig->loadTemplate('ZizooBookingBundle:Email:new_booking.html.twig');
         $context = array(   'bookingLink'      => $bookingLink );
@@ -133,7 +133,7 @@ class Messenger {
      * @author Alex Fuckert <alexf83@gmail.com>
      */
     public function sendConfirmationEmail(User $user){
-        $activationLink = $this->container->get('router')->generate('confirm', array('token' => $user->getConfirmationToken(), 'email' => $user->getEmail()), true);
+        $activationLink = $this->container->get('router')->generate('ZizooUserBundle_confirm', array('token' => $user->getConfirmationToken(), 'email' => $user->getEmail()), true);
         $twig = $this->container->get('twig');
         $template = $twig->loadTemplate('ZizooUserBundle:Email:confirm.html.twig');
         $context = array('link' => $activationLink);
@@ -165,7 +165,7 @@ class Messenger {
      * @author Alex Fuckert <alexf83@gmail.com>
      */
     public function sendForgotPasswordEmail(User $user){
-        $passwordLink = $this->container->get('router')->generate('reset_password', array('token' => $user->getConfirmationToken(), 'email' => $user->getEmail()), true);
+        $passwordLink = $this->container->get('router')->generate('ZizooUserBundle_reset_password', array('token' => $user->getConfirmationToken(), 'email' => $user->getEmail()), true);
         $twig = $this->container->get('twig');
         $template = $twig->loadTemplate('ZizooUserBundle:Email:password_confirm.html.twig');
         $context = array('link' => $passwordLink);

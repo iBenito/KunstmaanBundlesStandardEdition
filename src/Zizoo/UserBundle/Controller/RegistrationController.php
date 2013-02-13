@@ -60,7 +60,7 @@ class RegistrationController extends Controller
                 $user = $userService->registerUser($user);
                 $messenger->sendConfirmationEmail($user);
 
-                return $this->redirect($this->generateUrl('submitted'));
+                return $this->redirect($this->generateUrl('ZizooUserBundle_submitted'));
             } else {
                 // Form is not valid. Check if the user is valid. If not, see if it's because the user already exists and hasn't completed registration (i.e. confirmation)
                 // If that is the case, forward to "resend_confirmation". 
@@ -151,12 +151,12 @@ class RegistrationController extends Controller
             $user = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($email);
         } 
         if ($user==null || $user->getConfirmationToken()==null){
-            return $this->redirect($this->generateUrl('submitted'));
+            return $this->redirect($this->generateUrl('ZizooUserBundle_submitted'));
         }
         if ($request->isMethod('POST')) {
             $messenger = $this->get('messenger');
             $messenger->sendConfirmationEmail($user);
-            return $this->redirect($this->generateUrl('submitted'));
+            return $this->redirect($this->generateUrl('ZizooUserBundle_submitted'));
         }
         return $this->render('ZizooUserBundle:Registration:resend_confirmation.html.twig');
     }
@@ -176,9 +176,9 @@ class RegistrationController extends Controller
             $messenger = $this->container->get('messenger');        
             $message = $messenger->sendRegistrationEmail($user);
             
-            return $this->doLogin($user, $this->generateUrl('confirmed'));
+            return $this->doLogin($user, $this->generateUrl('ZizooUserBundle_confirmed'));
         } else {
-            return $this->redirect($this->generateUrl('register'));
+            return $this->redirect($this->generateUrl('ZizooUserBundle_register'));
         }
         
     }
@@ -271,12 +271,12 @@ class RegistrationController extends Controller
         try {
             $obj = $facebook->api('/me');
         } catch (FacebookApiException $e){
-            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'register',
+            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'ZizooUserBundle_register',
                                                                                           'ajax'    => $request->isXmlHttpRequest() ));
         }
         
         if (!array_key_exists('id', $obj)){
-            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'register',
+            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'ZizooUserBundle_register',
                                                                                           'ajax'    => $request->isXmlHttpRequest() ));
         }
         
@@ -295,9 +295,9 @@ class RegistrationController extends Controller
                 $user = $userService->registerFacebookUser($user, $obj);
                 if ($user){
                     $messenger->sendRegistrationEmail($user);
-                    return $this->doLogin($user, $this->generateUrl('register_facebook_success'));
+                    return $this->doLogin($user, $this->generateUrl('ZizooUserBundle_register_facebook_success'));
                 } else {
-                    return $this->redirect($this->generateUrl('register', array('relogin' => true,
+                    return $this->redirect($this->generateUrl('ZizooUserBundle_register', array('relogin' => true,
                                                                                 'ajax'    => $request->isXmlHttpRequest())));
                 }
                 
@@ -369,12 +369,12 @@ class RegistrationController extends Controller
         try {
             $obj = $facebook->api('/me');
         } catch (FacebookApiException $e){
-            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'register',
+            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'ZizooUserBundle_register',
                                                                                           'ajax'    => $request->isXmlHttpRequest() ));
         }
         
         if (!array_key_exists('id', $obj)){
-            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'register',
+            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'ZizooUserBundle_register',
                                                                                           'ajax'    => $request->isXmlHttpRequest() ));
         }
         
@@ -385,7 +385,7 @@ class RegistrationController extends Controller
         
         $existingUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($obj['email']);
         if (!$existingUser){
-            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'register',
+            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'ZizooUserBundle_register',
                                                                                           'ajax'    => $request->isXmlHttpRequest() ));
         }
         
@@ -402,9 +402,9 @@ class RegistrationController extends Controller
                 $user = $userService->linkFacebookUser($linkUser, $obj);
                 
                 if ($user){
-                    return $this->doLogin($existingUser, $this->generateUrl('register_facebook_merged'));
+                    return $this->doLogin($existingUser, $this->generateUrl('ZizooUserBundle_register_facebook_merged'));
                 } else {
-                    return $this->redirect($this->generateUrl('register', array('relogin' => true,
+                    return $this->redirect($this->generateUrl('ZizooUserBundle_register', array('relogin' => true,
                                                                                 'ajax'    => $request->isXmlHttpRequest())));
                 }
             } else {
@@ -429,7 +429,7 @@ class RegistrationController extends Controller
                             $possibleUnconfirmedUser = $em->getRepository('ZizooUserBundle:User')->findOneByUsername($username);
                             // If username already taken and not yet confirmed, forward.
                             if ($possibleUnconfirmedUser->getConfirmationToken()!=null && !$possibleUnconfirmedUser->getIsActive()){
-                                return $this->render('ZizooUserBundle:Registration:register_facebook_link.html.twig', array('form' => $form->createView(), 'facebook' => $facebook, 'data' => $obj, 'unconfirmed_user' => $possibleUnconfirmedUser, 'unconfirmed_email' => false, 'unconfirmed_username' => true));
+                                return $this->render('ZizooUserBundle:Registration:ZizooUserBundle_register_facebook_link.html.twig', array('form' => $form->createView(), 'facebook' => $facebook, 'data' => $obj, 'unconfirmed_user' => $possibleUnconfirmedUser, 'unconfirmed_email' => false, 'unconfirmed_username' => true));
                             }
                         }
                     }
@@ -452,7 +452,7 @@ class RegistrationController extends Controller
         $registration = new Registration();
         $registration->setUser($user);
         $form = $this->createForm(new FacebookLinkRegistrationType(), $registration);
-        return $this->render('ZizooUserBundle:Registration:register_facebook_link.html.twig', array('form' => $form->createView(), 
+        return $this->render('ZizooUserBundle:Registration:ZizooUserBundle_register_facebook_link.html.twig', array('form' => $form->createView(), 
                                                                                                     'facebook' => $facebook, 
                                                                                                     'data' => $obj, 
                                                                                                     'unconfirmed_user' => null, 
@@ -480,12 +480,12 @@ class RegistrationController extends Controller
         try {
             $obj = $facebook->api('/me');
         } catch (FacebookApiException $e){
-            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'register',
+            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'ZizooUserBundle_register',
                                                                                           'ajax'    => $ajax));
         }
 
         if (!array_key_exists('id', $obj)){
-            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'register',
+            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'ZizooUserBundle_register',
                                                                                           'ajax'    => $ajax));
         }
         
@@ -498,7 +498,7 @@ class RegistrationController extends Controller
                 return $this->render('ZizooUserBundle:Registration:forward.html.twig', array(   'action' => 'ZizooBaseBundle_dashboard',
                                                                                                 'ajax'    => $ajax));
             } else {
-                return $this->doLogin($alreadyExistsUser, $this->generateUrl('forward', array('action'  => 'ZizooBaseBundle_dashboard',
+                return $this->doLogin($alreadyExistsUser, $this->generateUrl('ZizooUserBundle_forward', array('action'  => 'ZizooBaseBundle_dashboard',
                                                                                               'ajax'    => $ajax)));
             }
         } else if ($loggedInUser && $alreadyExistsUser && $loggedInUser->getID() == $alreadyExistsUser->getID()){
@@ -512,11 +512,11 @@ class RegistrationController extends Controller
 
         $possibleLinkUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($obj['email']);
         if ($possibleLinkUser){
-            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'register_facebook_link',
+            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'ZizooUserBundle_register_facebook_link',
                                                                                           'ajax'    => $ajax));
         }
         
-        return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action' => 'register_facebook_new',
+        return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action' => 'ZizooUserBundle_register_facebook_new',
                                                                                       'ajax'    => $ajax));
 
     }

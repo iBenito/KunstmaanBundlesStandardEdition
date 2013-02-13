@@ -292,7 +292,7 @@
         var threadId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', rowId, 'grid_sentId');
         $.ajax({
             type: 'get', 
-            url: '{{ path('zizoo_mark_thread') }}/'+threadId+'/'+read,
+            url: '{{ path('ZizooMessageBundle_mark_thread') }}/'+threadId+'/'+read,
             success: function(data, textStatus, XHR){
             },
             error: function(jqXHR, textStatus,errorThrown){

@@ -18,10 +18,10 @@
         <div id="fb_profile">
             <img src="https://graph.facebook.com/{{ data['id'] }}/picture?redirect=true" />
             <span>{{ data['name'] }}</span>
-            <span><a href="{{ facebook.logoutURL({ next: url('register', {'relogin': 'true'}) }) }}">Not you?</a></span>
+            <span><a href="{{ facebook.logoutURL({ next: url('ZizooUserBundle_register', {'relogin': 'true'}) }) }}">Not you?</a></span>
         </div>
         <div>
-            <form novalidate="novalidate" action="{{ path('register_facebook_link')}}" method="post" {{ form_enctype(form) }} class="facebook_register_form">
+            <form novalidate="novalidate" action="{{ path('ZizooUserBundle_register_facebook_link')}}" method="post" {{ form_enctype(form) }} class="facebook_register_form">
                 {{ form_errors(form) }}
 
                 <div>
@@ -29,7 +29,7 @@
                     {{ form_errors(form.user.username) }}
                     {% if unconfirmed_username %}
                         <ul>
-                            <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
+                            <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooUserBundle_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
                         </ul>
                     {% endif %}
                     {{ form_widget(form.user.username) }}

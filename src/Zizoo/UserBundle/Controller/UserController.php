@@ -58,7 +58,7 @@ class UserController extends Controller
         
         $facebook = $this->get('facebook');
         
-        return $this->render('ZizooUserBundle:User:login_facebook_fail.html.twig', array( 'ajax'        => $request->isXmlHttpRequest(),
+        return $this->render('ZizooUserBundle:User:ZizooUserBundle_login_facebook_fail.html.twig', array( 'ajax'        => $request->isXmlHttpRequest(),
                                                                                           'facebook'    => $facebook));
     }
         
@@ -75,7 +75,7 @@ class UserController extends Controller
         }
         
         if (!array_key_exists('id', $obj)){
-            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'login',
+            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'ZizooUserBundle_login',
                                                                                           'ajax'    => $ajax  ));
         }
         
@@ -92,7 +92,7 @@ class UserController extends Controller
             return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => $forward,
                                                                                           'ajax'    => $ajax  ));
         } else {
-            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'login_facebook_fail',
+            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'ZizooUserBundle_login_facebook_fail',
                                                                                           'ajax'    => $ajax  ));
         }
         
@@ -102,7 +102,7 @@ class UserController extends Controller
         $request = $this->getRequest();
         $ajax = $request->query->get('ajax', false);
         
-        return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'login_facebook',
+        return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'ZizooUserBundle_login_facebook',
                                                                                       'ajax'    => $ajax  ));
     }
     
@@ -139,7 +139,7 @@ class UserController extends Controller
             $messenger = $this->get('messenger');
             $messenger->sendForgotPasswordEmail($user);
             
-            return $this->redirect($this->generateUrl('reset_password_email'));
+            return $this->redirect($this->generateUrl('ZizooUserBundle_reset_password_email'));
         }
         
         return $this->render('ZizooUserBundle:User:forgot_password.html.twig', array(   'form'  => $form->createView(),
@@ -153,7 +153,7 @@ class UserController extends Controller
      */
     public function resetPasswordEmailAction(){
         $request = $this->getRequest();
-        return $this->render('ZizooUserBundle:User:reset_password_email.html.twig', array( 'ajax' => $request->isXmlHttpRequest() ));
+        return $this->render('ZizooUserBundle:User:ZizooUserBundle_reset_password_email.html.twig', array( 'ajax' => $request->isXmlHttpRequest() ));
     }
     
     /**
@@ -180,9 +180,9 @@ class UserController extends Controller
             
             $messenger = $this->get('messenger');
             $messenger->sendNewPasswordEmail($user, $pass_plain);
-            return $this->render('ZizooUserBundle:User:reset_password_confirm.html.twig');
+            return $this->render('ZizooUserBundle:User:ZizooUserBundle_reset_password_confirm.html.twig');
         } else {
-            return $this->redirect($this->generateUrl('login'));
+            return $this->redirect($this->generateUrl('ZizooUserBundle_login'));
         }
     }
     
@@ -224,17 +224,17 @@ class UserController extends Controller
 
                     $trans = $this->get('translator');
                     $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.message.password_changed'));
-                    return $this->redirect($this->generateUrl('change_password'));
+                    return $this->redirect($this->generateUrl('ZizooUserBundle_change_password'));
 
                 } else {
                     $trans = $this->get('translator');
                     $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.message.password_not_changed'));
-                    return $this->redirect($this->generateUrl('change_password'));
+                    return $this->redirect($this->generateUrl('ZizooUserBundle_change_password'));
                 }
             }
    
         }
-        return $this->render('ZizooUserBundle:User:change_password.html.twig', array('form' => $form->createView()));
+        return $this->render('ZizooUserBundle:User:ZizooUserBundle_change_password.html.twig', array('form' => $form->createView()));
     }
     
     
@@ -303,7 +303,7 @@ class UserController extends Controller
                 }
                 
 
-                return $this->redirect($this->generateUrl('invite', array('form' => $form)));
+                return $this->redirect($this->generateUrl('ZizooUserBundle_invite', array('form' => $form)));
             }
         }
         
