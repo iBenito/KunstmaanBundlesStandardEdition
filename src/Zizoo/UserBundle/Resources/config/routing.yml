@@ -1,96 +1,97 @@
 # Registration
-register:
+ZizooUserBundle_register:
   pattern:    /register
   defaults:   {_controller: ZizooUserBundle:Registration:register }  
   
-submitted:
+ZizooUserBundle_submitted:
   pattern:    /submitted
   defaults:   {_controller: ZizooUserBundle:Registration:submitted }
   requirements:
         _method:  GET
-confirm:
+
+ZizooUserBundle_confirm:
   pattern:    /confirm/{token}/email/{email}
   defaults:   {_controller: ZizooUserBundle:Registration:confirm }
   requirements:
         _method:  GET
         
-confirmed:
+ZizooUserBundle_confirmed:
   pattern:    /confirmed
   defaults:   {_controller: ZizooUserBundle:Registration:confirmed }
   requirements:
         _method:  GET|POST
         
-resend_confirmation:
+ZizooUserBundle_resend_confirmation:
   pattern:    /resend-confirmation/email/{email}
   defaults:   {_controller: ZizooUserBundle:Registration:resendConfirmation }
   requirements:
         _method:  GET|POST
         
-register_facebook:
+ZizooUserBundle_register_facebook:
   pattern:    /register-fb
   defaults:   {_controller: ZizooUserBundle:Registration:registerFacebook }
   
-register_facebook_new:
+ZizooUserBundle_register_facebook_new:
   pattern:    /register-fb-new
   defaults:   {_controller: ZizooUserBundle:Registration:registerFacebookNew }
   
-register_facebook_link:
+ZizooUserBundle_register_facebook_link:
   pattern:    /register-fb-link
   defaults:   {_controller: ZizooUserBundle:Registration:registerFacebookLink }
 
-register_facebook_success:
+ZizooUserBundle_register_facebook_success:
   pattern:    /register-fb-success
   defaults:   {_controller: ZizooUserBundle:Registration:facebookSuccess }
 
-register_facebook_merged:
+ZizooUserBundle_register_facebook_merged:
   pattern:    /register-fb-merged
   defaults:   {_controller: ZizooUserBundle:Registration:facebookMerged }
 
-login_facebook_fail:
+ZizooUserBundle_login_facebook_fail:
   pattern:    /login-fb-fail
   defaults:   {_controller: ZizooUserBundle:User:facebookLoginFail }
 
 # User
-login:
+ZizooUserBundle_login:
     pattern:   /login
     defaults:  { _controller: ZizooUserBundle:User:login }
     
-login_check:
+ZizooUserBundle_login_check:
     pattern:   /login_check
     
-logout:
+ZizooUserBundle_logout:
     pattern:   /logout
 
-login_facebook:
+ZizooUserBundle_login_facebook:
      pattern: /login-fb
      defaults: {_controller: ZizooUserBundle:User:loginFacebook }
      
-logout_facebook:
+ZizooUserBundle_logout_facebook:
      pattern: /logout-fb
      defaults: {_controller: ZizooUserBundle:User:logoutFacebook }
 
-forgot_password:
+ZizooUserBundle_forgot_password:
   pattern:    /forgot-password
   defaults:   {_controller: ZizooUserBundle:Registration:forgotPassword }
   defaults:   {_controller: ZizooUserBundle:User:forgotPassword }
   requirements:
         _method:  GET|POST
         
-reset_password_email:
+ZizooUserBundle_reset_password_email:
   pattern:    /reset-password
   defaults:   {_controller: ZizooUserBundle:Registration:resetPasswordEmail }
   defaults:   {_controller: ZizooUserBundle:User:resetPasswordEmail }
   requirements:
         _method:  GET|POST
         
-reset_password:
+ZizooUserBundle_reset_password:
   pattern:    /reset-password/{token}/email/{email}
   defaults:   {_controller: ZizooUserBundle:Registration:resetPassword }
   defaults:   {_controller: ZizooUserBundle:User:resetPassword }
   requirements:
         _method:  GET|POST
   
-reset_password_confirm:
+ZizooUserBundle_reset_password_confirm:
   pattern:    /reset-password-confirm/
   defaults:   {_controller: ZizooUserBundle:Registration:resetPasswordConfirm }
   defaults:   {_controller: ZizooUserBundle:User:resetPasswordConfirm }
@@ -99,18 +100,18 @@ reset_password_confirm:
 
         _method:  GET|POST
         
-change_password:
+ZizooUserBundle_change_password:
   pattern:    /account/change-password/
   defaults:   {_controller: ZizooUserBundle:User:changePassword }
   requirements:
         _method:  GET|POST 
         
-invite:
+ZizooUserBundle_invite:
   pattern:    /account/invite/
   defaults:   {_controller: ZizooUserBundle:User:inviteFriends }
   requirements:
         _method:  GET|POST 
         
-forward:
+ZizooUserBundle_forward:
   pattern:    /forward/{action}
   defaults:   {_controller: ZizooUserBundle:Registration:forward }

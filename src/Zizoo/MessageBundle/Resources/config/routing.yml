@@ -1,12 +1,12 @@
-zizoo_delete_thread:
+ZizooMessageBundle_delete_thread:
     pattern: /delete-thread/{messageId}
     defaults: { _controller: ZizooMessageBundle:Message:deleteForm, messageId: null, ajax: false}
     
-zizoo_mark_thread:
+ZizooMessageBundle_mark_thread:
     pattern: /mark-message/{threadId}/{read}
     defaults: { _controller: ZizooMessageBundle:Message:markRead, threadId: null, read: true}
    
-zizoo_message_thread_view:
+ZizooMessageBundle_thread_view:
     pattern: /view/{threadId}
     defaults: { _controller: FOSMessageBundle:Message:thread, threadId: null, ajax: false }
    

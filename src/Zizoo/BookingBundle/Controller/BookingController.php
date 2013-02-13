@@ -115,7 +115,7 @@ class BookingController extends Controller
                         'addBillingAddressToPaymentMethod'  => true
                     ),
                 ),
-                'redirectUrl' => $this->generateUrl('zizoo_book', array(), true)
+                'redirectUrl' => $this->generateUrl('ZizooBookingBundle_book', array(), true)
             )
         );
         
@@ -135,7 +135,7 @@ class BookingController extends Controller
                 if ($reservation instanceof Reservation){
                     // Reservation and payment successful
                     $session->remove('boat');
-                    return $this->redirect($this->generateUrl('zizoo_view_booking', array('id' => $reservation->getID())));
+                    return $this->redirect($this->generateUrl('ZizooBookingBundle_view_booking', array('id' => $reservation->getID())));
                 } else {
                     if (is_array($reservation)){
                         if (array_key_exists('error', $reservation)){
@@ -162,7 +162,7 @@ class BookingController extends Controller
                 if ($reservation instanceof Reservation){
                     // Reservation and payment successful
                     $session->remove('boat');
-                    return $this->redirect($this->generateUrl('zizoo_view_booking', array('id' => $reservation->getID())));
+                    return $this->redirect($this->generateUrl('ZizooBookingBundle_view_booking', array('id' => $reservation->getID())));
                 } else {
                     if (is_array($reservation)){
                         if (array_key_exists('error', $reservation)){
@@ -193,18 +193,4 @@ class BookingController extends Controller
                                                                                 'braintree_errors'  => $braintreeErrors));
     }
 
-    
-    public function bookTRConfirmAction(Request $request)
-    {
-        // Include Braintree API
-        require_once $this->container->getParameter('braintree_path').'/lib/Braintree.php';
-        \Braintree_Configuration::environment($this->container->getParameter('braintree_environment'));
-        \Braintree_Configuration::merchantId($this->container->getParameter('braintree_merchant_id'));
-        \Braintree_Configuration::publicKey($this->container->getParameter('braintree_public_key'));
-        \Braintree_Configuration::privateKey($this->container->getParameter('braintree_private_key'));
-        
-        $queryString = $_SERVER['QUERY_STRING'];
-        $result = \Braintree_TransparentRedirect::confirm($queryString);
-        var_dump($result);
-    }
 }

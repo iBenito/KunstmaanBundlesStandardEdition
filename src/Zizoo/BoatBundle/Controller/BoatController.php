@@ -76,7 +76,7 @@ class BoatController extends Controller
             'valid'         => $valid,
             'url'           => $url,
             'ajax_url'      => $ajaxUrl,
-            'book_url'      => $this->generateUrl('zizoo_book')
+            'book_url'      => $this->generateUrl('ZizooBookingBundle_book')
         ));
     }
     /**

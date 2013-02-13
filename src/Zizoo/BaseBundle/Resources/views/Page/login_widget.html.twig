@@ -19,11 +19,11 @@
                         <ul class="dropdown-menu">
                             <li><a href="{{ path('ZizooBaseBundle_dashboard') }}">Dashboard</a></li>
                             <li><a href="{{ path('ZizooBaseBundle_dashboard_profile') }}">My Profile</a></li>
-                            <li><a href="{{ path('zizoo_view_all_booking') }}">My Bookings</a></li>
+                            <li><a href="{{ path('ZizooBookingBundle_view_all_bookings') }}">My Bookings</a></li>
                             <li class="divider"></li>
                             <li class="nav-header">Account</li>
                             <li><a href="#">Settings</a></li>
-                            <li><a href="{{ path('logout') }}">Logout</a></li>
+                            <li><a href="{{ path('ZizooUserBundle_logout') }}">Logout</a></li>
                         </ul>
                     </li>
                     <li class="add-boat"><a href="#">Add Boat</a></li>
@@ -46,16 +46,16 @@
                 <ul class="nav pull-right">
                     {% if show_login_form %}
                         <li>
-                            <form class="navbar-form pull-right" action="{{ path('login_check') }}" method="post">
+                            <form class="navbar-form pull-right" action="{{ path('ZizooUserBundle_login_check') }}" method="post">
                                 <input class="span2" type="text" name="_username" placeholder="Email or username">
                                 <input class="span2" type="password" name="_password" placeholder="Password">
                                 <button type="submit" class="btn">Login</button>
                             </form>
                         </li>
                     {% else %}
-                        <li><a id="login_link" href="{{ path('login') }}">Login</a></li>
+                        <li><a id="login_link" href="{{ path('ZizooUserBundle_login') }}">Login</a></li>
                     {% endif %}
-                    <li><a id="register_link" href="{{ path('register') }}">Register</a></li>
+                    <li><a id="register_link" href="{{ path('ZizooUserBundle_register') }}">Register</a></li>
                     <li><a href="#">Add Boat</a></li>
                 </ul>
             </div><!--/.nav-collapse -->

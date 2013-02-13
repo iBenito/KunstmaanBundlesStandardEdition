@@ -21,7 +21,7 @@
 {% endblock %}
 
 {% block body %}
-<form id="search_form" action="{{ path('zizoo_address_locations') }}" method="get">
+<form id="search_form" action="{{ path('ZizooAddressBundle_locations') }}" method="get">
     {{ form_widget(form.location) }}
     {{ form_widget(form.page) }}
     {{ form_widget(form.reservation_from) }}

@@ -98,7 +98,7 @@ class DashboardController extends Controller {
     {
         $boat = new Boat();
         
-        return $this->render('ZizooBaseBundle:DashboardBoat:new.html.twig', array(
+        return $this->render('ZizooBaseBundle:Dashboard/Boat:new.html.twig', array(
             'boat' => $boat,
             'formAction' => 'ZizooBoatBundle_create'
         ));
@@ -112,7 +112,7 @@ class DashboardController extends Controller {
     public function boatEditAction()
     {
         
-        return $this->render('ZizooBaseBundle:DashboardBoat:edit.html.twig', array(
+        return $this->render('ZizooBaseBundle:Dashboard/Boat:edit.html.twig', array(
 
         ));
     }
@@ -125,7 +125,7 @@ class DashboardController extends Controller {
     public function boatPhotosAction()
     {
         
-        return $this->render('ZizooBaseBundle:DashboardBoat:photos.html.twig', array(
+        return $this->render('ZizooBaseBundle:Dashboard/Boat:photos.html.twig', array(
 
         ));
     }
@@ -138,7 +138,7 @@ class DashboardController extends Controller {
     public function boatPriceAction()
     {
         
-        return $this->render('ZizooBaseBundle:DashboardBoat:price.html.twig', array(
+        return $this->render('ZizooBaseBundle:Dashboard/Boat:price.html.twig', array(
 
         ));
     }
