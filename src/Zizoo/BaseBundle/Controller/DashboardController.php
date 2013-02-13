@@ -21,7 +21,7 @@ class DashboardController extends Controller {
     {
         $user = $this->getUser();
         
-        return $this->render('ZizooBaseBundle:Dashboard:user_widget.html.twig', array(
+        return $this->render('ZizooBaseBundle::user_widget.html.twig', array(
             'user' => $user,
             'owner' => 'Owner',
             'skipper' => 'Skipper'

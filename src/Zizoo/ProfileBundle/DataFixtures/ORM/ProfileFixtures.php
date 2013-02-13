@@ -163,7 +163,6 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
         $profile->setLastName('Gonzo');
         $profile->setAbout('If I am not me, then who de hell am I');
         $profile->setPhone('006666666');
-        $profile->setPicture('benny_1.png');
         $profile->setCreated(new \DateTime());
         $profile->setUpdated($profile->getCreated());
         $profile->setUser($manager->merge($this->getReference($ref)));

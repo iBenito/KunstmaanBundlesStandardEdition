@@ -6,11 +6,13 @@
             <img src="{{ asset(user.profile|pictureWebPath) }}" alt="image not found" class="large" />
         {% endif %}
     </div>
-    <h1>{{ user.profile.firstName }} {{ user.profile.lastName }}</h1>
+    <h3>{{ user.profile.firstName }} {{ user.profile.lastName }}</h3>
 
     <a id="add_boat" href="{{ path('ZizooBaseBundle_dashboard_boat_new') }}">Add Boat</a>
     <a id="add_skills" href="{{ path('ZizooBaseBundle_dashboard_skills') }}">Add Skills</a>
 </div>
+
+<hr />
 
 <div class="dashboard_navigation">
     <ul class="nav">

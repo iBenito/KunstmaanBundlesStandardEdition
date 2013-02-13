@@ -57,7 +57,7 @@ class Profile
     protected $picture;
     
     /**
-     * 
+     * Virtual 'file' for temporary file upload
      */
     public $file;
     

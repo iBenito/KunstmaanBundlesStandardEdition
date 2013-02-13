@@ -2,8 +2,6 @@
 // src/Zizoo/UserBundle/Entity/User.php
 namespace Zizoo\UserBundle\Entity;
 
-use FOS\MessageBundle\Model\ParticipantInterface;
-
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
@@ -13,12 +11,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * Zizoo\UserBundle\Entity\User
  *
- * @ORM\Table(name="user")
+ * @ORM\Table(name="users")
  * @ORM\Entity(repositoryClass="Zizoo\UserBundle\Entity\UserRepository")
- * @UniqueEntity(fields="username", groups={"registration"}, message="zizoo_user.error.user_taken")
- * @UniqueEntity(fields="email", groups={"registration"}, message="zizoo_user.error.email_taken")
+ * @UniqueEntity(fields="username", message="zizoo_user.error.user_taken")
+ * @UniqueEntity(fields="email", message="zizoo_user.error.email_taken")
  */
-class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
+class User implements AdvancedUserInterface, \Serializable
 {
     
     /**
@@ -42,7 +40,6 @@ class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
      * @ORM\Column(type="string", length=255)
      */
     private $password;
-    private $newPassword;
     
     /**
      * @ORM\Column(type="string", length=60, unique=true)
@@ -58,21 +55,6 @@ class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
      * @ORM\Column(name="confirmation_token", type="string", length=255, nullable=true)
      */
     private $confirmationToken;
-    
-    /**
-     * @ORM\Column(name="fb_uid", type="string", length=255, nullable=true)
-     */
-    private $facebookUID;
-     
-    /**
-     * @ORM\OneToMany(targetEntity="Zizoo\MessageBundle\Entity\Contact", mappedBy="sender")
-     */
-    private $myContacts;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Zizoo\MessageBundle\Entity\Contact", mappedBy="recipient")
-     */
-    private $contactsWithMe;
     
     
     public function isAccountNonExpired()
@@ -96,32 +78,20 @@ class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
     }
     
     /**
+     * @ORM\OneToOne(targetEntity="Profile", mappedBy="user")
+     **/
+    private $profile;
+    
+    /**
      * @ORM\ManyToMany(targetEntity="Group", inversedBy="users")
      *
      */
     private $groups;
 
-    /**
-     * @ORM\OneToOne(targetEntity="\Zizoo\SkipperBundle\Entity\Skills", mappedBy="user")
-     **/
-    private $skills;
-    
-    /**
-     * @ORM\OneToOne(targetEntity="\Zizoo\ProfileBundle\Entity\Profile", mappedBy="user")
-     **/
-    private $profile;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="\Zizoo\BoatBundle\Entity\Boat", mappedBy="user")
-     */
-    private $boats;
-    
     public function __construct()
     {
         $this->isActive = false;
         $this->groups = new ArrayCollection();
-        
-        $this->boats = new ArrayCollection();
     }
 
 
@@ -147,10 +117,6 @@ class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
     public function getPassword()
     {
         return $this->password;
-    }
-    
-    public function getNewPassword(){
-        return $this->newPassword;
     }
 
     /**
@@ -185,6 +151,8 @@ class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
         ) = unserialize($serialized);
     }
     
+  
+
     /**
      * Get id
      *
@@ -233,13 +201,7 @@ class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
     
         return $this;
     }
-    
-    public function setNewPassword($newPassword){
-        $this->newPassword = $newPassword;
-        
-        return $this;
-    }
-    
+
     /**
      * Set email
      *
@@ -347,10 +309,10 @@ class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
     /**
      * Set profile
      *
-     * @param \Zizoo\ProfileBundle\Entity\Profile $profile
+     * @param \Zizoo\UserBundle\Entity\Profile $profile
      * @return User
      */
-    public function setProfile(\Zizoo\ProfileBundle\Entity\Profile $profile = null)
+    public function setProfile(\Zizoo\UserBundle\Entity\Profile $profile = null)
     {
         $this->profile = $profile;
     
@@ -360,134 +322,10 @@ class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
     /**
      * Get profile
      *
-     * @return \Zizoo\ProfileBundle\Entity\Profile 
+     * @return \Zizoo\UserBundle\Entity\Profile 
      */
     public function getProfile()
     {
         return $this->profile;
     }
-
-    /**
-     * Set facebookUID
-     *
-     * @param string $facebookUID
-     * @return User
-     */
-    public function setFacebookUID($facebookUID)
-    {
-        $this->facebookUID = $facebookUID;
-    
-        return $this;
-    }
-
-    /**
-     * Get facebookUID
-     *
-     * @return string 
-     */
-    public function getFacebookUID()
-    {
-        return $this->facebookUID;
-    }
-    
-    public function __toString(){
-        return '' . $this->username . '';
-    }
-
-    /**
-     * Add myContacts
-     *
-     * @param \Zizoo\MessageBundle\Entity\Contact $myContacts
-     * @return User
-     */
-    public function addMyContact(\Zizoo\MessageBundle\Entity\Contact $myContacts)
-    {
-        $this->myContacts[] = $myContacts;
-    
-        return $this;
-    }
-
-    /**
-     * Remove myContacts
-     *
-     * @param \Zizoo\MessageBundle\Entity\Contact $myContacts
-     */
-    public function removeMyContact(\Zizoo\MessageBundle\Entity\Contact $myContacts)
-    {
-        $this->myContacts->removeElement($myContacts);
-    }
-
-    /**
-     * Get myContacts
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getMyContacts()
-    {
-        return $this->myContacts;
-    }
-
-    /**
-     * Add contactsWithMe
-     *
-     * @param \Zizoo\MessageBundle\Entity\Contact $contactsWithMe
-     * @return User
-     */
-    public function addContactsWithMe(\Zizoo\MessageBundle\Entity\Contact $contactsWithMe)
-    {
-        $this->contactsWithMe[] = $contactsWithMe;
-    
-        return $this;
-    }
-
-    /**
-     * Remove contactsWithMe
-     *
-     * @param \Zizoo\MessageBundle\Entity\Contact $contactsWithMe
-     */
-    public function removeContactsWithMe(\Zizoo\MessageBundle\Entity\Contact $contactsWithMe)
-    {
-        $this->contactsWithMe->removeElement($contactsWithMe);
-    }
-
-    /**
-     * Get contactsWithMe
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getContactsWithMe()
-    {
-        return $this->contactsWithMe;
-    }
-    
-    /**
-     * Add boat
-     *
-     * @param \Zizoo\BoatBundle\Entity\Boat
-     * @return User
-     */
-    public function addBoat(\Zizoo\BoatBundle\Entity\Boat $boat) {
-        $this->boats[] = $boat;
-
-        return $this;
-    }
-
-    /**
-     * Remove boat
-     *
-     * @param \Zizoo\BoatBundle\Entity\Boat $boat
-     */
-    public function removeBoat(\Zizoo\BoatBundle\Entity\Boat $boat) {
-        $this->boats->removeElement($boat);
-    }
-
-    /**
-     * Get boats
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getBoats() {
-        return $this->boats;
-    }
-    
 }

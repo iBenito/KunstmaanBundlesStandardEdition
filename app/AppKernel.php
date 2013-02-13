@@ -32,7 +32,9 @@ class AppKernel extends Kernel
             new Zizoo\AddressBundle\ZizooAddressBundle(),
             new Zizoo\MessageBundle\ZizooMessageBundle(),
             new Zizoo\JqGridCustomBundle\ZizooJqGridCustomBundle(),
-            new PunkAve\FileUploaderBundle\PunkAveFileUploaderBundle()
+            new PunkAve\FileUploaderBundle\PunkAveFileUploaderBundle(),
+            new Zizoo\SkipperBundle\ZizooSkipperBundle(),
+            new Zizoo\BillingBundle\ZizooBillingBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

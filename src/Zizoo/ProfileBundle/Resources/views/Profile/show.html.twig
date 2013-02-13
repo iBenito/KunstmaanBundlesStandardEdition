@@ -7,7 +7,11 @@
     <div class="span4 hero-unit">
         <section class="user">
             <h2>PICTURE BOX</h2>
-            <h2>{{ user.username }}</h2>
+            <div class="avatar">
+                {% if user.profile.picture is not null %}
+                    <img src="{{ asset(user.profile|pictureWebPath) }}" alt="image not found" class="large" />
+                {% endif %}
+            </div>
             <p>{{ user.profile.firstName }} {{ user.profile.lastName }}</p>
         </section>
     </div>
