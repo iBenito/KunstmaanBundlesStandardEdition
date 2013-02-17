@@ -80,7 +80,7 @@ class BoatController extends Controller
         ));
     }
     /**
-     * Create form for Boat
+     * Create input form for Boat
      *
      * @author Benito Gonzalez <vbenitogo@gmail.com>
      */
@@ -103,12 +103,41 @@ class BoatController extends Controller
         }
         $existingFiles = $this->get('punk_ave.file_uploader')->getFiles(array('folder' => 'tmp/attachments/' . $editId));
         
+        /** @var Ivory\GoogleMapBundle\Model\Map */
+        $map = $this->get('ivory_google_map.map');
+        $map->setAsync(true);
+        $map->setAutoZoom(false);
+        $map->setCenter(45, 15, true);
+        $map->setMapOption('zoom', 4);
+        $map->setMapOption('disableDefaultUI', true);
+        $map->setMapOption('zoomControl', true);
+        $map->setStylesheetOptions(array(
+            'width' => '600px',
+            'height' => '300px'
+        ));
+        
+        $em = $this->getDoctrine()->getEntityManager();
+        $marinas = $em->getRepository('ZizooAddressBundle:Marina')->getAllMarinas();
+  
+        $markerImage = $this->get('kernel')->getRootDir().'/../web/images/map-pin.png';
+        foreach ($marinas as $marina){
+            $marker = $this->get('ivory_google_map.marker');
+            $marker->setPosition($marina->getLat(), $marina->getLng(), true);
+            $marker->setOption('title', $marina->getName());
+            $marker->setOption('clickable', true);
+            $marker->setIcon('http://www.incrediblue.com/assets/map-pin.png');
+            
+            $map->addMarker($marker);
+        }
+        
+        
         return $this->render('ZizooBoatBundle:Boat:boat_form_widget.html.twig', array(
             'boat' => $boat,
             'form' => $form->createView(),
             'formAction' => $formAction,
             'existingFiles' => $existingFiles,
             'editId' => $editId,
+            'map' => $map,
         ));
     }
     
@@ -148,15 +177,24 @@ class BoatController extends Controller
      */
     public function createAction(Request $request)
     {
-        $boat = new Profile();
+        $boat = new Boat();
         $form = $this->createForm(new BoatType(), $boat);
         $form->bind($request);
 
+        $editId = $this->getRequest()->get('editId');
+        
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($boat);
             $em->flush();
 
+            $fileUploader = $this->get('punk_ave.file_uploader');
+            $fileUploader->syncFiles(
+                array('from_folder' => '/tmp/attachments/' . $editId,
+                'to_folder' => '../images/boats/' . $boat->getId(),
+                'remove_from_folder' => true,
+                'create_to_folder' => true));
+            
             return $this->redirect($this->generateUrl('ZizooBoatBundle_show', array('id' => $boat->getId())));
         }
 

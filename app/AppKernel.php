@@ -35,6 +35,7 @@ class AppKernel extends Kernel
             new PunkAve\FileUploaderBundle\PunkAveFileUploaderBundle(),
             new Zizoo\SkipperBundle\ZizooSkipperBundle(),
             new Zizoo\BillingBundle\ZizooBillingBundle(),
+            new Ivory\GoogleMapBundle\IvoryGoogleMapBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

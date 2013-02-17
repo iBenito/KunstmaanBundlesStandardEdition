@@ -22,11 +22,11 @@
                             <li><a href="{{ path('ZizooBookingBundle_view_all_bookings') }}">My Bookings</a></li>
                             <li class="divider"></li>
                             <li class="nav-header">Account</li>
-                            <li><a href="#">Settings</a></li>
+                            <li><a href="{{ path('ZizooBaseBundle_dashboard_account') }}">Settings</a></li>
                             <li><a href="{{ path('ZizooUserBundle_logout') }}">Logout</a></li>
                         </ul>
                     </li>
-                    <li class="add-boat"><a href="#">Add Boat</a></li>
+                    <li class="add-boat"><a href="{{ path('ZizooBaseBundle_dashboard_boat_new') }}">Add Boat</a></li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div>

@@ -1,7 +1,8 @@
 <?php
 // src/Zizoo/AddressBundle/Form/Type/AddressType.php
-namespace Zizoo\AddresBundle\Form\Type;
+namespace Zizoo\AddressBundle\Form\Type;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
