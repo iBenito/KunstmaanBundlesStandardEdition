@@ -1,6 +1,7 @@
 <?php
 
 namespace Zizoo\BoatBundle\Form;
+use Zizoo\AddressBundle\Form\Type\AddressType;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -8,6 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class BoatType extends AbstractType
 {
+  
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -21,6 +23,14 @@ class BoatType extends AbstractType
             ->add('bathrooms')
             ->add('nr_guests')
             ->add('bathrooms')
+            ->add('boat_type', 'entity', array(
+                'class' => 'ZizooBoatBundle:BoatType',
+                'property' => 'name',))
+            ->add('address',new AddressType())
+//            ->add('address', 'entity', array(
+//                'class' => 'ZizooAddressBundle:Country',
+//                'property' => 'name',
+//                ))
         ;
     }
 

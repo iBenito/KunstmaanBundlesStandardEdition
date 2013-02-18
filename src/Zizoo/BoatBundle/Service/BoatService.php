@@ -33,16 +33,8 @@ class BoatService {
         }
     }
     
-    public function createBoat($name, $title, $description, $brand, $model, $length, $cabins, $numGuests, $defaultPrice, BoatAddress $address, BoatType $boatType, ArrayCollection $prices=null){
-        $boat = new Boat();
-        $boat->setName($name);
-        $boat->setTitle($title);
-        $boat->setDescription($description);
-        $boat->setBrand($brand);
-        $boat->setModel($model);
-        $boat->setLength($length);
-        $boat->setCabins($cabins);
-        $boat->setNrGuests($numGuests);
+    public function createBoat(Boat $boat, BoatAddress $address, BoatType $boatType, ArrayCollection $prices=null){
+
         $boat->setBoatType($boatType);
         $boat->setDefaultPrice($defaultPrice);
         

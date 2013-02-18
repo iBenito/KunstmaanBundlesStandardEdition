@@ -1,5 +1,6 @@
 <?php
 namespace Zizoo\ProfileBundle\Entity;
+use Zizoo\BaseBundle\Entity\BaseEntity;
 
 use Zizoo\ProfileBundle\Entity\Profile\NotificationSettings;
 
@@ -11,15 +12,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="profile")
  * @ORM\HasLifecycleCallbacks
  */
-class Profile
+class Profile extends BaseEntity
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-    
     /**
      * @ORM\OneToOne(targetEntity="Zizoo\UserBundle\Entity\User", inversedBy="profile")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
@@ -57,19 +51,9 @@ class Profile
     protected $picture;
     
     /**
-     * 
+     * @var File  - not a persisted field!
      */
     public $file;
-    
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $created;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $updated;
    
     /**
      * @ORM\OneToOne(targetEntity="Zizoo\ProfileBundle\Entity\Profile\NotificationSettings", cascade={"persist"})
@@ -237,6 +221,7 @@ class Profile
             $filename = sha1(uniqid(mt_rand(), true));
             $this->picture = $filename.'.'.$this->file->guessExtension();
         }
+
     }
    
     /**
@@ -306,52 +291,6 @@ class Profile
         // get rid of the __DIR__ so it doesn't screw up
         // when displaying uploaded doc/image in the view.
         return 'images/profile/'.$this->id;
-    }
-    
-    /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Profile
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-    
-        return $this;
-    }
-
-    /**
-     * Get created
-     *
-     * @return \DateTime 
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     * @return Profile
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-    
-        return $this;
-    }
-
-    /**
-     * Get updated
-     *
-     * @return \DateTime 
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
     }
     
     /**

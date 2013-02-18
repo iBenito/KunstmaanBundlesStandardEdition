@@ -50,6 +50,15 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
     
     public function load(ObjectManager $manager)
     {
+        $boat1 = new Boat();
+        $boat1->setName('Sandali');
+        $boat1->setTitle('The Ocean Explorer');
+        $boat1->setDescription('Lorem ipsum dolor sit amet, consectetur adipiscing eletra electrify denim vel ports.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut velocity magna. Etiam vehicula nunc non leo hendrerit commodo. Vestibulum vulputate mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras el mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras elementum molestie vestibulum. Morbi id quam nisl. Praesent hendrerit, orci sed elementum lobortis, justo mauris lacinia libero, non facilisis purus ipsum non mi. Aliquam sollicitudin, augue id vestibulum iaculis, sem lectus convallis nunc, vel scelerisque lorem tortor ac nunc. Donec pharetra eleifend enim vel porta.');
+        $boat1->setBrand('Seasy');
+        $boat1->setModel('911');
+        $boat1->setLength(5);
+        $boat1->setCabins(6);
+        $boat1->setNrGuests(12);
         
         $boatService = $this->container->get('boat_service');
         $boatTypeRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooBoatBundle:BoatType');   
@@ -70,8 +79,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat1Price->setAvailableUntil($to);
         $boat1Price->setPrice(9.99);
                 
-        $description = 'Lorem ipsum dolor sit amet, consectetur adipiscing eletra electrify denim vel ports.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut velocity magna. Etiam vehicula nunc non leo hendrerit commodo. Vestibulum vulputate mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras el mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras elementum molestie vestibulum. Morbi id quam nisl. Praesent hendrerit, orci sed elementum lobortis, justo mauris lacinia libero, non facilisis purus ipsum non mi. Aliquam sollicitudin, augue id vestibulum iaculis, sem lectus convallis nunc, vel scelerisque lorem tortor ac nunc. Donec pharetra eleifend enim vel porta.';
-        $boat1 = $boatService->createBoat('Sandali', 'The Ocean Explorer', $description, 'Seasy', '911', 5, 6, 12, 6.66, $boat1Address, $boatTypeRepo->findOneByName('Yacht'), new ArrayCollection(array($boat1Price)));
+        $boat1 = $boatService->createBoat($boat1, $boat1Address, $boatTypeRepo->findOneByName('Yacht'), new ArrayCollection(array($boat1Price)));
         
         //$boatService->addPrice($boat1, $from, $to, 9.99);
         
@@ -79,6 +87,16 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $manager->persist($boat1);
         $this->addReference('boat-1', $boat1);
         
+        $boat2 = new Boat();
+        $boat2->setName('Infinity');
+        $boat2->setTitle('Forever Wherever');
+        $boat2->setDescription('Lorem ipsum dolor sit amet, consectetur adipiscing eletra electrify denim vel ports.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut velocity magna. Etiam vehicula nunc non leo hendrerit commodo. Vestibulum vulputate mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras el mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras elementum molestie vestibulum. Morbi id quam nisl. Praesent hendrerit, orci sed elementum lobortis, justo mauris lacinia libero, non facilisis purus ipsum non mi. Aliquam sollicitudin, augue id vestibulum iaculis, sem lectus convallis nunc, vel scelerisque lorem tortor ac nunc. Donec pharetra eleifend enim vel porta.');
+        $boat2->setBrand('Floats');
+        $boat2->setModel('912');
+        $boat2->setLength(12);
+        $boat2->setCabins(5);
+        $boat2->setNrGuests(1);
+
         $boat2Address = new BoatAddress();
         $boat2Address->setStreet('Alicante Marina');
         $boat2Address->setPremise('84');
@@ -87,15 +105,22 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat2Address->setProvince('Some spanish province');
         $boat2Address->setCountry($manager->merge($this->getReference('countryES')));
         
-        $description = 'Lorem ipsum dolor sit amet, consectetur adipiscing eletra electrify denim vel ports.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut velocity magna. Etiam vehicula nunc non leo hendrerit commodo. Vestibulum vulputate mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras el mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras elementum molestie vestibulum. Morbi id quam nisl. Praesent hendrerit, orci sed elementum lobortis, justo mauris lacinia libero, non facilisis purus ipsum non mi. Aliquam sollicitudin, augue id vestibulum iaculis, sem lectus convallis nunc, vel scelerisque lorem tortor ac nunc. Donec pharetra eleifend enim vel porta.';
-        $boat2 = $boatService->createBoat('Infinity', 'Forever Wherever', $description, 'Floats', '912', 12, 5, 11, 7.89, $boat2Address, $boatTypeRepo->findOneByName('Yacht'));
+        $boat2 = $boatService->createBoat($boat2, $boat2Address, $boatTypeRepo->findOneByName('Yacht'), new ArrayCollection(array($boat2Availability, $boat2Availability2, $boat2Availability3)));
         
         $boat2->setUser($manager->merge($this->getReference('user-2')));
         $manager->persist($boat2);
         
         $this->addReference('boat-2', $boat2);
         
-        
+        $boat3 = new Boat();
+        $boat3->setName('Serenity');
+        $boat3->setTitle('Firefly');
+        $boat3->setDescription('Lorem ipsum dolor sit amet, consectetur adipiscing eletra electrify denim vel ports.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut velocity magna. Etiam vehicula nunc non leo hendrerit commodo. Vestibulum vulputate mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras el mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras elementum molestie vestibulum. Morbi id quam nisl. Praesent hendrerit, orci sed elementum lobortis, justo mauris lacinia libero, non facilisis purus ipsum non mi. Aliquam sollicitudin, augue id vestibulum iaculis, sem lectus convallis nunc, vel scelerisque lorem tortor ac nunc. Donec pharetra eleifend enim vel porta.');
+        $boat3->setBrand('Floats');
+        $boat3->setModel('911');
+        $boat3->setLength(5);
+        $boat3->setCabins(6);
+        $boat3->setNrGuests(20);
 
         $boat3Address = new BoatAddress();
         $boat3Address->setStreet('Brighton Marina');
@@ -104,14 +129,23 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat3Address->setPostcode('BN1 1NB');
         $boat3Address->setCountry($manager->merge($this->getReference('countryGB')));   
         
-        $description = 'Lorem ipsum dolor sit amet, consectetur adipiscing eletra electrify denim vel ports.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut velocity magna. Etiam vehicula nunc non leo hendrerit commodo. Vestibulum vulputate mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras el mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras elementum molestie vestibulum. Morbi id quam nisl. Praesent hendrerit, orci sed elementum lobortis, justo mauris lacinia libero, non facilisis purus ipsum non mi. Aliquam sollicitudin, augue id vestibulum iaculis, sem lectus convallis nunc, vel scelerisque lorem tortor ac nunc. Donec pharetra eleifend enim vel porta.';
-        $boat3 = $boatService->createBoat('Serenity', 'Firefly', $description, 'Floats', '911', 5, 6, 20, 99.99, $boat3Address, $boatTypeRepo->findOneByName('Yacht'));
+
+        $boat3 = $boatService->createBoat($boat3, $boat3Address, $boatTypeRepo->findOneByName('Yacht'));
         
         $boat3->setUser($manager->merge($this->getReference('user-2')));
         $manager->persist($boat3);
         
         $this->addReference('boat-3', $boat3);
         
+        $boat4 = new Boat();
+        $boat4->setName('Enterprise');
+        $boat4->setTitle('TNG');
+        $boat4->setDescription('Lorem ipsum dolor sit amet, consectetur adipiscing eletra electrify denim vel ports.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut velocity magna. Etiam vehicula nunc non leo hendrerit commodo. Vestibulum vulputate mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras el mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras elementum molestie vestibulum. Morbi id quam nisl. Praesent hendrerit, orci sed elementum lobortis, justo mauris lacinia libero, non facilisis purus ipsum non mi. Aliquam sollicitudin, augue id vestibulum iaculis, sem lectus convallis nunc, vel scelerisque lorem tortor ac nunc. Donec pharetra eleifend enim vel porta.');
+        $boat4->setBrand('Seasy');
+        $boat4->setModel('911');
+        $boat4->setLength(50);
+        $boat4->setCabins(20);
+        $boat4->setNrGuests(40);
 
         $boat4Address = new BoatAddress();
         $boat4Address->setStreet('Bristol Harbour');
@@ -120,8 +154,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat4Address->setPostcode('BS1 5QA');
         $boat4Address->setCountry($manager->merge($this->getReference('countryGB')));
         
-        $description = 'Lorem ipsum dolor sit amet, consectetur adipiscing eletra electrify denim vel ports.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut velocity magna. Etiam vehicula nunc non leo hendrerit commodo. Vestibulum vulputate mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras el mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras elementum molestie vestibulum. Morbi id quam nisl. Praesent hendrerit, orci sed elementum lobortis, justo mauris lacinia libero, non facilisis purus ipsum non mi. Aliquam sollicitudin, augue id vestibulum iaculis, sem lectus convallis nunc, vel scelerisque lorem tortor ac nunc. Donec pharetra eleifend enim vel porta.';
-        $boat4 = $boatService->createBoat('Enterprise', 'TNG', $description, 'Seasy', '911', 50, 20, 40, 100000, $boat4Address, $boatTypeRepo->findOneByName('Yacht'));
+        $boat4 = $boatService->createBoat($boat4, $boat4Address, $boatTypeRepo->findOneByName('Yacht'));
         
         $boat4->setUser($manager->merge($this->getReference('user-2')));
         $manager->persist($boat4);

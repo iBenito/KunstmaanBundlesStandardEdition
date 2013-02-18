@@ -1,0 +1,30 @@
+skills:
+    pattern:  /
+    defaults: { _controller: "ZizooSkipperBundle:Skills:index" }
+
+skills_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "ZizooSkipperBundle:Skills:show" }
+
+skills_new:
+    pattern:  /new
+    defaults: { _controller: "ZizooSkipperBundle:Skills:new" }
+
+skills_create:
+    pattern:  /create
+    defaults: { _controller: "ZizooSkipperBundle:Skills:create" }
+    requirements: { _method: post }
+
+skills_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "ZizooSkipperBundle:Skills:edit" }
+
+skills_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "ZizooSkipperBundle:Skills:update" }
+    requirements: { _method: post }
+
+skills_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "ZizooSkipperBundle:Skills:delete" }
+    requirements: { _method: post }

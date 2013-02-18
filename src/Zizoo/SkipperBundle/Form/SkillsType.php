@@ -1,34 +1,33 @@
 <?php
-// src/Zizoo/AddressBundle/Form/Type/AddressType.php
-namespace Zizoo\AddressBundle\Form\Type;
+
+namespace Zizoo\SkipperBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class AddressType extends AbstractType
+class SkillsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('street', 'text')
-            ->add('premise', 'text')
-            ->add('postcode', 'text')
-            ->add('locality', 'text')
-            ->add('sub_locality', 'text')
-            ->add('country', 'text');
+            ->add('license')
+            ->add('experience')
+            ->add('created')
+            ->add('updated')
+            ->add('user')
+        ;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'virtual' => true
+            'data_class' => 'Zizoo\SkipperBundle\Entity\Skills'
         ));
     }
 
     public function getName()
     {
-        return 'address';
+        return 'zizoo_skipperbundle_skillstype';
     }
 }
-?>

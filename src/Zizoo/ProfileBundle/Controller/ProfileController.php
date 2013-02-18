@@ -87,6 +87,9 @@ class ProfileController extends Controller
 
         if ($editForm->isValid()) {
             
+            //setting the updated field manually for file upload DO NOT REMOVE
+            $profile->setUpdated(new \DateTime());
+            
             $em->persist($profile);
             $em->flush();
             

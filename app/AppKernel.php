@@ -33,6 +33,9 @@ class AppKernel extends Kernel
             new Zizoo\MessageBundle\ZizooMessageBundle(),
             new Zizoo\JqGridCustomBundle\ZizooJqGridCustomBundle(),
             new PunkAve\FileUploaderBundle\PunkAveFileUploaderBundle(),
+            new Zizoo\SkipperBundle\ZizooSkipperBundle(),
+            new Zizoo\BillingBundle\ZizooBillingBundle(),
+            new Ivory\GoogleMapBundle\IvoryGoogleMapBundle(),
             new Zizoo\ReservationBundle\ZizooReservationBundle(),
         );
 
