@@ -6,12 +6,12 @@ ZizooBookingBundle_book:
                 
 ZizooBookingBundle_view_booking:
     pattern: /booking/{id}
-    defaults: { _controller: ZizooBookingBundle:Booking:viewReservation }
+    defaults: { _controller: ZizooBookingBundle:Booking:viewBooking }
     requirements:
         _method:  GET
         
 ZizooBookingBundle_view_all_bookings:
     pattern: /bookings
-    defaults: { _controller: ZizooBookingBundle:Booking:viewAllReservations }
+    defaults: { _controller: ZizooBookingBundle:Booking:viewAllBookings }
     requirements:
         _method:  GET

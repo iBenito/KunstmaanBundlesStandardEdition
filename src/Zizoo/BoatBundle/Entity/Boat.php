@@ -85,14 +85,19 @@ class Boat
     protected $image;
     
     /**
-     * @ORM\OneToMany(targetEntity="Zizoo\BookingBundle\Entity\Reservation", mappedBy="boat")
+     * @ORM\OneToMany(targetEntity="Zizoo\ReservationBundle\Entity\Reservation", mappedBy="boat")
      */
     protected $reservation;
     
     /**
-     * @ORM\OneToMany(targetEntity="Zizoo\BoatBundle\Entity\Availability", mappedBy="boat")
+     * @ORM\Column(name="default_price", type="decimal", precision=19, scale=4)
      */
-    protected $availability;
+    protected $defaultPrice;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Zizoo\BoatBundle\Entity\Price", mappedBy="boat")
+     */
+    protected $price;
     
     /**
      * @ORM\ManyToOne(targetEntity="Zizoo\BoatBundle\Entity\BoatType")
@@ -120,6 +125,7 @@ class Boat
         $this->status       = 0;
     }
     
+
     /**
      * Get id
      *
@@ -130,29 +136,6 @@ class Boat
         return $this->id;
     }
 
-    /**
-     * Set user
-     *
-     * @param \Zizoo\UserBundle\Entity\User $user
-     * @return Boat
-     */
-    public function setUser(\Zizoo\UserBundle\Entity\User $user = null)
-    {
-        $this->user = $user;
-    
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \Zizoo\UserBundle\Entity\User 
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-    
     /**
      * Set title
      *
@@ -175,7 +158,7 @@ class Boat
     {
         return $this->title;
     }
-    
+
     /**
      * Set name
      *
@@ -220,29 +203,6 @@ class Boat
     public function getDescription()
     {
         return $this->description;
-    }
-
-    /**
-     * Set city
-     *
-     * @param string $city
-     * @return Boat
-     */
-    public function setCity($city)
-    {
-        $this->city = $city;
-    
-        return $this;
-    }
-
-    /**
-     * Get city
-     *
-     * @return string 
-     */
-    public function getCity()
-    {
-        return $this->city;
     }
 
     /**
@@ -453,36 +413,49 @@ class Boat
     }
 
     /**
-     * Add reservation
+     * Set user
      *
-     * @param \Zizoo\BookingBundle\Entity\Reservation $reservation
+     * @param \Zizoo\UserBundle\Entity\User $user
      * @return Boat
      */
-    public function addReservation(\Zizoo\BookingBundle\Entity\Reservation $reservation)
+    public function setUser(\Zizoo\UserBundle\Entity\User $user = null)
     {
-        $this->reservation[] = $reservation;
+        $this->user = $user;
     
         return $this;
     }
 
     /**
-     * Remove reservation
+     * Get user
      *
-     * @param \Zizoo\BookingBundle\Entity\Reservation $reservation
+     * @return \Zizoo\UserBundle\Entity\User 
      */
-    public function removeReservation(\Zizoo\BookingBundle\Entity\Reservation $reservation)
+    public function getUser()
     {
-        $this->reservation->removeElement($reservation);
+        return $this->user;
     }
 
     /**
-     * Get reservation
+     * Set address
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @param \Zizoo\AddressBundle\Entity\BoatAddress $address
+     * @return Boat
      */
-    public function getReservation()
+    public function setAddress(\Zizoo\AddressBundle\Entity\BoatAddress $address = null)
     {
-        return $this->reservation;
+        $this->address = $address;
+    
+        return $this;
+    }
+
+    /**
+     * Get address
+     *
+     * @return \Zizoo\AddressBundle\Entity\BoatAddress 
+     */
+    public function getAddress()
+    {
+        return $this->address;
     }
 
     /**
@@ -518,98 +491,115 @@ class Boat
         return $this->image;
     }
 
-
     /**
-     * Add addresses
+     * Add reservation
      *
-     * @param \Zizoo\AddressBundle\Entity\BoatAddress $address
+     * @param \Zizoo\ReservationBundle\Entity\Reservation $reservation
      * @return Boat
      */
-    public function addAddress(\Zizoo\AddressBundle\Entity\BoatAddress $address)
+    public function addReservation(\Zizoo\ReservationBundle\Entity\Reservation $reservation)
     {
-        $this->addresses[] = $address;
-    
-        return $this;
-    }
-
-    
-    /**
-     * Add availability
-     *
-     * @param \Zizoo\BoatBundle\Entity\Availability $availability
-     * @return Boat
-     */
-    public function addAvailability(\Zizoo\BoatBundle\Entity\Availability $availability)
-    {
-        $this->availability[] = $availability;
+        $this->reservation[] = $reservation;
     
         return $this;
     }
 
     /**
-     * Remove availability
+     * Remove reservation
      *
-     * @param \Zizoo\BoatBundle\Entity\Availability $availability
+     * @param \Zizoo\ReservationBundle\Entity\Reservation $reservation
      */
-    public function removeAvailability(\Zizoo\BoatBundle\Entity\Availability $availability)
+    public function removeReservation(\Zizoo\ReservationBundle\Entity\Reservation $reservation)
     {
-        $this->availability->removeElement($availability);
+        $this->reservation->removeElement($reservation);
     }
 
     /**
-     * Get availability
+     * Get reservation
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getAvailability()
+    public function getReservation()
     {
-        return $this->availability;
+        return $this->reservation;
     }
 
     /**
-     * Set address
+     * Add price
      *
-     * @param \Zizoo\AddressBundle\Entity\BoatAddress $address
+     * @param \Zizoo\BoatBundle\Entity\Price $price
      * @return Boat
      */
-    public function setAddress(\Zizoo\AddressBundle\Entity\BoatAddress $address = null)
+    public function addPrice(\Zizoo\BoatBundle\Entity\Price $price)
     {
-        $this->address = $address;
+        $this->price[] = $price;
     
         return $this;
     }
 
     /**
-     * Get address
+     * Remove price
      *
-     * @return \Zizoo\AddressBundle\Entity\BoatAddress 
+     * @param \Zizoo\BoatBundle\Entity\Price $price
      */
-    public function getAddress()
+    public function removePrice(\Zizoo\BoatBundle\Entity\Price $price)
     {
-        return $this->address;
+        $this->price->removeElement($price);
     }
-    
-    
+
     /**
-     * Set type
+     * Get price
      *
-     * @param BoatType $type
-     * @return Message
+     * @return \Doctrine\Common\Collections\Collection 
      */
-    public function setBoatType($type)
+    public function getPrice()
     {
-        $this->boatType = $type;
+        return $this->price;
+    }
+
+    /**
+     * Set boatType
+     *
+     * @param \Zizoo\BoatBundle\Entity\BoatType $boatType
+     * @return Boat
+     */
+    public function setBoatType(\Zizoo\BoatBundle\Entity\BoatType $boatType = null)
+    {
+        $this->boatType = $boatType;
     
         return $this;
     }
 
     /**
-     * Get type
+     * Get boatType
      *
-     * @return BoatType 
+     * @return \Zizoo\BoatBundle\Entity\BoatType 
      */
     public function getBoatType()
     {
         return $this->boatType;
+    }
+
+    /**
+     * Set defaultPrice
+     *
+     * @param float $defaultPrice
+     * @return Boat
+     */
+    public function setDefaultPrice($defaultPrice)
+    {
+        $this->defaultPrice = $defaultPrice;
+    
+        return $this;
+    }
+
+    /**
+     * Get defaultPrice
+     *
+     * @return float 
+     */
+    public function getDefaultPrice()
+    {
+        return $this->defaultPrice;
     }
 }

@@ -5,7 +5,7 @@ use Zizoo\MessageBundle\Entity\Message;
 use Zizoo\MessageBundle\Entity\MessageRecipient;
 use Zizoo\ProfileBundle\Entity\Profile;
 use Zizoo\ProfileBundle\Entity\Profile\NotificationSettings;
-use Zizoo\BookingBundle\Entity\Reservation;
+use Zizoo\ReservationBundle\Entity\Reservation;
 use Zizoo\UserBundle\Entity\User;
 use Zizoo\UserBundle\Form\Model\Invitation;
 

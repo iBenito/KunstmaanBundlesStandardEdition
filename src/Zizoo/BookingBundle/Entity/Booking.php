@@ -4,11 +4,11 @@ namespace Zizoo\BookingBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Zizoo\BookingBundle\Entity\ReservationRepository")
- * @ORM\Table(name="reservation")
+ * @ORM\Entity(repositoryClass="Zizoo\BookingBundle\Entity\BookingRepository")
+ * @ORM\Table(name="booking")
  * @ORM\HasLifecycleCallbacks()
  */
-class Reservation
+class Booking
 {
      /**
      * @ORM\Id
@@ -18,26 +18,11 @@ class Reservation
     protected $id;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Zizoo\BoatBundle\Entity\Boat", inversedBy="reservation")
-     * @ORM\JoinColumn(name="boat_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="Zizoo\ReservationBundle\Entity\Reservation", inversedBy="booking")
+     * @ORM\JoinColumn(name="reservation_id", referencedColumnName="id", nullable=false)
      */
-    protected $boat;
+    protected $reservation;
         
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $check_in;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $check_out;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    protected $nr_guests;
-    
     /**
      * @ORM\Column(type="smallint")
      */
@@ -67,7 +52,7 @@ class Reservation
     protected $cost;
     
     /**
-     * @ORM\OneToMany(targetEntity="Zizoo\BookingBundle\Entity\Payment", mappedBy="reservation")
+     * @ORM\OneToMany(targetEntity="Zizoo\BookingBundle\Entity\Payment", mappedBy="booking")
      */
     protected $payment;
     
@@ -76,6 +61,7 @@ class Reservation
         $this->setCreated(new \DateTime());
         $this->setUpdated(new \DateTime());
     }
+
 
     /**
      * Get id
@@ -88,56 +74,33 @@ class Reservation
     }
 
     /**
-     * Set check_in
+     * Set status
      *
-     * @param \DateTime $checkIn
-     * @return Reservation
+     * @param integer $status
+     * @return Booking
      */
-    public function setCheckIn($checkIn)
+    public function setStatus($status)
     {
-        $this->check_in = $checkIn;
+        $this->status = $status;
     
         return $this;
     }
 
     /**
-     * Get check_in
+     * Get status
      *
-     * @return \DateTime 
+     * @return integer 
      */
-    public function getCheckIn()
+    public function getStatus()
     {
-        return $this->check_in;
-    }
-
-    /**
-     * Set check_out
-     *
-     * @param \DateTime $checkOut
-     * @return Reservation
-     */
-    public function setCheckOut($checkOut)
-    {
-        $this->check_out = $checkOut;
-    
-        return $this;
-    }
-
-    /**
-     * Get check_out
-     *
-     * @return \DateTime 
-     */
-    public function getCheckOut()
-    {
-        return $this->check_out;
+        return $this->status;
     }
 
     /**
      * Set created
      *
      * @param \DateTime $created
-     * @return Reservation
+     * @return Booking
      */
     public function setCreated($created)
     {
@@ -160,7 +123,7 @@ class Reservation
      * Set updated
      *
      * @param \DateTime $updated
-     * @return Reservation
+     * @return Booking
      */
     public function setUpdated($updated)
     {
@@ -180,57 +143,33 @@ class Reservation
     }
 
     /**
-     * Set boat
+     * Set cost
      *
-     * @param \Zizoo\BoatBundle\Entity\Boat $boat
-     * @return Reservation
+     * @param float $cost
+     * @return Booking
      */
-    public function setBoat(\Zizoo\BoatBundle\Entity\Boat $boat = null)
+    public function setCost($cost)
     {
-        $this->boat = $boat;
+        $this->cost = $cost;
     
         return $this;
     }
 
     /**
-     * Get boat
+     * Get cost
      *
-     * @return \Zizoo\BoatBundle\Entity\Boat 
+     * @return float 
      */
-    public function getBoat()
+    public function getCost()
     {
-        return $this->boat;
+        return $this->cost;
     }
-
-    /**
-     * Set status
-     *
-     * @param integer $status
-     * @return Reservation
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    
-        return $this;
-    }
-
-    /**
-     * Get status
-     *
-     * @return integer 
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
 
     /**
      * Set renter
      *
      * @param \Zizoo\UserBundle\Entity\User $renter
-     * @return Reservation
+     * @return Booking
      */
     public function setRenter(\Zizoo\UserBundle\Entity\User $renter = null)
     {
@@ -250,34 +189,10 @@ class Reservation
     }
 
     /**
-     * Set cost
-     *
-     * @param float $cost
-     * @return Reservation
-     */
-    public function setCost($cost)
-    {
-        $this->cost = $cost;
-    
-        return $this;
-    }
-
-    /**
-     * Get cost
-     *
-     * @return float 
-     */
-    public function getCost()
-    {
-        return $this->cost;
-    }
-
-
-    /**
      * Add payment
      *
      * @param \Zizoo\BookingBundle\Entity\Payment $payment
-     * @return Reservation
+     * @return Booking
      */
     public function addPayment(\Zizoo\BookingBundle\Entity\Payment $payment)
     {
@@ -307,25 +222,25 @@ class Reservation
     }
 
     /**
-     * Set nr_guests
+     * Set reservation
      *
-     * @param integer $nrGuests
-     * @return Reservation
+     * @param \Zizoo\ReservationBundle\Entity\Reservation $reservation
+     * @return Booking
      */
-    public function setNrGuests($nrGuests)
+    public function setReservation(\Zizoo\ReservationBundle\Entity\Reservation $reservation = null)
     {
-        $this->nr_guests = $nrGuests;
+        $this->reservation = $reservation;
     
         return $this;
     }
 
     /**
-     * Get nr_guests
+     * Get reservation
      *
-     * @return integer 
+     * @return \Zizoo\ReservationBundle\Entity\Reservation 
      */
-    public function getNrGuests()
+    public function getReservation()
     {
-        return $this->nr_guests;
+        return $this->reservation;
     }
 }

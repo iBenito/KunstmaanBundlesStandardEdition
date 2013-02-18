@@ -7,27 +7,24 @@
         {% set page_index = 0 %}
     {% endif %}
         {% set page_index = page_index + 1 %}
-        <article class="boat{% if boat|bookable(form.get('reservation_from'), form.get('reservation_to'))==false %} booked{% endif %}">
+        {% set reservation_exists = boat|reservationExists(form.vars.value.reservationFrom, form.vars.value.reservationTo) %}
+        <article class="boat{% if reservation_exists %} booked{% endif %}">
             <header>
+                {% if reservation_exists %}
                 <h2>{{ boat.title }}</h2>
+                {% else %}                
+                <h2><a class="boat_{{ boat.id }}" href="{{ path('ZizooBoatBundle_show', {id: boat.id}) }}?zizoo_boat_book[reservation_from]={{ form.vars.value.reservationFrom is empty ? "" : form.vars.value.reservationFrom|date }}&zizoo_boat_book[reservation_to]={{ form.vars.value.reservationTo is empty ? "" : form.vars.value.reservationTo|date }}&zizoo_boat_book[num_guests]={{ form.vars.value.numGuests }}">{{ boat.title }}</a></h2>
+                {% endif %}
             </header>
             <div class="boat_description">
                 <p>{{ boat.description }}</p>
             </div>
 
-
             <section class="details" id="details">
                 <h3>{{ boat.name }}</h3>
                 <p>{% trans %}zizoo_address.label.cities{% endtrans %}: 
                     <ul>
-                        {% if boat.address|duplicateCity == false %}
-                            <li>{{ boat.address.locality }}</li>
-                        {% endif %}
-                        {% for availability in boat.availability %}
-                            {% if availability.address|duplicateCity == false %}
-                                <li>{{ availability.address.locality }}</li>
-                            {% endif %}
-                        {% endfor %}
+                        <li>{{ boat.address.locality }}</li>
                     </ul>
                 </p>
                 <p>{% trans %}zizoo_boat.label.brand{% endtrans %}: {{ boat.brand }}</p>
@@ -70,7 +67,7 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function(){
-        
+
         markers = new Array();
         infoWindows = new Array();
         lastOpenWindow = -1;
@@ -78,16 +75,15 @@
         mc.clearMarkers();
         {% for boat in boats %}
             {% set x = boat|resetDuplicates %}
-            {% if boat|bookable(form.get('reservation_from'), form.get('reservation_to'))==true%}
-                {% for availability in boat.availability %}
-                    {% if availability.address|duplicateLocation == false %}
+            {% if boat|reservationExists(form.vars.value.reservationFrom, form.vars.value.reservationTo)==false%}
+                    
                         infoWindows.push(new google.maps.InfoWindow({
                             content: {% include "ZizooAddressBundle:Address:locations_boat_info_window.html.twig" with {'boat': boat } %}
                         }));
                         markers.push(new google.maps.Marker({
                             title: '{{ boat.name }}',
                             position: new google.maps.LatLng(
-                                 {{ availability.address.lat }}, {{ availability.address.lng }}),
+                                 {{ boat.address.lat }}, {{ boat.address.lng }}),
                                  clickable: true,
                                  draggable: false,
                                  flat: true
@@ -100,8 +96,8 @@
                             lastOpenWindow = {{ index }};
                           });
                           {% set index = index + 1 %}
-                    {% endif %}
-                {% endfor %}
+                   
+               
             {% endif %}
         {% endfor %}
         mc = new MarkerClusterer(map, markers, {maxZoom: 19});

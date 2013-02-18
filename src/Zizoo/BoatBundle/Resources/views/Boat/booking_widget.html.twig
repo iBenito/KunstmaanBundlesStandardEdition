@@ -1,9 +1,9 @@
 <div id="booking_widget">
     <form id="availability_form" action="{{ url }}" method="get">
-        {% if availability %} 
+        {% if reservation_exists == false %} 
         <div id="booking_price_container">
             <label for="booking_price">Price</label>
-            <div id="booking_price">{{ book_boat|BookBoat_price(availability)}}</div>
+            <div id="booking_price">{{ book_boat|BookBoat_price(boat)}}</div>
         </div>
         {% else %}
         <div id="booking_price_container" style="display: none">
@@ -31,16 +31,23 @@
         <button type="button" id="book_btn" disabled="disabled">Book It</button>
     {% endif %}
         
-    {% if availability %}
+    {% if reservation_exists == false and book_boat.reservationFrom and book_boat.reservationTo %}
         <script type="text/javascript">
+            var callbackDates = null;
+            
             $(document).ready(function(){
-                disableCallback = true;
-                $('#calendar').datepick('setDate', [new Date({{ form.vars.value.reservationFrom.format('Y') }}, {{ form.vars.value.reservationFrom.format('m')-1 }}, {{ form.vars.value.reservationFrom.format('d') }}), new Date({{ form.vars.value.reservationTo.format('Y') }}, {{ form.vars.value.reservationTo.format('m')-1 }}, {{ form.vars.value.reservationTo.format('d') }})]);
-                disableCallback = false;
+                if ($('#calendar').hasClass('hasDatepick')){
+                    disableCallback = true;
+                    $('#calendar').datepick('setDate', [new Date({{ form.vars.value.reservationFrom.format('Y') }}, {{ form.vars.value.reservationFrom.format('m')-1 }}, {{ form.vars.value.reservationFrom.format('d') }}), new Date({{ form.vars.value.reservationTo.format('Y') }}, {{ form.vars.value.reservationTo.format('m')-1 }}, {{ form.vars.value.reservationTo.format('d') }})]);
+                    disableCallback = false;
+                } else {
+                    callbackDates = [new Date({{ form.vars.value.reservationFrom.format('Y') }}, {{ form.vars.value.reservationFrom.format('m')-1 }}, {{ form.vars.value.reservationFrom.format('d') }}), new Date({{ form.vars.value.reservationTo.format('Y') }}, {{ form.vars.value.reservationTo.format('m')-1 }}, {{ form.vars.value.reservationTo.format('d') }})];
+                }
             });
         </script>
     {% else %}
         <script type="text/javascript">
+            var callbackDates = null;
             $(document).ready(function(){
                 clearDates();
             });
@@ -71,7 +78,7 @@
         $('#booking_widget').block({ message: null });
        
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: '{{ ajax_url }}',
             data: $('#availability_form').serialize(),
             success: function (data, textStatus, jqXHR){

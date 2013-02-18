@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Payment
  *
- * @ORM\Table(name="reservation_payment")
+ * @ORM\Table(name="booking_payment")
  * @ORM\Entity
  */
 class Payment
@@ -27,12 +27,12 @@ class Payment
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
+    
     /**
-     * @ORM\ManyToOne(targetEntity="Zizoo\BookingBundle\Entity\Reservation", inversedBy="payment")
-     * @ORM\JoinColumn(name="reservation_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Zizoo\BookingBundle\Entity\Booking", inversedBy="payment")
+     * @ORM\JoinColumn(name="booking_id", referencedColumnName="id")
      */
-    private $reservation;
+    private $booking;
 
     /**
      * @var \DateTime
@@ -69,6 +69,13 @@ class Payment
      */
     private $providerStatus;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="provider_id", type="text")
+     */
+    private $providerId;
+    
     public function __construct() {
         $now = new \DateTime();
         $this->setDateCreated($now);
@@ -83,29 +90,6 @@ class Payment
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set reservation
-     *
-     * @param \Zizoo\BookingBundle\Entity\Reservation $reservation
-     * @return Payment
-     */
-    public function setReservation(\Zizoo\BookingBundle\Entity\Reservation $reservation)
-    {
-        $this->reservation = $reservation;
-    
-        return $this;
-    }
-
-    /**
-     * Get reservation
-     *
-     * @return \Zizoo\BookingBundle\Entity\Reservation 
-     */
-    public function getReservation()
-    {
-        return $this->reservation;
     }
 
 
@@ -222,5 +206,51 @@ class Payment
     public function getDateModified()
     {
         return $this->dateModified;
+    }
+
+    /**
+     * Set booking
+     *
+     * @param \Zizoo\BookingBundle\Entity\Booking $booking
+     * @return Payment
+     */
+    public function setBooking(\Zizoo\BookingBundle\Entity\Booking $booking = null)
+    {
+        $this->booking = $booking;
+    
+        return $this;
+    }
+
+    /**
+     * Get booking
+     *
+     * @return \Zizoo\BookingBundle\Entity\Booking 
+     */
+    public function getBooking()
+    {
+        return $this->booking;
+    }
+
+    /**
+     * Set providerId
+     *
+     * @param $providerId
+     * @return Payment
+     */
+    public function setProviderId($providerId)
+    {
+        $this->providerId = $providerId;
+    
+        return $this;
+    }
+
+    /**
+     * Get providerId
+     *
+     * @return 
+     */
+    public function getProviderId()
+    {
+        return $this->providerId;
     }
 }

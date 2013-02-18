@@ -16,9 +16,9 @@ class BookBoatValidator extends ConstraintValidator
     
     public function validate($bookBoat, Constraint $constraint)
     {
-        $em             = $this->container->get('doctrine.orm.entity_manager');
-        $bookingAgent   = $this->container->get('booking_agent');
-        $boat           = $em->getRepository('ZizooBoatBundle:Boat')->findOneById($bookBoat->getBoatId());
+        $em                 = $this->container->get('doctrine.orm.entity_manager');
+        $reservationAgent   = $this->container->get('zizoo_reservation_reservation_agent');
+        $boat               = $em->getRepository('ZizooBoatBundle:Boat')->findOneById($bookBoat->getBoatId());
                 
         if ($bookBoat->getNumGuests() > $boat->getNrGuests()){
             $this->context->addViolationAtSubPath('num_guests', $constraint->messageNumGuests, array(), null);
@@ -30,7 +30,7 @@ class BookBoatValidator extends ConstraintValidator
             if ($from >= $to){
                 $this->context->addViolationAtSubPath('reservation_from', $constraint->messageNotBookable, array(), null);
                 $this->context->addViolationAtSubPath('reservation_to', $constraint->messageNotBookable, array(), null);
-            } else if (!$bookingAgent->isAvailable($boat, $from, $to)){
+            } else if ($reservationAgent->reservationExists($boat, $from, $to)){
                 $this->context->addViolationAtSubPath('reservation_from', $constraint->messageNotBookable, array(), null);
                 $this->context->addViolationAtSubPath('reservation_to', $constraint->messageNotBookable, array(), null);
             }

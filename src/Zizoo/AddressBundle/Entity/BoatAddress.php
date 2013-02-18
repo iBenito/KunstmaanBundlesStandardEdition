@@ -158,21 +158,5 @@ class BoatAddress extends AddressBase {
             $this->setLng($geoLocation->lng);
         }
     }
-    
-    public function createAvailabilityAddress(){
-        $availabilityAddress = new AvailabilityAddress();
-        $availabilityAddress->setCountry($this->getCountry());
-        $availabilityAddress->setExtra1($this->getExtra1());
-        $availabilityAddress->setExtra2($this->getExtra2());
-        $availabilityAddress->setLat($this->getLat());
-        $availabilityAddress->setLng($this->getLng());
-        $availabilityAddress->setLocality($this->getLocality());
-        $availabilityAddress->setPostcode($this->getPostcode());
-        $availabilityAddress->setPremise($this->getPremise());
-        $availabilityAddress->setProvince($this->getProvince());
-        $availabilityAddress->setState($this->getState());
-        $availabilityAddress->setStreet($this->getStreet());
-        $availabilityAddress->setSubLocality($this->getSubLocality());
-        return $availabilityAddress;
-    }
+   
 }

@@ -11,16 +11,17 @@ class BoatExtension extends \Twig_Extension
             'reservationExists' => new \Twig_Filter_Method($this, 'reservationExists'),
             'bookable' => new \Twig_Filter_Method($this, 'bookable'),
             'availableDates' => new \Twig_Filter_Method($this, 'availableDates2'),
-            'bookedDates' => new \Twig_Filter_Method($this, 'bookedDates'),
+            'reservedDates' => new \Twig_Filter_Method($this, 'reservedDates'),
+            'priceDates' => new \Twig_Filter_Method($this, 'priceDates'),
         );
     }
     
     public function reservationExists($boat, $from, $to){
         if ($from=='' || $to=='') return false;
+        $from->setTime(0, 0, 0);
+        $to->setTime(23, 59, 59);
         $reservations = $boat->getReservation();
-        if (count($reservations)==0) return false;
-        
-        
+        if ($reservations->count()==0) return false;
         
         foreach ($reservations as $reservation){
             $checkIn = $reservation->getCheckIn();
@@ -33,7 +34,7 @@ class BoatExtension extends \Twig_Extension
     }
 
     public function bookable($boat, $from, $to){
-        $availabilities = $boat->getAvailability();
+        $reservations = $boat->getReservations();
         if ($availabilities->count()==0) return false;
         if ($from=='' || $to=='') return true;
         foreach ($availabilities as $availability){
@@ -107,7 +108,7 @@ class BoatExtension extends \Twig_Extension
         //return '[' . implode(",", $arr) . ']';
     }
     
-    public function bookedDates($boat)
+    public function reservedDates($boat)
     {
         $arr = array();
         $reservations = $boat->getReservation();
@@ -116,11 +117,42 @@ class BoatExtension extends \Twig_Extension
             $to     = $reservation->getCheckOut();
             
             do {
-                $arr[$from->format('Y').'_'.$from->format('m').'_'.$from->format('d')] = array($from->format('Y'), $from->format('m'), $from->format('d'));
+                //$arr[$from->format('Y').'_'.$from->format('m').'_'.$from->format('d')] = array($from->format('Y'), $from->format('m'), $from->format('d'));
+                $arr[] = array($from->format('Y'), $from->format('m'), $from->format('d'));
                 $from = $from->modify('+1 day');
             } while ($from < $to);
         }
         return json_encode($arr);
+    }
+    
+    public function priceDates($boat)
+    {
+        $arr = array();
+        $prices = $boat->getPrice();
+        foreach ($prices as $price){
+            $from   = clone $price->getAvailableFrom();
+            $to     = $price->getAvailableUntil();
+            
+            do {
+                //$arr[$from->format('Y').'_'.$from->format('m').'_'.$from->format('d')] = array($from->format('Y'), $from->format('m'), $from->format('d'));
+                $arr[] = array($from->format('Y'), $from->format('m'), $from->format('d'), str_replace(".","_",number_format($price->getPrice(),2)));
+                $from = $from->modify('+1 day');
+            } while ($from < $to);
+        }
+        return json_encode($arr);
+    }
+    
+    public function colourClasses($boat)
+    {
+        $allPrices = array();
+        $prices = $boat->getPrice();
+        foreach ($prices as $price){
+            $allPrices[str_replace(".","_",number_format($price->getPrice(),2))] = $price->getPrice();
+        }
+        $allPrices[str_replace(".","_",number_format($boat->getDefaultPrice(),2))] = $boat->getDefaultPrice();
+        ksort($allPrices);
+        $numPrices = count($allPrices);
+        
     }
     
     public function getName()

@@ -3,7 +3,7 @@ namespace Zizoo\BoatBundle\Service;
 
 use Zizoo\BoatBundle\Entity\Boat;
 use Zizoo\BoatBundle\Entity\BoatType;
-use Zizoo\BoatBundle\Entity\Availability;
+use Zizoo\BoatBundle\Entity\Price;
 use Zizoo\BoatBundle\Entity\Image;
 
 use Zizoo\AddressBundle\Entity\BoatAddress;
@@ -24,19 +24,16 @@ class BoatService {
         $this->container = $container;
     }
     
-    public function addAvailability(Boat $boat, Availability $availability, $flush=true){
-        $boat->addAvailability($availability);
-        $availability->setBoat($boat);
-        $availabilityAddress = $availability->getAddress();
-        $availabilityAddress->fetchGeo();
-        $this->em->persist($availabilityAddress);
-        $this->em->persist($availability);
+    public function addPrice(Boat $boat, Price $price, $flush=true){
+        $boat->addPrice($price);
+        $price->setBoat($boat);
+        $this->em->persist($price);
         if ($flush){
             $this->em->flush();
         }
     }
     
-    public function createBoat($name, $title, $description, $brand, $model, $length, $cabins, $numGuests, BoatAddress $address, BoatType $boatType, ArrayCollection $availabilities=null){
+    public function createBoat($name, $title, $description, $brand, $model, $length, $cabins, $numGuests, $defaultPrice, BoatAddress $address, BoatType $boatType, ArrayCollection $prices=null){
         $boat = new Boat();
         $boat->setName($name);
         $boat->setTitle($title);
@@ -47,13 +44,14 @@ class BoatService {
         $boat->setCabins($cabins);
         $boat->setNrGuests($numGuests);
         $boat->setBoatType($boatType);
+        $boat->setDefaultPrice($defaultPrice);
         
         $address->fetchGeo();
         $address->setBoat($boat);
         $boat->setAddress($address);
-        if ($availabilities){
-            foreach ($availabilities as $availability){
-                $this->addAvailability($boat, $availability, false);
+        if ($prices){
+            foreach ($prices as $price){
+                $this->addPrice($boat, $price, false);
             }
         }
         

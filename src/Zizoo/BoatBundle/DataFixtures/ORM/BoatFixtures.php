@@ -3,11 +3,10 @@
 namespace Zizoo\BoatBundle\DataFixtures\ORM;
 
 use Zizoo\BoatBundle\Entity\Boat;
-use Zizoo\BoatBundle\Entity\Availability;
+use Zizoo\BoatBundle\Entity\Price;
 use Zizoo\AddressBundle\Entity\BoatAddress;
-use Zizoo\AddressBundle\Entity\AvailabilityAddress;
 use Zizoo\AddressBundle\Entity\Country;
-use Zizoo\BookingBundle\Entity\Reservation;
+use Zizoo\ReservationBundle\Entity\Reservation;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -62,20 +61,19 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat1Address->setPostcode('54321');
         $boat1Address->setCountry($manager->merge($this->getReference('countryHR')));
         
-        $boat1Availability = new Availability();
-        $boat1AvailabilityAddress = $boat1Address->createAvailabilityAddress();
-        $boat1AvailabilityAddress->setAvailability($boat1Availability);
-        $boat1Availability->setAddress($boat1AvailabilityAddress);
+        $boat1Price = new Price();
         $from = new \DateTime();
         $from->modify( 'first day of last month' );
-        $boat1Availability->setAvailableFrom($from);
+        $boat1Price->setAvailableFrom($from);
         $to = new \DateTime();
         $to->modify( 'last day of next month' );
-        $boat1Availability->setAvailableUntil($to);
-        $boat1Availability->setPrice(9.99);
-        
+        $boat1Price->setAvailableUntil($to);
+        $boat1Price->setPrice(9.99);
+                
         $description = 'Lorem ipsum dolor sit amet, consectetur adipiscing eletra electrify denim vel ports.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut velocity magna. Etiam vehicula nunc non leo hendrerit commodo. Vestibulum vulputate mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras el mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras elementum molestie vestibulum. Morbi id quam nisl. Praesent hendrerit, orci sed elementum lobortis, justo mauris lacinia libero, non facilisis purus ipsum non mi. Aliquam sollicitudin, augue id vestibulum iaculis, sem lectus convallis nunc, vel scelerisque lorem tortor ac nunc. Donec pharetra eleifend enim vel porta.';
-        $boat1 = $boatService->createBoat('Sandali', 'The Ocean Explorer', $description, 'Seasy', '911', 5, 6, 12, $boat1Address, $boatTypeRepo->findOneByName('Yacht'), new ArrayCollection(array($boat1Availability)));
+        $boat1 = $boatService->createBoat('Sandali', 'The Ocean Explorer', $description, 'Seasy', '911', 5, 6, 12, 6.66, $boat1Address, $boatTypeRepo->findOneByName('Yacht'), new ArrayCollection(array($boat1Price)));
+        
+        //$boatService->addPrice($boat1, $from, $to, 9.99);
         
         $boat1->setUser($manager->merge($this->getReference('user-1')));
         $manager->persist($boat1);
@@ -89,53 +87,8 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat2Address->setProvince('Some spanish province');
         $boat2Address->setCountry($manager->merge($this->getReference('countryES')));
         
-        $boat2Availability = new Availability();
-        $boat2AvailabilityAddress = $boat2Address->createAvailabilityAddress();
-        $boat2AvailabilityAddress->setAvailability($boat2Availability);
-        $boat2Availability->setAddress($boat2AvailabilityAddress);
-        
-        $from = new \DateTime();
-        $from->modify( 'first day of january' );
-        $boat2Availability->setAvailableFrom($from);
-        $to = new \DateTime();
-        $to->modify( 'last day of march' );
-        $boat2Availability->setAvailableUntil($to);
-        $boat2Availability->setPrice(6.66);
-        
-        $boat2Availability2 = new Availability();
-        $boat2Availability2Address2 = $boat2Address->createAvailabilityAddress();
-        $boat2Availability2Address2->setAvailability($boat2Availability2);
-        $boat2Availability2->setAddress($boat2Availability2Address2);
-        
-        $from = new \DateTime();
-        $from->modify( 'first day of april' );
-        $boat2Availability2->setAvailableFrom($from);
-        $to = new \DateTime();
-        $to->modify( 'last day of april' );
-        $boat2Availability2->setAvailableUntil($to);
-        $boat2Availability2->setPrice(6.66);
-        
-        $boat2Availability3 = new Availability();
-        $boat2Availability3Address = new AvailabilityAddress();
-        $boat2Availability3Address->setStreet('Clarendon Road');
-        $boat2Availability3Address->setPremise('64');
-        $boat2Availability3Address->setLocality('Bristol');
-        $boat2Availability3Address->setPostcode('BS6 7EU');
-        $boat2Availability3Address->setProvince('Bristol');
-        $boat2Availability3Address->setCountry($manager->merge($this->getReference('countryGB')));
-        $boat2Availability3Address->setAvailability($boat2Availability3);
-        $boat2Availability3->setAddress($boat2Availability3Address);
-        
-        $from = new \DateTime();
-        $from->modify( 'first day of june' );
-        $boat2Availability3->setAvailableFrom($from);
-        $to = new \DateTime();
-        $to->modify( 'last day of june' );
-        $boat2Availability3->setAvailableUntil($to);
-        $boat2Availability3->setPrice(6.66);
-        
         $description = 'Lorem ipsum dolor sit amet, consectetur adipiscing eletra electrify denim vel ports.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut velocity magna. Etiam vehicula nunc non leo hendrerit commodo. Vestibulum vulputate mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras el mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras elementum molestie vestibulum. Morbi id quam nisl. Praesent hendrerit, orci sed elementum lobortis, justo mauris lacinia libero, non facilisis purus ipsum non mi. Aliquam sollicitudin, augue id vestibulum iaculis, sem lectus convallis nunc, vel scelerisque lorem tortor ac nunc. Donec pharetra eleifend enim vel porta.';
-        $boat2 = $boatService->createBoat('Infinity', 'Forever Wherever', $description, 'Floats', '912', 12, 5, 11, $boat2Address, $boatTypeRepo->findOneByName('Yacht'), new ArrayCollection(array($boat2Availability, $boat2Availability2, $boat2Availability3)));
+        $boat2 = $boatService->createBoat('Infinity', 'Forever Wherever', $description, 'Floats', '912', 12, 5, 11, 7.89, $boat2Address, $boatTypeRepo->findOneByName('Yacht'));
         
         $boat2->setUser($manager->merge($this->getReference('user-2')));
         $manager->persist($boat2);
@@ -152,7 +105,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat3Address->setCountry($manager->merge($this->getReference('countryGB')));   
         
         $description = 'Lorem ipsum dolor sit amet, consectetur adipiscing eletra electrify denim vel ports.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut velocity magna. Etiam vehicula nunc non leo hendrerit commodo. Vestibulum vulputate mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras el mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras elementum molestie vestibulum. Morbi id quam nisl. Praesent hendrerit, orci sed elementum lobortis, justo mauris lacinia libero, non facilisis purus ipsum non mi. Aliquam sollicitudin, augue id vestibulum iaculis, sem lectus convallis nunc, vel scelerisque lorem tortor ac nunc. Donec pharetra eleifend enim vel porta.';
-        $boat3 = $boatService->createBoat('Serenity', 'Firefly', $description, 'Floats', '911', 5, 6, 20, $boat3Address, $boatTypeRepo->findOneByName('Yacht'));
+        $boat3 = $boatService->createBoat('Serenity', 'Firefly', $description, 'Floats', '911', 5, 6, 20, 99.99, $boat3Address, $boatTypeRepo->findOneByName('Yacht'));
         
         $boat3->setUser($manager->merge($this->getReference('user-2')));
         $manager->persist($boat3);
@@ -168,7 +121,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat4Address->setCountry($manager->merge($this->getReference('countryGB')));
         
         $description = 'Lorem ipsum dolor sit amet, consectetur adipiscing eletra electrify denim vel ports.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut velocity magna. Etiam vehicula nunc non leo hendrerit commodo. Vestibulum vulputate mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras el mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras elementum molestie vestibulum. Morbi id quam nisl. Praesent hendrerit, orci sed elementum lobortis, justo mauris lacinia libero, non facilisis purus ipsum non mi. Aliquam sollicitudin, augue id vestibulum iaculis, sem lectus convallis nunc, vel scelerisque lorem tortor ac nunc. Donec pharetra eleifend enim vel porta.';
-        $boat4 = $boatService->createBoat('Enterprise', 'TNG', $description, 'Seasy', '911', 50, 20, 40, $boat4Address, $boatTypeRepo->findOneByName('Yacht'));
+        $boat4 = $boatService->createBoat('Enterprise', 'TNG', $description, 'Seasy', '911', 50, 20, 40, 100000, $boat4Address, $boatTypeRepo->findOneByName('Yacht'));
         
         $boat4->setUser($manager->merge($this->getReference('user-2')));
         $manager->persist($boat4);

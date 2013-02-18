@@ -1,3 +1,7 @@
+zizoo_reservation:
+    resource: "@ZizooReservationBundle/Resources/config/routing.yml"
+    prefix:   /
+
 zizoo_address:
     resource: "@ZizooAddressBundle/Resources/config/routing.yml"
     prefix:   /

@@ -1,17 +1,19 @@
 <?php
 namespace Zizoo\AddressBundle\Entity;
 
+use Zizoo\BoatBundle\Entity\Boat;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  */
-class AvailabilityAddress extends AddressBase {
+class ReservationAddress extends AddressBase {
     
     /**
-     * @ORM\OneToOne(targetEntity="Zizoo\BoatBundle\Entity\Availability", inversedBy="address")
+     * @ORM\OneToOne(targetEntity="Zizoo\ReservationBundle\Entity\Reservation", inversedBy="address")
      */
-    protected $availability;
+    protected $reservation;
     
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -26,73 +28,34 @@ class AvailabilityAddress extends AddressBase {
     
     protected $geoHash;
     
+    
+    public function __construct(Boat $boat=null) {
+        if ($boat){
+            parent::__construct($boat->getAddress());
+        }
+    }
+    
     /**
-     * Set boat
+     * Set reservation
      *
-     * @param \Zizoo\BoatBundle\Entity\Availability $availability
-     * @return AvailabilityAddress
+     * @param \Zizoo\ReservationBundle\Entity\Reservation $reservation
+     * @return ReservationAddress
      */
-    public function setAvailability(\Zizoo\BoatBundle\Entity\Availability $availability = null)
+    public function setReservation(\Zizoo\ReservationBundle\Entity\Reservation $reservation = null)
     {
-        $this->availability = $availability;
+        $this->reservation = $reservation;
     
         return $this;
     }
 
     /**
-     * Get boat
+     * Get reservation
      *
-     * @return \Zizoo\BoatBundle\Entity\Availability
+     * @return \Zizoo\ReservationBundle\Entity\Reservation 
      */
-    public function getAvailability()
+    public function getReservation()
     {
-        return $this->availability;
-    }
-
-    /**
-     * Set lat
-     *
-     * @param string $lat
-     * @return BoatAddress
-     */
-    public function setLat($lat)
-    {
-        $this->lat = $lat;
-    
-        return $this;
-    }
-
-    /**
-     * Get lat
-     *
-     * @return string 
-     */
-    public function getLat()
-    {
-        return $this->lat;
-    }
-
-    /**
-     * Set lng
-     *
-     * @param string $lng
-     * @return BoatAddress
-     */
-    public function setLng($lng)
-    {
-        $this->lng = $lng;
-    
-        return $this;
-    }
-
-    /**
-     * Get lng
-     *
-     * @return string 
-     */
-    public function getLng()
-    {
-        return $this->lng;
+        return $this->reservation;
     }
     
     /**

@@ -60,7 +60,7 @@ class BookBoat
         $to     = $this->getReservationTo();
         if (!$from || !$to) return null;
         $interval = $from->diff($to);
-        return $availability->getPrice() * $interval->d;
+        return $availability->getPrice() * $interval->days;
     }
 }
 

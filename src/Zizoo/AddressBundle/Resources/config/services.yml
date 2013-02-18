@@ -2,10 +2,6 @@ parameters:
 #    zizoo_address.example.class: Zizoo\AddressBundle\Example
 
 services:
-    zizoo_address.twig.availability_address_extension:
-        class: Zizoo\AddressBundle\Twig\AvailabilityAddressExtension
-        tags:
-            - { name: twig.extension }
             
     zizoo_address.search_boat_type:
         class:  Zizoo\AddressBundle\Form\Type\SearchBoatType

@@ -2,9 +2,16 @@
 
 namespace Zizoo\BookingBundle\Twig;
 
+use Symfony\Component\DependencyInjection\Container;
 
 class BookBoatExtension extends \Twig_Extension
 {
+    protected $container;
+    
+    public function __construct(Container $container) {
+        $this->container = $container;
+    }
+    
     public function getFilters()
     {
         return array(
@@ -13,13 +20,13 @@ class BookBoatExtension extends \Twig_Extension
         );
     }
     
-    public function price($bookBoat, $availability){
+    public function price($bookBoat, $boat){
         $from   = $bookBoat->getReservationFrom();
         $to     = $bookBoat->getReservationTo();
         if (!$from || !$to) return '...';
-        $interval = $from->diff($to);
-        $price = $availability->getPrice() * $interval->d;
-        return number_format($price, 2);
+        $reservationAgent = $this->container->get('zizoo_reservation_reservation_agent');
+        $totalPrice = $reservationAgent->getTotalPrice($boat, $from, $to);
+        return number_format($totalPrice, 2);
     }
 
     public function numberOfDays($bookBoat){
@@ -27,7 +34,7 @@ class BookBoatExtension extends \Twig_Extension
         $to     = $bookBoat->getReservationTo();
         if (!$from || !$to) return '...';
         $interval = $from->diff($to);
-        return $interval->d;
+        return $interval->days;
     }
     
     public function getName()

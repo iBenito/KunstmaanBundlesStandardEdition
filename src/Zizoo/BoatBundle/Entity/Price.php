@@ -6,11 +6,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Availability
- * @ORM\Entity(repositoryClass="Zizoo\BoatBundle\Entity\AvailabilityRepository")
- * @ORM\Table(name="availability")
+ * @ORM\Entity(repositoryClass="Zizoo\BoatBundle\Entity\PriceRepository")
+ * @ORM\Table(name="boat_price")
  * @ORM\HasLifecycleCallbacks()
  */
-class Availability
+class Price
 {
     /**
      * @var integer
@@ -44,12 +44,6 @@ class Availability
      */
     protected $price;
 
-
-    /**
-     * @ORM\OneToOne(targetEntity="Zizoo\AddressBundle\Entity\AvailabilityAddress", mappedBy="availability")
-     */
-    protected $address;
-    
     
     /**
      * Get id
@@ -156,26 +150,4 @@ class Availability
         return $this->boat;
     }
 
-    /**
-     * Set address
-     *
-     * @param \Zizoo\AddressBundle\Entity\AvailabilityAddress $address
-     * @return Availability
-     */
-    public function setAddress(\Zizoo\AddressBundle\Entity\AvailabilityAddress $address = null)
-    {
-        $this->address = $address;
-    
-        return $this;
-    }
-
-    /**
-     * Get address
-     *
-     * @return \Zizoo\AddressBundle\Entity\AvailabilityAddress 
-     */
-    public function getAddress()
-    {
-        return $this->address;
-    }
 }

@@ -2,7 +2,7 @@
 
 namespace Zizoo\BookingBundle\DataFixtures\ORM;
 
-use Zizoo\BookingBundle\Entity\Reservation;
+use Zizoo\ReservationBundle\Entity\Reservation;
 use Zizoo\BoatBundle\Entity\Boat;
 use Zizoo\BoatBundle\Form\Model\BookBoat;
 use Zizoo\BookingBundle\Form\Model\Booking;
@@ -19,7 +19,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 
 
-class ReservationFixtures implements OrderedFixtureInterface, SharedFixtureInterface, ContainerAwareInterface
+class BookingFixtures implements OrderedFixtureInterface, SharedFixtureInterface, ContainerAwareInterface
 {
     /**
      * @var ContainerInterface
@@ -52,8 +52,8 @@ class ReservationFixtures implements OrderedFixtureInterface, SharedFixtureInter
     public function load(ObjectManager $manager)
     {
         
-        
-        $bookingAgent = $this->container->get('booking_agent');
+        /**
+        $bookingAgent = $this->container->get('zizoo_booking_booking_agent');
         $boat1 = $this->getReference('boat-1');
         $user1 = $this->getReference('user-1');
         
@@ -71,7 +71,7 @@ class ReservationFixtures implements OrderedFixtureInterface, SharedFixtureInter
             $bookBoat->setReservationTo($to);
             
             $interval = $from->diff($to);
-            $price = $interval->d * $availability->getPrice();
+            $price = $interval->days * $availability->getPrice();
             
             $profile = $user1->getProfile();
             
@@ -98,25 +98,9 @@ class ReservationFixtures implements OrderedFixtureInterface, SharedFixtureInter
             $booking->setCreditCard($creditCard);
             $booking->setBilling($billingAddress);
             
-            $bookingAgent->braintreeMakeReservation($user1, $booking, $price, $bookBoat, $boat1);
+            $bookingAgent->braintreeMakeBooking($user1, $booking, $price, $bookBoat, $boat1);
         }
         
-        
-        /**
-        
-        
-        $availabilities = $boat1->getAvailability();
-        if ($availabilities && $availabilities->offsetExists(0)){
-            $availability = $availabilities->first();
-            $from   = clone $availability->getAvailableFrom();
-            $to     = clone $availability->getAvailableUntil();
-            $from->modify('+1 week');
-            $to->modify('-1 week');
-            
-            $interval = $from->diff($to);
-            $price = $interval->d * $availability->getPrice();
-            $reservation = $bookingAgent->makeReservation($boat1, $user1, $from, $to, (float)$price);
-        }
         */
 
     }

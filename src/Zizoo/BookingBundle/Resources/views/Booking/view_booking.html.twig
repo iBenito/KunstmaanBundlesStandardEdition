@@ -9,37 +9,37 @@
         <tbody id="trip_details">
             <tr>
                 <td>Boat:</td>
-                <td><a href="{{ path('ZizooBoatBundle_show', {id: reservation.boat.id}) }}">{{ reservation.boat.name }}</a></td>
+                <td><a href="{{ path('ZizooBoatBundle_show', {id: booking.reservation.boat.id}) }}">{{ booking.reservation.boat.name }}</a></td>
             </tr>
             <tr>
                 <td>Check In:</td>
-                <td>{{ reservation.checkIn|date }}</td>
+                <td>{{ booking.reservation.checkIn|date }}</td>
             </tr>
             <tr>
                 <td>Check Out:</td>
-                <td>{{ reservation.checkOut|date }}</td>
+                <td>{{ booking.reservation.checkOut|date }}</td>
             </tr>
             <tr>
                 <td>Nights:</td>
-                <td>{{ reservation|Reservation_numberOfDays }}</td>
+                <td>{{ booking.reservation|Reservation_numberOfDays }}</td>
             </tr>
             <tr>
                 <td>Guests:</td>
-                <td>{{ reservation.nrGuests }}</td>
+                <td>{{ booking.reservation.nrGuests }}</td>
             </tr>
         </tbody>
         <tbody id="cost_details">
             <tr>
                 <td>Total:</td>
-                <td>{{ reservation|Reservation_displayPrice }}</td>
+                <td>{{ booking|Booking_displayPrice }}</td>
             </tr>
             <tr>
                 <td>Paid:</td>
-                <td>{{ reservation|Reservation_amountPaid }}</td>
+                <td>{{ booking|Booking_amountPaid }}</td>
             </tr>
             <tr>
                 <td>Outstanding:</td>
-                <td>{{ reservation|Reservation_amountOutstanding }}</td>
+                <td>{{ booking|Booking_amountOutstanding }}</td>
             </tr>
         </tbody>
     </table>

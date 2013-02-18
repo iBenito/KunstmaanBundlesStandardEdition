@@ -1,6 +1,6 @@
 <?php
 
-namespace Zizoo\BookingBundle\Entity;
+namespace Zizoo\ReservationBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 

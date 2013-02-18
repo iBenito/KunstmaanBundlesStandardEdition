@@ -5,7 +5,7 @@
 
 {% block body %}
 
-    {% if reservations %}
+    {% if bookings %}
         <table>
             <thead>
                 <tr>
@@ -17,13 +17,13 @@
                 </tr>
             </thead>
             <tbody>
-            {% for reservation in reservations %}
+            {% for booking in bookings %}
                 <tr>
-                    <td><a href="{{ path('ZizooBookingBundle_view_booking', {id: reservation.id}) }}">{{ reservation.boat.name }}</a></td>
-                    <td>{{ reservation.created|date }}</td>
-                    <td>{{ reservation.checkIn|date }}</td>
-                    <td>{{ reservation.checkOut|date }}</td>
-                    <td>{{ reservation.nrGuests }}</td>
+                    <td><a href="{{ path('ZizooBookingBundle_view_booking', {id: booking.id}) }}">{{ booking.reservation.boat.name }}</a></td>
+                    <td>{{ booking.reservation.created|date }}</td>
+                    <td>{{ booking.reservation.checkIn|date }}</td>
+                    <td>{{ booking.reservation.checkOut|date }}</td>
+                    <td>{{ booking.reservation.nrGuests }}</td>
                 </tr>
             {% endfor %}
             </tbody>

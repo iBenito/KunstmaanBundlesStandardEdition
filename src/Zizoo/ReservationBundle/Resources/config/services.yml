@@ -1,0 +1,23 @@
+parameters:
+#    zizoo_reservation.example.class: Zizoo\ReservationBundle\Example
+
+services:
+    zizoo_reservation_reservation_agent:
+        class:  Zizoo\ReservationBundle\Service\ReservationAgent
+        arguments: 
+            entityManager:  "@doctrine.orm.entity_manager"
+            messenger:      "@messenger"
+            container:      "@service_container"
+            
+    zizoo_reservation_reservation_listener:
+        class: Zizoo\ReservationBundle\EventListener\ReservationListener
+        arguments:
+            container:      "@service_container"
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+            - { name: doctrine.event_listener, event: postPersist }
+            
+    zizoo_booking.twig.reservation_extension:
+        class: Zizoo\ReservationBundle\Twig\ReservationExtension
+        tags:
+            - { name: twig.extension }

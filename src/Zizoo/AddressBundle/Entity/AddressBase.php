@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="address")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"profile" = "ProfileAddress", "boat" = "BoatAddress", "availability" = "AvailabilityAddress"})
+ * @ORM\DiscriminatorMap({"profile" = "ProfileAddress", "boat" = "BoatAddress", "reservation" = "ReservationAddress"})
  */
 class AddressBase
 {
@@ -94,6 +94,21 @@ class AddressBase
     private $country;
 
 
+    public function __construct(AddressBase $address=null) {
+        if ($address){
+            $this->setCountry($address->getCountry());
+            $this->setExtra1($address->getExtra1());
+            $this->setExtra2($address->getExtra2());
+            $this->setLocality($address->getLocality());
+            $this->setPostcode($address->getPostcode());
+            $this->setPremise($address->getPremise());
+            $this->setProvince($address->getProvince());
+            $this->setState($address->getState());
+            $this->setStreet($address->getStreet());
+            $this->setSubLocality($address->getSubLocality());
+        }
+    }
+    
     /**
      * Get id
      *

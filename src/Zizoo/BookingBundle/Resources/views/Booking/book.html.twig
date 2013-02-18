@@ -10,7 +10,6 @@
 
 {% block body %}
     
-    
     <table>
         <tbody id="trip_details">
             <tr>
@@ -32,16 +31,12 @@
         </tbody>
         <tbody id="cost_details">
             <tr>
-                <td>Rate (per night):</td>
-                <td>{{ availability|Availability_priceFormatted }}</td>
-            </tr>
-            <tr>
                 <td>Subtotal:</td>
-                <td>{{ book_boat|BookBoat_price(availability) }}</td>
+                <td>{{ book_boat|BookBoat_price(boat) }}</td>
             </tr>
             <tr>
                 <td>Total:</td>
-                <td>{{ book_boat|BookBoat_price(availability) }}</td>
+                <td>{{ book_boat|BookBoat_price(boat) }}</td>
             </tr>
         </tbody>
     </table>

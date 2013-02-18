@@ -30,7 +30,8 @@ class BoatController extends Controller
         if (!$boat) {
             throw $this->createNotFoundException('Unable to find boat post.');
         }        
-        $request = $this->getRequest();
+        $request = $this->getRequest();       
+        
         $request->query->set('url', $this->generateUrl('ZizooBoatBundle_show', array('id' => $id)));
         $request->query->set('ajax_url', $this->generateUrl('ZizooBoatBundle_booking_widget', array('id' => $id, 'request' => $request)));
         return $this->render('ZizooBoatBundle:Boat:show.html.twig', array(
@@ -42,22 +43,22 @@ class BoatController extends Controller
     
     
     public function bookingWidgetAction($id, Request $request){
+        $session = $request->getSession();
         $em = $this->getDoctrine()->getEntityManager();
         $boat = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
         if (!$boat) {
             throw $this->createNotFoundException('Unable to find boat post.');
         }  
         
-        $bookBoat = null;
         $form = $this->createForm(new BookBoatType(), new BookBoat($id));
         $form->bindRequest($request);
-      
         $bookBoat = $form->getData();
-        $bookingAgent = $this->get('booking_agent');
-        $availability = $bookingAgent->getAvailability($boat, $bookBoat->getReservationFrom(), $bookBoat->getReservationTo(), $bookBoat->getNumGuests());
+        
+        $reservationAgent = $this->get('zizoo_reservation_reservation_agent');
+        $reservationExists = $reservationAgent->reservationExists($boat, $bookBoat->getReservationFrom(), $bookBoat->getReservationTo());
         $valid = false;
-        $session = $request->getSession();
-        if ($form->isValid() && $availability && $bookBoat->getNumGuests()>0){
+        
+        if ($form->isValid() && !$reservationExists && $bookBoat->getNumGuests()>0){
             $valid = true;
             $session->set('boat', $bookBoat);
         } else {
@@ -65,18 +66,20 @@ class BoatController extends Controller
             $session->remove('boat');
         }
         
-        $url        = $request->query->get('url', null);
-        $ajaxUrl    = $request->query->get('ajax_url', null);
+        $url            = $request->query->get('url', null);
+        $ajaxUrl        = $request->query->get('ajax_url', null);
+        if (!$url)      $url = $request->request->get('url', null);
+        if (!$ajaxUrl)  $ajaxUrl = $request->request->get('ajax_url');
         
         return $this->render('ZizooBoatBundle:Boat:booking_widget.html.twig', array(
-            'boat'          => $boat,
-            'book_boat'     => $bookBoat,
-            'form'          => $form->createView(),
-            'availability'  => $availability,
-            'valid'         => $valid,
-            'url'           => $url,
-            'ajax_url'      => $ajaxUrl,
-            'book_url'      => $this->generateUrl('ZizooBookingBundle_book')
+            'boat'                  => $boat,
+            'book_boat'             => $bookBoat,
+            'form'                  => $form->createView(),
+            'reservation_exists'    => $reservationExists,
+            'valid'                 => $valid,
+            'url'                   => $url,
+            'ajax_url'              => $ajaxUrl,
+            'book_url'              => $this->generateUrl('ZizooBookingBundle_book')
         ));
     }
     /**

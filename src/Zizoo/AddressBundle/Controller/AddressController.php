@@ -49,7 +49,7 @@ class AddressController extends Controller
         
         $maxBoatValues   = $em->getRepository('ZizooBoatBundle:Boat')->getMaxBoatValues();
         
-        $availableBoats = $em->getRepository('ZizooBoatBundle:Boat')->searchBoatAvailability($searchBoat);
+        $availableBoats = $em->getRepository('ZizooBoatBundle:Boat')->searchBoats($searchBoat);
         $numAvailableBoats = count($availableBoats);
         $numPages = floor($numAvailableBoats / $pageSize);
         if ($numAvailableBoats % $pageSize > 0){

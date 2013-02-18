@@ -2,10 +2,11 @@
 
 namespace Zizoo\BookingBundle\Controller;
 
-use Zizoo\BookingBundle\Entity\Reservation;
+use Zizoo\BookingBundle\Entity\Booking;
 use Zizoo\BookingBundle\Entity\Payment;
-use Zizoo\BookingBundle\Form\Model\Booking;
+use Zizoo\BookingBundle\Form\Model\Booking as BookingForm;
 use Zizoo\BookingBundle\Form\Type\BookingType;
+use Zizoo\ReservationBundle\Entity\Reservation;
 use Zizoo\BoatBundle\Form\Model\BookBoat;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -16,23 +17,23 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class BookingController extends Controller
 {
     
-    public function viewAllReservationsAction()
+    public function viewAllBookingsAction()
     {
         $user = $this->getUser();
         $em = $this->getDoctrine()->getEntityManager();
-        $reservations = $em->getRepository('ZizooBookingBundle:Reservation')->findByRenter($user->getId());
-        return $this->render('ZizooBookingBundle:Booking:view_all_bookings.html.twig', array('reservations'       => $reservations));
+        $bookings = $em->getRepository('ZizooBookingBundle:Booking')->findByRenter($user->getId());
+        return $this->render('ZizooBookingBundle:Booking:view_all_bookings.html.twig', array('bookings'       => $bookings));
     }
     
-    public function viewReservationAction($id)
+    public function viewBookingAction($id)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $reservation = $em->getRepository('ZizooBookingBundle:Reservation')->findOneById($id);
-        if (!$reservation){
+        $booking = $em->getRepository('ZizooBookingBundle:Booking')->findOneById($id);
+        if (!$booking){
             return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
         }
         
-        return $this->render('ZizooBookingBundle:Booking:view_booking.html.twig', array('reservation'       => $reservation));
+        return $this->render('ZizooBookingBundle:Booking:view_booking.html.twig', array('booking'       => $booking));
     }
     
     
@@ -55,6 +56,19 @@ class BookingController extends Controller
         $request->request->set('transaction', $trans);
         $form->bind($request);
         return $form;
+    }
+    
+    private function handleBookingError($bookingError)
+    {
+        if (is_array($bookingError)){
+            if (array_key_exists('error', $bookingError)){
+                return $bookingError['error'];
+            } else {
+                // Shouldn't happen, but handle anyway?
+            }
+        } else {
+            // Shouldn't happen, but handle anyway?
+        }
     }
     
     /**
@@ -89,16 +103,17 @@ class BookingController extends Controller
         }  
         
         // Ensure boat is available for specified dates (from bookBoat)
-        $bookingAgent = $this->get('booking_agent');
-        $availability = $bookingAgent->getAvailability($boat, $bookBoat->getReservationFrom(), $bookBoat->getReservationTo());
+        $reservationAgent   = $this->get('zizoo_reservation_reservation_agent');
+        $bookingAgent       = $this->get('zizoo_booking_booking_agent');
+        $reservationExists  = $reservationAgent->reservationExists($boat, $bookBoat->getReservationFrom(), $bookBoat->getReservationTo());
         $validator = $this->get('zizoo_boat.book_boat_validator');
         $errors = $validator->validate($bookBoat, new \Zizoo\BoatBundle\Validator\Constraints\BookBoat());
-        if ($errors || !$availability){
+        if ($errors || $reservationExists){
             return $this->redirect($this->generateUrl('ZizooBoatBundle_show', array('id' => $boat->getId())));
         }
         
         // Calculate price
-        $price = $bookBoat->getPrice($availability);
+        $totalPrice = $reservationAgent->getTotalPrice($boat, $bookBoat->getReservationFrom(), $bookBoat->getReservationTo());
         
         // Get list of countries
         $countries = $em->getRepository('ZizooAddressBundle:Country')->findAll();
@@ -108,7 +123,7 @@ class BookingController extends Controller
             array(
                 'transaction' => array(
                     'type'      => \Braintree_Transaction::SALE,
-                    'amount'    => $price,
+                    'amount'    => $totalPrice,
                     'customerId'    => $user->getID(),
                     'options'       => array(
                         'storeInVaultOnSuccess'             => true,
@@ -128,52 +143,35 @@ class BookingController extends Controller
         
         if ($request->isMethod('POST')){
             $form->bindRequest($request);
-            $booking = $form->getData();
+            $bookingForm = $form->getData();
             
             if ($form->isValid()){
-                $reservation = $bookingAgent->braintreeMakeReservation($user, $booking, $price, $bookBoat, $boat);
-                if ($reservation instanceof Reservation){
+                $booking = $bookingAgent->braintreeMakeBooking($user, $bookingForm, $totalPrice, $bookBoat, $boat);
+                if ($booking instanceof Booking){
                     // Reservation and payment successful
                     $session->remove('boat');
-                    return $this->redirect($this->generateUrl('ZizooBookingBundle_view_booking', array('id' => $reservation->getID())));
+                    return $this->redirect($this->generateUrl('ZizooBookingBundle_view_booking', array('id' => $booking->getID())));
                 } else {
-                    if (is_array($reservation)){
-                        if (array_key_exists('error', $reservation)){
-                            $braintreeErrors = $reservation['error'];
-                        } else {
-                            // Shouldn't happen, but handle anyway?
-                        }
-                    } else {
-                        // Shouldn't happen, but handle anyway?
-                    }
-                    $form = $this->clearCreditCardData($bookingType, $booking, $request);
+                    $braintreeErrors = $this->handleBookingError($booking);
+                    $form = $this->clearCreditCardData($bookingType, $bookingForm, $request);
                 }
             } else {
                 // Form not valid
                 // Clear credit card data
-                $form = $this->clearCreditCardData($bookingType, $booking, $request);
+                $form = $this->clearCreditCardData($bookingType, $bookingForm, $request);
             }
         } else if ($braintreeTransactionKind == 'create_transaction'){
             $queryString = $_SERVER['QUERY_STRING'];
             try {
                 $result = \Braintree_TransparentRedirect::confirm($queryString);
-                $reservation = $bookingAgent->processBraintreeResult($result, $boat, $user, $bookBoat);
-                $booking = new Booking();
-                if ($reservation instanceof Reservation){
+                $booking = $bookingAgent->processBraintreeResult($result, $boat, $user, $bookBoat);
+                if ($booking instanceof Booking){
                     // Reservation and payment successful
                     $session->remove('boat');
-                    return $this->redirect($this->generateUrl('ZizooBookingBundle_view_booking', array('id' => $reservation->getID())));
+                    return $this->redirect($this->generateUrl('ZizooBookingBundle_view_booking', array('id' => $booking->getID())));
                 } else {
-                    if (is_array($reservation)){
-                        if (array_key_exists('error', $reservation)){
-                            $braintreeErrors = $reservation['error'];
-                        } else {
-                            // Shouldn't happen, but handle anyway?
-                        }
-                    } else {
-                        // Shouldn't happen, but handle anyway?
-                    }
-                    $form = $this->createForm($bookingType);
+                    $braintreeErrors = $this->handleBookingError($booking);
+                    $form = $this->clearCreditCardData($bookingType, $bookingForm, $request);
                 }
             } catch (\Braintree_Exception $e){
                 $braintreeErrors[] = 'Something went wrong with the payment provider';
@@ -183,7 +181,6 @@ class BookingController extends Controller
         $clientSideBraintreeKey = $this->container->getParameter('braintree_client_side_key');
         return $this->render('ZizooBookingBundle:Booking:book.html.twig', array('boat'              => $boat,
                                                                                 'book_boat'         => $bookBoat,
-                                                                                'availability'      => $availability,
                                                                                 'client_key'        => $clientSideBraintreeKey,
                                                                                 'tr_data'           => $trData,
                                                                                 'braintree_action'  => \Braintree_TransparentRedirect::url(),

@@ -5,6 +5,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/colour_gradient.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/datepick/jquery.datepick.js') }}"></script>
 {% endblock %}
     
@@ -59,14 +60,7 @@
                 <h3>{{ boat.name }}</h3>
                 <p>{% trans %}zizoo_address.label.cities{% endtrans %}: 
                     <ul>
-                        {% if boat.address|duplicateCity == false %}
-                            <li>{{ boat.address.locality }}</li>
-                        {% endif %}
-                        {% for availability in boat.availability %}
-                            {% if availability.address|duplicateCity == false %}
-                                <li>{{ availability.address.locality }}</li>
-                            {% endif %}
-                        {% endfor %}
+                        <li>{{ boat.address.locality }}</li>
                     </ul>
                 </p>
                 <p>{% trans %}zizoo_boat.label.brand{% endtrans %}: {{ boat.brand }}</p>
@@ -158,36 +152,6 @@
             });
         }
         
-        function datepResize() {
-
-            // Get width of parent container
-            var width = jQuery("#calendar").width(); //attr('clientWidth');
-            if (width == null || width < 1){
-                // For IE, revert to offsetWidth if necessary
-                width = jQuery("#calendar").attr('offsetWidth');
-            }
-            width = width - 2; // Fudge factor to prevent horizontal scrollbars
-            if (width > 0 &&
-                // Only resize if new width exceeds a minimal threshold
-                // Fixes IE issue with in-place resizing when mousing-over frame bars
-                Math.abs(width - jQuery("div ui-datepicker").width()) > 5)
-            {
-                if (width < 166){
-                    jQuery("div.ui-datepicker").css({'font-size': '8px'});
-                    jQuery(".ui-datepicker td .ui-state-default").css({'padding':'0px','font-size': '6px'});
-                }
-                else if (width > 228){
-                    jQuery("div.ui-datepicker").css({'font-size': '13px'});
-                    jQuery(".ui-datepicker td .ui-state-default").css({'padding':'5px','font-size': '100%'});
-
-                }
-                else{
-                    jQuery("div.ui-datepicker").css({'font-size': (width-43)/16+'px'});
-                }
-            }
-
-        }
-        
         function calendarAdjust(){
             
             var maxWidth  = 0;
@@ -227,25 +191,25 @@
                 return month < 9 ? '0' + (month+1) : (month+1); // ('' + month) for string result
             }
             
-            var availableDates  = {{ boat|availableDates|raw}};
-            var bookedDates     = {{ boat|bookedDates|raw}};
+            var reservedDates       = {{ boat|reservedDates|raw }};
+            var priceDates          = {{ boat|priceDates|raw }};
             $.extend($.datepick, {
                 zizoo: function(date) {
                     var i;
-                    for (i=0; i<availableDates.length; i++){
-                        if (date.getFullYear()==availableDates[i][0] && date.getMonthFormatted()==availableDates[i][1] && date.getDateFormatted()==availableDates[i][2])
+                    for (i=0; i<reservedDates.length; i++){
+                        if (date.getFullYear()==reservedDates[i][0] && date.getMonthFormatted()==reservedDates[i][1] && date.getDateFormatted()==reservedDates[i][2])
                         {
-                            
-                            if (bookedDates[availableDates[i][0]+'_'+availableDates[i][1]+'_'+availableDates[i][2]] == undefined){
-                                return {selectable: true};
-                            } else {
-                                console.log(bookedDates[availableDates[i][0]+'_'+availableDates[i][1]+'_'+availableDates[i][2]]);
-                                return {selectable: false};
-                            }
-                            
+                            return {selectable: false};                            
                         }
                     }
-                    return {selectable: false};
+                    var i;
+                    for (i=0; i<priceDates.length; i++){
+                        if (date.getFullYear()==priceDates[i][0] && date.getMonthFormatted()==priceDates[i][1] && date.getDateFormatted()==priceDates[i][2])
+                        {
+                            return {selectable: true, dateClass: priceDates[i][3]+'_day'};                            
+                        }
+                    }
+                    return {selectable: true};
                 }
             });
             
@@ -254,11 +218,18 @@
                 changeMonth: false,
                 monthsToShow: 12,
                 onDate: $.datepick.zizoo,
-                onSelect: selectDate
+                onSelect: selectDate,
+                onShow: function(){
+                    
+                }
             });
-            
+            if (callbackDates && callbackDates.length==2){
+                disableCallback = true;
+                $('#calendar').datepick('setDate', callbackDates);
+                disableCallback = false;
+            }
             return;
-            //var bookedDates     = {{ boat|bookedDates|raw}};
+            
             $('#calendar').datepicker({
                 numberOfMonths: 12,
                 dateFormat: 'dd/mm/yy',

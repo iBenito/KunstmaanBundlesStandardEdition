@@ -1,5 +1,5 @@
 <?php
-namespace Zizoo\BookingBundle\Exception;
+namespace Zizoo\ReservationBundle\Exception;
 
 class InvalidReservationException extends \Exception {    
 }

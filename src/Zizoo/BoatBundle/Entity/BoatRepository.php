@@ -38,18 +38,16 @@ class BoatRepository extends EntityRepository
      * @return Doctrine\ORM\AbstractQuery[] Results
      * @author Alex Fuckert <alexf83@gmail.com>
      */
-    public function searchBoatAvailability(SearchBoat $searchBoat)
+    public function searchBoats(SearchBoat $searchBoat)
     {
         // Join boat, image, address, country and reservation
         $qb = $this->createQueryBuilder('boat')
-                   ->select('boat, image, address, availability, country, reservation, boat_type')
+                   ->select('boat, image, address, country, reservation, price, boat_type')
                    ->leftJoin('boat.image', 'image')
                    ->leftJoin('boat.address', 'address')
                    ->leftJoin('boat.reservation', 'reservation')
-                   ->leftJoin('boat.availability', 'availability')
+                   ->leftJoin('boat.price', 'price')
                    ->leftJoin('boat.address', 'boat_address')
-                   ->leftJoin('availability.address', 'availability_address')
-                   ->leftJoin('availability_address.country', 'availability_country')
                    ->leftJoin('address.country', 'country')
                    ->leftJoin('boat.boatType', 'boat_type');
         
@@ -61,11 +59,6 @@ class BoatRepository extends EntityRepository
                ->orWhere('address.state = :search')
                ->orWhere('address.province = :search')
                ->orWhere('country.printableName = :search')
-               ->orWhere('availability_address.locality = :search')
-               ->orWhere('availability_address.subLocality = :search')
-               ->orWhere('availability_address.state = :search')
-               ->orWhere('availability_address.province = :search')
-               ->orWhere('availability_country.printableName = :search')
                ->setParameter('search', $searchBoat->getLocation());
             $firstWhere = false;
         }
@@ -144,14 +137,14 @@ class BoatRepository extends EntityRepository
         //$qb->getQuery();
         
          
-        $qb->addOrderBy('availability.id', 'desc');
+        $qb->addOrderBy('reservation.id', 'asc');
 
         
         return $qb->getQuery()
                   ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'Zizoo\BoatBundle\Extensions\DoctrineExtensions\CustomWalker\SortableNullsWalker')
                   ->setHint('SortableNullsWalker.fields',
                         array(
-                            'availability.id' => SortableNullsWalker::NULLS_LAST,
+                            'reservation.id' => SortableNullsWalker::NULLS_LAST,
                         ))
                   ->getResult();
     }
