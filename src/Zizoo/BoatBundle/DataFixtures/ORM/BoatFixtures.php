@@ -107,7 +107,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat2Address->setProvince('Some spanish province');
         $boat2Address->setCountry($manager->merge($this->getReference('countryES')));
         
-        $boat2 = $boatService->createBoat($boat2, $boat2Address, $boatTypeRepo->findOneByName('Yacht'), new ArrayCollection(array($boat2Availability, $boat2Availability2, $boat2Availability3)));
+        $boat2 = $boatService->createBoat($boat2, $boat2Address, $boatTypeRepo->findOneByName('Yacht'));
         
         $boat2->setUser($manager->merge($this->getReference('user-2')));
         $manager->persist($boat2);
