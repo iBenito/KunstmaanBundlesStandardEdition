@@ -59,6 +59,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat1->setLength(5);
         $boat1->setCabins(6);
         $boat1->setNrGuests(12);
+        $boat1->setDefaultPrice(5.99);
         
         $boatService = $this->container->get('boat_service');
         $boatTypeRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooBoatBundle:BoatType');   
@@ -96,7 +97,8 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat2->setLength(12);
         $boat2->setCabins(5);
         $boat2->setNrGuests(1);
-
+        $boat2->setDefaultPrice(6.66);
+        
         $boat2Address = new BoatAddress();
         $boat2Address->setStreet('Alicante Marina');
         $boat2Address->setPremise('84');
@@ -105,7 +107,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat2Address->setProvince('Some spanish province');
         $boat2Address->setCountry($manager->merge($this->getReference('countryES')));
         
-        $boat2 = $boatService->createBoat($boat2, $boat2Address, $boatTypeRepo->findOneByName('Yacht'), new ArrayCollection(array($boat2Availability, $boat2Availability2, $boat2Availability3)));
+        $boat2 = $boatService->createBoat($boat2, $boat2Address, $boatTypeRepo->findOneByName('Yacht'));
         
         $boat2->setUser($manager->merge($this->getReference('user-2')));
         $manager->persist($boat2);
@@ -121,6 +123,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat3->setLength(5);
         $boat3->setCabins(6);
         $boat3->setNrGuests(20);
+        $boat3->setDefaultPrice(7.77);
 
         $boat3Address = new BoatAddress();
         $boat3Address->setStreet('Brighton Marina');
@@ -146,6 +149,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat4->setLength(50);
         $boat4->setCabins(20);
         $boat4->setNrGuests(40);
+        $boat4->setDefaultPrice(100000000);
 
         $boat4Address = new BoatAddress();
         $boat4Address->setStreet('Bristol Harbour');
