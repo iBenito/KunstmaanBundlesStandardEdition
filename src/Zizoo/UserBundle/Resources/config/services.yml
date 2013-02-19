@@ -3,7 +3,7 @@ services:
         class: Zizoo\UserBundle\Service\Facebook
         arguments: [{ appId: %zizoo_user.facebook.app_id%, secret: %zizoo_user.facebook.app_secret% }]
         
-    user_service:
+    zizoo_user_user_service:
         class:  Zizoo\UserBundle\Service\UserService
         arguments: 
             entityManager:  "@doctrine.orm.entity_manager"

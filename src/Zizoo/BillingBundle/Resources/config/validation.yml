@@ -1,0 +1,9 @@
+Zizoo\BillingBundle\Form\Model\BankAccount:
+    properties:
+        iban:
+            - NotBlank: { message: zizoo_billing.error.iban_not_blank }
+            - Zizoo\BillingBundle\Validator\Constraints\Iban: ~
+            
+        bic:
+            - NotBlank: { message: zizoo_billing.error.bic_not_blank }
+            - Zizoo\BillingBundle\Validator\Constraints\Bic: ~
