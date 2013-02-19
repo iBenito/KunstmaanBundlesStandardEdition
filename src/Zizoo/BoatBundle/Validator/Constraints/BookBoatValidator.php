@@ -30,7 +30,7 @@ class BookBoatValidator extends ConstraintValidator
             if ($from >= $to){
                 $this->context->addViolationAtSubPath('reservation_from', $constraint->messageNotBookable, array(), null);
                 $this->context->addViolationAtSubPath('reservation_to', $constraint->messageNotBookable, array(), null);
-            } else if ($reservationAgent->reservationExists($boat, $from, $to)){
+            } else if ($reservationAgent->reservationExists($boat, $from, $to) || !$reservationAgent->getPrices($boat, $from, $to)){
                 $this->context->addViolationAtSubPath('reservation_from', $constraint->messageNotBookable, array(), null);
                 $this->context->addViolationAtSubPath('reservation_to', $constraint->messageNotBookable, array(), null);
             }

@@ -18,16 +18,19 @@ class BookBoatType extends AbstractType
 
         $builder->add('reservation_from', 'date', array('required'      => false,
                                                         'by_reference'  => false,
-                                                        'widget' => 'single_text',
-                                                        'format' => 'dd/MM/yyyy'));
+                                                        'widget'        => 'single_text',
+                                                        'format'        => 'dd/MM/yyyy',
+                                                        'attr'          => array('autocomplete' => 'off')));
         
-        $builder->add('reservation_to', 'date', array('required'      => false,
+        $builder->add('reservation_to', 'date', array('required'        => false,
                                                         'by_reference'  => false,
-                                                        'widget' => 'single_text',
-                                                        'format' => 'dd/MM/yyyy'));
+                                                        'widget'        => 'single_text',
+                                                        'format'        => 'dd/MM/yyyy',
+                                                        'attr'          => array('autocomplete' => 'off')));
         
-        $builder->add('num_guests', 'integer', array('required'      => false,
-                                                        'by_reference'  => false));
+        $builder->add('num_guests', 'integer', array('required'         => false,
+                                                        'by_reference'  => false,
+                                                        'attr'          => array('autocomplete' => 'off')));
   
     }
 

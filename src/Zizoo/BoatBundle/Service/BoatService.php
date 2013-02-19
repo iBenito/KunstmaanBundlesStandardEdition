@@ -36,7 +36,6 @@ class BoatService {
     public function createBoat(Boat $boat, BoatAddress $address, BoatType $boatType, ArrayCollection $prices=null){
 
         $boat->setBoatType($boatType);
-        $boat->setDefaultPrice($defaultPrice);
         
         $address->fetchGeo();
         $address->setBoat($boat);

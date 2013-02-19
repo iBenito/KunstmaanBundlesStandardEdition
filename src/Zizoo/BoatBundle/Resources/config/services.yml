@@ -9,6 +9,7 @@ services:
 
     zizoo_boat.twig.boat_extension:
         class: Zizoo\BoatBundle\Twig\BoatExtension
+        arguments: ["@service_container"]
         tags:
             - { name: twig.extension }
             

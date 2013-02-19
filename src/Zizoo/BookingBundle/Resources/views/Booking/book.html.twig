@@ -13,11 +13,11 @@
     <table>
         <tbody id="trip_details">
             <tr>
-                <td>Check In:</td>
+                <td>Check in:</td>
                 <td>{{ book_boat.reservationFrom|date }}</td>
             </tr>
             <tr>
-                <td>Check Out:</td>
+                <td>Check out:</td>
                 <td>{{ book_boat.reservationTo|date }}</td>
             </tr>
             <tr>
@@ -31,12 +31,31 @@
         </tbody>
         <tbody id="cost_details">
             <tr>
+                <td>Price per night:</td>
+                <td>
+                {% if total_price['price']|length == 1 %}
+                    {% for price in total_price['price'] %}
+                        &euro; {{ book_boat|BookBoat_price( price['price'] ) }}
+                    {% endfor %}
+                {% else %}
+                    <table>
+                        {% for price in total_price['price'] %}
+                            <tr>
+                                <td>{{ price['dates'][0]|date }} - {{ price['dates'][1]|date }}:</td>
+                                <td>&euro; {{ book_boat|BookBoat_price( price['price'] ) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% endif %}
+                </td>
+            </tr>
+            <tr>
                 <td>Subtotal:</td>
-                <td>{{ book_boat|BookBoat_price(boat) }}</td>
+                <td>&euro; {{ book_boat|BookBoat_price(total_price['total_price']) }}</td>
             </tr>
             <tr>
                 <td>Total:</td>
-                <td>{{ book_boat|BookBoat_price(boat) }}</td>
+                <td>&euro; {{ book_boat|BookBoat_price(total_price['total_price']) }}</td>
             </tr>
         </tbody>
     </table>

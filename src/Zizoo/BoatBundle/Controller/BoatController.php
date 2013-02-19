@@ -30,12 +30,66 @@ class BoatController extends Controller
         if (!$boat) {
             throw $this->createNotFoundException('Unable to find boat post.');
         }        
-        $request = $this->getRequest();       
         
+        
+        $map = $this->get('ivory_google_map.map');
+        $map->setAsync(true);
+        $map->setAutoZoom(false);
+        $boatAddress = $boat->getAddress();
+        $map->setCenter($boatAddress->getLat(), $boatAddress->getLng(), true);
+        $map->setMapOption('zoom', 4);
+        $map->setMapOption('disableDefaultUI', true);
+        $map->setMapOption('zoomControl', true);
+        $map->setStylesheetOptions(array(
+            'width' => '100%',
+            'height' => '300px'
+        ));
+        
+        $marker = $this->get('ivory_google_map.marker');
+        $marker->setPosition($boatAddress->getLat(), $boatAddress->getLng(), true);
+        $marker->setOption('title', $boat->getName());
+        $marker->setOption('clickable', true);
+        $marker->setIcon('http://www.incrediblue.com/assets/map-pin.png');
+        
+        /** info window
+         * 
+         
+        // Requests the ivory google map info window service
+        $infoWindow = $this->get('ivory_google_map.info_window');
+        // Add your info window to the marker
+        $marker->setInfoWindow($infoWindow);
+        */
+        
+        /** Event
+         * 
+         
+        // Requests the ivory google map event service
+        $event = $this->get('ivory_google_map.event');
+        
+        $instance = $marker->getJavascriptVariable();
+        // Configure your event
+        $handle = 'function(){alert("The event has been triggered");}';
+        $event->setInstance($instance);
+        $event->setEventName('click');
+        $event->setHandle($handle);
+
+        // It can only be used with a DOM event
+        // By default, the capture flag is false
+        $event->setCapture(true);
+         
+         // Add a DOM event
+        $map->getEventManager()->addDomEvent($event);
+        */
+        $map->addMarker($marker);
+        
+        
+        
+        $request = $this->getRequest();       
         $request->query->set('url', $this->generateUrl('ZizooBoatBundle_show', array('id' => $id)));
         $request->query->set('ajax_url', $this->generateUrl('ZizooBoatBundle_booking_widget', array('id' => $id, 'request' => $request)));
         return $this->render('ZizooBoatBundle:Boat:show.html.twig', array(
             'boat'      => $boat,
+            'map'       => $map,
             'request'   => $request
         ));
     }
@@ -56,6 +110,9 @@ class BoatController extends Controller
         
         $reservationAgent = $this->get('zizoo_reservation_reservation_agent');
         $reservationExists = $reservationAgent->reservationExists($boat, $bookBoat->getReservationFrom(), $bookBoat->getReservationTo());
+        
+        $totalPrice = $reservationAgent->getTotalPrice($boat, $bookBoat->getReservationFrom(), $bookBoat->getReservationTo());
+        
         $valid = false;
         
         if ($form->isValid() && !$reservationExists && $bookBoat->getNumGuests()>0){
@@ -74,6 +131,7 @@ class BoatController extends Controller
         return $this->render('ZizooBoatBundle:Boat:booking_widget.html.twig', array(
             'boat'                  => $boat,
             'book_boat'             => $bookBoat,
+            'total_price'           => $totalPrice,
             'form'                  => $form->createView(),
             'reservation_exists'    => $reservationExists,
             'valid'                 => $valid,
