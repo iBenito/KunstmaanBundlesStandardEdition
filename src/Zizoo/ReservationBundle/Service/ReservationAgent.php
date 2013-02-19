@@ -47,6 +47,7 @@ class ReservationAgent {
     }
     
     public function reservationExists($boat, $from, $to){
+        if (!$from || !$to) return false;
         $from->setTime(0,0,0);
         $to->setTime(23,59,59);
         $reservations = $boat->getReservation();
