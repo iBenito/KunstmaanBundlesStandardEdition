@@ -79,8 +79,17 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $to->modify( 'last day of next month' );
         $boat1Price->setAvailableUntil($to);
         $boat1Price->setPrice(9.99);
+        
+        $boat1Price2 = new Price();
+        $from = clone $to;
+        $from->modify( '+1 day' );
+        $boat1Price2->setAvailableFrom($from);
+        $to = clone $from;
+        $to->modify( '+1 month' );
+        $boat1Price2->setAvailableUntil($to);
+        $boat1Price2->setPrice(299.99);
                 
-        $boat1 = $boatService->createBoat($boat1, $boat1Address, $boatTypeRepo->findOneByName('Yacht'), new ArrayCollection(array($boat1Price)));
+        $boat1 = $boatService->createBoat($boat1, $boat1Address, $boatTypeRepo->findOneByName('Yacht'), new ArrayCollection(array($boat1Price, $boat1Price2)));
         
         //$boatService->addPrice($boat1, $from, $to, 9.99);
         
