@@ -82,4 +82,75 @@ class AddressController extends Controller
     }
     
     
+    public function locations2Action(Request $request){
+        $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat());
+        
+        $form->bindRequest($request);
+        $searchBoat = $form->getData();
+        
+        // hack for location search
+        $boatSearch = $request->query->get('zizoo_boat_search', null);
+        if ($boatSearch){
+            $searchBoat->setLocation($boatSearch['location']);
+        } 
+        if (!$searchBoat->getPage()){
+            $searchBoat->setPage(1);
+        }
+        
+        $pageSize   = $request->query->get('page_size', '9');
+
+        $em = $this->getDoctrine()
+                   ->getEntityManager();
+        
+        $maxBoatValues   = $em->getRepository('ZizooBoatBundle:Boat')->getMaxBoatValues();
+        
+        $availableBoats = $em->getRepository('ZizooBoatBundle:Boat')->searchBoats($searchBoat);
+        $numAvailableBoats = count($availableBoats);
+        $numPages = floor($numAvailableBoats / $pageSize);
+        if ($numAvailableBoats % $pageSize > 0){
+            $numPages++;
+        }
+
+        
+        $map = $this->get('ivory_google_map.map');
+        $map->setAsync(true);
+        $map->setAutoZoom(false);
+        $boatAddress = $boat->getAddress();
+        $map->setCenter($boatAddress->getLat(), $boatAddress->getLng(), true);
+        $map->setMapOption('zoom', 4);
+        $map->setMapOption('disableDefaultUI', true);
+        $map->setMapOption('zoomControl', true);
+        $map->setStylesheetOptions(array(
+            'width' => '100%',
+            'height' => '300px'
+        ));
+        
+        if ($request->isXmlHttpRequest()){
+            return $this->render('ZizooAddressBundle:Address:locations_boats.html.twig', array(
+                'boats'             => $availableBoats,
+                'page'              => $searchBoat->getPage(),
+                'page_size'         => $pageSize,
+                'num_pages'         => $numPages,                
+                'max_length'        => $maxBoatValues['max_length'],
+                'max_cabins'        => $maxBoatValues['max_cabins'],
+                'form'              => $form->createView(),
+                'map'               => $map
+            ));
+        } else {
+            return $this->render('ZizooAddressBundle:Address:locations.html.twig', array(
+                'boats'             => $availableBoats,
+                'page'              => $searchBoat->getPage(),
+                'page_size'         => $pageSize,
+                'num_pages'         => $numPages,
+                'max_length'        => $maxBoatValues['max_length'],
+                'max_cabins'        => $maxBoatValues['max_cabins'],
+                'form'              => $form->createView(),
+                'map'               => $map
+            ));
+        }
+        
+        
+    }
+    
+    
 }

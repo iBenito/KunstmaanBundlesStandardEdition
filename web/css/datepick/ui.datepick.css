@@ -5,7 +5,7 @@
 #ui-datepicker-div,
 .ui-datepicker-inline {
 	width: 17em;
-	font-size: 75%;
+	font-size: 100%;
 }
 #ui-datepicker-div {
 	z-index: 100;

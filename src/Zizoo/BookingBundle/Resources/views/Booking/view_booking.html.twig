@@ -31,15 +31,15 @@
         <tbody id="cost_details">
             <tr>
                 <td>Total:</td>
-                <td>{{ booking|Booking_displayPrice }}</td>
+                <td>&euro; {{ booking|Booking_displayPrice }}</td>
             </tr>
             <tr>
                 <td>Paid:</td>
-                <td>{{ booking|Booking_amountPaid }}</td>
+                <td>&euro; {{ booking|Booking_amountPaid }}</td>
             </tr>
             <tr>
                 <td>Outstanding:</td>
-                <td>{{ booking|Booking_amountOutstanding }}</td>
+                <td>&euro; {{ booking|Booking_amountOutstanding }}</td>
             </tr>
         </tbody>
     </table>

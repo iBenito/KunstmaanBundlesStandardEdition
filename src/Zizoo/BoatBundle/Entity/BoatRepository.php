@@ -2,12 +2,15 @@
 
 namespace Zizoo\BoatBundle\Entity;
 
+use Zizoo\BoatBundle\Entity\Price;
+
 use Zizoo\BoatBundle\Extensions\DoctrineExtensions\CustomWalker\SortableNullsWalker;
 use Zizoo\AddressBundle\Form\Model\SearchBoat;
+
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\Query;
-
+use Doctrine\ORM\Query\ResultSetMapping;
 /**
  * BoatRepository
  *
@@ -157,5 +160,51 @@ class BoatRepository extends EntityRepository
         return $qb->getQuery()->getSingleResult();
     }
     
+    /**
+    public function getPrices(Boat $boat, $from, $to){
+        $rsm = new ResultSetMapping();
+        $rsm->addEntityResult('Zizoo\BoatBundle\Entity\Price', 'p');
+        $rsm->addFieldResult('p', 'id', 'id');
+        $rsm->addFieldResult('p', 'available_from', 'available_from');
+        $rsm->addFieldResult('p', 'available_until', 'available_until');
+        $rsm->addFieldResult('p', 'price', 'price');
+        $rsm->addFieldResult('p', 'date_range', 'date_range');
+        $rsm->addFieldResult('p', 'date_range_before', 'date_range_before');
+        $rsm->addFieldResult('p', 'date_range_after', 'date_range_after');
+        $rsm->addMetaResult('p', 'boat_id', 'boat');
+
+        $query = $this->_em->createNativeQuery('SELECT id, available_from, available_until, price, boat_id,'
+                                                .' CASE
+                                                        WHEN :from >= available_from AND :until <= available_until THEN DATEDIFF(:until, :from)
+                                                        WHEN :from >= available_from AND :from < available_until AND :until > available_until THEN DATEDIFF(available_until, :from)
+                                                        WHEN :from < available_from AND :until >= available_from AND :until <= available_until THEN DATEDIFF(:until, available_from)
+                                                        WHEN :from < available_until AND :until > available_until THEN DATEDIFF(available_until, available_from)
+                                                END AS date_range,'
+                                                .' CASE
+                                                        WHEN :from >= available_from AND :until <= available_until THEN DATEDIFF(available_from, :from)
+                                                        WHEN :from >= available_from AND :from < available_until AND :until > available_until THEN NULL
+                                                        WHEN :from < available_from AND :until >= available_from AND :until <= available_until THEN DATEDIFF(available_from, :from)
+                                                        WHEN :from < available_until AND :until > available_until THEN DATEDIFF(available_from, :from)
+                                                END AS date_range_before,'
+                                                .' CASE
+                                                        WHEN :from >= available_from AND :until <= available_until THEN NULL
+                                                        WHEN :from >= available_from AND :from < available_until AND :until > available_until THEN DATEDIFF(:until, available_until)
+                                                        WHEN :from < available_from AND :until >= available_from AND :until <= available_until THEN NULL
+                                                        WHEN :from < available_until AND :until > available_until THEN DATEDIFF(:until, available_until)
+                                                END AS date_range_after'
+                                                .' FROM boat_price'
+                                                .' WHERE boat_id = :boat_id'
+                                                .' ORDER BY available_from ASC',
+                                                $rsm);
+        
+        $query->setParameter('from', $from);
+        $query->setParameter('until', $to);
+        $query->setParameter('boat_id', $boat->getId());
+
+        $prices = $query->getResult();
+        
+        return $prices;
+    }*/
+        
     
 }

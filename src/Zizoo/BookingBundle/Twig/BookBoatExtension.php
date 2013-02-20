@@ -20,12 +20,7 @@ class BookBoatExtension extends \Twig_Extension
         );
     }
     
-    public function price($bookBoat, $boat){
-        $from   = $bookBoat->getReservationFrom();
-        $to     = $bookBoat->getReservationTo();
-        if (!$from || !$to) return '...';
-        $reservationAgent = $this->container->get('zizoo_reservation_reservation_agent');
-        $totalPrice = $reservationAgent->getTotalPrice($boat, $from, $to);
+    public function price($bookBoat, $totalPrice){
         return number_format($totalPrice, 2);
     }
 

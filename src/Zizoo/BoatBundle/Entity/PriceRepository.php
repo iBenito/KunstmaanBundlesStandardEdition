@@ -12,4 +12,88 @@ use Doctrine\ORM\EntityRepository;
  */
 class PriceRepository extends EntityRepository
 {
+    public function getPrices(Boat $boat, $from, $to)
+    {
+        $qb = $this->createQueryBuilder('price')
+                    ->select('price')
+                    ->where('(:from >= price.available_from AND :until <= price.available_until)')
+                    ->orWhere('(:from >= price.available_from AND :from < price.available_until AND :until > price.available_until)')
+                    ->orWhere('(:from < price.available_from AND :until >= price.available_from AND :until <= price.available_until)')
+                    ->orWhere('(:from < price.available_from AND :until > price.available_until)')
+                    ->andWhere('price.boat = :boat_id')
+                    ->setParameter('from', $from)
+                    ->setParameter('until', $to)
+                    ->setParameter('boat_id', $boat->getID());
+        
+        $prices = new \Doctrine\Common\Collections\ArrayCollection($qb->getQuery()->getResult());
+        //$prices = $boat->getPrice();
+        
+        $validPrices = array();
+        
+        if (!$prices || $prices->count()==0){
+            // No prices to consider
+            return $validPrices;
+        }
+        
+        $firstPrice = $prices->first();
+        
+        if ($from >= $firstPrice->getAvailableFrom() && $to <= $firstPrice->getAvailableUntil())
+        {
+            /** Search is entirely in first price
+             * 
+             *              SEARCH              FROM---------------TO
+             *              PRICE       FROMxxxx---------------------xxxxTO
+             */
+            $validPrices[] = $firstPrice;
+        } else if ($from >= $firstPrice->getAvailableFrom() && $from < $firstPrice->getAvailableUntil() && $to > $firstPrice->getAvailableUntil())
+        {
+            /** Search begins in first price, but ends outside
+             *              SEARCH              FROM---------xxxxxxxxxxxxxTO
+             *              PRICE       FROMxxxx-----------TO
+             * Need to determine if outside range is covered by following prices
+             */
+            $tmpPrices = array($firstPrice);
+            $thisPrice = $firstPrice;
+            $valid = false;
+            while ( ($nextPrice = $prices->next()) ){
+                $tmpAvailableUntil = clone $thisPrice->getAvailableUntil();
+                $tmpAvailableUntil->modify('+1 second');
+                if ($nextPrice->getAvailableFrom() > $tmpAvailableUntil){
+                    /** There is a gap between two prices
+                     *              SEARCH              FROM---------xxxx------TO
+                     *              PRICE       FROMxxxx-----------TO    FROM----xxxxxxTO
+                     * Not valid
+                     */
+                    break;
+                } else if ($to <= $nextPrice->getAvailableUntil()){
+                    /** There is no gap between two prices and the search ends in next price
+                     *              SEARCH              FROM---------------TO
+                     *              PRICE       FROMxxxx-----------TOFROM----xxxxxxTO
+                     * Valid
+                     */
+                    $tmpPrices[] = $nextPrice;
+                    $valid = true;
+                    break;
+                } else {
+                    /** There is no gap between two prices but the search does not end in next price
+                     *              SEARCH              FROM----------------------------TO
+                     *              PRICE       FROMxxxx-----------TOFROM----xxxxxxTO?????
+                     * Possibly valid
+                     */
+                    $tmpPrices[] = $nextPrice;
+                }
+                
+                    
+                $thisPrice = $nextPrice;
+            }
+            
+            if ($valid){
+                foreach ($tmpPrices as $tmpPrice){
+                    $validPrices[] = $tmpPrice;
+                }
+            }
+                
+        }
+        return $validPrices;
+    }
 }

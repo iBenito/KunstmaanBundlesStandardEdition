@@ -7,11 +7,13 @@
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/colour_gradient.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/datepick/jquery.datepick.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/datepick/jquery.datepick.ext.js') }}"></script>
 {% endblock %}
     
 {% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('css/datepick/jquery.datepick.css') }}" type="text/css" rel="stylesheet" />
+    <!--<link href="{{ asset('css/datepick/jquery.datepick.css') }}" type="text/css" rel="stylesheet" />-->
+    <link href="{{ asset('css/datepick/ui-ui-zizoo.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
 {% block body %}
@@ -35,8 +37,9 @@
                     </section>
                 </div>
 
-                <div id="tabs-2" class="tab">
+                <div id="tabs-2" class="tab" style="width: 100%;">
                     <h2>Location</h2>
+                    {{ google_map_container(map) }}
                 </div>
 
                 <div id="tabs-3" class="tab current">
@@ -92,14 +95,14 @@
         
         .tabs .tab {
             position: absolute;
-            top: 0;
+            top: -5000px;
             left: 0;
-            display: none;
         }
         
         .tabs .tab.current {
             display: block;
             position: static;
+            top: 0;
         }
         
         #calendar {
@@ -117,54 +120,31 @@
         }
         
         #calendar .ui-datepicker-group {
-            margin-right: 16px;
+            margin-right: 0;
+            width: 100%;
         }
         
         #calendar .ui-datepicker-group-last {
             margin-right: 0;
         }
         
+        .day_price {
+            padding: 0 !important;
+            margin: 0 !important;
+            text-align: right !important;
+        }
+        
     </style>
     
+    {{ google_map_js(map) }}
+    
     <script type="text/javascript">
-        var fromDateSelected = false;
         var disableCallback = false;
+        var reservedDates;
+        var priceDates;
         
         function clearDates(){
             $('#calendar').datepick('setDate', []);
-        }
-
-        
-        function calendarOffsets(){
-            var offsets = [],
-                $listItems = $('#calendar .ui-datepicker-group');
-
-            $listItems.each(function() {
-                offsets.push( $(this).offset().top );
-            });
-
-            $.each(offsets, function(i, v) {
-                if (v < offsets[i + 1]){
-                    $listItems.eq(i).addClass('last-in-line');
-                } else {
-                    $listItems.eq(i).removeClass('last-in-line');
-                }
-            });
-        }
-        
-        function calendarAdjust(){
-            
-            var maxWidth  = 0;
-            var maxHeight = 0;
-            $('#calendar .ui-datepicker-group').each(function(index,el){
-                var height = $(el).height();
-                if (height>maxHeight) maxHeight = height;
-                var width = $(el).width();
-                if (width>maxWidth) maxWidth = width;
-            });
-            $('#calendar .ui-datepicker-group').height(maxHeight+20+'px');
-            //$('#calendar .ui-datepicker-group').width(maxWidth+'px');
-            calendarOffsets();
         }
         
         function selectDate(dates){
@@ -182,86 +162,46 @@
         }
         
         function setupCalendar(){
-            Date.prototype.getDateFormatted = function() {
-                var d = this.getDate();
-                return d < 10 ? '0' + (d) : (d); // 
-            }
-            Date.prototype.getMonthFormatted = function() {
-                var month = this.getMonth();
-                return month < 9 ? '0' + (month+1) : (month+1); // ('' + month) for string result
-            }
             
-            var reservedDates       = {{ boat|reservedDates|raw }};
-            var priceDates          = {{ boat|priceDates|raw }};
+            
             $.extend($.datepick, {
-                zizoo: function(date) {
+                zizoo_availability: function(date) {
                     var i;
                     for (i=0; i<reservedDates.length; i++){
                         if (date.getFullYear()==reservedDates[i][0] && date.getMonthFormatted()==reservedDates[i][1] && date.getDateFormatted()==reservedDates[i][2])
                         {
-                            return {selectable: false};                            
+                            return {selectable: false, dateClass: 'day_disabled', content: reservedDates[i][2] + '<span class="day_price">Booked</span>'};                            
                         }
                     }
                     var i;
                     for (i=0; i<priceDates.length; i++){
                         if (date.getFullYear()==priceDates[i][0] && date.getMonthFormatted()==priceDates[i][1] && date.getDateFormatted()==priceDates[i][2])
                         {
-                            return {selectable: true, dateClass: priceDates[i][3]+'_day'};                            
+                            return {selectable: true, content: priceDates[i][2] + '<span class="day_price">&euro;' + priceDates[i][3] + '</span>'};                            
                         }
                     }
-                    return {selectable: true};
+                    return {selectable: false, dateClass: 'day_disabled', content: date.getDateFormatted() + '<span class="day_price">Unavailable</span>'};
                 }
             });
             
             $('#calendar').datepick({ 
                 rangeSelect: true,
                 changeMonth: false,
-                monthsToShow: 12,
-                onDate: $.datepick.zizoo,
+                monthsToShow: 1,
+                onDate: $.datepick.zizoo_availability,
                 onSelect: selectDate,
-                onShow: function(){
-                    
-                }
+                renderer: $.datepick.themeRollerRenderer
             });
             if (callbackDates && callbackDates.length==2){
                 disableCallback = true;
                 $('#calendar').datepick('setDate', callbackDates);
                 disableCallback = false;
             }
-            return;
             
-            $('#calendar').datepicker({
-                numberOfMonths: 12,
-                dateFormat: 'dd/mm/yy',
-                onSelect: function (selectedDate, b) {
-                    /* the jQuery UI code sets the width on the element, we need to remove this any time jQuery tries to reset it */
-                    //$('#calendar .ui-datepicker-inline').css('width', '');
-                    if (!fromDateSelected){
-                        $('#zizoo_boat_book_reservation_from').val(selectedDate);
-                        fromDateSelected = true;
-                    } else {
-                        $('#zizoo_boat_book_reservation_to').val(selectedDate);
-                        fromDateSelected = false;
-                    }
-                    setTimeout('calendarAdjust()', 1);
-                },
-                beforeShowDay: function (date){
-                    var year = date.getFullYear(), month = date.getMonth(), day = date.getDate();
-
-                    // see if the current date should be highlighted
-                    for (var i=0; i < availableDates.length; ++i)
-                        if (year == availableDates[i][0] && month == availableDates[i][1] - 1 &&  day == availableDates[i][2])
-                        return [true, 'ui-state-highlight ui-state-active'];
-
-                    return [false];
-                },
-                onChangeMonthYear: function(){
-                    setTimeout("calendarAdjust()", 1);
-                }
-            });
-            calendarAdjust();
+            
+            //$('#zizoo_boat_book_reservation_from').datepick('setDate', $('#zizoo_boat_book_reservation_from').val()); 
+            //$('#zizoo_boat_book_reservation_to').datepick('setDate', $('#zizoo_boat_book_reservation_to').val()); 
         }
-        
         
         $(document).ready(function(){
             setupCalendar();

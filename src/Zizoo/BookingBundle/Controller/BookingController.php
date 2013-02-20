@@ -113,7 +113,7 @@ class BookingController extends Controller
         }
         
         // Calculate price
-        $totalPrice = $reservationAgent->getTotalPrice($boat, $bookBoat->getReservationFrom(), $bookBoat->getReservationTo());
+        $totalPrice = $reservationAgent->getTotalPrice($boat, $bookBoat->getReservationFrom(), $bookBoat->getReservationTo(), true);
         
         // Get list of countries
         $countries = $em->getRepository('ZizooAddressBundle:Country')->findAll();
@@ -123,7 +123,7 @@ class BookingController extends Controller
             array(
                 'transaction' => array(
                     'type'      => \Braintree_Transaction::SALE,
-                    'amount'    => $totalPrice,
+                    'amount'    => $totalPrice['total_price'],
                     'customerId'    => $user->getID(),
                     'options'       => array(
                         'storeInVaultOnSuccess'             => true,
@@ -146,7 +146,7 @@ class BookingController extends Controller
             $bookingForm = $form->getData();
             
             if ($form->isValid()){
-                $booking = $bookingAgent->braintreeMakeBooking($user, $bookingForm, $totalPrice, $bookBoat, $boat);
+                $booking = $bookingAgent->braintreeMakeBooking($user, $bookingForm, $totalPrice['total_price'], $bookBoat, $boat);
                 if ($booking instanceof Booking){
                     // Reservation and payment successful
                     $session->remove('boat');
@@ -181,6 +181,7 @@ class BookingController extends Controller
         $clientSideBraintreeKey = $this->container->getParameter('braintree_client_side_key');
         return $this->render('ZizooBookingBundle:Booking:book.html.twig', array('boat'              => $boat,
                                                                                 'book_boat'         => $bookBoat,
+                                                                                'total_price'       => $totalPrice,
                                                                                 'client_key'        => $clientSideBraintreeKey,
                                                                                 'tr_data'           => $trData,
                                                                                 'braintree_action'  => \Braintree_TransparentRedirect::url(),

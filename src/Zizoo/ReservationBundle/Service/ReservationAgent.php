@@ -47,6 +47,9 @@ class ReservationAgent {
     }
     
     public function reservationExists($boat, $from, $to){
+        if (!$from || !$to) return false;
+        $from->setTime(0,0,0);
+        $to->setTime(23,59,59);
         $reservations = $boat->getReservation();
         foreach ($reservations as $reservation){
             $checkIn = $reservation->getCheckIn();
@@ -58,7 +61,6 @@ class ReservationAgent {
         }
         return false;
     }
-    
     
     public function makeReservation(Boat $boat, BookBoat $bookBoat, $flush=false){
         $from = $bookBoat->getReservationFrom();
@@ -93,29 +95,44 @@ class ReservationAgent {
         
     }
     
-        
-    public function getPricePerDay(Boat $boat, $from, $to){
+    public function getPrices($boat, $from, $to){
         if (!$from || !$to) return null;
-        $from->setTime(0,0,0);
-        $to->setTime(23,59,59);
-        $prices = $boat->getPrice();
-        foreach ($prices as $price){
-            if ($from >= $price->getAvailableFrom() 
-                    && $to <= $price->getAvailableUntil())
-            {
-                return $price->getPrice();
-            }
-        }
-        return $boat->getDefaultPrice();
-    }
+        $prices = $this->em->getRepository('ZizooBoatBundle:Price')->getPrices($boat, $from, $to);
+        return $prices;
+    }   
     
-    public function getTotalPrice(Boat $boat, $from, $to){
+    public function getTotalPrice(Boat $boat, $from, $to, $arrayFormat=false){
         if (!$from || !$to) return null;
         $from->setTime(0,0,0);
         $to->setTime(23,59,59);
-        $interval = $from->diff($to);
-        $totalPrice = $this->getPricePerDay($boat, $from, $to) * $interval->days;
-        return $totalPrice;
+        
+        $prices = $this->getPrices($boat, $from, $to);
+        if (!$prices) return null;
+        
+        $arr = array();
+        $totalPrice = 0;
+        foreach ($prices as $price){
+            if ($from >= $price->getAvailableFrom() && $to <= $price->getAvailableUntil()){
+                $interval = $from->diff($to);
+                $arr['price'][$price->getPrice()] = array('price' => $price->getPrice(), 'dates' => array($from, $to));
+            } else if ($from >= $price->getAvailableFrom() && $from < $price->getAvailableUntil() && $to > $price->getAvailableUntil()){
+                $interval = $from->diff($price->getAvailableUntil());
+                $arr['price'][$price->getId()] = array('price' => $price->getPrice(), 'dates' => array($from, $price->getAvailableUntil()));
+            } else if ($from < $price->getAvailableFrom() && $to >= $price->getAvailableFrom() && $to <= $price->getAvailableUntil()){
+                $interval = $price->getAvailableFrom()->diff($to);
+                $arr['price'][$price->getId()] = array('price' => $price->getPrice(), 'dates' => array($price->getAvailableFrom(), $to));
+            } else {
+                $interval = $price->getAvailableFrom()->diff($price->getAvailableUntil());
+                $arr['price'][$price->getId()] = array('price' => $price->getPrice(), 'dates' => array($price->getAvailableFrom(), $price->getAvailableUntil()));
+            }
+            $totalPrice += $price->getPrice() * ($interval->days+1);
+        }
+        $arr['total_price'] = $totalPrice;
+        if ($arrayFormat){
+            return $arr;
+        } else {
+            return $totalPrice;
+        }
     }
 }
 ?>
