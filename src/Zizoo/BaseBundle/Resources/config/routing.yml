@@ -111,4 +111,4 @@ ZizooBaseBundle_dashboard_account:
     pattern:  /account/settings
     defaults: { _controller: ZizooBaseBundle:Dashboard:settings }
     requirements:
-        _method:  GET
+        _method:  GET|POST
