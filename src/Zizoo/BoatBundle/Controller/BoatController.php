@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 use Zizoo\BoatBundle\Entity\Boat;
+use Zizoo\BoatBundle\Entity\Image;
 use Zizoo\BoatBundle\Form\BoatType;
 
 /**
@@ -158,7 +159,7 @@ class BoatController extends Controller
             if ($boat->getId())
             {
                 $this->get('punk_ave.file_uploader')->syncFiles(
-                    array('from_folder' => 'attachments/' . $boat->getId(), 
+                    array('from_folder' => '../images/boats/' . $boat->getId(), 
                       'to_folder' => 'tmp/attachments/' . $editId,
                       'create_to_folder' => true));
             }
@@ -242,20 +243,37 @@ class BoatController extends Controller
         $form->bind($request);
 
         $editId = $this->getRequest()->get('editId');
+        if (!preg_match('/^\d+$/', $editId))
+        {
+            throw new Exception("Bad edit id");
+        }
         
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($boat);
-            $em->flush();
-
+            $boat->setUser($this->getUser());
+            
             $fileUploader = $this->get('punk_ave.file_uploader');
+            
+            /* Get a list of uploaded images to add to Boat */
+            $files = $fileUploader->getFiles(array('folder' => '/tmp/attachments/' . $editId));
+            $images = array();
+            foreach ($files as $file) {
+                $image = new Image();
+                $image->setBoat($boat);
+                $image->setPath($file);
+                $images[] = $image;
+            }
+                    
+            /* Boat creation is done by Boat Service class */
+            $boatService = $this->get('boat_service');
+            $boatCreated = $boatService->createBoat($boat, $boat->getAddress(), $boat->getBoatType(), null, $images);
+
             $fileUploader->syncFiles(
                 array('from_folder' => '/tmp/attachments/' . $editId,
-                'to_folder' => '../images/boats/' . $boat->getId(),
+                'to_folder' => '../images/boats/' . $boatCreated->getId(),
                 'remove_from_folder' => true,
                 'create_to_folder' => true));
             
-            return $this->redirect($this->generateUrl('ZizooBoatBundle_show', array('id' => $boat->getId())));
+            return $this->redirect($this->generateUrl('ZizooBoatBundle_show', array('id' => $boatCreated->getId())));
         }
 
         return $this->render('ZizooBoatBundle:Boat:new.html.twig', array(

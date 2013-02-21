@@ -33,16 +33,31 @@ class BoatService {
         }
     }
     
-    public function createBoat(Boat $boat, BoatAddress $address, BoatType $boatType, ArrayCollection $prices=null){
+    public function addImage(Boat $boat, Image $image, $flush=true){
+        $boat->addImage($image);
+        $this->em->persist($image);
+        if ($flush){
+            $this->em->flush();
+        }
+    }
+    
+    public function createBoat(Boat $boat, BoatAddress $address, BoatType $boatType, ArrayCollection $prices=null, $images=null){
 
         $boat->setBoatType($boatType);
         
         $address->fetchGeo();
         $address->setBoat($boat);
         $boat->setAddress($address);
+        
         if ($prices){
             foreach ($prices as $price){
                 $this->addPrice($boat, $price, false);
+            }
+        }
+        
+        if ($images){
+            foreach ($images as $image){
+                $this->addImage($boat, $image, false);
             }
         }
         

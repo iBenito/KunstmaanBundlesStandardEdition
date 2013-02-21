@@ -2,7 +2,7 @@
 
 namespace Zizoo\BoatBundle\Form;
 use Zizoo\BoatBundle\Form\Type\BoatTypeType;
-use Zizoo\AddressBundle\Form\Type\AddressType;
+use Zizoo\AddressBundle\Form\BoatAddressType;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,6 +17,9 @@ class BoatType extends AbstractType
             ->add('title')
             ->add('name')
             ->add('description')
+            ->add('boat_type', 'entity', array(
+                'class' => 'ZizooBoatBundle:BoatType',
+                'property' => 'name',))
             ->add('default_price')
             ->add('brand')
             ->add('model')
@@ -25,15 +28,8 @@ class BoatType extends AbstractType
             ->add('bathrooms')
             ->add('nr_guests')
             ->add('bathrooms')
-            ->add('boat_type',new BoatTypeType())
-//            ->add('boat_type', 'entity', array(
-//                'class' => 'ZizooBoatBundle:BoatType',
-//                'property' => 'name',))
-//            ->add('address',new AddressType())
-//            ->add('address', 'entity', array(
-//                'class' => 'ZizooAddressBundle:Country',
-//                'property' => 'name',
-//                ))
+            ->add('address',new BoatAddressType())
+
         ;
     }
 
