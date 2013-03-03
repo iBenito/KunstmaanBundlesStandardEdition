@@ -2,3 +2,8 @@
     background-image:url('images/avatar.png');
     min-height: 200px;
 }
+
+.avatar img {
+    background-color:#eeeeee;
+    width: 100%;
+}

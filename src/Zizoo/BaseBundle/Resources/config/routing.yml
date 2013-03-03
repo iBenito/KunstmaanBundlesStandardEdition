@@ -84,10 +84,10 @@ ZizooBaseBundle_dashboard_boat_edit:
         id: \d+
         
 ZizooBaseBundle_dashboard_boat_photos:
-    pattern:  /account/boat/{id}/photos
+    pattern:  /account/boat/photos
     defaults: { _controller: ZizooBaseBundle:Dashboard:boatPhotos }
     requirements:
-        _method:  GET
+        _method:  POST
         
 ZizooBaseBundle_dashboard_boat_price:
     pattern:  /account/boat/{id}/price

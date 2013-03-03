@@ -1,4 +1,4 @@
-{% extends 'ZizooBaseBundle:Page:index.html.twig' %}
+{% extends 'ZizooBaseBundle::layout.html.twig' %}
 
 {% block body %}
 
@@ -7,12 +7,13 @@
     </div>
 
     <div class="span8 hero-unit">
-    <section class="dashboard_page_title">
-        <header>
-            <h2>{% block dashboard_page_title %}Main Dashboard{% endblock %}</h2>
-        </header>
-    </section>
-    {% block content %}{% endblock %}
+        <section class="dashboard_page_title">
+            <header>
+                <h2>{% block dashboard_page_title %}Main Dashboard{% endblock %}</h2>
+            </header>
+        </section>
+            
+        {% block content %}{% endblock %}
     </div>
 
 {% endblock %}

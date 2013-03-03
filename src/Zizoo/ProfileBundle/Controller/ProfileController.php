@@ -14,8 +14,7 @@ class ProfileController extends Controller
     /**
      * Get User Information
      * 
-     * @param integer $id
-     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     * @return Response
      */
     public function showAction() 
     {
@@ -30,7 +29,7 @@ class ProfileController extends Controller
      * Get User Information
      * 
      * @param integer $id
-     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     * @return Response
      */
     public function editAction($id) 
     {
@@ -49,8 +48,11 @@ class ProfileController extends Controller
     
     /**
      * Create form for Profile Edit
-     *
-     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     * 
+     * @param \Zizoo\ProfileBundle\Entity\Profile $profile
+     * @param string $formPath Path for form submission
+     * @return Response
+     * @throws type
      */
     public function editWidgetAction(Profile $profile, $formPath = 'ZizooProfileBundle_edit')
     {
@@ -69,8 +71,12 @@ class ProfileController extends Controller
     
     /**
      * Edits an existing Profile entity.
-     *
-     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     * 
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param integer $id
+     * @param string $formPath Path for form submission
+     * @return Response
+     * @throws type
      */
     public function updateAction(Request $request, $id, $formPath)
     {

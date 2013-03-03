@@ -1,33 +1,29 @@
 <?php
 
-namespace Zizoo\AddressBundle\Form;
+namespace Zizoo\BoatBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class BoatAddressType extends AbstractType
+class ImageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('country', 'entity', array(
-                'class' => 'ZizooAddressBundle:Country',
-                'property' => 'name',
-                ))
-            ->add('locality')
+            ->add('boat', 'hidden')
         ;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Zizoo\AddressBundle\Entity\BoatAddress'
+            'data_class' => 'Zizoo\BoatBundle\Entity\Image'
         ));
     }
 
     public function getName()
     {
-        return 'zizoo_addressbundle_boataddresstype';
+        return 'zizoo_boatbundle_imagetype';
     }
 }

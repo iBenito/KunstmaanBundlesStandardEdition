@@ -33,15 +33,26 @@ class BoatService {
         }
     }
     
-    public function addImage(Boat $boat, Image $image, $flush=true){
-        $boat->addImage($image);
-        $this->em->persist($image);
-        if ($flush){
-            $this->em->flush();
+    public function addImages(Boat $boat, ArrayCollection $images){
+        foreach ($images as $image){
+            $this->addImage($boat, $image);
         }
     }
     
-    public function createBoat(Boat $boat, BoatAddress $address, BoatType $boatType, ArrayCollection $prices=null, $images=null){
+    public function addImage(Boat $boat, Image $image, $flush=true){
+        
+        //check if image already exists otherwise add it to boat
+        if(!($boat->getImage()->contains($image))){
+            $boat->addImage($image);
+            $this->em->persist($image);
+            if ($flush){
+                $this->em->flush();
+            }
+        }
+        
+    }
+    
+    public function createBoat(Boat $boat, BoatAddress $address, BoatType $boatType, ArrayCollection $prices=null){
 
         $boat->setBoatType($boatType);
         
@@ -52,12 +63,6 @@ class BoatService {
         if ($prices){
             foreach ($prices as $price){
                 $this->addPrice($boat, $price, false);
-            }
-        }
-        
-        if ($images){
-            foreach ($images as $image){
-                $this->addImage($boat, $image, false);
             }
         }
         

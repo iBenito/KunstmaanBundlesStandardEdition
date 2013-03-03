@@ -12,9 +12,9 @@ class ImageExtension extends \Twig_Extension
         );
     }
 
-    public function webPath($image)
+    public function webPath($image, $size = 'originals')
     {
-        return 'images/boats/'.$image->getBoat()->getId().'/'.$image->getPath();
+        return 'images/boats/'.$image->getBoat()->getId().'/'.$size.'/'.$image->getPath();
     }
 
     public function getName()

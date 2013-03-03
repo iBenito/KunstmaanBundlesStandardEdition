@@ -1,36 +1,10 @@
-{% block javascripts %}
-    <script src="{{ asset('js/jquery-1.8.3.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('js/jquery-ui-1.9.2.custom.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('js/underscore-min.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('bundles/punkavefileuploader/js/jquery.fileupload.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('bundles/punkavefileuploader/js/FileUploader.js') }}" type="text/javascript"></script>
-    <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer_compiled.js"></script>
-    
-{% endblock %}
-
-<form action="{{ path(formAction, { 'id': boat.id, 'editId': editId, 'formPath': formAction }) }}" method="post" {{ form_enctype(form) }}>
+<form action="{{ path(formAction, { 'id': boat.id, 'formPath': formAction }) }}" method="post" {{ form_enctype(form) }}>
     {{ form_widget(form) }}
 
-     {{ google_map_container(map) }}
-        
-    {# Hydrated by javascript #}
-    <div class="file-uploader"></div>
+    {# Displays Marina Map #}
+    {{ google_map_container(map) }}
         
     <button type="submit">Save</button>
 </form>
     
- {{ google_map_js(map) }} 
-    
-<script type="text/javascript">
-
-// Enable the file uploader
-$(function() {
-    new PunkAveFileUploader({ 
-        'uploadUrl': {{ path('ZizooBoatBundle_upload', { editId: editId }) | json_encode | raw }},
-        'viewUrl': "{{ '/uploads/tmp/attachments/' ~ editId | json_encode | raw }}",
-        'el': '.file-uploader',
-        'existingFiles': {{ existingFiles | json_encode | raw }},
-        'delaySubmitWhileUploading': '.edit-form'
-    });
-});
-</script>
+{{ google_map_js(map) }} 

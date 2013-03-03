@@ -8,4 +8,10 @@
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{ asset('bundles/zizooprofile/css/profile.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/zizoobase/css/custom.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+    
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/main.js') }}" type="text/javascript"></script>
 {% endblock %}

@@ -3,6 +3,5 @@
 {% block dashboard_page_title %}Add Boat - Step 1{% endblock %}
 
 {% block content %}
-    {% include "PunkAveFileUploaderBundle:Default:templates.html.twig" %}
     {% render 'ZizooBoatBundle:Boat:boatFormWidget' with { 'boat': boat, 'formAction': formAction } %}
 {% endblock %}

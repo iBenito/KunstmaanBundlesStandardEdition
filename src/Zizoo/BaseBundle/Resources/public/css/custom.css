@@ -1,0 +1,16 @@
+/* 
+ *   Document   : Custom
+ *   Created on : Oct 27, 2012, 5:51:02 PM
+ *   Author     : iBenito
+ *   Description:
+ *       Purpose of the stylesheet follows.
+ */
+
+/* Tabbed Viewing */
+#tabs .tab {
+    display: none;
+}
+
+#tabs .tab.current {
+    display: block;
+}

@@ -16,6 +16,9 @@ use Zizoo\BoatBundle\Form\BoatType;
 
 /**
  * Boat controller.
+ * 
+ * @author Alex Fuckert <alexf83@gmail.com>
+ * @author Benito Gonzalez <vbenitogo@gmail.com>
  */
 class BoatController extends Controller 
 {
@@ -145,27 +148,11 @@ class BoatController extends Controller
     /**
      * Create input form for Boat
      *
-     * @author Benito Gonzalez <vbenitogo@gmail.com>
      */
     public function boatFormWidgetAction(Boat $boat, $formAction)
     {
         $form = $this->createForm(new BoatType(), $boat);
 
-        // The Punk Ave file uploader part of the Form
-        $editId = $this->getRequest()->get('editId');
-        if (!preg_match('/^\d+$/', $editId))
-        {
-            $editId = sprintf('%09d', mt_rand(0, 1999999999));
-            if ($boat->getId())
-            {
-                $this->get('punk_ave.file_uploader')->syncFiles(
-                    array('from_folder' => '../images/boats/' . $boat->getId(), 
-                      'to_folder' => 'tmp/attachments/' . $editId,
-                      'create_to_folder' => true));
-            }
-        }
-        $existingFiles = $this->get('punk_ave.file_uploader')->getFiles(array('folder' => 'tmp/attachments/' . $editId));
-        
         /** @var Ivory\GoogleMapBundle\Model\Map */
         $map = $this->get('ivory_google_map.map');
         $map->setAsync(true);
@@ -179,9 +166,9 @@ class BoatController extends Controller
             'height' => '300px'
         ));
         
+        /* Build List of Marinas */
         $em = $this->getDoctrine()->getEntityManager();
         $marinas = $em->getRepository('ZizooAddressBundle:Marina')->getAllMarinas();
-  
         foreach ($marinas as $marina){
             $marker = $this->get('ivory_google_map.marker');
             $marker->setPosition($marina->getLat(), $marina->getLng(), true);
@@ -196,8 +183,6 @@ class BoatController extends Controller
             'boat' => $boat,
             'form' => $form->createView(),
             'formAction' => $formAction,
-            'existingFiles' => $existingFiles,
-            'editId' => $editId,
             'map' => $map,
         ));
     }
@@ -205,7 +190,6 @@ class BoatController extends Controller
     /**
      * Uploads Images.
      *
-     * @author Benito Gonzalez <vbenitogo@gmail.com>
      */
     public function uploadAction()
     {
@@ -242,36 +226,12 @@ class BoatController extends Controller
         $form = $this->createForm(new BoatType(), $boat);
         $form->bind($request);
 
-        $editId = $this->getRequest()->get('editId');
-        if (!preg_match('/^\d+$/', $editId))
-        {
-            throw new Exception("Bad edit id");
-        }
-        
         if ($form->isValid()) {
             $boat->setUser($this->getUser());
             
-            $fileUploader = $this->get('punk_ave.file_uploader');
-            
-            /* Get a list of uploaded images to add to Boat */
-            $files = $fileUploader->getFiles(array('folder' => '/tmp/attachments/' . $editId));
-            $images = array();
-            foreach ($files as $file) {
-                $image = new Image();
-                $image->setBoat($boat);
-                $image->setPath($file);
-                $images[] = $image;
-            }
-                    
             /* Boat creation is done by Boat Service class */
             $boatService = $this->get('boat_service');
-            $boatCreated = $boatService->createBoat($boat, $boat->getAddress(), $boat->getBoatType(), null, $images);
-
-            $fileUploader->syncFiles(
-                array('from_folder' => '/tmp/attachments/' . $editId,
-                'to_folder' => '../images/boats/' . $boatCreated->getId(),
-                'remove_from_folder' => true,
-                'create_to_folder' => true));
+            $boatCreated = $boatService->createBoat($boat, $boat->getAddress(), $boat->getBoatType());
             
             return $this->redirect($this->generateUrl('ZizooBoatBundle_show', array('id' => $boatCreated->getId())));
         }

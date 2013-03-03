@@ -4,40 +4,42 @@ namespace Zizoo\BaseBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
-use Zizoo\BaseBundle\Entity\Enquiry;
-use Zizoo\BaseBundle\Form\EnquiryType;
-
-use Zizoo\ProfileBundle\Form\ProfileType;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use Zizoo\BoatBundle\Entity\Boat;
+use Zizoo\BoatBundle\Entity\Image;
+use Zizoo\BoatBundle\Form\ImageType;
 
 use Zizoo\BillingBundle\Form\Model\BankAccount;
 use Zizoo\BillingBundle\Form\Type\BankAccountType;
 
+/**
+ * Dashboard Controller for managind everything related to User account.
+ *
+ * @author Benito Gonzalez <vbenitogo@gmail.com>
+ */
 class DashboardController extends Controller {
 
     /**
      * Displays Mini User Profile and Navigation
      * 
-     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     * @return Response
      */
     public function userWidgetAction()
     {
         $user = $this->getUser();
-        
+
         return $this->render('ZizooBaseBundle::user_widget.html.twig', array(
             'user' => $user,
-            'owner' => 'Owner',
-            'skipper' => 'Skipper'
+//            'owner' => (empty($user->getBoats())) ? false : true,
+//            'skipper' => (empty($user->getBoats())) ? false : true
         ));
     }
     
     /**
      * Display User Dashboard
      * 
-     * @param integer $userId
-     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     * @return Response
      */
     public function indexAction()
     {
@@ -49,7 +51,7 @@ class DashboardController extends Controller {
     /**
      * Display User Profile
      * 
-     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     * @return Response
      */
     public function profileAction()
     {
@@ -70,7 +72,7 @@ class DashboardController extends Controller {
     /**
      * Display User Inbox
      * 
-     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     * @return Response
      */
     public function inboxAction()
     {
@@ -82,7 +84,7 @@ class DashboardController extends Controller {
     /**
      * Display User Boats
      * 
-     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     * @return Response
      */
     public function boatsAction()
     {
@@ -95,9 +97,9 @@ class DashboardController extends Controller {
     }
     
     /**
-     * Add new Boat
+     * Add new Boat. Rendering of page will be delegated to Boat bundle.
      * 
-     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     * @return Response
      */
     public function boatNewAction()
     {
@@ -112,33 +114,96 @@ class DashboardController extends Controller {
     /**
      * Edit existing Boat
      * 
-     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     * @param integer $boatId
+     * @return Response
      */
-    public function boatEditAction()
+    public function boatEditAction($boatId)
     {
+        $em = $this->getDoctrine()->getManager();
+
+        $boat = $em->getRepository('ZizooBoatBundle:Boat')->find($boatId);
+        if (!$boat) {
+            throw $this->createNotFoundException('Unable to find Boat entity.');
+        }
+        
+        // The Punk Ave file uploader part of the Form for Uploading Images
+        $editId = $this->getRequest()->get('editId');
+        if (!preg_match('/^\d+$/', $editId))
+        {
+            $editId = sprintf('%09d', mt_rand(0, 1999999999));
+            if ($boat->getId())
+            {
+                $this->get('punk_ave.file_uploader')->syncFiles(
+                    array('from_folder' => '../images/boats/' . $boat->getId(),
+                        'to_folder' => 'tmp/attachments/' . $editId,
+                        'create_to_folder' => true));
+            }
+        }
+        $existingFiles = $this->get('punk_ave.file_uploader')->getFiles(array('folder' => 'tmp/attachments/' . $editId));
+        
+        $imagesForm = $this->createForm(new ImageType());
         
         return $this->render('ZizooBaseBundle:Dashboard/Boat:edit.html.twig', array(
-
+            'boat'  => $boat,
+            'imagesForm'  => $imagesForm->createView(),
+            'existingFiles' => $existingFiles,
+            'editId' => intval($editId),
+            'formAction' => 'ZizooBoatBundle_update'
         ));
     }
     
     /**
-     * Edit existing Boat
+     * Adds Images to Existing Boat
      * 
-     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     * @return Response
      */
     public function boatPhotosAction()
     {
-        
-        return $this->render('ZizooBaseBundle:Dashboard/Boat:photos.html.twig', array(
+        $boatId = $this->getRequest()->get('boatId');
+        $em = $this->getDoctrine()->getManager();
 
-        ));
+        $boat = $em->getRepository('ZizooBoatBundle:Boat')->find($boatId);
+        if (!$boat) {
+            throw $this->createNotFoundException('Unable to find Boat entity.');
+        }
+        
+        $editId = $this->getRequest()->get('editId');
+        if (!preg_match('/^\d+$/', $editId))
+        {
+            throw new Exception("Bad edit id");
+        }
+           
+        $fileUploader = $this->get('punk_ave.file_uploader');
+
+        /* Get a list of uploaded images to add to Boat */
+        $files = $fileUploader->getFiles(array('folder' => '/tmp/attachments/' . $editId));
+       
+        $images = array();
+        foreach ($files as $file) {
+            $image = new Image();
+            $image->setBoat($boat);
+            $image->setPath($file);
+            $images[] = $image;
+        }
+
+        /* Boat creation is done by Boat Service class */
+        $boatService = $this->get('boat_service');
+        $boatService->addImages($boat, new ArrayCollection($images));
+        
+        $fileUploader->syncFiles(
+            array('from_folder' => '/tmp/attachments/' . $editId,
+            'to_folder' => '../images/boats/' . $boatId,
+            'remove_from_folder' => true,
+            'create_to_folder' => true)
+        );
+            
+        return $this->redirect($this->generateUrl('ZizooBaseBundle_dashboard_boat_edit', array('id' => $boatId)));
     }
     
     /**
-     * Edit existing Boat
+     * Update the Boat Pricing
      * 
-     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     * @return Response
      */
     public function boatPriceAction()
     {
@@ -151,7 +216,7 @@ class DashboardController extends Controller {
     /**
      * Display User Skills
      * 
-     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     * @return Response
      */
     public function skillsAction()
     {
@@ -164,7 +229,7 @@ class DashboardController extends Controller {
     /**
      * Display User Bookings
      * 
-     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     * @return Response
      */
     public function tripsAction()
     {
@@ -174,9 +239,10 @@ class DashboardController extends Controller {
     }
     
     /**
-     * Display User Account Settings
+     * Edit Account Settings
      * 
-     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return Response
      */
     public function settingsAction(Request $request)
     {

@@ -4,34 +4,47 @@
     <!-- Main hero unit for a primary marketing message or call to action -->
     <div class="span8 hero-unit">
         <h1>Boats!</h1>
-        {% for boat in boats %}    
-            <h2><a href="{{ path('ZizooBoatBundle_show', { 'id': boat.id }) }}">{{ boat.name }}</a></h2>
+        {% for boat in boats %}
+            <div class="boat-carousel">
+                <h2><a href="{{ path('ZizooBoatBundle_show', { 'id': boat.id }) }}">{{ boat.name }}</a></h2>
+                <h3>{{ boat.title }}</h3>
+                <section class="images-carousel">
+                    <a href="{{ path('ZizooBoatBundle_show', { 'id': boat.id }) }}">{% include 'ZizooBoatBundle:Image:index.html.twig' with { 'images': boat.image, 'single': true } %}</a>
+                </section>
+                <section class="user-carousel">
+                    {% if boat.user.profile.picture is not null %}
+                        <img src="{{ asset(user.profile|pictureWebPath) }}" alt="image not found" class="large" />
+                    {% endif %}
+                    <a href="{{ path('ZizooProfileBundle_show', { 'id': boat.user.profile.id }) }}"> <p>{{ boat.user.profile.firstName }}</p></a>
+                </section>
+            </div>
         {% else %}
             <p>There are no boats available</p>
         {% endfor %}
-        <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
     </div>
     <div class="span4 hero-unit">
-         <h1><a href="{{ path('ZizooAddressBundle_locations') }}">Search!</a></h1>
+         <h1><a href="{{ path('ZizooAddressBundle_locations') }}">Browse!</a></h1>
     </div>
 {% endblock %}
     
 {% block row %}
     {% if main is defined and main %}
-    <div class="span4">
-        <h2>Ride The Waves</h2>
-        <p>Renting a boat is your way to a unique vacation.</p>
-        <p><a class="btn" href="#">View details &raquo;</a></p>
-    </div>
-    <div class="span4">
-        <h2>Rent Your Boat</h2>
-        <p>Find out how and why to add your boat.</p>
-        <p><a class="btn" href="#">View details &raquo;</a></p>
-    </div>
-    <div class="span4">
-        <h2>Be a Skipper</h2>
-        <p>Find out how and why to be a skipper.</p>
-        <p><a class="btn" href="#">View details &raquo;</a></p>
-    </div>
+        <div class="row">
+            <div class="span4">
+                <h2>Ride The Waves</h2>
+                <p>Renting a boat is your way to a unique vacation.</p>
+                <p><a class="btn" href="{{ path('ZizooBaseBundle_how') }}">View details &raquo;</a></p>
+            </div>
+            <div class="span4">
+                <h2>Rent Your Boat</h2>
+                <p>Find out how and why to add your boat.</p>
+                <p><a class="btn" href="{{ path('ZizooBaseBundle_how') }}">View details &raquo;</a></p>
+            </div>
+            <div class="span4">
+                <h2>Be a Skipper</h2>
+                <p>Find out how and why to be a skipper.</p>
+                <p><a class="btn" href="{{ path('ZizooBaseBundle_how') }}">View details &raquo;</a></p>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}

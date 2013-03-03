@@ -1,7 +1,6 @@
 {% extends 'ZizooBoatBundle::layout.html.twig' %}
 
 {% block body %}
-    {% include "PunkAveFileUploaderBundle:Default:templates.html.twig" %}
     {% render 'ZizooBoatBundle:Boat:boatFormWidget' with { 'boat': boat, 'formAction': formAction } %}
 {% endblock %}
 

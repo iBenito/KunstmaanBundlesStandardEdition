@@ -10,3 +10,20 @@ parameters:
     locale:            en
     secret:            YGREfaHmfclAfUpSlwRTL0sWAUQJxMrfcJ9XpbHjHWIx6ry2ZlC4lwNMBLL5GBKp
     remember_me_secret: fuckadoodledoo
+
+    file_uploader.allowed_extensions:
+    # Mime types are just for documentation's sake. 
+    # BlueImp filters by supplied extension. No checking of the
+    # actual file contents is done. If your mime types are 
+    # configured correctly in Apache the browser will have the
+    # correct expectations for each file
+    - gif #image/gif
+    - png #image/png
+    - jpg #image/jpeg
+    - jpeg #image/jpeg
+    
+    file_uploader.sizes:
+      thumbnail:
+        folder: thumbnails
+        max_width: 200
+        max_height: 200

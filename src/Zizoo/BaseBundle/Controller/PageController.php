@@ -6,6 +6,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Zizoo\BaseBundle\Entity\Feedback;
 use Zizoo\BaseBundle\Form\FeedbackType;
 
+/**
+ * Default controller. For single actions for project
+ *
+ * @author Benito Gonzalez <vbenitogo@gmail.com>
+ */
 class PageController extends Controller {
 
     public function indexAction() 
@@ -27,8 +32,7 @@ class PageController extends Controller {
         $user = $this->getUser();
         
         return $this->render('ZizooBaseBundle:Page:how.html.twig',array(
-            'user' => $user,
-            'main' => TRUE
+            'user' => $user
         ));
     }
     
@@ -62,7 +66,7 @@ class PageController extends Controller {
     /**
      * Feedback form
      * 
-     * @author Benito Gonzalez <vbenitogo@gmail.com>
+     * @return Response
      */
     public function feedbackAction()
     {

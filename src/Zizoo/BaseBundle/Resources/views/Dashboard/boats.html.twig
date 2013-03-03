@@ -6,7 +6,9 @@
     {% for boat in boats %}    
         <h3>{{ boat.name }}</h3>
         <p>{{ boat.title }}</p>
-        {% include 'ZizooBoatBundle:Image:index.html.twig' with { 'images': boat.image } %}
+        {% include 'ZizooBoatBundle:Image:index.html.twig' with { 'images': boat.image, 'single': true, 'size': 'thumbnails' } %}
+        <a href="{{ path('ZizooBoatBundle_show', { 'id': boat.id }) }}">View</a>
+        <a href="{{ path('ZizooBaseBundle_dashboard_boat_edit', { 'id': boat.id }) }}">Edit</a>
     {% else %}
         <p>There are no boats available</p>
     {% endfor %} 

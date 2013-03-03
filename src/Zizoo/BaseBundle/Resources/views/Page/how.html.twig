@@ -3,7 +3,35 @@
 {% block title %}How It Works{% endblock%}
 
 {% block body %}
-    <header>
+    <div id="how-menu">
         <h1>How it works</h1>
-    </header>
+        <ul id="tab-links">
+            <li><a href="#tabs-1">Rent</a></li>
+            <li><a href="#tabs-2">Host</a></li>
+            <li><a href="#tabs-3">Crew</a></li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block row %}
+    <div class="row">
+        <div class="span12">
+            <div id="tabs">
+                <div id="tabs-1" class="tab current">
+                    <h2>Ride The Waves</h2>
+                    <p>Renting a boat is your way to a unique vacation. Renting a boat is your way to a unique vacation.Renting a boat is your way to a unique vacation. Renting a boat is your way to a unique vacation. Renting a boat is your way to a unique vacation.</p>
+                </div>
+
+                <div id="tabs-2" class="tab">
+                    <h2>Host Your Boat</h2>
+                    <p>Find out how and why to add your boat.</p>
+                </div>
+
+                <div id="tabs-3" class="tab">
+                    <h2>Be a Skipper</h2>
+                    <p>Find out how and why to be a skipper.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
