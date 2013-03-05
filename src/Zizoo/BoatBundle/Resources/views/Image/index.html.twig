@@ -2,7 +2,7 @@
     {% if single is defined and single == true %}
         {% if loop.first %}
             <article class="image" id="image-{{ image.id }}">
-                <img src="{{ asset(image|imageWebPath) }}" alt="{{ image.path }} image not found" class="large" />
+                <img src="{{ asset(image|imageWebPath('thumbnails')) }}" alt="{{ image.path }} image not found" class="large" />
             </article>
         {% endif %}
     {% else %}

@@ -74,6 +74,38 @@ class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
      */
     private $contactsWithMe;
     
+    /**
+     * @ORM\ManyToMany(targetEntity="Group", inversedBy="users")
+     *
+     */
+    private $groups;
+        
+    /**
+     * @ORM\OneToOne(targetEntity="\Zizoo\ProfileBundle\Entity\Profile", mappedBy="user")
+     **/
+    private $profile;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="\Zizoo\CrewBundle\Entity\Skills", mappedBy="user")
+     **/
+    private $skills;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="\Zizoo\BoatBundle\Entity\Boat", mappedBy="user")
+     */
+    private $boats;
+        
+    /**
+     * @ORM\OneToMany(targetEntity="Zizoo\ReservationBundle\Entity\Reservation", mappedBy="guest")
+     */
+    private $reservations;
+    
+         
+    /**
+     * @ORM\OneToMany(targetEntity="Zizoo\BookingBundle\Entity\Booking", mappedBy="renter")
+     */
+    private $bookings;
+    
     
     public function isAccountNonExpired()
     {
@@ -95,26 +127,6 @@ class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
         return $this->isActive;
     }
     
-    /**
-     * @ORM\ManyToMany(targetEntity="Group", inversedBy="users")
-     *
-     */
-    private $groups;
-
-    /**
-     * @ORM\OneToOne(targetEntity="\Zizoo\SkipperBundle\Entity\Skills", mappedBy="user")
-     **/
-    private $skills;
-    
-    /**
-     * @ORM\OneToOne(targetEntity="\Zizoo\ProfileBundle\Entity\Profile", mappedBy="user")
-     **/
-    private $profile;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="\Zizoo\BoatBundle\Entity\Boat", mappedBy="user")
-     */
-    private $boats;
     
     public function __construct()
     {
@@ -122,8 +134,9 @@ class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
         $this->groups = new ArrayCollection();
         
         $this->boats = new ArrayCollection();
+        $this->reservations = new ArrayCollection();
+        $this->bookings = new ArrayCollection();
     }
-
 
     /**
      * @inheritDoc
@@ -489,5 +502,64 @@ class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
     public function getBoats() {
         return $this->boats;
     }
+        
+    /**
+     * Add reservation
+     *
+     * @param \Zizoo\ReservationBundle\Entity\Reservation
+     * @return User
+     */
+    public function addReservation(\Zizoo\ReservationBundle\Entity\Reservation $reservation) {
+        $this->reservations[] = $reservation;
+
+        return $this;
+    }
+
+    /**
+     * Remove reservations
+     *
+     * @param \Zizoo\ReservationBundle\Entity\Reservation $reservation
+     */
+    public function removeReservation(\Zizoo\ReservationBundle\Entity\Reservation $reservation) {
+        $this->reservations->removeElement($reservation);
+    }
+
+    /**
+     * Get reservations
+     *
+     * @return \Zizoo\ReservationBundle\Entity\Reservation 
+     */
+    public function getReservations() {
+        return $this->reservations;
+    }
     
+        /**
+     * Add booking
+     *
+     * @param \Zizoo\BookingBundle\Entity\Booking
+     * @return User
+     */
+    public function addBooking(\Zizoo\BookingBundle\Entity\Booking $booking) {
+        $this->bookings[] = $booking;
+
+        return $this;
+    }
+
+    /**
+     * Remove booking
+     *
+     * @param \Zizoo\BookingBundle\Entity\Booking $booking
+     */
+    public function removeBooking(\Zizoo\BookingBundle\Entity\Booking $booking) {
+        $this->bookings->removeElement($booking);
+    }
+
+    /**
+     * Get bookings
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getBookings() {
+        return $this->bookings;
+    }
 }

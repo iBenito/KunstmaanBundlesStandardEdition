@@ -63,6 +63,9 @@ class ReservationAgent {
     }
     
     public function makeReservation(Boat $boat, BookBoat $bookBoat, $flush=false){
+        $guestId = $bookBoat->getGuestId();
+        $guest = $this->em->getRepository('ZizooUserBundle:User')->findOneById($guestId);
+        
         $from = $bookBoat->getReservationFrom();
         $to   = $bookBoat->getReservationTo();
         $from->setTime(0,0,0);
@@ -79,6 +82,7 @@ class ReservationAgent {
         $reservation->setCheckOut($to);
         $reservation->setNrGuests($bookBoat->getNumGuests());
         $reservation->setBoat($boat);
+        $reservation->setGuest($guest);
         $reservation->setStatus('4');
 
         $reservationAddress = new ReservationAddress($boat);

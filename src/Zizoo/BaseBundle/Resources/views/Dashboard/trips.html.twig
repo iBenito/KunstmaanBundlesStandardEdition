@@ -1,3 +1,20 @@
 {% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
     
 {% block dashboard_page_title %}Trips{% endblock %}
+
+{% block content %}
+    
+    <h3>Bookings</h3>
+    {% for booking in bookings %}   
+        <p>{{ booking.reservation.boat.title }}</p>
+        
+        <a href="{{ path('ZizooBoatBundle_show', { 'id': booking.reservation.boat.id }) }}">
+            {% include 'ZizooBoatBundle:Image:index.html.twig' with { 'images': booking.reservation.boat.image, 'single': true, 'size': 'thumbnails' } %}
+        </a>
+        <p>Cost: {{ booking.cost }}</p>
+        <hr />
+    {% else %}
+        <p>You have no trips yet</p>
+    {% endfor %}
+        
+{% endblock %}

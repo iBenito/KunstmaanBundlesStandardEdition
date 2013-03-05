@@ -24,6 +24,8 @@ class AppKernel extends Kernel
             new Liip\ImagineBundle\LiipImagineBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new FOS\MessageBundle\FOSMessageBundle(),
+            new PunkAve\FileUploaderBundle\PunkAveFileUploaderBundle(),
+            new Ivory\GoogleMapBundle\IvoryGoogleMapBundle(),
             new Zizoo\BaseBundle\ZizooBaseBundle(),
             new Zizoo\BoatBundle\ZizooBoatBundle(),
             new Zizoo\UserBundle\ZizooUserBundle(),
@@ -32,11 +34,10 @@ class AppKernel extends Kernel
             new Zizoo\AddressBundle\ZizooAddressBundle(),
             new Zizoo\MessageBundle\ZizooMessageBundle(),
             new Zizoo\JqGridCustomBundle\ZizooJqGridCustomBundle(),
-            new PunkAve\FileUploaderBundle\PunkAveFileUploaderBundle(),
-            new Zizoo\SkipperBundle\ZizooSkipperBundle(),
+            new Zizoo\CrewBundle\ZizooCrewBundle(),
             new Zizoo\BillingBundle\ZizooBillingBundle(),
-            new Ivory\GoogleMapBundle\IvoryGoogleMapBundle(),
             new Zizoo\ReservationBundle\ZizooReservationBundle(),
+            new Zizoo\ReviewBundle\ZizooReviewBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

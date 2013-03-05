@@ -495,15 +495,15 @@ class RegistrationController extends Controller
             // User with Facebook UID already exists - log in
             if ($ajax){
                 $this->doLogin($alreadyExistsUser);
-                return $this->render('ZizooUserBundle:Registration:forward.html.twig', array(   'action' => 'ZizooBaseBundle_dashboard',
+                return $this->render('ZizooUserBundle:Registration:forward.html.twig', array(   'action' => 'ZizooBaseBundle_Dashboard',
                                                                                                 'ajax'    => $ajax));
             } else {
-                return $this->doLogin($alreadyExistsUser, $this->generateUrl('ZizooUserBundle_forward', array('action'  => 'ZizooBaseBundle_dashboard',
+                return $this->doLogin($alreadyExistsUser, $this->generateUrl('ZizooUserBundle_forward', array('action'  => 'ZizooBaseBundle_Dashboard',
                                                                                               'ajax'    => $ajax)));
             }
         } else if ($loggedInUser && $alreadyExistsUser && $loggedInUser->getID() == $alreadyExistsUser->getID()){
             // User with Facebook UID already exists and is already logged in - idiot!
-            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array('action' => 'ZizooBaseBundle_dashboard',
+            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array('action' => 'ZizooBaseBundle_Dashboard',
                                                                                          'ajax'    => $ajax));
         } else if ($loggedInUser && $alreadyExistsUser && $loggedInUser->getID() != $alreadyExistsUser->getID()){
             // User with Facebook UID already exists but another user is already logged in - what to do?

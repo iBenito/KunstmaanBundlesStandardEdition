@@ -46,68 +46,75 @@ ZizooBaseBundle_login_widget:
     requirements:
         _method:  GET
         
-ZizooBaseBundle_dashboard:
+ZizooBaseBundle_Dashboard:
     pattern:  /account/dashboard
     defaults: { _controller: ZizooBaseBundle:Dashboard:index }
     requirements:
         _method:  GET
         
-ZizooBaseBundle_dashboard_user_widget:
+ZizooBaseBundle_Dashboard_UserWidget:
     pattern:  /dashboard-user-widget
     defaults: { _controller: ZizooBaseBundle:Dashboard:userWidget }
     requirements:
         _method:  GET
         
-ZizooBaseBundle_dashboard_profile:
+ZizooBaseBundle_Dashboard_Profile:
     pattern:  /account/profile
     defaults: { _controller: ZizooBaseBundle:Dashboard:profile }
     requirements:
         _method:  GET
         
-ZizooBaseBundle_dashboard_boats:
+ZizooBaseBundle_Dashboard_Boats:
     pattern:  /account/boats
     defaults: { _controller: ZizooBaseBundle:Dashboard:boats }
     requirements:
         _method:  GET
         
-ZizooBaseBundle_dashboard_boat_new:
+ZizooBaseBundle_Dashboard_BoatNew:
     pattern:  /account/boat/new
     defaults: { _controller: ZizooBaseBundle:Dashboard:boatNew }
     requirements:
         _method:  GET
         
-ZizooBaseBundle_dashboard_boat_edit:
+ZizooBaseBundle_Dashboard_BoatEdit:
     pattern:  /account/boat/{id}/edit
     defaults: { _controller: ZizooBaseBundle:Dashboard:boatEdit }
     requirements:
         _method:  GET
         id: \d+
         
-ZizooBaseBundle_dashboard_boat_photos:
-    pattern:  /account/boat/photos
+ZizooBaseBundle_Dashboard_BoatPhotos:
+    pattern:  /account/boat/{id}/photos
     defaults: { _controller: ZizooBaseBundle:Dashboard:boatPhotos }
+    requirements:
+        _method:  GET
+        id: \d+
+        
+ZizooBaseBundle_Dashboard_BoatPhotosCreate:
+    pattern:  /account/boat/photos
+    defaults: { _controller: ZizooBaseBundle:Dashboard:boatPhotosCreate }
     requirements:
         _method:  POST
         
-ZizooBaseBundle_dashboard_boat_price:
+ZizooBaseBundle_Dashboard_BoatPrice:
     pattern:  /account/boat/{id}/price
     defaults: { _controller: ZizooBaseBundle:Dashboard:boatPrice }
     requirements:
         _method:  GET
         
-ZizooBaseBundle_dashboard_skills:
+ZizooBaseBundle_Dashboard_Skills:
     pattern:  /account/skills
     defaults: { _controller: ZizooBaseBundle:Dashboard:skills }
     requirements:
         _method:  GET
         
-ZizooBaseBundle_dashboard_trips:
+ZizooBaseBundle_Dashboard_Trips:
     pattern:  /account/trips
     defaults: { _controller: ZizooBaseBundle:Dashboard:trips }
     requirements:
         _method:  GET
         
-ZizooBaseBundle_dashboard_account:
+ZizooBaseBundle_Dashboard_Account:
     pattern:  /account/settings
     defaults: { _controller: ZizooBaseBundle:Dashboard:settings }
     requirements:

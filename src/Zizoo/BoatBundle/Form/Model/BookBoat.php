@@ -9,6 +9,8 @@ class BookBoat
     
     protected $boatId;
     
+    protected $guestId;
+    
     protected $reservation_from;
     protected $reservation_to;
     
@@ -20,6 +22,17 @@ class BookBoat
     
     public function getBoatId(){
         return $this->boatId;
+    }
+    
+    public function getGuestId()
+    {
+        return $this->guestId;
+    }
+    
+    public function setGuestId($guestId)
+    {
+        $this->guestId = $guestId;
+        return $this;
     }
     
     public function getReservationFrom()

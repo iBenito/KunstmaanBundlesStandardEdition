@@ -1,6 +1,6 @@
 <?php
 
-namespace Zizoo\SkipperBundle\Tests\Controller;
+namespace Zizoo\CrewBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

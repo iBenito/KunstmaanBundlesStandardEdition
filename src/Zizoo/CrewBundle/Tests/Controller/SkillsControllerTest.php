@@ -1,6 +1,6 @@
 <?php
 
-namespace Zizoo\SkipperBundle\Tests\Controller;
+namespace Zizoo\CrewBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -19,7 +19,7 @@ class SkillsControllerTest extends WebTestCase
 
         // Fill in the form and submit it
         $form = $crawler->selectButton('Create')->form(array(
-            'zizoo_skipperbundle_skillstype[field_name]'  => 'Test',
+            'zizoo_crewbundle_skillstype[field_name]'  => 'Test',
             // ... other fields to fill
         ));
 
@@ -33,7 +33,7 @@ class SkillsControllerTest extends WebTestCase
         $crawler = $client->click($crawler->selectLink('Edit')->link());
 
         $form = $crawler->selectButton('Edit')->form(array(
-            'zizoo_skipperbundle_skillstype[field_name]'  => 'Foo',
+            'zizoo_crewbundle_skillstype[field_name]'  => 'Foo',
             // ... other fields to fill
         ));
 

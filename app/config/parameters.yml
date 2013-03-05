@@ -22,8 +22,4 @@ parameters:
     - jpg #image/jpeg
     - jpeg #image/jpeg
     
-    file_uploader.sizes:
-      thumbnail:
-        folder: thumbnails
-        max_width: 200
-        max_height: 200
+    file_uploader.sizes: ~

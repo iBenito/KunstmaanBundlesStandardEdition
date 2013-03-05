@@ -6,6 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Zizoo\BaseBundle\Entity\Feedback;
 use Zizoo\BaseBundle\Form\FeedbackType;
 
+use Zizoo\AddressBundle\Form\Model\SearchBoat;
+use Zizoo\AddressBundle\Form\Type\SearchBoatType;
+
 /**
  * Default controller. For single actions for project
  *
@@ -15,15 +18,19 @@ class PageController extends Controller {
 
     public function indexAction() 
     {
+        $request = $this->getRequest();
         $em = $this->getDoctrine()->getEntityManager();
         $boats = $em->getRepository('ZizooBoatBundle:Boat')->getBoats(3);
         
         $user = $this->getUser();
-
+        
+        $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat());
+        
         return $this->render('ZizooBaseBundle:Page:index.html.twig',array(
             'user' => $user,
             'boats' => $boats,
-            'main' => TRUE
+            'main' => true,
+            'form' => $form->createView()
         ));
     }
     

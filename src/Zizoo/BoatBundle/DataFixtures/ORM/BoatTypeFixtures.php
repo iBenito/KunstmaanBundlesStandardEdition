@@ -47,7 +47,7 @@ class BoatTypeFixtures implements OrderedFixtureInterface, SharedFixtureInterfac
     public function load(ObjectManager $manager)
     {
         
-        $boatService       = $this->container->get('boat_service');
+        $boatService    = $this->container->get('boat_service');
             
         $yachtType      = $boatService->createBoatType('Yacht', 0);
         $catamaranType  = $boatService->createBoatType('Catamaran', 1);

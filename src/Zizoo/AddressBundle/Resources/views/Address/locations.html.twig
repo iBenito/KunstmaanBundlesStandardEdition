@@ -27,10 +27,10 @@
     {{ form_widget(form.reservation_from) }}
     {{ form_widget(form.reservation_to) }}
     {{ form_widget(form.num_guests) }}
-    {{ form_widget(form.length_from) }}
-    {{ form_widget(form.length_to) }}
-    {{ form_widget(form.num_cabins_from) }}
-    {{ form_widget(form.num_cabins_to) }}
+    {{ form_widget(form.filter.length_from) }}
+    {{ form_widget(form.filter.length_to) }}
+    {{ form_widget(form.filter.num_cabins_from) }}
+    {{ form_widget(form.filter.num_cabins_to) }}
     <input type="submit" value="Search" />
 
 <div id="map"></div>
@@ -92,8 +92,8 @@
                 max: {{ max_length }},
                 values: [ 1, {{ max_length }} ],
                 slide: function( event, ui ) {
-                    $( "#zizoo_boat_search_length_from" ).val(ui.values[ 0 ]);
-                    $( "#zizoo_boat_search_length_to" ).val(ui.values[ 1 ]);
+                    $( "#zizoo_boat_search_filter_length_from" ).val(ui.values[ 0 ]);
+                    $( "#zizoo_boat_search_filter_length_to" ).val(ui.values[ 1 ]);
                     $( "#length_text" ).html(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
                 },
                 stop: function( event, ui ){
@@ -107,8 +107,8 @@
                 max: {{ max_cabins }},
                 values: [ 1, {{ max_cabins }} ],
                 slide: function( event, ui ) {
-                    $( "#zizoo_boat_search_num_cabins_from" ).val(ui.values[ 0 ]);
-                    $( "#zizoo_boat_search_num_cabins_to" ).val(ui.values[ 1 ]);
+                    $( "#zizoo_boat_search_filter_num_cabins_from" ).val(ui.values[ 0 ]);
+                    $( "#zizoo_boat_search_filter_num_cabins_to" ).val(ui.values[ 1 ]);
                     $( "#num_cabins_text" ).html(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
                 },
                 stop: function( event, ui ){
@@ -132,7 +132,7 @@
     <div id="results_container" class="row-fluid">
         <div id="filter" style="display: none" class="span3 well pull-right">
             <div id="boat_type_filter">
-                {{ form_widget(form.boat_type) }}
+                {{ form_widget(form.filter.boat_type) }}
             </div>
             <div id="length_filter">
                 <label for="length_text">Boat Length:</label>

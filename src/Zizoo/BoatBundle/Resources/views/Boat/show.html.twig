@@ -121,7 +121,7 @@
         
         #calendar .ui-datepicker-group {
             margin-right: 0;
-            width: 100%;
+            width: 50%;
         }
         
         #calendar .ui-datepicker-group-last {
@@ -170,7 +170,7 @@
                     for (i=0; i<reservedDates.length; i++){
                         if (date.getFullYear()==reservedDates[i][0] && date.getMonthFormatted()==reservedDates[i][1] && date.getDateFormatted()==reservedDates[i][2])
                         {
-                            return {selectable: false, dateClass: 'day_disabled', content: reservedDates[i][2] + '<span class="day_price">Booked</span>'};                            
+                            return {selectable: false, dateClass: 'day_disabled', content: reservedDates[i][2] + '<span class="day_price">B</span>'};                            
                         }
                     }
                     var i;
@@ -180,14 +180,14 @@
                             return {selectable: true, content: priceDates[i][2] + '<span class="day_price">&euro;' + priceDates[i][3] + '</span>'};                            
                         }
                     }
-                    return {selectable: false, dateClass: 'day_disabled', content: date.getDateFormatted() + '<span class="day_price">Unavailable</span>'};
+                    return {selectable: false, dateClass: 'day_disabled', content: date.getDateFormatted() + '<span class="day_price">U</span>'};
                 }
             });
             
             $('#calendar').datepick({ 
                 rangeSelect: true,
                 changeMonth: false,
-                monthsToShow: 1,
+                monthsToShow: [2,2],
                 onDate: $.datepick.zizoo_availability,
                 onSelect: selectDate,
                 renderer: $.datepick.themeRollerRenderer

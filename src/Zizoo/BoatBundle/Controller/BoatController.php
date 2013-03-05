@@ -149,7 +149,7 @@ class BoatController extends Controller
      * Create input form for Boat
      *
      */
-    public function boatFormWidgetAction(Boat $boat, $formAction)
+    public function boatFormWidgetAction(Boat $boat, $formAction, $formRedirect)
     {
         $form = $this->createForm(new BoatType(), $boat);
 
@@ -183,6 +183,7 @@ class BoatController extends Controller
             'boat' => $boat,
             'form' => $form->createView(),
             'formAction' => $formAction,
+            'formRedirect' => $formRedirect,
             'map' => $map,
         ));
     }
@@ -233,7 +234,8 @@ class BoatController extends Controller
             $boatService = $this->get('boat_service');
             $boatCreated = $boatService->createBoat($boat, $boat->getAddress(), $boat->getBoatType());
             
-            return $this->redirect($this->generateUrl('ZizooBoatBundle_show', array('id' => $boatCreated->getId())));
+            $redirect = $request->query->get('formRedirect');
+            return $this->redirect($this->generateUrl($redirect, array('id' => $boatCreated->getId())));
         }
 
         return $this->render('ZizooBoatBundle:Boat:new.html.twig', array(
@@ -288,7 +290,8 @@ class BoatController extends Controller
             $em->persist($boat);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('ZizooBoatBundle_edit', array('id' => $id)));
+            $redirect = $request->query->get('formRedirect');
+            return $this->redirect($this->generateUrl($redirect, array('id' => $id)));
         }
 
         return $this->render('ZizooBoatBundle:Boat:edit.html.twig', array(
@@ -318,7 +321,7 @@ class BoatController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('ZizooBaseBundle_dashboard_boats'));
+        return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_Boats'));
     }
 
     private function createDeleteForm($id)

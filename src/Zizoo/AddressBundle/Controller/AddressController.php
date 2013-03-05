@@ -28,7 +28,7 @@ class AddressController extends Controller
      * @author Alex Fuckert <alexf83@gmail.com>
      */
     public function locationsAction(Request $request){       
-        $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat());
+        $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat(), array('filter' => true));
         
         $form->bindRequest($request);
         $searchBoat = $form->getData();
@@ -39,6 +39,7 @@ class AddressController extends Controller
             $searchBoat->setLocation($boatSearch['location']);
         } 
         if (!$searchBoat->getPage()){
+            // 1 is default for paging
             $searchBoat->setPage(1);
         }
         

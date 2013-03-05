@@ -1,6 +1,7 @@
 <?php
 
-namespace Zizoo\SkipperBundle\Entity;
+namespace Zizoo\CrewBundle\Entity;
+use Zizoo\BaseBundle\Entity\BaseEntity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -9,14 +10,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Table(name="skills")
  */
-class Skills
+class Skills extends BaseEntity
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
         
     /**
      * @ORM\OneToOne(targetEntity="Zizoo\UserBundle\Entity\User", inversedBy="skills")
@@ -33,18 +28,6 @@ class Skills
      * @ORM\Column(type="integer")
      */
     protected $experience;
-    
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $created;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $updated;
-
-
 
     /**
      * Get id
@@ -100,52 +83,6 @@ class Skills
     public function getExperience()
     {
         return $this->experience;
-    }
-
-    /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Skills
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-    
-        return $this;
-    }
-
-    /**
-     * Get created
-     *
-     * @return \DateTime 
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     * @return Skills
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-    
-        return $this;
-    }
-
-    /**
-     * Get updated
-     *
-     * @return \DateTime 
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
     }
 
     /**

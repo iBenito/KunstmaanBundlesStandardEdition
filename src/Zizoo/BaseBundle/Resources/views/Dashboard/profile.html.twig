@@ -2,4 +2,6 @@
 
 {% block dashboard_page_title %}Profile{% endblock %}
 
-{% block content %}{% render 'ZizooProfileBundle:Profile:editWidget' with { 'profile': profile, 'formPath': formPath } %}{% endblock %}
+{% block content %}
+    {% render 'ZizooProfileBundle:Profile:editWidget' with { 'profile': profile, 'formPath': formPath } %}
+{% endblock %}

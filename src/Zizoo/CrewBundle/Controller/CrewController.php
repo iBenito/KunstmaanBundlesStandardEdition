@@ -1,12 +1,12 @@
 <?php
 
-namespace Zizoo\SkipperBundle\Controller;
+namespace Zizoo\CrewBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-use Zizoo\SkipperBundle\Entity\Skills;
-use Zizoo\SkipperBundle\Form\SkillsType;
+use Zizoo\CrewBundle\Entity\Skills;
+use Zizoo\CrewBundle\Form\SkillsType;
 
 /**
  * Skills controller.
@@ -22,9 +22,9 @@ class SkillsController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('ZizooSkipperBundle:Skills')->findAll();
+        $entities = $em->getRepository('ZizooCrewBundle:Skills')->findAll();
 
-        return $this->render('ZizooSkipperBundle:Skills:index.html.twig', array(
+        return $this->render('ZizooCrewBundle:Skills:index.html.twig', array(
             'entities' => $entities,
         ));
     }
@@ -37,7 +37,7 @@ class SkillsController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('ZizooSkipperBundle:Skills')->find($id);
+        $entity = $em->getRepository('ZizooCrewBundle:Skills')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Skills entity.');
@@ -45,7 +45,7 @@ class SkillsController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('ZizooSkipperBundle:Skills:show.html.twig', array(
+        return $this->render('ZizooCrewBundle:Skills:show.html.twig', array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),        ));
     }
@@ -59,7 +59,7 @@ class SkillsController extends Controller
         $entity = new Skills();
         $form   = $this->createForm(new SkillsType(), $entity);
 
-        return $this->render('ZizooSkipperBundle:Skills:new.html.twig', array(
+        return $this->render('ZizooCrewBundle:Skills:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
         ));
@@ -83,7 +83,7 @@ class SkillsController extends Controller
             return $this->redirect($this->generateUrl('skills_show', array('id' => $entity->getId())));
         }
 
-        return $this->render('ZizooSkipperBundle:Skills:new.html.twig', array(
+        return $this->render('ZizooCrewBundle:Skills:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
         ));
@@ -97,7 +97,7 @@ class SkillsController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('ZizooSkipperBundle:Skills')->find($id);
+        $entity = $em->getRepository('ZizooCrewBundle:Skills')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Skills entity.');
@@ -106,7 +106,7 @@ class SkillsController extends Controller
         $editForm = $this->createForm(new SkillsType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('ZizooSkipperBundle:Skills:edit.html.twig', array(
+        return $this->render('ZizooCrewBundle:Skills:edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -121,7 +121,7 @@ class SkillsController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('ZizooSkipperBundle:Skills')->find($id);
+        $entity = $em->getRepository('ZizooCrewBundle:Skills')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Skills entity.');
@@ -138,7 +138,7 @@ class SkillsController extends Controller
             return $this->redirect($this->generateUrl('skills_edit', array('id' => $id)));
         }
 
-        return $this->render('ZizooSkipperBundle:Skills:edit.html.twig', array(
+        return $this->render('ZizooCrewBundle:Skills:edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -156,7 +156,7 @@ class SkillsController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('ZizooSkipperBundle:Skills')->find($id);
+            $entity = $em->getRepository('ZizooCrewBundle:Skills')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Skills entity.');

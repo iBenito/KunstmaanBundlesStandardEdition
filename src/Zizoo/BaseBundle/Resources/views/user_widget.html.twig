@@ -7,22 +7,30 @@
         {% endif %}
     </div>
     <h3>{{ user.profile.firstName }} {{ user.profile.lastName }}</h3>
-
-    <a id="add_boat" href="{{ path('ZizooBaseBundle_dashboard_boat_new') }}">Add Boat</a>
-    <a id="add_skills" href="{{ path('ZizooBaseBundle_dashboard_skills') }}">Add Skills</a>
+    {% if owner is defined and owner %}
+        <p>Captain!</p>
+    {% endif %}
+           
+    {% if crew is defined %}
+        <p>Sailor!</p>
+    {% endif %} 
+        
+        
+    <a id="add_boat" href="{{ path('ZizooBaseBundle_Dashboard_BoatNew') }}">Add Boat</a>
+    <a id="add_skills" href="{{ path('ZizooBaseBundle_Dashboard_Skills') }}">Add Skills</a>
 </div>
 
 <hr />
 
 <div class="dashboard_navigation">
     <ul class="nav">
-      <li class="active"><a href="{{ path('ZizooBaseBundle_dashboard') }}">Dashboard</a></li>
+      <li class="active"><a href="{{ path('ZizooBaseBundle_Dashboard') }}">Dashboard</a></li>
       <li><a href="{{ path('fos_message_inbox') }}">Inbox</a></li>
       <li><a href="{{ path('fos_message_sent') }}">Sent Messages</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_dashboard_profile') }}">Profile</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_dashboard_trips') }}">Trips</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_dashboard_boats') }}">Boats</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_dashboard_skills') }}">Skills</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_dashboard_account') }}">Account</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Profile') }}">Profile</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Trips') }}">Trips</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Boats') }}">Boats</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Skills') }}">Skills</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Account') }}">Account</a></li>
     </ul>
 </div>

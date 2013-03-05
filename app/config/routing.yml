@@ -1,10 +1,14 @@
-zizoo_billing:
-    resource: "@ZizooBillingBundle/Resources/config/routing.yml"
+zizoo_review:
+    resource: "@ZizooReviewBundle/Resources/config/routing.yml"
     prefix:   /
 
-zizoo_skills:
-    resource: "@ZizooSkipperBundle/Resources/config/routing.yml"
-    prefix:   /skills
+zizoo_billing:
+    resource: "@ZizooBillingBundle/Resources/config/routing.yml"
+    prefix:   /billing
+
+zizoo_crew:
+    resource: "@ZizooCrewBundle/Resources/config/routing.yml"
+    prefix:   /crew
 
 zizoo_reservation:
     resource: "@ZizooReservationBundle/Resources/config/routing.yml"

@@ -43,7 +43,6 @@ class ImageFixtures implements OrderedFixtureInterface, SharedFixtureInterface, 
     {
         $this->container = $container;
         $this->imgPath = $this->container->getParameter('kernel.root_dir').'/../web/images/boats';
-        var_dump($this->imgPath);
     }
     
     private function rrmdir($dir) { 
@@ -54,7 +53,7 @@ class ImageFixtures implements OrderedFixtureInterface, SharedFixtureInterface, 
     }
     
     private function copyImage($boat, $imgDir, $image){
-        $boatImgPath = $this->imgPath.'/'.$boat->getId();
+        $boatImgPath = $this->imgPath.'/'.$boat->getId().'/originals';
         
         if (!file_exists($boatImgPath)){
             mkdir($boatImgPath, 0775, true);

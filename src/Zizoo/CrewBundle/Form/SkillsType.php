@@ -1,6 +1,6 @@
 <?php
 
-namespace Zizoo\SkipperBundle\Form;
+namespace Zizoo\CrewBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,21 +13,18 @@ class SkillsType extends AbstractType
         $builder
             ->add('license')
             ->add('experience')
-            ->add('created')
-            ->add('updated')
-            ->add('user')
         ;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Zizoo\SkipperBundle\Entity\Skills'
+            'data_class' => 'Zizoo\CrewBundle\Entity\Skills'
         ));
     }
 
     public function getName()
     {
-        return 'zizoo_skipperbundle_skillstype';
+        return 'zizoo_crewbundle_skillstype';
     }
 }

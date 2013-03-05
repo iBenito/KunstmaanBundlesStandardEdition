@@ -22,10 +22,20 @@ class ReservationRepository extends EntityRepository
                     ->orWhere(':check_in BETWEEN r.check_in AND r.check_out')
                     ->setParameter('check_in', $resFrom)
                     ->setParameter('check_out', $resTo);
-
         
         return $qb->getQuery()->getResult();
         
+    }
+    
+    public function getReservationRequests($boatId) {
+
+        $qb = $this->createQueryBuilder('r')
+                    ->select('r')
+                    ->where('r.boat = :boat_id AND r.status = :status')
+                    ->setParameter('boat_id', $boatId)
+                    ->setParameter('status', Reservation::STATUS_REQUESTED);
+
+        return $qb->getQuery()->getResult();
     }
     
 }

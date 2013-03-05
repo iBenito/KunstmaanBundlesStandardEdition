@@ -1,13 +1,9 @@
 <?php
-// src/Zizoo/UserBundle/Form/Type/UserType.php
 namespace Zizoo\AddressBundle\Form\Type;
 
-use Doctrine\ORM\EntityRepository;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class SearchBoatType extends AbstractType
 {
@@ -19,8 +15,8 @@ class SearchBoatType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $em         = $this->container->get('doctrine.orm.entity_manager');
-        $uniqueLocations = $em->getRepository('ZizooAddressBundle:BoatAddress')->getUniqueLocations();
+        $em                 = $this->container->get('doctrine.orm.entity_manager');
+        $uniqueLocations    = $em->getRepository('ZizooAddressBundle:BoatAddress')->getUniqueLocations();
      
         $builder->add('location', 'zizoo_unique_locations', array('choices'         => $uniqueLocations, 
                                                                     'current'       => $options['current'],
@@ -44,27 +40,17 @@ class SearchBoatType extends AbstractType
         
         $builder->add('page', 'hidden', array('by_reference' => false));
         
-        $builder->add('boat_type', 'zizoo_boat_type_selector', array('expanded'     => true,
-                                                                        'multiple'  => true));
-        
-        $builder->add('length_from', 'hidden', array('required'      => false,
-                                                        'by_reference'  => false));
-        
-        $builder->add('length_to', 'hidden', array('required'      => false,
-                                                        'by_reference'  => false));
-        
-        $builder->add('num_cabins_from', 'hidden', array('required'      => false,
-                                                        'by_reference'  => false));
-        
-        $builder->add('num_cabins_to', 'hidden', array('required'      => false,
-                                                        'by_reference'  => false));
-        
+        if ($options['filter']){
+            $builder->add('filter', 'zizoo_boat_filter');
+        }
+                
     }
 
 
     public function getDefaultOptions(array $options)
     {
         return array('data_class'   => 'Zizoo\AddressBundle\Form\Model\SearchBoat',
+                     'filter'       => false,
                      'current'      => '-1');
     }
     

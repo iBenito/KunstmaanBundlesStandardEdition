@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Zizoo\BoatBundle\Entity\Boat;
 use Zizoo\BoatBundle\Entity\Image;
 use Zizoo\BoatBundle\Form\ImageType;
+use Zizoo\CrewBundle\Form\SkillsType;
 
 use Zizoo\BillingBundle\Form\Model\BankAccount;
 use Zizoo\BillingBundle\Form\Type\BankAccountType;
@@ -29,10 +30,13 @@ class DashboardController extends Controller {
     {
         $user = $this->getUser();
 
+        $owner = (count($user->getBoats())) ? true : false;
+//        $crew = (count($user->getSkills())) ? true : false;
+        
         return $this->render('ZizooBaseBundle::user_widget.html.twig', array(
             'user' => $user,
-//            'owner' => (empty($user->getBoats())) ? false : true,
-//            'skipper' => (empty($user->getBoats())) ? false : true
+            'owner' => $owner,
+//            'crew' => $crew
         ));
     }
     
@@ -43,8 +47,28 @@ class DashboardController extends Controller {
      */
     public function indexAction()
     {
-        return $this->render('ZizooBaseBundle:Dashboard:index.html.twig', array(
+        $user = $this->getUser();
+        
+        $reservationsMade = $user->getReservations();
+        $bookingsMade = $user->getBookings();
+        
+        $boats = $user->getBoats();
+        
+        $reservationRequests = array();
+        foreach ($boats as $boat) {
+            
+            // Returns one or more requests for each boat
+            $newRequests = $this->getDoctrine()->getRepository('ZizooReservationBundle:Reservation')->getReservationRequests($boat->getId());
+            foreach($newRequests as $request) {
+                $reservationRequests[] = $request;
+            }
 
+        }
+
+        return $this->render('ZizooBaseBundle:Dashboard:index.html.twig', array(
+            'reservations' => $reservationsMade,
+            'bookings' => $bookingsMade,
+            'reservationRequests' => $reservationRequests
         ));
     }
     
@@ -107,21 +131,40 @@ class DashboardController extends Controller {
         
         return $this->render('ZizooBaseBundle:Dashboard/Boat:new.html.twig', array(
             'boat' => $boat,
-            'formAction' => 'ZizooBoatBundle_create'
+            'formAction' => 'ZizooBoatBundle_create',
+            'formRedirect' => 'ZizooBaseBundle_Dashboard_BoatPhotos'
         ));
     }
     
     /**
      * Edit existing Boat
      * 
-     * @param integer $boatId
+     * @param integer $id Boat Id
      * @return Response
      */
-    public function boatEditAction($boatId)
+    public function boatEditAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $boat = $em->getRepository('ZizooBoatBundle:Boat')->find($boatId);
+        $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
+        if (!$boat) {
+            throw $this->createNotFoundException('Unable to find Boat entity.');
+        }
+            
+        return $this->render('ZizooBaseBundle:Dashboard/Boat:edit.html.twig', array(
+            'boat'  => $boat,
+            'formAction' => 'ZizooBoatBundle_update',
+            'formRedirect' => 'ZizooBaseBundle_Dashboard_BoatEdit'
+        ));
+    }
+    
+    /**
+     * Add photos to existing Boat
+     * 
+     * @param integer $id Boat Id
+     * @return Response
+     */
+    public function boatPhotosAction($id)
+    {
+        $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
         if (!$boat) {
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
@@ -143,12 +186,13 @@ class DashboardController extends Controller {
         
         $imagesForm = $this->createForm(new ImageType());
         
-        return $this->render('ZizooBaseBundle:Dashboard/Boat:edit.html.twig', array(
+        return $this->render('ZizooBaseBundle:Dashboard/Boat:photos.html.twig', array(
             'boat'  => $boat,
             'imagesForm'  => $imagesForm->createView(),
             'existingFiles' => $existingFiles,
             'editId' => intval($editId),
-            'formAction' => 'ZizooBoatBundle_update'
+            'formAction' => 'ZizooBoatBundle_update',
+            'formRedirect' => 'ZizooBaseBundle_Dashboard_BoatEdit'
         ));
     }
     
@@ -157,12 +201,11 @@ class DashboardController extends Controller {
      * 
      * @return Response
      */
-    public function boatPhotosAction()
+    public function boatPhotosCreateAction()
     {
         $boatId = $this->getRequest()->get('boatId');
-        $em = $this->getDoctrine()->getManager();
 
-        $boat = $em->getRepository('ZizooBoatBundle:Boat')->find($boatId);
+        $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($boatId);
         if (!$boat) {
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
@@ -197,7 +240,7 @@ class DashboardController extends Controller {
             'create_to_folder' => true)
         );
             
-        return $this->redirect($this->generateUrl('ZizooBaseBundle_dashboard_boat_edit', array('id' => $boatId)));
+        return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_BoatEdit', array('id' => $boatId)));
     }
     
     /**
@@ -220,9 +263,10 @@ class DashboardController extends Controller {
      */
     public function skillsAction()
     {
+        $user = $this->getUser();
         
         return $this->render('ZizooBaseBundle:Dashboard:skills.html.twig', array(
-
+            
         ));
     }
     
@@ -233,8 +277,12 @@ class DashboardController extends Controller {
      */
     public function tripsAction()
     {
+        $user = $this->getUser();
+        
+        $bookings = $user->getBookings();
         
         return $this->render('ZizooBaseBundle:Dashboard:trips.html.twig', array(
+            'bookings' => $bookings
         ));
     }
     
@@ -277,7 +325,7 @@ class DashboardController extends Controller {
 
                     if ($updateResult->success){
                         $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_billing.bank_account_changed'));
-                        return $this->redirect($this->generateUrl('ZizooBaseBundle_dashboard_account'));
+                        return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_Account'));
                     } else {
                         $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_billing.bank_account_not_changed'));
                     }

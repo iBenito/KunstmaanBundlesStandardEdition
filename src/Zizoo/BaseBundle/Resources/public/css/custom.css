@@ -14,3 +14,14 @@
 #tabs .tab.current {
     display: block;
 }
+
+
+
+
+#zizoo_boat_search_location_chzn .country, #zizoo_boat_search_location .country {
+    font-weight: bold;
+}
+
+#zizoo_boat_search_location_chzn .sub, #zizoo_boat_search_location .sub {
+    padding-left: 15px;
+}

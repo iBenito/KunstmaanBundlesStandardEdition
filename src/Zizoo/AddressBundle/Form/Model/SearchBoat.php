@@ -9,20 +9,15 @@ class SearchBoat
     protected $location;
     
     protected $page;
-    
-    protected $boat_type;
-    
+   
     protected $reservation_from;
     protected $reservation_to;
     
     protected $num_guests;
     
-    protected $length_from;
-    protected $length_to;
-    
-    protected $num_cabins_from;
-    protected $num_cabins_to;
-    
+    protected $filter;
+
+
     public function __construct() {
         $this->page = 1;
     }
@@ -47,22 +42,6 @@ class SearchBoat
     {
         $this->page = $page;
         return $this;
-    }
-    
-    public function getBoatType()
-    {
-        return $this->boat_type;
-    }
-    
-    public function setBoatType($type)
-    {
-        $this->boat_type = $type;
-        return $this;
-    }
-    
-    public function boatTypeSelected()
-    {
-        return $this->boat_type['boat_type']->count()>0;
     }
     
     public function getReservationFrom()
@@ -98,48 +77,15 @@ class SearchBoat
         return $this;
     }
     
-    public function getLengthFrom()
+    public function setFilter($filter)
     {
-        return $this->length_from;
-    }
-    
-    public function setLengthFrom($from)
-    {
-        $this->length_from = $from;
+        $this->filter = $filter;
         return $this;
     }
     
-    public function getLengthTo()
+    public function getFilter()
     {
-        return $this->length_to;
-    }
-    
-    public function setLengthTo($to)
-    {
-        $this->length_to = $to;
-        return $this;
-    }
-    
-    public function getNumCabinsFrom()
-    {
-        return $this->num_cabins_from;
-    }
-    
-    public function setNumCabinsFrom($from)
-    {
-        $this->num_cabins_from = $from;
-        return $this;
-    }
-    
-    public function getNumCabinsTo()
-    {
-        return $this->num_cabins_to;
-    }
-    
-    public function setNumCabinsTo($to)
-    {
-        $this->num_cabins_to = $to;
-        return $this;
+        return $this->filter;
     }
     
     

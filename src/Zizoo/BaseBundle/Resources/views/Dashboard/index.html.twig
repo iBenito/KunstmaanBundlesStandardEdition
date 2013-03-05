@@ -1,3 +1,26 @@
 {% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
 
-{% block dashboard_page_title %}Main Dashboard{% endblock %}
+{% block dashboard_page_title %}Notifications{% endblock %}
+
+{% block content %}
+
+     <h3>Reservations</h3>
+    {% for reservation in reservations %}    
+        <p>You have a reservation for boat {{ reservation.boat.title }}</p>
+    {% endfor %} 
+
+    <hr />
+        
+    <h3>Trips</h3>
+    {% for booking in bookings %}    
+        <p>Booked boat {{ booking.reservation.boat.title }} for {{ booking.cost }}</p>
+    {% endfor %}
+        
+    <hr />
+        
+    <h3>Reservation Requests Received</h3>
+    {% for reservationRequest in reservationRequests %}    
+        <p>You Received a reservation request from {{ reservationRequest.guest.profile.firstName }}</p>
+    {% endfor %}   
+
+{% endblock %}

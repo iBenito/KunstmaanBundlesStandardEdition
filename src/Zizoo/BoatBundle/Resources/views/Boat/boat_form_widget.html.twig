@@ -1,4 +1,4 @@
-<form action="{{ path(formAction, { 'id': boat.id, 'formPath': formAction }) }}" method="post" {{ form_enctype(form) }}>
+<form action="{{ path(formAction, { 'id': boat.id, 'formRedirect': formRedirect }) }}" method="post" {{ form_enctype(form) }}>
     {{ form_widget(form) }}
 
     {# Displays Marina Map #}

@@ -10,6 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Reservation
 {
+    const STATUS_REQUESTED = 1;
+    const STATUS_ACCEPTED = 2;
+    const STATUS_EXPIRED = 3;
+    const STATUS_DENIED = 4;
+    
      /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -23,6 +28,12 @@ class Reservation
      */
     protected $boat;
         
+    /**
+     * @ORM\ManyToOne(targetEntity="Zizoo\UserBundle\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     **/
+    protected $guest;
+    
     /**
      * @ORM\OneToOne(targetEntity="Zizoo\BookingBundle\Entity\Booking", mappedBy="reservation")
      */
@@ -67,9 +78,9 @@ class Reservation
     {
         $this->setCreated(new \DateTime());
         $this->setUpdated(new \DateTime());
+        $this->setStatus(self::STATUS_REQUESTED);
     }
     
-
     /**
      * Get id
      *
@@ -241,6 +252,29 @@ class Reservation
         return $this->boat;
     }
 
+    /**
+     * Set guest
+     *
+     * @param \Zizoo\UserBundle\Entity\User $guest
+     * @return Booking
+     */
+    public function setGuest(\Zizoo\UserBundle\Entity\User $guest = null)
+    {
+        $this->guest = $guest;
+    
+        return $this;
+    }
+
+    /**
+     * Get guest
+     *
+     * @return \Zizoo\UserBundle\Entity\User 
+     */
+    public function getGuest()
+    {
+        return $this->guest;
+    }
+    
     /**
      * Set booking
      *

@@ -1,4 +1,16 @@
 {% extends 'ZizooBaseBundle::layout.html.twig' %}
+{% form_theme form 'ZizooAddressBundle:Form:fields.html.twig' %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/chosen.jquery.min.js') }}"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/chosen.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
 
 {% block body %}
     <!-- Main hero unit for a primary marketing message or call to action -->
@@ -13,7 +25,7 @@
                 </section>
                 <section class="user-carousel">
                     {% if boat.user.profile.picture is not null %}
-                        <img src="{{ asset(user.profile|pictureWebPath) }}" alt="image not found" class="large" />
+                        <img src="{{ asset(boat.user.profile|pictureWebPath) }}" alt="image not found" class="large" />
                     {% endif %}
                     <a href="{{ path('ZizooProfileBundle_show', { 'id': boat.user.profile.id }) }}"> <p>{{ boat.user.profile.firstName }}</p></a>
                 </section>
@@ -23,7 +35,70 @@
         {% endfor %}
     </div>
     <div class="span4 hero-unit">
-         <h1><a href="{{ path('ZizooAddressBundle_locations') }}">Browse!</a></h1>
+        <form id="search_form" action="{{ path('ZizooAddressBundle_locations') }}" method="get">
+            {{ form_widget(form) }}
+            <input type="submit" value="Search" />
+        </form>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('#zizoo_boat_search_location').chosen();
+                
+                var clearBtnFnc1 = function(input) {
+                        setTimeout(function() {
+                            var buttonPane = $( input )
+                                .datepicker( "widget" )
+                                .find( ".ui-datepicker-buttonpane" );
+                            var btn = $( '<button class="ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all" type="button">Clear</button>');
+                            btn.unbind("click")  .bind("click", function () {  
+                                $.datepicker._clearDate( input ); 
+                            });
+                            btn.appendTo(buttonPane);
+                        }, 1 );
+                    };
+
+                var clearBtnFnc2 = function(yes, month, inst) {
+                        setTimeout(function() {
+                            var buttonPane = $( this )
+                                .datepicker( "widget" )
+                                .find( ".ui-datepicker-buttonpane" );
+                            var btn = $( '<button class="ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all" type="button">Clear</button>');
+                            btn.unbind("click")  .bind("click", function () {  
+                               $.datepicker._clearDate( inst.input ); 
+                            });
+                            btn.appendTo(buttonPane);
+                        }, 1 );
+                    };
+
+                $( "#zizoo_boat_search_reservation_from" ).datepicker({
+                    defaultDate: "+1d",
+                    changeMonth: true,
+                    numberOfMonths: 1,
+                    showAnim: 'slideDown',
+                    dateFormat: 'dd/mm/yy',
+                    showButtonPanel: true,
+                    beforeShow: clearBtnFnc1,
+                    onChangeMonthYear: clearBtnFnc2,
+                    onClose: function( selectedDate ) {
+                        $( "#reservation_to" ).datepicker( "option", "minDate", selectedDate );
+                    }
+                });
+                $( "#zizoo_boat_search_reservation_to" ).datepicker({
+                    defaultDate: "+1d",
+                    changeMonth: true,
+                    numberOfMonths: 1,
+                    showAnim: 'slideDown',
+                    dateFormat: 'dd/mm/yy',
+                    showButtonPanel: true,
+                    beforeShow: clearBtnFnc1,
+                    onChangeMonthYear: clearBtnFnc2,
+                    onClose: function( selectedDate ) {
+                        $( "#zizoo_boat_search_reservation_from" ).datepicker( "option", "maxDate", selectedDate );
+                    }
+                });
+            });
+        </script>
+        
+        <h1><a href="{{ path('ZizooAddressBundle_locations') }}">Browse!</a></h1>
     </div>
 {% endblock %}
     

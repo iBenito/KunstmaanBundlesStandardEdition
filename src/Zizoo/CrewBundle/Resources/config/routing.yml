@@ -1,0 +1,30 @@
+skills:
+    pattern:  /skills
+    defaults: { _controller: "ZizooCrewBundle:Skills:index" }
+
+skills_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "ZizooCrewBundle:Skills:show" }
+
+skills_new:
+    pattern:  /new
+    defaults: { _controller: "ZizooCrewBundle:Skills:new" }
+
+skills_create:
+    pattern:  /create
+    defaults: { _controller: "ZizooCrewBundle:Skills:create" }
+    requirements: { _method: post }
+
+skills_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "ZizooCrewBundle:Skills:edit" }
+
+skills_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "ZizooCrewBundle:Skills:update" }
+    requirements: { _method: post }
+
+skills_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "ZizooCrewBundle:Skills:delete" }
+    requirements: { _method: post }
