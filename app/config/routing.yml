@@ -1,7 +1,3 @@
-zizoo_review:
-    resource: "@ZizooReviewBundle/Resources/config/routing.yml"
-    prefix:   /
-
 zizoo_billing:
     resource: "@ZizooBillingBundle/Resources/config/routing.yml"
     prefix:   /billing
