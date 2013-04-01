@@ -14,16 +14,12 @@ use Doctrine\ORM\Mapping as ORM;
 class Group implements RoleInterface
 {
     /**
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @var string
+     *
+     * @ORM\Column(name="id", type="string", length=255)
+     * @ORM\Id
      */
-    private $id;
-
-    /**
-     * @ORM\Column(name="name", type="string", length=30)
-     */
-    private $name;
+    protected $id;
 
     /**
      * @ORM\Column(name="role", type="string", length=20, unique=true)
@@ -51,36 +47,26 @@ class Group implements RoleInterface
     }
 
     /**
-     * Get id
+     * Set id
      *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
+     * @param string $id
      * @return Group
      */
-    public function setName($name)
+    public function setId($id)
     {
-        $this->name = $name;
+        $this->id = $id;
     
         return $this;
     }
 
     /**
-     * Get name
+     * Get id
      *
      * @return string 
      */
-    public function getName()
+    public function getId()
     {
-        return $this->name;
+        return $this->id;
     }
 
     /**

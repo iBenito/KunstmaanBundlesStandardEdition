@@ -31,6 +31,9 @@ class ThreadMetadata extends BaseThreadMetadata
      */
     protected $participant;
     
+    
+    
+    
     public function setThread(ThreadInterface $thread) {
         $this->thread = $thread;
     }
@@ -39,6 +42,5 @@ class ThreadMetadata extends BaseThreadMetadata
         $this->participant = $participant;
         return $this;
     }
-    
-    
+         
 }

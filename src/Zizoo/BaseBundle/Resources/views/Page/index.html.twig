@@ -27,7 +27,7 @@
                     {% if boat.user.profile.picture is not null %}
                         <img src="{{ asset(boat.user.profile|pictureWebPath) }}" alt="image not found" class="large" />
                     {% endif %}
-                    <a href="{{ path('ZizooProfileBundle_show', { 'id': boat.user.profile.id }) }}"> <p>{{ boat.user.profile.firstName }}</p></a>
+                    <a href="{{ path('ZizooProfileBundle_show', { 'username': boat.user.username }) }}"> <p>{{ boat.user.profile.firstName }}</p></a>
                 </section>
             </div>
         {% else %}

@@ -15,7 +15,7 @@ class NewThreadMultipleMessage extends AbstractMessage
         $this->recipients = $recipients;
     }
     
-    protected $threadType;
+    protected $messageType;
     
     /**
      * The user who receives the message
@@ -93,12 +93,12 @@ class NewThreadMultipleMessage extends AbstractMessage
         $this->recipients = $recipients;
     }
     
-    public function setThreadType($type){
-        $this->threadType = $type;
+    public function setMessageType($type){
+        $this->messageType = $type;
     }
     
-    public function getThreadType(){
-        return $this->threadType;
+    public function getMessageType(){
+        return $this->messageType;
     }
 
 }

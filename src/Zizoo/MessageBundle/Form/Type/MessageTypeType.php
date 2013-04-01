@@ -5,14 +5,14 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Zizoo\MessageBundle\Form\DataTransformer\ThreadTypeTransformer;
+use Zizoo\MessageBundle\Form\DataTransformer\MessageTypeTransformer;
 
 /**
  * Description of RecipientsType
  *
  * @author Łukasz Pospiech <zocimek@gmail.com>
  */
-class ThreadTypeType extends AbstractType
+class MessageTypeType extends AbstractType
 {
     /**
      * @var ThreadTypeTransformer
@@ -22,7 +22,7 @@ class ThreadTypeType extends AbstractType
     /**
      * @param ThreadTypeTransformer $transformer
      */
-    public function __construct(ThreadTypeTransformer $transformer)
+    public function __construct(MessageTypeTransformer $transformer)
     {
         $this->threadTypeTransformer = $transformer;
     }
@@ -58,6 +58,6 @@ class ThreadTypeType extends AbstractType
      */
     public function getName()
     {
-        return 'zizoo_thread_type_selector';
+        return 'zizoo_message_type_selector';
     }
 }

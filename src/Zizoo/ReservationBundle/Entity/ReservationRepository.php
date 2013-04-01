@@ -2,6 +2,10 @@
 
 namespace Zizoo\ReservationBundle\Entity;
 
+use Zizoo\BoatBundle\Entity\Boat;
+
+use Zizoo\UserBundle\Entity\User;
+
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -27,15 +31,82 @@ class ReservationRepository extends EntityRepository
         
     }
     
-    public function getReservationRequests($boatId) {
-
-        $qb = $this->createQueryBuilder('r')
-                    ->select('r')
-                    ->where('r.boat = :boat_id AND r.status = :status')
-                    ->setParameter('boat_id', $boatId)
-                    ->setParameter('status', Reservation::STATUS_REQUESTED);
-
+    public function getReservations(User $user=null, Boat $boat=null, \DateTime $from=null, \DateTime $to=null, $statusArr=null, Reservation $exceptReservation=null)
+    {
+         $qb = $this->createQueryBuilder('reservation')
+                    ->select('reservation, boat')
+                    ->leftJoin('reservation.boat', 'boat');
+         
+         $firstWhere = true;
+         if ($user){
+             $qb = $qb->where('boat.user = :user')
+                       ->setParameter('user', $user);
+             $firstWhere = false;
+         }
+         
+         if ($boat){
+             if ($firstWhere){
+                 $qb = $qb->where('boat = :boat')
+                            ->setParameter('boat', $boat);
+             } else {
+                 $qb = $qb->andWhere('boat = :boat')
+                            ->setParameter('boat', $boat);
+             }
+         }
+         
+         if ($from && $to){
+             if ($firstWhere){
+                 $qb = $qb->where('reservation.check_in BETWEEN :check_in AND :check_out')
+                            ->orWhere('reservation.check_out BETWEEN :check_in AND :check_out')
+                            ->orWhere(':check_in BETWEEN reservation.check_in AND reservation.check_out')
+                            ->setParameter('check_in', $from)
+                            ->setParameter('check_out', $to);
+             } else {
+                 $qb = $qb->andWhere('reservation.check_in BETWEEN :check_in AND :check_out')
+                            ->orWhere('reservation.check_out BETWEEN :check_in AND :check_out')
+                            ->orWhere(':check_in BETWEEN reservation.check_in AND reservation.check_out')
+                            ->setParameter('check_in', $from)
+                            ->setParameter('check_out', $to);
+             }
+         }
+         
+         if ($statusArr && count($statusArr)>0){
+             if ($firstWhere){
+                 $qb = $qb->where('reservation.status IN (:status)')
+                            ->setParameter('status', $statusArr);
+             } else {
+                $qb = $qb->andWhere('reservation.status IN (:status)')
+                            ->setParameter('status', $statusArr);
+             }
+         }
+         
+         if ($exceptReservation){
+             if ($firstWhere){
+                 $qb = $qb->where('reservation != (:except_reservation)')
+                            ->setParameter('except_reservation', $exceptReservation);
+             } else {
+                 $qb = $qb->andWhere('reservation != (:except_reservation)')
+                            ->setParameter('except_reservation', $exceptReservation);
+             }
+         }
+         
+         return $qb->getQuery()->getResult();
+    }
+    
+    public function getReservationRequests(User $user=null, Boat $boat=null) {
+        return $this->getReservations($user, $boat, null, null, array(Reservation::STATUS_REQUESTED));
+    }
+    
+    public function findByIds($ids)
+    {
+        $qb = $this->createQueryBuilder('reservation')
+                    ->select('reservation')
+                    ->where('reservation.id IN (:ids)')
+                    ->setParameter('ids', $ids);
+        
         return $qb->getQuery()->getResult();
     }
+        
+    
     
 }

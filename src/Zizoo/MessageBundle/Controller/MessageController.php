@@ -179,9 +179,13 @@ class MessageController extends BaseController
                             $user = $grid->getContainer()->get('security.context')->getToken()->getUser();
                             $val[] = $row->isReadByParticipant($user);
                         } else if ($fieldName=='Type'){
-                            $val[] = $row->getThreadType()->getName();
+                            //$val[] = $row->getThreadType()->getName();
+                            $lastMessageType = $row->getLastMessage()->getMessageType();
+                            $val [] = $lastMessageType?$lastMessageType->getName():'General';
                         } else if ($fieldName=='TypeInt'){
-                            $val[] = $row->getThreadType()->getId();
+                            //$val[] = $row->getThreadType()->getId();
+                            $lastMessageType = $row->getLastMessage()->getMessageType();
+                            $val [] = $val [] = $lastMessageType?$lastMessageType->getId():'';
                         } else if (method_exists($row, $methodName)){
                             $val[] = call_user_func(array( &$row, $methodName)); 
                         } else {
@@ -297,32 +301,43 @@ class MessageController extends BaseController
         $request                = $this->container->get('request');
         if (!$ajax) $ajax       = $request->isXmlHttpRequest();
         
-        $thread         = $this->getProvider()->getThread($threadId);
-        $form           = $this->container->get('fos_message.reply_form.factory')->create($thread);
-        $formHandler    = $this->container->get('fos_message.reply_form.handler');
-
+        $user           = $this->container->get('security.context')->getToken()->getUser();
+        
+        $provider       = $this->getProvider();
+        $thread         = $provider->getThread($threadId);
+        $form           = $this->container->get('zizoo_message.reply_form.factory')->create($thread);
+        $formHandler    = $this->container->get('zizoo_message.reply_form.handler');
+        
+        $messageTypeRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooMessageBundle:MessageType');
+        
         if ($message = $formHandler->process($form)) {
             if ($ajax){
                 return new Response();
             } else {
                 return new RedirectResponse($this->container->get('router')->generate('fos_message_thread_view', array(
-                    'threadId'  => $message->getThread()->getId(),
-                    'ajax'      => $ajax
+                    'threadId'      => $message->getThread()->getId(),
+                    'inquiry_type'  => $messageTypeRepo->findOneById('inquiry'),
+                    'user'          => $user,
+                    'ajax'          => $ajax
                 )));
             }
         }
 
         if ($ajax){
             return $this->container->get('templating')->renderResponse('FOSMessageBundle:Message:thread_ajax.html.twig', array(
-                'form' => $form->createView(),
-                'thread' => $thread,
-                'ajax'  => $ajax
+                'form'          => $form->createView(),
+                'thread'        => $thread,
+                'inquiry_type'  => $messageTypeRepo->findOneById('inquiry'),
+                'user'          => $user,
+                'ajax'          => $ajax
             ));
         } else {
             return $this->container->get('templating')->renderResponse('FOSMessageBundle:Message:thread.html.twig', array(
-                'form' => $form->createView(),
-                'thread' => $thread,
-                'ajax'  => $ajax
+                'form'          => $form->createView(),
+                'thread'        => $thread,
+                'inquiry_type'  => $messageTypeRepo->findOneById('inquiry'),
+                'user'          => $user,
+                'ajax'          => $ajax
             ));
         }
     }
@@ -347,29 +362,30 @@ class MessageController extends BaseController
        
         $formHandler = $this->container->get('fos_message.new_thread_form.handler');
 
-        if ($message = $formHandler->process($form)) {
-            $messenger = $this->container->get('messenger');
-            $sender     = $message->getSender();
-            $recipients = $message->getThread()->getOtherParticipants($sender);
-            foreach ($recipients as $recipient){
-                $messenger->sendNotificationMessageEmail($sender->getProfile(), $recipient->getProfile(), $message);
+        try {
+            $message = $formHandler->process($form);
+            if ($message) {
+                return new RedirectResponse($this->container->get('router')->generate('fos_message_thread_view', array(
+                    'threadId' => $message->getThread()->getId()
+                )));
             }
-            return new RedirectResponse($this->container->get('router')->generate('fos_message_thread_view', array(
-                'threadId' => $message->getThread()->getId()
-            )));
+        } catch (\InvalidArgumentException $e){
+            $this->container->get('session')->getFlashBag()->add('error', $e->getMessage());
+            return new RedirectResponse($this->container->get('router')->generate('ZizooMessageBundle_new_thread'));
         }
+        
 
         if ($ajax){
             return $this->container->get('templating')->renderResponse('FOSMessageBundle:Message:newThread_ajax.html.twig', array(
-                'form' => $form->createView(),
-                'data' => $form->getData(),
-                'ajax' => $ajax
+                'form'      => $form->createView(),
+                'data'      => $form->getData(),
+                'ajax'      => $ajax
             ));
         } else {
             return $this->container->get('templating')->renderResponse('FOSMessageBundle:Message:newThread.html.twig', array(
-                'form' => $form->createView(),
-                'data' => $form->getData(),
-                'ajax' => $ajax
+                'form'      => $form->createView(),
+                'data'      => $form->getData(),
+                'ajax'      => $ajax
             ));
         }
     }

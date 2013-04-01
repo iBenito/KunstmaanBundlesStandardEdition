@@ -15,11 +15,11 @@ class GroupFixtures extends AbstractFixture implements OrderedFixtureInterface
     {
         
         $group_zizoo = new Group();
-        $group_zizoo->setName('ROLE_ZIZOO_USER');
+        $group_zizoo->setId('ROLE_ZIZOO_USER');
         $group_zizoo->setRole('ROLE_ZIZOO_USER');
         
         $group_admin = new Group();
-        $group_admin->setName('ROLE_ZIZOO_ADMIN');
+        $group_admin->setId('ROLE_ZIZOO_ADMIN');
         $group_admin->setRole('ROLE_ZIZOO_ADMIN');
         
         //$group_zizoo->addUser($manager->merge($this->getReference('user1')));

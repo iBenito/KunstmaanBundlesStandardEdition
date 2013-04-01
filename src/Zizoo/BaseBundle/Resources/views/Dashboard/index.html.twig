@@ -4,11 +4,20 @@
 
 {% block content %}
 
-     <h3>Reservations</h3>
+    <h3>Reservations</h3>
+    <ul>
     {% for reservation in reservations %}    
-        <p>You have a reservation for boat {{ reservation.boat.title }}</p>
+        {% if reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_REQUESTED') %}
+            <li>You have requested a reservation for boat {{ reservation.boat.title }}</li>
+        {% elseif reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') %}
+            <li>Your requested reservation for boat {{ reservation.boat.title }} has been accepted</li>
+        {% elseif reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_EXPIRED') %}
+            <li>Your reservation request for boat {{ reservation.boat.title }} has expired</li>
+        {% elseif reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_DENIED') %}
+            <li>Your reservation request for boat {{ reservation.boat.title }} has been denied</li>
+        {% endif %}
     {% endfor %} 
-
+    </ul>
     <hr />
         
     <h3>Trips</h3>
@@ -20,7 +29,7 @@
         
     <h3>Reservation Requests Received</h3>
     {% for reservationRequest in reservationRequests %}    
-        <p>You Received a reservation request from {{ reservationRequest.guest.profile.firstName }}</p>
+        <p>You Received a <a href="{{ path('ZizooReservationBundle_view', {id: reservationRequest.id}) }}">reservation request</a> from {{ reservationRequest.guest.profile.firstName }}</p>
     {% endfor %}   
 
 {% endblock %}

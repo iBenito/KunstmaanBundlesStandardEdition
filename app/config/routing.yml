@@ -1,3 +1,7 @@
+zizoo_notification:
+    resource: "@ZizooNotificationBundle/Resources/config/routing.yml"
+    prefix:   /
+
 zizoo_billing:
     resource: "@ZizooBillingBundle/Resources/config/routing.yml"
     prefix:   /billing

@@ -9,6 +9,9 @@ use Zizoo\ReservationBundle\Entity\Reservation;
 use Zizoo\UserBundle\Entity\User;
 use Zizoo\UserBundle\Form\Model\Invitation;
 
+use FOS\MessageBundle\FormModel\AbstractMessage;
+use FOS\MessageBundle\Model\ParticipantInterface;
+
 use Doctrine\Common\Collections\ArrayCollection;
 
 class Messenger {
@@ -215,6 +218,19 @@ class Messenger {
         }
 
         $this->container->get('mailer')->send($message);
+    }
+    
+    public function threadAllowed(ParticipantInterface $sender, AbstractMessage $message)
+    {
+        $contactRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooMessageBundle:Contact');
+        
+        $recipients = $message->getRecipients();
+        foreach ($recipients as $recipient){
+            $contact = $contactRepo->findOneBy( array(    'sender'    => $sender,
+                                                            'recipient' => $recipient) );
+            if (!$contact) return false;
+        }
+        return true;
     }
     
 }

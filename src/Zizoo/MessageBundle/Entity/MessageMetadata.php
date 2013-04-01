@@ -33,6 +33,7 @@ class MessageMetadata extends BaseMessageMetadata
      */
     protected $participant;
 
+    
     public function setMessage(MessageInterface $message) {
         $this->message = $message;
         return $this;

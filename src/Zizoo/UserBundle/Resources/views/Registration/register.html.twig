@@ -25,6 +25,18 @@
                 {{ form_errors(form) }}
 
                 <div>
+                    {{ form_label(form.profile.first_name) }}
+                    {{ form_errors(form.profile.first_name) }}
+                    {{ form_widget(form.profile.first_name) }}
+                </div>
+                    
+                    <div>
+                    {{ form_label(form.profile.last_name) }}
+                    {{ form_errors(form.profile.last_name) }}
+                    {{ form_widget(form.profile.last_name) }}
+                </div>
+                    
+                <div>
                     {{ form_label(form.user.username) }}
                     {{ form_errors(form.user.username) }}
                     {% if unconfirmed_username %}

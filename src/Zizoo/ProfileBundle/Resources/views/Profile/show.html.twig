@@ -14,6 +14,11 @@
             </div>
             <p>{{ user.profile.firstName }} {{ user.profile.lastName }}</p>
         </section>
+            
+        <section class="boats">
+            <h2>Boats</h2>
+            {% render 'ZizooProfileBundle:Profile:showBoats' with {username: user.username, page: 1} %}
+        </section>
     </div>
 
     <div class="span8 hero-unit">

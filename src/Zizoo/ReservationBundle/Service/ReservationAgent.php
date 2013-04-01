@@ -46,44 +46,58 @@ class ReservationAgent {
         return $message;
     }
     
-    public function reservationExists($boat, $from, $to){
-        if (!$from || !$to) return false;
+    public function getReservation($boat, $from, $to)
+    {
+        if (!$from || !$to) return null;
         $from->setTime(0,0,0);
         $to->setTime(23,59,59);
         $reservations = $boat->getReservation();
         foreach ($reservations as $reservation){
+            if ($reservation->getStatus()!=Reservation::STATUS_ACCEPTED && $reservation->getStatus()!=Reservation::STATUS_SELF && $reservation->getStatus()!=Reservation::STATUS_HOLD) continue;
             $checkIn = $reservation->getCheckIn();
             $checkout = $reservation->getCheckOut();
             //(StartA <= EndB) and (EndA >= StartB)
             $inRange = ($from < $checkout) && ($to > $checkIn);
-            //$inRange = !(($from < $checkIn && $to < $checkout) || ($from > $checkIn && $to > $checkout));
-            if ($inRange) return true;
+            if ($inRange) return $reservation;
         }
-        return false;
+        return null;
     }
     
-    public function makeReservation(Boat $boat, BookBoat $bookBoat, $flush=false){
-        $guestId = $bookBoat->getGuestId();
-        $guest = $this->em->getRepository('ZizooUserBundle:User')->findOneById($guestId);
+    public function getOtherReservationRequests(Reservation $reservation)
+    {
+        $reservationRequests = array();
+        $reservations = $reservation->getBoat()->getReservation();
+        foreach ($reservations as $otherReservation){
+            if ($reservation->getStatus()!=Reservation::STATUS_REQUESTED || $otherReservation == $reservation) continue;
+            $checkIn = $otherReservation->getCheckIn();
+            $checkout = $otherReservation->getCheckOut();
+            //(StartA <= EndB) and (EndA >= StartB)
+            $inRange = ($reservation->getCheckIn() < $checkout) && ($reservation->getCheckOut() > $checkIn);
+            if ($inRange) {
+                $reservationRequests[] = $reservation;
+            }
+                
+        }
+        return $reservationRequests;
+    }
         
-        $from = $bookBoat->getReservationFrom();
-        $to   = $bookBoat->getReservationTo();
+    public function reservationExists($boat, $from, $to){
+        return $this->getReservation($boat, $from, $to)!=null;
+    }
+    
+    private function makeReservationWithStatus($boat, $from, $to, $numGuests, $cost, User $guest, $status, $flush=false)
+    {
         $from->setTime(0,0,0);
         $to->setTime(23,59,59);
         
-        /**if ($bookBoat->getNumGuests() > $boat->getNrGuests()) throw new InvalidReservationException('Too many guests: '.$bookBoat->getNumGuests().'>'.$boat->getNrGuests());
-        
-        if ($this->reservationExists($boat, $from, $to)){
-            throw new InvalidReservationException('Boat not available for '.$from->format('d/m/Y') . ' - ' . $to->format('d/m/Y'));
-        }*/
-
         $reservation = new Reservation();
         $reservation->setCheckIn($from);
         $reservation->setCheckOut($to);
-        $reservation->setNrGuests($bookBoat->getNumGuests());
+        $reservation->setNrGuests($numGuests);
         $reservation->setBoat($boat);
         $reservation->setGuest($guest);
-        $reservation->setStatus('4');
+        $reservation->setStatus($status);
+        $reservation->setCost($cost);
 
         $reservationAddress = new ReservationAddress($boat);
         $reservation->setAddress($reservationAddress);
@@ -96,7 +110,66 @@ class ReservationAgent {
         }
 
         return $reservation;
+    }
+    
+    public function makeReservationForSelf(Boat $boat, $from, $to, $flush=false)
+    {
+        return $this->makeReservationWithStatus($boat, $from, $to, 0, 0, $boat->getUser(), Reservation::STATUS_SELF, $flush);
+    }
+    
+    public function makeReservation(Boat $boat, BookBoat $bookBoat, $cost, User $guest, $flush=false)
+    {
+        $from = $bookBoat->getReservationFrom();
+        $to   = $bookBoat->getReservationTo();        
+        return $this->makeReservationWithStatus($boat, $from, $to, $bookBoat->getNumGuests(), $cost, $guest, Reservation::STATUS_REQUESTED, $flush);
         
+    }
+    
+    public function removeReservationForSelf(Boat $boat, Reservation $reservation)
+    {
+        $this->em->remove($reservation->getAddress());
+        $this->em->remove($reservation);
+    }
+        
+    public function acceptReservation(Reservation $reservation, $flush)
+    {
+        if ($reservation->getStatus()!=Reservation::STATUS_REQUESTED){
+            throw new InvalidReservationException('Unable to accept reservation');
+        }
+        
+        $bankTransferPaymentMethod = $this->em->getRepository('ZizooBookingBundle:PaymentMethod')->findOneById('bank_transfer');
+        $booking = $reservation->getBooking();
+        if ($booking->getInitialPaymentMethod()==$bankTransferPaymentMethod){
+            $reservation->setStatus(Reservation::STATUS_HOLD);
+        } else {
+            $reservation->setStatus(Reservation::STATUS_ACCEPTED);
+        }
+        $this->em->persist($reservation);
+        
+        if ($flush) $this->em->flush();
+        // TODO: handle notification, either here or in a listener
+    }
+    
+    public function denyReservation(Reservation $reservation, $flush)
+    {
+        if ($reservation->getStatus()!=Reservation::STATUS_REQUESTED){
+            throw new InvalidReservationException('Unable to accept reservation');
+        }
+        
+        $reservation->setStatus(Reservation::STATUS_DENIED);
+        $this->em->persist($reservation);
+        
+        if ($flush) $this->em->flush();
+        
+        // TODO: handle notification, either here or in a listener
+    }
+    
+    public function expireReservation(Reservation $reservation, $flush)
+    {
+        $reservation->setStatus(Reservation::STATUS_EXPIRED);
+        $this->em->persist($reservation);
+        if ($flush) $this->em->flush();
+        // TODO: handle notification, either here or in a listener
     }
     
     public function getPrices($boat, $from, $to){
@@ -104,38 +177,45 @@ class ReservationAgent {
         $prices = $this->em->getRepository('ZizooBoatBundle:Price')->getPrices($boat, $from, $to);
         return $prices;
     }   
-    
-    public function getTotalPrice(Boat $boat, $from, $to, $arrayFormat=false){
-        if (!$from || !$to) return null;
+      
+
+    public function available(Boat $boat, $from, $to)
+    {
+        if (!$from || !$to) return false;
         $from->setTime(0,0,0);
-        $to->setTime(23,59,59);
+        $to->setTime(00,00,00);
         
-        $prices = $this->getPrices($boat, $from, $to);
-        if (!$prices) return null;
+        $totalSetPrice  = $this->em->getRepository('ZizooBoatBundle:Price')->getTotalSetPrice($boat, $from, $to);
         
-        $arr = array();
-        $totalPrice = 0;
-        foreach ($prices as $price){
-            if ($from >= $price->getAvailableFrom() && $to <= $price->getAvailableUntil()){
-                $interval = $from->diff($to);
-                $arr['price'][$price->getPrice()] = array('price' => $price->getPrice(), 'dates' => array($from, $to));
-            } else if ($from >= $price->getAvailableFrom() && $from < $price->getAvailableUntil() && $to > $price->getAvailableUntil()){
-                $interval = $from->diff($price->getAvailableUntil());
-                $arr['price'][$price->getId()] = array('price' => $price->getPrice(), 'dates' => array($from, $price->getAvailableUntil()));
-            } else if ($from < $price->getAvailableFrom() && $to >= $price->getAvailableFrom() && $to <= $price->getAvailableUntil()){
-                $interval = $price->getAvailableFrom()->diff($to);
-                $arr['price'][$price->getId()] = array('price' => $price->getPrice(), 'dates' => array($price->getAvailableFrom(), $to));
-            } else {
-                $interval = $price->getAvailableFrom()->diff($price->getAvailableUntil());
-                $arr['price'][$price->getId()] = array('price' => $price->getPrice(), 'dates' => array($price->getAvailableFrom(), $price->getAvailableUntil()));
-            }
-            $totalPrice += $price->getPrice() * ($interval->days+1);
-        }
-        $arr['total_price'] = $totalPrice;
-        if ($arrayFormat){
-            return $arr;
+        $interval = $from->diff($to);
+        $numDays = $interval->days;
+        
+        if ($numDays > $totalSetPrice['num_days']){
+            return $boat->getDefaultPrice()>0;
         } else {
-            return $totalPrice;
+            return true;
+        }
+    }
+    
+    public function getTotalPrice(Boat $boat, $from, $to){
+        if (!$from || !$to) return null;
+        $from = $from->setTime(0,0,0);
+        $to = $to->setTime(0,0,0);
+        
+        $totalSetPrice  = $this->em->getRepository('ZizooBoatBundle:Price')->getTotalSetPrice($boat, $from, $to);
+        
+        $interval = $from->diff($to);
+        $numDays = $interval->days;
+        
+        if ($numDays > $totalSetPrice['num_days']){
+            if ($boat->getDefaultPrice()>0){
+                $diffDays = $numDays-$totalSetPrice['num_days'];
+                return $totalSetPrice['set_price'] + ($diffDays*$boat->getDefaultPrice());
+            } else {
+                throw new InvalidReservationException('Boat not available for '.$from->format('d/m/Y') . ' - ' . $to->format('d/m/Y'));
+            }
+        } else {
+            return $totalSetPrice['set_price'];
         }
     }
 }

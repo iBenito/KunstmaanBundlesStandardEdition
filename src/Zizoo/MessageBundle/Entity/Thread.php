@@ -2,6 +2,8 @@
 
 namespace Zizoo\MessageBundle\Entity;
 
+use Zizoo\ReservationBundle\Entity\Reservation;
+
 use Doctrine\ORM\Mapping as ORM;
 
 use FOS\MessageBundle\Entity\Thread as BaseThread;
@@ -36,6 +38,15 @@ class Thread extends BaseThread
      * @ORM\OneToMany(targetEntity="Zizoo\MessageBundle\Entity\ThreadMetadata", mappedBy="thread", cascade={"all"})
      */
     protected $metadata;
+    
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Zizoo\ReservationBundle\Entity\Reservation")
+     * @ORM\JoinColumn(name="reservation_id", referencedColumnName="id")
+     */
+    protected $reservation;
+    
+    
 
     public function __construct()
     {
@@ -58,35 +69,20 @@ class Thread extends BaseThread
         parent::addMetadata($meta);
     }
     
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="Zizoo\MessageBundle\Entity\ThreadType")
-     * @ORM\JoinColumn(name="thread_type", referencedColumnName="id")
-     */
-    protected $threadType;
-    
-    /**
-     * Set type
-     *
-     * @param ThreadType $type
-     * @return Message
-     */
-    public function setThreadType($type)
+    public function setReservation(Reservation $reservation)
     {
-        $this->threadType = $type;
-    
+        $this->reservation = $reservation;
         return $this;
     }
-
-    /**
-     * Get type
-     *
-     * @return ThreadType 
-     */
-    public function getThreadType()
+    
+    public function getReservation()
     {
-        return $this->threadType;
+        return $this->reservation;
     }
-
+    
+    public function getMessages()
+    {
+        return $this->messages->toArray();
+    }
 
 }

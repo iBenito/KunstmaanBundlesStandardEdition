@@ -8,38 +8,42 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Message
  *
- * @ORM\Table(name="message_thread_type")
- * @ORM\Entity(repositoryClass="Zizoo\MessageBundle\Entity\ThreadTypeRepository")
+ * @ORM\Table(name="message_type")
+ * @ORM\Entity(repositoryClass="Zizoo\MessageBundle\Entity\MessageTypeRepository")
  */
-class ThreadType
+class MessageType
 {
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="id", type="string", length=255)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="thread_type", type="string", length=255)
+     * @ORM\Column(name="message_type", type="string", length=255)
      */
     private $name;
 
     
-    public function __construct($name=null){
+    public function __construct($id=null, $name=null){
+        $this->id   = $id;
         $this->name = $name;
     }
     
     
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
     
     /**
      * Get id
      *
-     * @return integer 
+     * @return string 
      */
     public function getId()
     {

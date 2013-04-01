@@ -1,5 +1,5 @@
 <?php
-// src/Zizoo/BookingBundle/Form/Model/CreditCard.php
+// src/Zizoo/BookingBundle/Form/Model/BillingAddress.php
 namespace Zizoo\BookingBundle\Form\Model;
 
 use Symfony\Component\Validator\Constraints as Assert;

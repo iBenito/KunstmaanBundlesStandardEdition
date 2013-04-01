@@ -1,16 +1,11 @@
 <div id="booking_widget">
     <form id="availability_form" action="{{ url }}" method="get">
-        {% if reservation_exists == false %} 
+        
         <div id="booking_price_container">
             <label for="booking_price">Price</label>
             <div id="booking_price">{{ book_boat|BookBoat_price(total_price)}}</div>
         </div>
-        {% else %}
-        <div id="booking_price_container" style="display: none">
-            <label for="booking_price">Price</label>
-            <div id="booking_price">...</div>
-        </div>
-        {% endif %}
+        
         <input type="hidden" name="url" value="{{ url }}" />
         <input type="hidden" name="ajax_url" value="{{ ajax_url }}" />
         
@@ -31,28 +26,6 @@
         <button type="button" id="book_btn" disabled="disabled">Book It</button>
     {% endif %}
         
-    {% if reservation_exists == false and book_boat.reservationFrom and book_boat.reservationTo %}
-        <script type="text/javascript">
-            var callbackDates = null;
-            
-            $(document).ready(function(){
-                if ($('#calendar').hasClass('hasDatepick')){
-                    disableCallback = true;
-                    $('#calendar').datepick('setDate', [new Date({{ form.vars.value.reservationFrom.format('Y') }}, {{ form.vars.value.reservationFrom.format('m')-1 }}, {{ form.vars.value.reservationFrom.format('d') }}), new Date({{ form.vars.value.reservationTo.format('Y') }}, {{ form.vars.value.reservationTo.format('m')-1 }}, {{ form.vars.value.reservationTo.format('d') }})]);
-                    disableCallback = false;
-                } else {
-                    callbackDates = [new Date({{ form.vars.value.reservationFrom.format('Y') }}, {{ form.vars.value.reservationFrom.format('m')-1 }}, {{ form.vars.value.reservationFrom.format('d') }}), new Date({{ form.vars.value.reservationTo.format('Y') }}, {{ form.vars.value.reservationTo.format('m')-1 }}, {{ form.vars.value.reservationTo.format('d') }})];
-                }
-            });
-        </script>
-    {% else %}
-        <script type="text/javascript">
-            var callbackDates = null;
-            $(document).ready(function(){
-                clearDates();
-            });
-        </script>
-    {% endif %}
 </div>
 
 <style type="text/css">
@@ -60,19 +33,18 @@
 </style>
 
 <script type="text/javascript">
-    
+
+    var bookingWidgetReservedDates      = {{ boat|reservedDates(reservations)|raw }};
+    var bookingWidgetPriceDates         = {{ boat|priceDates(prices)|raw }};
+    var bookingWidgetDefaultAllowed     = {{ boat.defaultPrice > 0 ? 'true' : 'false' }};
+    var bookingWidgetDefaultPrice       = {{ boat.defaultPrice }};
     
     function reloadWidget(){
         var dateFrom    = $('#zizoo_boat_book_reservation_from').datepick('getDate');
         var dateUntil   = $('#zizoo_boat_book_reservation_to').datepick('getDate');
-        if (dateFrom.length>0 && dateUntil.length>0){
-            if (dateFrom[0] > dateUntil[0]){
-                $('#zizoo_boat_book_reservation_to').val('');
-            }
-        } 
+        
         if ($('#zizoo_boat_book_reservation_from').val()=='' || $('#zizoo_boat_book_reservation_to').val()=='') {
             $('#booking_price').html('...');
-            clearDates();
             return;
         }
         $('#booking_widget').block({ message: null });
@@ -88,8 +60,20 @@
         });
     }
     
+    function dateExists(dates, year, month, day){
+        return (typeof dates[year]!='undefined' && typeof dates[year][month]!='undefined' && typeof dates[year][month][day]!='undefined');
+    }
+
+    function defaultDate(day){
+        if (bookingWidgetDefaultAllowed){
+            return {selectable: true, dateClass: 'day_available', title: '&euro; ' + bookingWidgetDefaultPrice, content: day};
+        } else {
+            return {selectable: false, dateClass: 'day_unavailable', title: 'Unavailable', content: day};
+        }
+    }
     
     $(document).ready(function(){
+    
     
         $('#zizoo_boat_book_num_guests').change(function(){
             reloadWidget();
@@ -140,27 +124,42 @@
         
         $.extend($.datepick, {
             zizoo_widget: function(date) {
-                var i;
-                for (i=0; i<reservedDates.length; i++){
-                    if (date.getFullYear()==reservedDates[i][0] && date.getMonthFormatted()==reservedDates[i][1] && date.getDateFormatted()==reservedDates[i][2])
-                    {
-                        return {selectable: false, dateClass: 'day_disabled', content: reservedDates[i][2]};                            
-                    }
+                var reservedDate    = null;
+                var priceDate       = null;
+
+                if (dateExists(bookingWidgetReservedDates, date.getFullYear(), date.getMonthFormatted(), date.getDateFormatted())){
+                    reservedDate = bookingWidgetReservedDates[date.getFullYear()][date.getMonthFormatted()][date.getDateFormatted()];
                 }
-                var i;
-                for (i=0; i<priceDates.length; i++){
-                    if (date.getFullYear()==priceDates[i][0] && date.getMonthFormatted()==priceDates[i][1] && date.getDateFormatted()==priceDates[i][2])
-                    {
-                        return {selectable: true, content: priceDates[i][2]};                            
-                    }
+
+                if (dateExists(bookingWidgetPriceDates, date.getFullYear(), date.getMonthFormatted(), date.getDateFormatted())){
+                    priceDate = bookingWidgetPriceDates[date.getFullYear()][date.getMonthFormatted()][date.getDateFormatted()];
                 }
-                return {selectable: false, dateClass: 'day_disabled', content: date.getDateFormatted()};
+                
+                
+                if (priceDate){
+                    if (reservedDate){
+                        if (reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') }} || reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_SELF') }}){
+                            return {selectable: false, dateClass: 'day_unavailable', title: 'Unavailable', content: date.getDateFormatted() };
+                        } else {
+                            return defaultDate(date.getDateFormatted());
+                        }
+                    } else {
+                        return {selectable: true, dateClass: 'day_available', title: '&euro; ' + priceDate[0], content: date.getDateFormatted()};
+                    }
+                } else {
+                    if (reservedDate){
+                        if (reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') }} || reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_SELF') }}){
+                            return {selectable: false, dateClass: 'day_unavailable', title: 'Unavailable', content: date.getDateFormatted()};
+                        } else {
+                            return defaultDate(date.getDateFormatted());
+                        }
+                    }
+                    return defaultDate(date.getDateFormatted());    
+                }
+                
             }
         });
-
-        reservedDates       = {{ boat|reservedDates|raw }};
-        priceDates          = {{ boat|priceDates|raw }};
-
+        
         $( "#zizoo_boat_book_reservation_from" ).datepick({
             rangeSelect: false,
             changeMonth: false,

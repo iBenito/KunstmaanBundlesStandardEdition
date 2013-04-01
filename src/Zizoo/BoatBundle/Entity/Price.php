@@ -2,24 +2,20 @@
 
 namespace Zizoo\BoatBundle\Entity;
 
+use Zizoo\BaseBundle\Entity\BaseEntity;
+
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Availability
  * @ORM\Entity(repositoryClass="Zizoo\BoatBundle\Entity\PriceRepository")
- * @ORM\Table(name="boat_price")
+ * @ORM\Table(name="boat_price", uniqueConstraints={@ORM\UniqueConstraint(columns={"available"})})
+ * @UniqueEntity(fields="available", message="zizoo_boat.price_date_already_exists")
  * @ORM\HasLifecycleCallbacks()
  */
-class Price
+class Price extends BaseEntity
 {
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Zizoo\BoatBundle\Entity\Boat", inversedBy="availability")
@@ -30,12 +26,7 @@ class Price
     /**
      * @ORM\Column(type="datetime")
      */
-    protected $available_from;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $available_until;
+    protected $available;
 
     /**
      * @var float
@@ -44,64 +35,30 @@ class Price
      */
     protected $price;
 
+   
     
     /**
-     * Get id
+     * Set available
      *
-     * @return integer 
+     * @param \DateTime $available
+     * @return Price
      */
-    public function getId()
+    public function setAvailable($available)
     {
-        return $this->id;
-    }
-
-    
-    /**
-     * Set available_from
-     *
-     * @param \DateTime $availableFrom
-     * @return Availability
-     */
-    public function setAvailableFrom($availableFrom)
-    {
-        $availableFrom->setTime(0,0,0);
-        $this->available_from = $availableFrom;
+        $available->setTime(0,0,0);
+        $this->available = $available;
     
         return $this;
     }
 
     /**
-     * Get available_from
+     * Get available
      *
      * @return \DateTime 
      */
-    public function getAvailableFrom()
+    public function getAvailable()
     {
-        return $this->available_from;
-    }
-
-    /**
-     * Set available_until
-     *
-     * @param \DateTime $availableUntil
-     * @return Availability
-     */
-    public function setAvailableUntil($availableUntil)
-    {
-        $availableUntil->setTime(23,59,59);
-        $this->available_until = $availableUntil;
-    
-        return $this;
-    }
-
-    /**
-     * Get available_until
-     *
-     * @return \DateTime 
-     */
-    public function getAvailableUntil()
-    {
-        return $this->available_until;
+        return $this->available;
     }
 
     /**
@@ -149,5 +106,11 @@ class Price
     {
         return $this->boat;
     }
+    
+    public function __toString()
+    {
+        return ''.$this->id.'';
+    }
 
+    
 }

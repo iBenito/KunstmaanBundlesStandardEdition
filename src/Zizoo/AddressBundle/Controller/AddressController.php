@@ -48,7 +48,8 @@ class AddressController extends Controller
         $em = $this->getDoctrine()
                    ->getEntityManager();
         
-        $maxBoatValues   = $em->getRepository('ZizooBoatBundle:Boat')->getMaxBoatValues();
+        $minMaxBoatValues   = $em->getRepository('ZizooBoatBundle:Boat')->getMaxBoatValues();
+        $minMaxPrice     = $em->getRepository('ZizooBoatBundle:Price')->getMinimumAndMaximumPrice();
         
         $availableBoats = $em->getRepository('ZizooBoatBundle:Boat')->searchBoats($searchBoat);
         $numAvailableBoats = count($availableBoats);
@@ -63,8 +64,10 @@ class AddressController extends Controller
                 'page'              => $searchBoat->getPage(),
                 'page_size'         => $pageSize,
                 'num_pages'         => $numPages,                
-                'max_length'        => $maxBoatValues['max_length'],
-                'max_cabins'        => $maxBoatValues['max_cabins'],
+                'max_length'        => $minMaxBoatValues['max_length'],
+                'max_cabins'        => $minMaxBoatValues['max_cabins'],
+                'min_price'         => min(array($minMaxBoatValues['min_default_price'], $minMaxPrice['max_price'])),
+                'max_price'         => max(array($minMaxBoatValues['max_default_price'], $minMaxPrice['max_price'])),
                 'form'              => $form->createView()
             ));
         } else {
@@ -73,8 +76,10 @@ class AddressController extends Controller
                 'page'              => $searchBoat->getPage(),
                 'page_size'         => $pageSize,
                 'num_pages'         => $numPages,
-                'max_length'        => $maxBoatValues['max_length'],
-                'max_cabins'        => $maxBoatValues['max_cabins'],
+                'max_length'        => $minMaxBoatValues['max_length'],
+                'max_cabins'        => $minMaxBoatValues['max_cabins'],
+                'min_price'         => min(array($minMaxBoatValues['min_default_price'], $minMaxPrice['max_price'])),
+                'max_price'         => max(array($minMaxBoatValues['max_default_price'], $minMaxPrice['max_price'])),
                 'form'              => $form->createView()
             ));
         }

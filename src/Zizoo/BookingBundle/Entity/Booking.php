@@ -1,6 +1,7 @@
 <?php
 namespace Zizoo\BookingBundle\Entity;
 
+use Zizoo\BaseBundle\Entity\BaseEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -8,15 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="booking")
  * @ORM\HasLifecycleCallbacks()
  */
-class Booking
+class Booking extends BaseEntity
 {
-     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-    
+
     /**
      * @ORM\OneToOne(targetEntity="Zizoo\ReservationBundle\Entity\Reservation", inversedBy="booking")
      * @ORM\JoinColumn(name="reservation_id", referencedColumnName="id", nullable=false)
@@ -27,16 +22,6 @@ class Booking
      * @ORM\Column(type="smallint")
      */
     private $status;
-    
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $created;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $updated;
     
     /**
      * @ORM\ManyToOne(targetEntity="Zizoo\UserBundle\Entity\User")
@@ -55,6 +40,14 @@ class Booking
      * @ORM\OneToMany(targetEntity="Zizoo\BookingBundle\Entity\Payment", mappedBy="booking")
      */
     protected $payment;
+    
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Zizoo\BookingBundle\Entity\PaymentMethod")
+     * @ORM\JoinColumn(name="intial_payment_method_id", referencedColumnName="id", nullable=false)
+     */
+    private $initialPaymentMethod;
+    
     
     public function __construct()
     {
@@ -94,52 +87,6 @@ class Booking
     public function getStatus()
     {
         return $this->status;
-    }
-
-    /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Booking
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-    
-        return $this;
-    }
-
-    /**
-     * Get created
-     *
-     * @return \DateTime 
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     * @return Booking
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-    
-        return $this;
-    }
-
-    /**
-     * Get updated
-     *
-     * @return \DateTime 
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
     }
 
     /**
@@ -242,5 +189,27 @@ class Booking
     public function getReservation()
     {
         return $this->reservation;
+    }
+    
+    /**
+     * Set initial payment method
+     *
+     * @param \Zizoo\BookingBundle\Entity\PaymentMethod $initialPaymentMethod
+     * @return Booking
+     */
+    public function setInitialPaymentMethod(PaymentMethod $initialPaymentMethod)
+    {
+        $this->initialPaymentMethod = $initialPaymentMethod;
+        return $this;
+    }
+    
+    /**
+     * Get initial payment method
+     *
+     * @return \Zizoo\BookingBundle\Entity\PaymentMethod 
+     */
+    public function getInitialPaymentMethod()
+    {
+        return $this->initialPaymentMethod;
     }
 }

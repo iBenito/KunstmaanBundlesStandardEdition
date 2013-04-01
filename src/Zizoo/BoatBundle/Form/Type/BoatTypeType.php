@@ -48,7 +48,7 @@ class BoatTypeType extends AbstractType
         $queryBuilderClosure = function(EntityRepository $er)
         {
             return $er->createQueryBuilder('boat_type')
-                        ->orderBy('boat_type.orderNum', 'ASC');
+                        ->orderBy('boat_type.order', 'ASC');
         };
         $builder->add('boat_type', 'entity', array(
             'class'     => 'ZizooBoatBundle:BoatType',

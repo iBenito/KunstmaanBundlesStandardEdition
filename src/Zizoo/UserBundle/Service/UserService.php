@@ -32,14 +32,6 @@ class UserService
             $user->setConfirmationToken(null);
             $user->setIsActive(1);
             
-            $profile = new Profile();
-            $profile->setFirstName('');
-            $profile->setLastName('');
-            $profile->setCreated(new \DateTime());
-            $profile->setUpdated($profile->getCreated());
-            $profile->setUser($user);
-            
-            $this->em->persist($profile);
             $this->em->persist($user);
             $this->em->flush();
             
@@ -89,7 +81,7 @@ class UserService
         }
     }
     
-    public function registerUser(User $user){
+    public function registerUser(User $user, Profile $profile){
         $user->setSalt(md5(time()));
         $encoder = new MessageDigestPasswordEncoder('sha512', true, 10);
         $password = $encoder->encodePassword($user->getPassword(), $user->getSalt());
@@ -99,8 +91,13 @@ class UserService
         $zizooUserGroup = $this->em->getRepository('ZizooUserBundle:Group')->findOneByRole('ROLE_ZIZOO_USER');
         $user->addGroup($zizooUserGroup);
         
+        $profile->setCreated($user->getCreated());
+        $profile->setUpdated($user->getUpdated());
+        $profile->setUser($user);
+        
         $this->em->persist($zizooUserGroup);
         $this->em->persist($user);
+        $this->em->persist($profile);
         $this->em->flush();
         
         return $user;

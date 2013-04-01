@@ -25,6 +25,15 @@ class FilterBoatType extends AbstractType
         $builder->add('num_cabins_to', 'hidden', array('required'      => false,
                                                         'by_reference'  => false));
         
+        $builder->add('price_from', 'hidden', array('required'      => false,
+                                                        'by_reference'  => false));
+        
+        $builder->add('price_to', 'hidden', array('required'      => false,
+                                                        'by_reference'  => false));
+        
+        $builder->add('equipment', 'zizoo_equipment_selector', array('expanded'     => true,
+                                                                        'multiple'  => true));
+        
     }
 
 

@@ -7,39 +7,47 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * BoatType
  *
- * @ORM\Table(name="boat_type")
+ * @ORM\Table(name="boat_type", uniqueConstraints={@ORM\UniqueConstraint(name="idx", columns={"name"})})
  * @ORM\Entity
  */
 class BoatType
 {
+
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="id", type="string", length=255)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
      */
-    private $name;
-
+    protected $name;
+    
     /**
      * @var integer
      *
-     * @ORM\Column(name="order_num", type="integer")
+     * @ORM\Column(name="display_order", type="integer")
      */
-    private $orderNum;
+    private $order;
 
-    public function __construct($name=null, $orderNum=null) {
+    public function __construct($id=null, $name=null, $order=null) {
+        $this->id       = $id;
         $this->name     = $name;
-        $this->orderNum = $orderNum;
+        $this->order = $order;
     }
 
+    public function setId($id)
+    {
+        $this->id = $id;
+        
+        return $this;
+    }
+    
     /**
      * Get id
      *
@@ -79,9 +87,9 @@ class BoatType
      * @param integer $orderNum
      * @return BoatType
      */
-    public function setOrderNum($orderNum)
+    public function setOrder($order)
     {
-        $this->orderNum = $orderNum;
+        $this->order = $order;
     
         return $this;
     }
@@ -91,8 +99,8 @@ class BoatType
      *
      * @return integer 
      */
-    public function getOrderNum()
+    public function getOrder()
     {
-        return $this->orderNum;
+        return $this->order;
     }
 }

@@ -3,7 +3,7 @@
 namespace Zizoo\BoatBundle\Entity;
 
 use Zizoo\BoatBundle\Entity\Price;
-
+use Zizoo\UserBundle\Entity\User;
 use Zizoo\BoatBundle\Extensions\DoctrineExtensions\CustomWalker\SortableNullsWalker;
 use Zizoo\AddressBundle\Form\Model\SearchBoat;
 
@@ -45,14 +45,15 @@ class BoatRepository extends EntityRepository
     {
         // Join boat, image, address, country and reservation
         $qb = $this->createQueryBuilder('boat')
-                   ->select('boat, image, address, country, reservation, price, boat_type')
+                   ->select('boat, image, address, country, reservation, price, boat_type, equipment')
                    ->leftJoin('boat.image', 'image')
                    ->leftJoin('boat.address', 'address')
                    ->leftJoin('boat.reservation', 'reservation')
                    ->leftJoin('boat.price', 'price')
                    ->leftJoin('boat.address', 'boat_address')
                    ->leftJoin('address.country', 'country')
-                   ->leftJoin('boat.boatType', 'boat_type');
+                   ->leftJoin('boat.boatType', 'boat_type')
+                   ->leftJoin('boat.equipment', 'equipment');
         
         // Optionally search by boat location or boat availability location
         $firstWhere = true;
@@ -137,6 +138,67 @@ class BoatRepository extends EntityRepository
                 $firstWhere = false;
 
             }
+            
+            // Optionally restrict by equipment
+            if ($filter->equipmentSelected()){           
+                $equipment = $filter->getEquipment();
+                $equipmentIds = array();
+                foreach ($equipment as $e){
+                    $equipmentIds[] = $e->getId();
+                }
+                if ($firstWhere){
+                    $qb->where('equipment.id IN (:e)');
+                } else {
+                    $qb->andWhere('equipment.id IN (:e)');
+                }
+                $qb->setParameter('e', $equipmentIds);
+                $firstWhere = false;
+
+            }
+            
+            // Optionally restrict by price
+            if ($filter->getPriceFrom()){
+                if ($firstWhere){
+                    if ($searchBoat->getReservationFrom() && $searchBoat->getReservationTo()){
+                        $qb->where('price.price >= :price_from AND price.available >= :res_from AND price.available < :res_to');
+                        $qb->setParameter('res_from', $searchBoat->getReservationFrom());
+                        $qb->setParameter('res_to', $searchBoat->getReservationTo());
+                    } else {
+                        $qb->where('price.price >= :price_from OR boat.defaultPrice >= :price_from');
+                    }
+                } else {
+                    if ($searchBoat->getReservationFrom() && $searchBoat->getReservationTo()){
+                        $qb->andWhere('price.price >= :price_from AND price.available >= :res_from AND price.available < :res_to');
+                        $qb->setParameter('res_from', $searchBoat->getReservationFrom());
+                        $qb->setParameter('res_to', $searchBoat->getReservationTo());
+                    } else {
+                        $qb->andWhere('price.price >= :price_from OR boat.defaultPrice >= :price_from');
+                    }
+                }
+                $qb->setParameter('price_from', (float)$filter->getPriceFrom());
+                $firstWhere = false;
+            }
+            if ($filter->getPriceTo()){
+                if ($firstWhere){
+                    if ($searchBoat->getReservationFrom() && $searchBoat->getReservationTo()){
+                        $qb->where('price.price <= :price_to AND price.available >= :res_from AND price.available < :res_to');
+                        $qb->setParameter('res_from', $searchBoat->getReservationFrom());
+                        $qb->setParameter('res_to', $searchBoat->getReservationTo());
+                    } else {
+                        $qb->where('price.price <= :price_to OR boat.defaultPrice <= :price_to');
+                    }
+                } else {
+                    if ($searchBoat->getReservationFrom() && $searchBoat->getReservationTo()){
+                        $qb->andWhere('price.price <= :price_to AND price.available >= :res_from AND price.available < :res_to');
+                        $qb->setParameter('res_from', $searchBoat->getReservationFrom());
+                        $qb->setParameter('res_to', $searchBoat->getReservationTo());
+                    } else {
+                        $qb->andWhere('price.price <= :price_to OR boat.defaultPrice <= :price_to');
+                    }
+                }
+                $qb->setParameter('price_to', (float)$filter->getPriceTo());
+                $firstWhere = false;
+            }
         }
         
         $qb->addOrderBy('reservation.id', 'asc');
@@ -154,9 +216,33 @@ class BoatRepository extends EntityRepository
     
     public function getMaxBoatValues(){
         $qb = $this->createQueryBuilder('boat')
-                   ->select('MAX(boat.cabins) as max_cabins, MAX(boat.length) as max_length');
+                   ->select('MAX(boat.cabins) as max_cabins, MAX(boat.length) as max_length, MAX(boat.defaultPrice) as max_default_price, MIN(boat.defaultPrice) as min_default_price');
         
         return $qb->getQuery()->getSingleResult();
+    }
+    
+    public function getLatestUserBoats(User $user, $pageSize, $page)
+    {
+        $start = ($page-1)*($pageSize-1);
+        $limit = $pageSize;
+        $qb = $this->createQueryBuilder('boat')
+                   ->select('boat')
+                   ->where('boat.user = :user')
+                   ->setParameter('user', $user)
+                   ->setFirstResult($start)
+                   ->setMaxResults($limit);
+        
+        return $qb->getQuery()->getResult();
+    }
+    
+    public function getNumberOfUserBoats(User $user)
+    {
+        $qb = $this->createQueryBuilder('boat')
+                   ->select('COUNT(boat.id) as num_boats')
+                   ->where('boat.user = :user')
+                   ->setParameter('user', $user);
+        
+        return $qb->getQuery()->getSingleScalarResult();
     }
     
     /**

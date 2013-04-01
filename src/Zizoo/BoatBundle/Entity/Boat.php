@@ -2,6 +2,8 @@
 
 namespace Zizoo\BoatBundle\Entity;
 
+use Zizoo\BaseBundle\Entity\BaseEntity;
+
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -9,15 +11,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity(repositoryClass="Zizoo\BoatBundle\Entity\BoatRepository")
  * @ORM\Table(name="boat")
  */
-class Boat
+class Boat extends BaseEntity
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-        
+
     /**
      * @ORM\ManyToOne(targetEntity="Zizoo\UserBundle\Entity\User", inversedBy="boats")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
@@ -106,14 +102,11 @@ class Boat
     protected $boatType;
     
     /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $created;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $updated;
+     * @ORM\ManyToMany(targetEntity="Zizoo\BoatBundle\Entity\Equipment", inversedBy="boats")
+     * @ORM\JoinTable(name="boat_equipment")
+     **/
+    protected $equipment;
+    
 
     public function __construct()
     {
@@ -125,16 +118,6 @@ class Boat
         $this->status       = 0;
     }
     
-
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Set title
@@ -367,52 +350,6 @@ class Boat
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Boat
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-    
-        return $this;
-    }
-
-    /**
-     * Get created
-     *
-     * @return \DateTime 
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     * @return Boat
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-    
-        return $this;
-    }
-
-    /**
-     * Get updated
-     *
-     * @return \DateTime 
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
-    }
-
-    /**
      * Set user
      *
      * @param \Zizoo\UserBundle\Entity\User $user
@@ -602,4 +539,39 @@ class Boat
     {
         return $this->defaultPrice;
     }
+    
+    
+    /**
+     * Add equipment
+     *
+     * @param \Zizoo\BoatBundle\Entity\Equipment $equipment
+     * @return Boat
+     */
+    public function addEquipment(\Zizoo\BoatBundle\Entity\Equipment $equipment)
+    {
+        $this->equipment[] = $equipment;
+    
+        return $this;
+    }
+
+    /**
+     * Remove equipment
+     *
+     * @param \Zizoo\BoatBundle\Entity\Equipment $equipment
+     */
+    public function removeEquipment(\Zizoo\BoatBundle\Entity\Equipment $equipment)
+    {
+        $this->equipment->removeElement($equipment);
+    }
+
+    /**
+     * Get equipment
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEquipment()
+    {
+        return $this->equipment;
+    }
+    
 }

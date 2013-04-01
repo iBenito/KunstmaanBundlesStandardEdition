@@ -31,6 +31,8 @@
     {{ form_widget(form.filter.length_to) }}
     {{ form_widget(form.filter.num_cabins_from) }}
     {{ form_widget(form.filter.num_cabins_to) }}
+    {{ form_widget(form.filter.price_from) }}
+    {{ form_widget(form.filter.price_to) }}
     <input type="submit" value="Search" />
 
 <div id="map"></div>
@@ -115,9 +117,28 @@
                     updateSearch(1);
                 }
             });
+            
+            $( "#price_slider" ).slider({
+                range: true,
+                min: 1,
+                max: {{ max_price }},
+                values: [ 1, {{ max_price }} ],
+                slide: function( event, ui ) {
+                    $( "#zizoo_boat_search_filter_price_from" ).val(ui.values[ 0 ]);
+                    $( "#zizoo_boat_search_filter_price_to" ).val(ui.values[ 1 ]);
+                    $( "#price_text" ).html(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+                },
+                stop: function( event, ui ){
+                    updateSearch(1);
+                }
+            });
 
 
             $('#boat_type_filter input[type="checkbox"]').change(function(){
+                updateSearch(1);
+            });
+            
+            $('#equipment_filter input[type="checkbox"]').change(function(){
                 updateSearch(1);
             });
 
@@ -139,11 +160,19 @@
                 <div id="length_text">1 - {{ max_length }}</div>
                 <div id="length_slider"></div>
             </div>
+            <div id="price_filter">
+                <label for="price_text">Price:</label>
+                <div id="price_text">1 - {{ max_price }}</div>
+                <div id="price_slider"></div>
+            </div>
             <div id="num_cabins_filter">
                 <label for="num_cabins_text">Number of cabins:</label>
                 <div id="num_cabins_text">1 - {{ max_cabins }}</div>
                 <div id="num_cabins_slider"></div>
             </div>
+            <div id="equipment_filter">
+                {{ form_widget(form.filter.equipment) }}
+            </div>    
         </div>
 
         <div id="boats" class="span9 grid pull-left">

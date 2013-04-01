@@ -54,7 +54,8 @@ class ReservationFixtures implements OrderedFixtureInterface, SharedFixtureInter
         $reservationAgent   = $this->container->get('zizoo_reservation_reservation_agent');
         
         $boat1 = $this->getReference('boat-1');
-        $user = $this->getReference('user-2');
+        $user1 = $this->getReference('user-1');
+        $user2 = $this->getReference('user-2');
         
         $from   = new \DateTime();
         $to     = new \DateTime();
@@ -63,11 +64,14 @@ class ReservationFixtures implements OrderedFixtureInterface, SharedFixtureInter
 
         $bookBoat = new BookBoat($boat1->getId());
         $bookBoat->setNumGuests(5);
-        $bookBoat->setGuestId($user->getId());
+        $bookBoat->setGuestId($user2->getId());
         $bookBoat->setReservationFrom($from);
         $bookBoat->setReservationTo($to);
         
-        $reservation = $reservationAgent->makeReservation($boat1, $bookBoat, true);        
+        $cost = $reservationAgent->getTotalPrice($boat1, $from, $to);
+        
+        //public function makeReservation(Boat $boat, BookBoat $bookBoat, $cost, User $guest, $flush=false)
+        //$reservation = $reservationAgent->makeReservation($boat1, $bookBoat, $cost, $user1, true);        
     }
 
     public function getOrder()

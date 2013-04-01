@@ -11,7 +11,12 @@ class FilterBoat
     protected $num_cabins_from;
     protected $num_cabins_to;
   
+    protected $price_from;
+    protected $price_to;
     
+    protected $equipment;
+
+
     public function getBoatType()
     {
         return $this->boat_type['boat_type'];
@@ -70,6 +75,44 @@ class FilterBoat
     {
         $this->num_cabins_to = $to;
         return $this;
+    }
+    
+    public function getPriceFrom()
+    {
+        return $this->price_from;
+    }
+    
+    public function setPriceFrom($from)
+    {
+        $this->price_from = $from;
+        return $this;
+    }
+    
+    public function getPriceTo()
+    {
+        return $this->price_to;
+    }
+    
+    public function setPriceTo($to)
+    {
+        $this->price_to = $to;
+        return $this;
+    }
+    
+    public function getEquipment()
+    {
+        return $this->equipment['equipment'];
+    }
+    
+    public function setEquipment($type)
+    {
+        $this->equipment = $type;
+        return $this;
+    }
+    
+    public function equipmentSelected()
+    {
+        return $this->equipment['equipment']->count()>0;
     }
     
     

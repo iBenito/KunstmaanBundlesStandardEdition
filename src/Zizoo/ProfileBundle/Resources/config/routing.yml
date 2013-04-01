@@ -1,6 +1,12 @@
 ZizooProfileBundle_show:
-    pattern:  /{id}/show
+    pattern:  /{username}/show
     defaults: { _controller: ZizooProfileBundle:Profile:show }
+    requirements:
+        _method:  GET
+        
+ZizooProfileBundle_show_boats:
+    pattern:  /{username}/show-boats/{page}
+    defaults: { _controller: ZizooProfileBundle:Profile:showBoats }
     requirements:
         _method:  GET
         

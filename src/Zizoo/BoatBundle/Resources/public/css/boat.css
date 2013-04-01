@@ -1,3 +1,143 @@
 .boat { margin-bottom: 20px; }
 .boat img { width: 190px; float: left; padding: 5px; border: 1px solid #ccc; margin: 0 10px 10px 0; }
 .boat img.large { width: 300px; min-height: 165px; }
+
+
+
+/************** SHOW ******************/
+#center-col {
+    margin-left: 0;
+}
+
+.tabs {
+    position: relative;
+}
+
+.tabs .tab {
+    position: absolute;
+    top: -5000px;
+    left: 0;
+}
+
+.tabs .tab.current {
+    display: block;
+    position: static;
+    top: 0;
+}
+
+#calendar {
+    width: 100%;
+    max-width: 100%;
+}
+
+
+#calendar .ui-datepicker-inline {
+    width: 100% !important;
+}
+
+#calendar .ui-datepicker-group.last-in-line {
+    margin-right: 0;
+}
+
+#calendar .ui-datepicker-group {
+    margin-right: 0;
+    width: 100%;
+}
+
+#calendar .ui-datepicker-group-last {
+    margin-right: 0;
+}
+
+#calendar .day_available {
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: right !important;
+    
+    background: url("../../../css/images/ui-bg_glass_45_0078ae_1x400.png") repeat-x scroll 50% 50% #0078AE !important;
+    border: 1px solid #77D5F7 !important;
+    color: #FFFFFF !important;
+    font-weight: normal !important;
+    cursor: default !important;
+}
+
+#calendar .day_available_default {
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: right !important;
+    
+    background: url("../../../css/images/ui-bg_glass_45_0078ae_1x400.png") repeat-x scroll 50% 50% #0078AE !important;
+    border: 1px solid #77D5F7 !important;
+    color: #FFFFFF !important;
+    font-weight: normal !important;
+    opacity: 0.5;
+    cursor: default !important;
+}
+
+#calendar .ui-datepicker-other-month {
+    display: none !important;
+}
+
+
+
+
+#availability-calendar {
+    width: 100%;
+    max-width: 100%;
+}
+
+#availability-calendar .ui-datepicker-inline {
+    width: 100% !important;
+}
+
+#availability-calendar .ui-datepicker-group.last-in-line {
+    margin-right: 0;
+}
+
+#availability-calendar .ui-datepicker-group {
+    margin-right: 0;
+    width: 100%;
+}
+
+#availability-calendar .ui-datepicker-group-last {
+    margin-right: 0;
+}
+
+
+#availability-calendar .day_reserved {
+    color: black !important;
+    background: url("../../../css/images/ui-bg_glass_55_f8da4e_1x400.png") repeat-x scroll 50% 50% #0078AE !important;
+    border: 1px solid #77D5F7 !important;
+    font-weight: normal !important;
+}
+
+#availability-calendar .day_reserved.hover {
+    background-image: none !important;
+    background-color: orange !important;
+}
+
+#availability-calendar .day_reserved.ui-state-active  {
+    background: url("../../../css/images/ui-bg_gloss-wave_50_6eac2c_500x100.png") repeat-x scroll 50% 50% #6EAC2C !important;
+    border: 1px solid #ACDD4A !important;
+    color: #FFFFFF !important;
+    font-weight: normal !important;
+}
+
+
+#availability-calendar .day_requested {
+    color: black !important;
+    background: url("../../../css/images/ui-bg_glass_55_f8da4e_1x400.png") repeat-x scroll 50% 50% #0078AE !important;
+    border: 1px solid #77D5F7 !important;
+    font-weight: normal !important;
+}
+
+#availability-calendar .day_requested.hover {
+    background-image: none !important;
+    background-color: purple !important;
+}
+
+#availability-calendar .day_requested.ui-state-active  {
+    background: url("../../../css/images/ui-bg_gloss-wave_50_6eac2c_500x100.png") repeat-x scroll 50% 50% #6EAC2C !important;
+    border: 1px solid #ACDD4A !important;
+    color: #FFFFFF !important;
+    font-weight: normal !important;
+}

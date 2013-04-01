@@ -1,29 +1,35 @@
 Zizoo\BookingBundle\Form\Model\CreditCard:
     properties:
         cardHolder:
-            - NotBlank: { message: zizoo_booking.error.cardholder_not_blank, groups: [booking] }
+            - NotBlank: { message: zizoo_booking.error.cardholder_not_blank, groups: [booking.credit_card] }
             
         creditCardNumber:
-            - NotBlank: { message: zizoo_booking.error.credit_card_number_not_blank, groups: [booking] }
-            - MinLength: { limit: 16, message: zizoo_booking.error.credit_card_number_min_length, groups: [booking] }
+            - NotBlank: { message: zizoo_booking.error.credit_card_number_not_blank, groups: [booking.credit_card] }
+            - MinLength: { limit: 16, message: zizoo_booking.error.credit_card_number_min_length, groups: [booking.credit_card] }
         
         cvv:
-            - NotBlank: { message: zizoo_booking.error.cvv_not_blank, groups: [booking] }
-            - MinLength: { limit: 5, message: zizoo_booking.error.cvv_min_length, groups: [booking] }
+            - NotBlank: { message: zizoo_booking.error.cvv_not_blank, groups: [booking.credit_card] }
+            - MinLength: { limit: 5, message: zizoo_booking.error.cvv_min_length, groups: [booking.credit_card] }
       
 Zizoo\BookingBundle\Form\Model\BillingAddress:
     properties:
         firstName:
-            - NotBlank: { message: zizoo_booking.error.first_name_not_blank, groups: [booking] }
+            - NotBlank: { message: zizoo_booking.error.first_name_not_blank, groups: [booking.credit_card] }
         
         lastName:
-            - NotBlank: { message: zizoo_booking.error.last_name_not_blank, groups: [booking] }
+            - NotBlank: { message: zizoo_booking.error.last_name_not_blank, groups: [booking.credit_card] }
             
         streetAddress:
-            - NotBlank: { message: zizoo_booking.error.street_address_not_blank, groups: [booking] }
+            - NotBlank: { message: zizoo_booking.error.street_address_not_blank, groups: [booking.credit_card] }
             
         locality:
-            - NotBlank: { message: zizoo_booking.error.locality_not_blank, groups: [booking] }
+            - NotBlank: { message: zizoo_booking.error.locality_not_blank, groups: [booking.credit_card] }
             
         postalCode:
-            - NotBlank: { message: zizoo_booking.error.postal_code_not_blank, groups: [booking] }
+            - NotBlank: { message: zizoo_booking.error.postal_code_not_blank, groups: [booking.credit_card] }
+            
+Zizoo\BookingBundle\Form\Model\CustomFields:
+    properties:
+        termsAccepted:
+            - "True": { message: zizoo_booking.error.terms, groups: [booking.credit_card, booking.bank_transfer] }
+            

@@ -2,6 +2,7 @@
 
 namespace Zizoo\BoatBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -12,88 +13,69 @@ use Doctrine\ORM\EntityRepository;
  */
 class PriceRepository extends EntityRepository
 {
+    
+    
+
     public function getPrices(Boat $boat, $from, $to)
     {
         $qb = $this->createQueryBuilder('price')
                     ->select('price')
-                    ->where('(:from >= price.available_from AND :until <= price.available_until)')
-                    ->orWhere('(:from >= price.available_from AND :from < price.available_until AND :until > price.available_until)')
-                    ->orWhere('(:from < price.available_from AND :until >= price.available_from AND :until <= price.available_until)')
-                    ->orWhere('(:from < price.available_from AND :until > price.available_until)')
-                    ->andWhere('price.boat = :boat_id')
+                    ->where('(:from <= price.available AND :until >= price.available)')
+                    ->andWhere('price.boat = :boat')
                     ->setParameter('from', $from)
                     ->setParameter('until', $to)
-                    ->setParameter('boat_id', $boat->getID());
+                    ->setParameter('boat', $boat)
+                    ->orderBy('price.available', 'ASC');
         
         $prices = new \Doctrine\Common\Collections\ArrayCollection($qb->getQuery()->getResult());
-        //$prices = $boat->getPrice();
         
-        $validPrices = array();
+        return $prices;
+    }
+    
+    public function getTotalSetPrice(Boat $boat, $from, $to)
+    {
+        $qb = $this->createQueryBuilder('price')
+                    ->select('COUNT(price.id) as num_days, SUM(price.price) as set_price')
+                    ->where('(:from <= price.available AND :until > price.available)')
+                    ->andWhere('price.boat = :boat')
+                    ->setParameter('from', $from)
+                    ->setParameter('until', $to)
+                    ->setParameter('boat', $boat);
         
-        if (!$prices || $prices->count()==0){
-            // No prices to consider
-            return $validPrices;
-        }
+        return $qb->getQuery()->getSingleResult();
+    }
         
-        $firstPrice = $prices->first();
+    
+    public function getMinimumPriceOfBoat(Boat $boat)
+    {
+        $qb = $this->createQueryBuilder('price')
+                    ->select('MIN(price.price)')
+                    ->where('price.boat = :boat')
+                    ->setParameter('boat', $boat);
         
-        if ($from >= $firstPrice->getAvailableFrom() && $to <= $firstPrice->getAvailableUntil())
-        {
-            /** Search is entirely in first price
-             * 
-             *              SEARCH              FROM---------------TO
-             *              PRICE       FROMxxxx---------------------xxxxTO
-             */
-            $validPrices[] = $firstPrice;
-        } else if ($from >= $firstPrice->getAvailableFrom() && $from < $firstPrice->getAvailableUntil() && $to > $firstPrice->getAvailableUntil())
-        {
-            /** Search begins in first price, but ends outside
-             *              SEARCH              FROM---------xxxxxxxxxxxxxTO
-             *              PRICE       FROMxxxx-----------TO
-             * Need to determine if outside range is covered by following prices
-             */
-            $tmpPrices = array($firstPrice);
-            $thisPrice = $firstPrice;
-            $valid = false;
-            while ( ($nextPrice = $prices->next()) ){
-                $tmpAvailableUntil = clone $thisPrice->getAvailableUntil();
-                $tmpAvailableUntil->modify('+1 second');
-                if ($nextPrice->getAvailableFrom() > $tmpAvailableUntil){
-                    /** There is a gap between two prices
-                     *              SEARCH              FROM---------xxxx------TO
-                     *              PRICE       FROMxxxx-----------TO    FROM----xxxxxxTO
-                     * Not valid
-                     */
-                    break;
-                } else if ($to <= $nextPrice->getAvailableUntil()){
-                    /** There is no gap between two prices and the search ends in next price
-                     *              SEARCH              FROM---------------TO
-                     *              PRICE       FROMxxxx-----------TOFROM----xxxxxxTO
-                     * Valid
-                     */
-                    $tmpPrices[] = $nextPrice;
-                    $valid = true;
-                    break;
-                } else {
-                    /** There is no gap between two prices but the search does not end in next price
-                     *              SEARCH              FROM----------------------------TO
-                     *              PRICE       FROMxxxx-----------TOFROM----xxxxxxTO?????
-                     * Possibly valid
-                     */
-                    $tmpPrices[] = $nextPrice;
-                }
-                
-                    
-                $thisPrice = $nextPrice;
+        $result = (float)$qb->getQuery()->getSingleScalarResult();
+        $defaultPrice = $boat->getDefaultPrice();
+        if ($result){
+            if ($result>$defaultPrice && $defaultPrice>0){
+                return $defaultPrice;
+            } else {
+                return $result;
             }
-            
-            if ($valid){
-                foreach ($tmpPrices as $tmpPrice){
-                    $validPrices[] = $tmpPrice;
-                }
+        } else {
+            if ($defaultPrice>0){
+                return $defaultPrice;
+            } else {
+                return null;
             }
-                
         }
-        return $validPrices;
+    }
+    
+    public function getMinimumAndMaximumPrice()
+    {
+       $qb = $this->createQueryBuilder('price')
+                    ->select('MIN(price.price) as min_price, MAX(price.price) as max_price'); 
+       
+       $result = $qb->getQuery()->getSingleResult();
+       return $result;
     }
 }

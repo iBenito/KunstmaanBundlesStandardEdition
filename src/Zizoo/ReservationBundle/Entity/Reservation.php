@@ -1,6 +1,7 @@
 <?php
 namespace Zizoo\ReservationBundle\Entity;
 
+use Zizoo\BaseBundle\Entity\BaseEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -8,19 +9,14 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="reservation")
  * @ORM\HasLifecycleCallbacks()
  */
-class Reservation
+class Reservation extends BaseEntity
 {
-    const STATUS_REQUESTED = 1;
-    const STATUS_ACCEPTED = 2;
-    const STATUS_EXPIRED = 3;
-    const STATUS_DENIED = 4;
-    
-     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    const STATUS_REQUESTED  = 1;
+    const STATUS_ACCEPTED   = 2;
+    const STATUS_EXPIRED    = 3;
+    const STATUS_DENIED     = 4;
+    const STATUS_SELF       = 5;
+    const STATUS_HOLD       = 6;
     
     /**
      * @ORM\ManyToOne(targetEntity="Zizoo\BoatBundle\Entity\Boat", inversedBy="reservation")
@@ -37,7 +33,7 @@ class Reservation
     /**
      * @ORM\OneToOne(targetEntity="Zizoo\BookingBundle\Entity\Booking", mappedBy="reservation")
      */
-    private $booking;
+    protected $booking;
     
     /**
      * @ORM\Column(type="datetime")
@@ -55,25 +51,28 @@ class Reservation
     protected $nr_guests;
     
     /**
-     * @ORM\Column(type="smallint")
+     * @var float
+     *
+     * @ORM\Column(name="cost", type="decimal", precision=19, scale=4)
      */
-    private $status;
+    protected $cost;
     
     /**
-     * @ORM\OneToOne(targetEntity="Zizoo\AddressBundle\Entity\ReservationAddress", mappedBy="reservation")
+     * @ORM\Column(type="smallint")
+     */
+    protected $status;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Zizoo\AddressBundle\Entity\ReservationAddress", mappedBy="reservation", cascade={"remove"})
      */
     protected $address;
     
-    /**
-     * @ORM\Column(type="datetime")
+        /**
+     * @ORM\Column(type="text", nullable=true)
      */
-    protected $created;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $updated;
+    protected $reason;
         
+    
     public function __construct()
     {
         $this->setCreated(new \DateTime());
@@ -161,6 +160,29 @@ class Reservation
     }
 
     /**
+     * Set cost
+     *
+     * @param float $cost
+     * @return Booking
+     */
+    public function setCost($cost)
+    {
+        $this->cost = $cost;
+    
+        return $this;
+    }
+
+    /**
+     * Get cost
+     *
+     * @return float 
+     */
+    public function getCost()
+    {
+        return $this->cost;
+    }
+    
+    /**
      * Set status
      *
      * @param integer $status
@@ -181,52 +203,6 @@ class Reservation
     public function getStatus()
     {
         return $this->status;
-    }
-
-    /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Reservation
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-    
-        return $this;
-    }
-
-    /**
-     * Get created
-     *
-     * @return \DateTime 
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     * @return Reservation
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-    
-        return $this;
-    }
-
-    /**
-     * Get updated
-     *
-     * @return \DateTime 
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
     }
 
     /**
@@ -319,6 +295,18 @@ class Reservation
     public function getAddress()
     {
         return $this->address;
+    }
+    
+    public function setReason($reason)
+    {
+        $this->reason = $reason;
+        
+        return $this;
+    }
+    
+    public function getReason()
+    {
+        return $this->reason;
     }
     
 }

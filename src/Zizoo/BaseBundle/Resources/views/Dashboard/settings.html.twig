@@ -16,13 +16,26 @@
         </div>
     {% endfor %}
 
-    {% if form %}
-        <form method="post">
-            {{ form_widget(form) }}
-            <button type="submit">Save</button>
-        </form>
-    {% else %}
-        <p>Please try again later.</p>
-    {% endif %}
+    <div id="credit_card" class="section">
+        {% if braintree_form %}
+            <form method="post">
+                {{ form_widget(braintree_form) }}
+                <button type="submit">Save</button>
+            </form>
+        {% else %}
+            <p>Please try again later.</p>
+        {% endif %}
+    </div>
+
+    <div id="paypal" class="section">
+        {% if paypal_form %}
+            <form method="post">
+                {{ form_widget(paypal_form) }}
+                <button type="submit">Save</button>
+            </form>
+        {% else %}
+            <p>Please try again later.</p>
+        {% endif %}
+    </div>
 
 {% endblock %}

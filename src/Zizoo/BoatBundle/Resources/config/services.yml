@@ -2,6 +2,7 @@ parameters:
 #    zizoo_boat.example.class: Zizoo\BoatBundle\Example
 
 services:
+    # TWIG EXTENSIONS
     zizoo_boat.twig.image_extension:
         class: Zizoo\BoatBundle\Twig\ImageExtension
         tags:
@@ -18,6 +19,8 @@ services:
         tags:
             - { name: twig.extension }
 
+
+    # SERVICES
     boat_service:
         class:  Zizoo\BoatBundle\Service\BoatService
         arguments: 
@@ -25,26 +28,43 @@ services:
             messenger:      "@messenger"
             container:      "@service_container"
     
+    
+    # DATA TRANSFORMERS
     zizoo_boat.boat_type_data_transformer:
         class:  Zizoo\BoatBundle\Form\DataTransformer\BoatTypeTransformer
         arguments: ["@doctrine.orm.entity_manager"]
     
+    
+    # FORM TYPES
     zizoo_boat.boat_type_selector:
         class:  Zizoo\BoatBundle\Form\Type\BoatTypeType
         arguments: ["@service_container"]
         tags:
             - { name: form.type, alias: zizoo_boat_type_selector }
             
+    zizoo_boat.equipment_selector:
+        class:  Zizoo\BoatBundle\Form\Type\EquipmentType
+        arguments: ["@service_container"]
+        tags:
+            - { name: form.type, alias: zizoo_equipment_selector }
+            
     zizoo_boat.book_boat_type:
         class:  Zizoo\BoatBundle\Form\Type\BookBoatType
         tags:
             - { name: form.type, alias: zizoo_boat_book }
             
+            
+    # VALIDATORS
     zizoo_boat.book_boat_validator:
         class: Zizoo\BoatBundle\Validator\Constraints\BookBoatValidator
         arguments: ["@service_container"]
         tags:
             - { name: validator.constraint_validator, alias: validator.book_boat_validator }
-#    zizoo_boat.example:
-#        class: %zizoo_boat.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+
+   # LISTENERS
+    zizoo_boat_price_listener:
+        class: Zizoo\BoatBundle\EventListener\PriceListener
+        arguments:
+            container:      "@service_container"
+        tags:
+            - { name: doctrine.event_listener, event: onFlush }

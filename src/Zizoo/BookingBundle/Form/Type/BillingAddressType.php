@@ -3,8 +3,8 @@
 namespace Zizoo\BookingBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -51,14 +51,22 @@ class BillingAddressType extends AbstractType
                                                     'label'         => 'zizoo_booking.label.country',
                                                     'property_path'    => 'countryCodeAlpha2'
                                                 ));
-        //$builder->add('country_name', 'country', array('label' => 'zizoo_booking.label.country_name'));
     }
 
-
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver) 
     {
-        return array('data_class' => 'Zizoo\BookingBundle\Form\Model\BillingAddress',
-                     'validation_groups' => 'booking');
+        $resolver->setDefaults(array(
+            'data_class' => 'Zizoo\BookingBundle\Form\Model\BillingAddress',
+            'cascade_validation' => true,
+            'validation_groups' => function(FormInterface $form) {
+                $data = $form->getParent()->getData();
+                if ($data->getPaymentMethod()=='credit_card') {
+                    return array('booking.credit_card');
+                } else {
+                    return array('booking.bank_transfer');
+                }
+            },
+        ));
     }
 
     public function getName()

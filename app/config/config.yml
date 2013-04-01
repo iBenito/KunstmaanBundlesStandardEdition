@@ -21,6 +21,9 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    form:
+        resources:
+            - ZizooBookingBundle:Form:fields.html.twig
 
 # Assetic Configuration
 assetic:
@@ -87,4 +90,9 @@ fos_message:
         type:               zizoo_message.new_thread_multiple_form_type
         handler:            zizoo_message.new_thread_multiple_form.handler
         model:              Zizoo\MessageBundle\Form\Model\NewThreadMultipleMessage
+    reply_form:
+        #type:   zizoo_message.new_thread_form.type
+        type:               zizoo_message.reply_form_type
+        handler:            zizoo_message.reply_form.handler
+        model:              Zizoo\MessageBundle\Form\Model\ReplyMessage
         

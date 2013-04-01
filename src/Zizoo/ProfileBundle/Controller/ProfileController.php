@@ -3,7 +3,6 @@
 namespace Zizoo\ProfileBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\Request;
 
 use Zizoo\ProfileBundle\Entity\Profile;
@@ -11,15 +10,30 @@ use Zizoo\ProfileBundle\Form\ProfileType;
 
 class ProfileController extends Controller
 {
+    
+    public function showBoatsAction($username, $page=1)
+    {
+        $pageSize = 3;
+        $user   = $this->getDoctrine()->getManager()->getRepository('ZizooUserBundle:User')->findOneByUsername($username);
+        $boats  = $this->getDoctrine()->getManager()->getRepository('ZizooBoatBundle:Boat')->getLatestUserBoats($user, $pageSize+1, $page);
+        
+        return $this->render('ZizooProfileBundle:Profile:show_boats.html.twig', array(
+            'user'      => $user,
+            'boats'     => $boats,
+            'page'      => $page,
+            'page_size' => $pageSize
+        ));
+    }
+    
     /**
      * Get User Information
      * 
      * @return Response
      */
-    public function showAction() 
+    public function showAction($username) 
     {
-        $user = $this->getUser();
-        
+        $user   = $this->getDoctrine()->getManager()->getRepository('ZizooUserBundle:User')->findOneByUsername($username);
+
         return $this->render('ZizooProfileBundle:Profile:show.html.twig', array(
             'user' => $user
         ));

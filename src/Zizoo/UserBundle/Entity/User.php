@@ -2,6 +2,8 @@
 // src/Zizoo/UserBundle/Entity/User.php
 namespace Zizoo\UserBundle\Entity;
 
+use Zizoo\BaseBundle\Entity\BaseEntity;
+
 use FOS\MessageBundle\Model\ParticipantInterface;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -18,16 +20,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @UniqueEntity(fields="username", groups={"registration"}, message="zizoo_user.error.user_taken")
  * @UniqueEntity(fields="email", groups={"registration"}, message="zizoo_user.error.email_taken")
  */
-class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
+class User extends BaseEntity implements AdvancedUserInterface, \Serializable, ParticipantInterface
 {
     
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
     /**
      * @ORM\Column(type="string", length=25, unique=true)
      */
@@ -130,6 +125,7 @@ class User implements AdvancedUserInterface, \Serializable, ParticipantInterface
     
     public function __construct()
     {
+        parent::__construct();
         $this->isActive = false;
         $this->groups = new ArrayCollection();
         

@@ -1,6 +1,8 @@
 <?php
 
-namespace Zizoo\MessageBundle\DataFixtures\ORM;
+namespace Zizoo\BookingBundle\DataFixtures\ORM;
+
+use Zizoo\BookingBundle\Entity\PaymentMethod;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -10,13 +12,9 @@ use Doctrine\Common\DataFixtures\SharedFixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 
-use Zizoo\MessageBundle\Entity\Message;
-use Zizoo\MessageBundle\Entity\Thread;
-use Zizoo\MessageBundle\Entity\ThreadType;
 
-class ThreadTypeFixtures implements OrderedFixtureInterface, SharedFixtureInterface, ContainerAwareInterface
+class PaymentMethodFixtures implements OrderedFixtureInterface, SharedFixtureInterface, ContainerAwareInterface
 {
     /**
      * @var ContainerInterface
@@ -47,27 +45,21 @@ class ThreadTypeFixtures implements OrderedFixtureInterface, SharedFixtureInterf
     }
     
     public function load(ObjectManager $manager)
-    {
-        $threadType = new ThreadType('Inquiry');
-        $manager->persist($threadType);
-        
-        $threadType = new ThreadType('Booking');
-        $manager->persist($threadType);
-        
-        $threadType = new ThreadType('Booked');
-        $manager->persist($threadType);
-        
-        $threadType = new ThreadType('Review');
-        $manager->persist($threadType);
+    {        
+        $paymentMethod = new PaymentMethod('credit_card', 'Credit Card', 0);
+        $manager->persist($paymentMethod);
+     
+        $paymentMethod = new PaymentMethod('bank_transfer', 'Bank Transfer', 1);
+        $manager->persist($paymentMethod);
         
         $manager->flush();
     }
 
     public function getOrder()
     {
-        return 5;
+        return 1;
     }
-        
+    
     /**
      * Set the reference entry identified by $name
      * and referenced to managed $object. If $name

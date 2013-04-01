@@ -46,10 +46,10 @@ class NewThreadMultipleMessageFormType extends AbstractType
             }
         }
         
-        $threadTypes    = $em->getRepository('ZizooMessageBundle:ThreadType')->findAll();
-        $threadTypeChoices = array();
-        foreach ($threadTypes as $threadType){
-            $threadTypeChoices[$threadType->getId()] = $threadType->getName();
+        $messageTypes    = $em->getRepository('ZizooMessageBundle:MessageType')->findAll();
+        $messageTypeChoices = array();
+        foreach ($messageTypes as $messageType){
+            $messageTypeChoices[$messageType->getId()] = $messageType->getName();
         }
         
         $builder
@@ -57,7 +57,7 @@ class NewThreadMultipleMessageFormType extends AbstractType
                                                                     'multiple'  => true))
             ->add('subject', 'text')
             ->add('body', 'textarea')
-            ->add('thread_type', 'zizoo_thread_type_selector', array( 'choices'     => $threadTypeChoices));
+            ->add('message_type', 'zizoo_message_type_selector', array( 'choices'     => $messageTypeChoices));
     }
 
     public function getName()

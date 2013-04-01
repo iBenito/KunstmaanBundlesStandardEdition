@@ -35,6 +35,7 @@ class MessageEventListener
         foreach ($recipients as $recipient){
             $senderContact = $em->getRepository('ZizooMessageBundle:Contact')->findOneBy( array(    'sender'    => $sender,
                                                                                                     'recipient' => $recipient) );
+            
             if (!$senderContact){
                 $senderContact = new Contact();
                 $senderContact->setSender($sender);
@@ -51,6 +52,7 @@ class MessageEventListener
                 $em->persist($recipientContact);
             }
             
+            $messenger->sendNotificationMessageEmail($sender->getProfile(), $recipient->getProfile(), $message);
         }        
         
         $em->flush();

@@ -9,9 +9,11 @@ class Booking
 {
     
     protected $creditCard;
+    protected $paymentMethod;
     protected $billingAddress;
     protected $customFields;
-        
+    protected $message;
+    
     public function getCustomFields()
     {
         return $this->customFields;
@@ -20,6 +22,7 @@ class Booking
     public function setCustomFields($customFields)
     {
         $this->customFields = $customFields;
+        return $this;
     }
     
     public function getCreditCard()
@@ -30,6 +33,7 @@ class Booking
     public function setCreditCard($creditCard)
     {
         $this->creditCard = $creditCard;
+        return $this;
     }
     
     public function getBilling()
@@ -40,6 +44,29 @@ class Booking
     public function setBilling($billingAddress)
     {
         $this->billingAddress = $billingAddress;
+        return $this;
+    }
+    
+    public function getPaymentMethod()
+    {
+        return $this->paymentMethod;
+    }
+    
+    public function setPaymentMethod($paymentMethod)
+    {
+        $this->paymentMethod = $paymentMethod;
+        return $this;
+    }
+    
+    public function getMessageToOwner()
+    {
+        return $this->message;
+    }
+    
+    public function setMessageToOwner($message)
+    {
+        $this->message = $message;
+        return $this;
     }
 }
 ?>

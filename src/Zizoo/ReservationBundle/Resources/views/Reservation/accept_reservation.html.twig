@@ -1,0 +1,26 @@
+{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
+
+{% block dashboard_page_title %}Accept Reservation{% endblock %}
+
+{% block content %}
+    <div class="accept_reservation" id="{% if ajax %}accept_reservation_inner_ajax{% else %}accept_reservation_inner{% endif %}">
+        <form action="{{ path('ZizooReservationBundle_accept', {id: reservation.id}) }}" method="post">
+            
+            {% if overlap_requested_reservations|length > 0 %}
+                <p>The following requested reservations will be denied:</p>
+                <ul>
+                    {% for reservation in overlap_requested_reservations %}
+                        <li>{{ reservation.checkIn|date }} - {{ reservation.checkOut|date }} ({{ reservation.id}})</li>
+                    {% endfor %}
+                </ul>
+                {{ form_widget(deny_form) }}
+            {% endif %}
+        
+            {{ form_widget(accept_form) }}
+            <input type="submit" name="accept" value="Accept" />
+        </form>
+        <form action="{{ path('ZizooReservationBundle_accept', {id: reservation.id}) }}" method="post">
+            <input type="submit" name="cancel" value="Cancel" />
+        </form>
+    </div>
+{% endblock %}

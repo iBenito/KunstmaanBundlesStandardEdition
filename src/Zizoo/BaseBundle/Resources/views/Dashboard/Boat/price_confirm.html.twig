@@ -1,0 +1,56 @@
+{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
+    
+{% block dashboard_page_title %}Boats{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+    
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/zizooboat/css/boat.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h3>{{ boat.name }}</h3>
+    <p>{{ boat.title }}</p>
+    
+    {% if overlap_external_reservations|length > 0 %}
+        <p>The following unavailabilites will be removed:</p>
+        <ul>
+            {% for reservation in overlap_external_reservations %}
+                <li>{{ reservation.checkIn|date }} - {{ reservation.checkOut|date }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+        
+    {% if overlap_requested_reservations|length > 0 %}
+        <p>The following requested reservations will be denied:</p>
+        <ul>
+            {% for reservation in overlap_requested_reservations %}
+                <li>{{ reservation.checkIn|date }} - {{ reservation.checkOut|date }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+    <form action="{{ path('ZizooBaseBundle_Dashboard_BoatPrice', {id: boat.id}) }}" method="post">
+        <input name="date_from" id="date_from" type="hidden" value="{{ from }}" />
+        <input name="date_to" id="date_to" type="hidden" value="{{ to }}" />
+        <input name="price" type="hidden" value="{{ price }}" />
+        <input name="confirmed" type="hidden" value="true" />
+        <input name="type" type="hidden" value="{{ type }}" />
+        {% if type=='availability' or type=='default' %}
+            <input type="submit" name="available_btn" value="Confirm" />
+        {% else %}
+            <input type="submit" name="unavailable_btn" value="Confirm" />
+        {% endif %}
+    </form>
+        
+    <form action="{{ path('ZizooBaseBundle_Dashboard_BoatPrice', {id: boat.id}) }}" method="get">
+        <input type="submit" value="Cancel" />
+    </form>
+    <script type="text/javascript">
+        
+        
+    </script>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
+
+{% block dashboard_page_title %}Reservation{% endblock %}
+
+{% block content %}
+    <div class="reservation" id="{% if ajax %}reservation_inner_ajax{% else %}reservation_inner{% endif %}">
+        <table>
+            <thead>
+                <tr>
+                    <th>Boat</th>
+                    <th>Guest</th>
+                    <th>Dates</th>
+                    <th>Cost</th>
+                    <th>Status</th>
+                    <th>Control</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="{{ path('ZizooBaseBundle_Dashboard_BoatEdit', {id: reservation.boat.id}) }}" target="_blank">{{ reservation.boat.name }}</a></td>
+                    <td><a href="{{ path('ZizooProfileBundle_show', {username: reservation.guest.username}) }}" target="_blank">{{ reservation.guest.profile.firstName }}</a></td>
+                    <td>{{ reservation.checkIn|date }} &ndash; {{ reservation.checkOut|date }}</td>
+                    <td>{% if reservation.booking %} {{ reservation.booking|Booking_displayPrice }} {% endif %}</td>
+                    <td>{{ reservation|Reservation_statusToString }}</td>
+                    <td>
+                        <input id="status" type="hidden" value="{{ reservation.status }}" />
+                        {% if show_controls ==true %}
+                        <form action="{{ path('ZizooReservationBundle_accept', {id: reservation.id}) }}" method="get">
+                            <input type="submit" name="accept" id="accept_btn" value="Accept" />
+                        </form>
+                        <form action="{{ path('ZizooReservationBundle_deny', {id: reservation.id}) }}" method="get">
+                            <input type="submit" name="deny" id="deny_btn" value="Deny" />
+                        </form>
+                        <script type="text/javascript">
+                        </script>
+                        {% endif %}
+                        {% for flashMessage in app.session.flashbag.get('notice') %}
+                            <div class="flash-notice">
+                                {{ flashMessage}}
+                            </div>
+                        {% endfor %}
+
+                        {% for flashMessage in app.session.flashbag.get('error') %}
+                            <div class="flash-error">
+                                {{ flashMessage}}
+                            </div>
+                        {% endfor %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+     </div>
+{% endblock %}

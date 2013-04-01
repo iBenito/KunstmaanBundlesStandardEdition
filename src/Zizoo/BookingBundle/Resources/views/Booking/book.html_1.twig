@@ -1,0 +1,126 @@
+{% extends 'ZizooBookingBundle::layout.html.twig' %}
+{% trans_default_domain "labels" %}
+
+{% block title %}{{ boat.name }}{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/zizoobooking/js/braintree/braintree.1.1.0.min.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    
+    <table>
+        <tbody id="trip_details">
+            <tr>
+                <td>Check in:</td>
+                <td>{{ book_boat.reservationFrom|date }}</td>
+            </tr>
+            <tr>
+                <td>Check out:</td>
+                <td>{{ book_boat.reservationTo|date }}</td>
+            </tr>
+            <tr>
+                <td>Nights:</td>
+                <td>{{ book_boat|BookBoat_numberOfDays }}</td>
+            </tr>
+            <tr>
+                <td>Guests:</td>
+                <td>{{ book_boat.numGuests }}</td>
+            </tr>
+        </tbody>
+        <tbody id="cost_details">
+            <tr>
+                <td>Price per night:</td>
+                <td>
+                {% if total_price['price']|length == 1 %}
+                    {% for price in total_price['price'] %}
+                        &euro; {{ book_boat|BookBoat_price( price['price'] ) }}
+                    {% endfor %}
+                {% else %}
+                    <table>
+                        {% for price in total_price['price'] %}
+                            <tr>
+                                <td>{{ price['dates'][0]|date }} - {{ price['dates'][1]|date }}:</td>
+                                <td>&euro; {{ book_boat|BookBoat_price( price['price'] ) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>Subtotal:</td>
+                <td>&euro; {{ book_boat|BookBoat_price(total_price['total_price']) }}</td>
+            </tr>
+            <tr>
+                <td>Total:</td>
+                <td>&euro; {{ book_boat|BookBoat_price(total_price['total_price']) }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br />
+
+    {{ form_widget(form._token) }}
+    {{ form_errors(form) }}
+    <form id="tr_booking_form" method="post" action="{{ braintree_action }}" novalidate="novalidate">
+        <input type="hidden" name="tr_data" value="{{ tr_data }}" />
+
+        {{ form_widget(form) }}
+        
+        <button type="submit">Book It</button>
+    </form>
+    
+    <form id="booking_form" action="{{ path('ZizooBookingBundle_book') }}" method="post">
+        
+    </form>
+
+    <div id="errors">
+        {% if errors|length > 0 %}
+            <ul>
+            {% for error in errors %} 
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <script type="text/javascript">
+        
+        function encrypt(){
+            var enc = Braintree.create("{{ client_key }}");
+            $('#tr_booking_form input').each(function(index,el){
+                var clone = $(el).clone();
+                if ($(clone).attr('type')=='checkbox'){
+                    $(clone).attr('style', 'display: none');
+                } else {
+                    $(clone).attr('type', 'hidden');
+                }
+                if ($(clone).hasClass('sensitive')){
+                    $(clone).val(enc.encrypt($(clone).val()));
+                }
+                $(clone).appendTo('#booking_form');
+            });
+            $('#tr_booking_form select').each(function(index,el){
+                var selected = $(el).find('option:selected');
+                
+                $('#booking_form').append('<input type="hidden" name="'+$(el).attr('name')+'" value="'+$(selected).val()+'" />');
+                
+            });
+            $('#transaction__token').appendTo('#booking_form');
+        }
+        
+        $(document).ready(function(){            
+            
+            $('#tr_booking_form').submit(function(){
+                $('#booking_form').html('');
+                encrypt();
+                $('#booking_form').submit();
+                return false;
+            });
+
+        });
+    </script>
+
+{% endblock %}

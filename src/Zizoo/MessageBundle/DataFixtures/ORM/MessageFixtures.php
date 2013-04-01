@@ -55,35 +55,30 @@ class MessageFixtures implements OrderedFixtureInterface, SharedFixtureInterface
         
         $composer       = $this->container->get('zizoo_message.composer');
         $sender         = $this->container->get('fos_message.sender');
-        $threadTypeRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooMessageBundle:ThreadType');
+        $messageTypeRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooMessageBundle:MessageType');
         
         // Message thread 1 from profile 2 (Benny) to profile 1 (Alex)
-        $message = $composer->newThread()
+        $thread = $composer->newThread()
                             ->setSender($profile2->getUser())
                             ->addRecipient($profile1->getUser())
                             ->setSubject('First thread!')
-                            ->setBody('This is a test message')
-                            ->setThreadType($threadTypeRepo->findOneByName('Inquiry'))
-                            ->getMessage();
+                            ->setBody('This is a test inquiry');
+        
+        $message = $thread->getMessage()
+                            ->setMessageType($messageTypeRepo->findOneById('inquiry'));
+        
         $sender->send($message);
         
         // Reply (thread 1) from profile 1 (Alex) to profile 2 (Benny)
-        $message = $composer->reply($message->getThread())
+        $thread = $composer->reply($message->getThread())
                             ->setSender($profile1->getUser())
-                            ->setBody('This is the answer to the test message.')
-                            ->getMessage();
+                            ->setBody('This is the answer to the test inquiry... denied!.');
+        
+        $message =  $thread->getMessage()
+                            ->setMessageType($messageTypeRepo->findOneById('declined'));
+        
         $sender->send($message);
                 
-        // Message thread 2 from profile 1 (Alex) to profile 2 (Benny) and profile 3 (Sinan)
-        $message = $composer->newThread()
-                            ->setSender($profile1->getUser())
-                            ->addRecipient($profile2->getUser())
-                            ->addRecipient($profile3->getUser())
-                            ->setSubject('2nd thread!')
-                            ->setBody('Benny and Sinan should receive this')
-                            ->setThreadType($threadTypeRepo->findOneByName('Inquiry'))
-                            ->getMessage();
-        $sender->send($message);
     }
 
     public function getOrder()

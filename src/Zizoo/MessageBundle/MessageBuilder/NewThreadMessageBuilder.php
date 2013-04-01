@@ -52,8 +52,8 @@ class NewThreadMessageBuilder extends AbstractMessageBuilder
         return $this;
     }
     
-    public function setThreadType($type){
-        $this->thread->setThreadType($type);
+    public function setReservation($reservation){
+        $this->thread->setReservation($reservation);
         return $this;
     }
 

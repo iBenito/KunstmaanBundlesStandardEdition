@@ -8,6 +8,12 @@
         <form action="{{ url('fos_message_thread_new') }}" method="post" id="new_thread_form">
             {{ form_widget(form) }}
 
+            {% for flashMessage in app.session.flashbag.get('error') %}
+                <div class="flash-error">
+                    {{ flashMessage}}
+                </div>
+            {% endfor %}
+                
             <input type="submit" />
         </form>
 

@@ -31,31 +31,14 @@
         </tbody>
         <tbody id="cost_details">
             <tr>
-                <td>Price per night:</td>
+                <td>Total price:</td>
                 <td>
-                {% if total_price['price']|length == 1 %}
-                    {% for price in total_price['price'] %}
-                        &euro; {{ book_boat|BookBoat_price( price['price'] ) }}
-                    {% endfor %}
-                {% else %}
-                    <table>
-                        {% for price in total_price['price'] %}
-                            <tr>
-                                <td>{{ price['dates'][0]|date }} - {{ price['dates'][1]|date }}:</td>
-                                <td>&euro; {{ book_boat|BookBoat_price( price['price'] ) }}</td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                {% endif %}
+                    &euro; {{ book_boat|BookBoat_price( total_price ) }}
                 </td>
             </tr>
             <tr>
-                <td>Subtotal:</td>
-                <td>&euro; {{ book_boat|BookBoat_price(total_price['total_price']) }}</td>
-            </tr>
-            <tr>
-                <td>Total:</td>
-                <td>&euro; {{ book_boat|BookBoat_price(total_price['total_price']) }}</td>
+                <td>Price to pay now:</td>
+                <td>&euro; {{ book_boat|BookBoat_price( price_to_pay_now ) }}</td>
             </tr>
         </tbody>
     </table>
@@ -67,7 +50,7 @@
     <form id="tr_booking_form" method="post" action="{{ braintree_action }}" novalidate="novalidate">
         <input type="hidden" name="tr_data" value="{{ tr_data }}" />
 
-        {{ form_rest(form) }}
+        {{ form_widget(form) }}
         
         <button type="submit">Book It</button>
     </form>
@@ -76,10 +59,10 @@
         
     </form>
 
-    <div id="braintree_errors">
-        {% if braintree_errors|length > 0 %}
+    <div id="errors">
+        {% if errors|length > 0 %}
             <ul>
-            {% for error in braintree_errors %} 
+            {% for error in errors %} 
                 <li>{{ error }}</li>
             {% endfor %}
             </ul>

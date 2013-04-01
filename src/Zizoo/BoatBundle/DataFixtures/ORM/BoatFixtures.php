@@ -50,6 +50,14 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
     
     public function load(ObjectManager $manager)
     {
+        $boatService    = $this->container->get('boat_service');
+        $boatTypeRepo   = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooBoatBundle:BoatType');   
+        $equipmentRepo  = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooBoatBundle:Equipment');   
+        
+        $equipmentMainsailFurling   = $equipmentRepo->findOneById('mainsail_furning');
+        $equipmentBattenedMainsail  = $equipmentRepo->findOneById('battened_mainsail');
+        $equipmentTeakDeck          = $equipmentRepo->findOneById('teak_deck');
+        
         $boat1 = new Boat();
         $boat1->setName('Sandali');
         $boat1->setTitle('The Ocean Explorer');
@@ -59,10 +67,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat1->setLength(5);
         $boat1->setCabins(6);
         $boat1->setNrGuests(12);
-        $boat1->setDefaultPrice(9.99);
-        
-        $boatService = $this->container->get('boat_service');
-        $boatTypeRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooBoatBundle:BoatType');   
+        $boat1->setDefaultPrice(9.99);        
         
         $boat1Address = new BoatAddress();
         $boat1Address->setStreet('Krk Marina');
@@ -70,28 +75,20 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat1Address->setLocality('Krk');
         $boat1Address->setPostcode('54321');
         $boat1Address->setCountry($manager->merge($this->getReference('countryHR')));
+   
+        $boat1 = $boatService->createBoat($boat1, $boat1Address, $boatTypeRepo->findOneByName('Yacht'), new ArrayCollection(array($equipmentBattenedMainsail, $equipmentMainsailFurling)));
         
-        $boat1Price = new Price();
         $from = new \DateTime();
         $from->modify( 'first day of last month' );
-        $boat1Price->setAvailableFrom($from);
         $to = new \DateTime();
         $to->modify( 'last day of next month' );
-        $boat1Price->setAvailableUntil($to);
-        $boat1Price->setPrice(9.99);
+        $boatService->addPrice($boat1, $from, $to, 9.99, false, true);
         
-        $boat1Price2 = new Price();
         $from = clone $to;
         $from->modify( '+1 day' );
-        $boat1Price2->setAvailableFrom($from);
         $to = clone $from;
         $to->modify( '+1 month' );
-        $boat1Price2->setAvailableUntil($to);
-        $boat1Price2->setPrice(299.99);
-                
-        $boat1 = $boatService->createBoat($boat1, $boat1Address, $boatTypeRepo->findOneByName('Yacht'), new ArrayCollection(array($boat1Price, $boat1Price2)));
-        
-        //$boatService->addPrice($boat1, $from, $to, 9.99);
+        $boatService->addPrice($boat1, $from, $to, 299.99, false, true);
         
         $boat1->setUser($manager->merge($this->getReference('user-1')));
         $manager->persist($boat1);
@@ -174,7 +171,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         
         $this->addReference('boat-4', $boat4);
         
-        
+        $manager->flush();
         /**
         // Load test
         for ($i=0; $i<100; $i++){

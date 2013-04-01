@@ -86,21 +86,24 @@ class BoatController extends Controller
         */
         $map->addMarker($marker);
         
-        
+        $reservations   = $boat->getReservation();
+        $prices         = $boat->getPrice();
         
         $request = $this->getRequest();       
         $request->query->set('url', $this->generateUrl('ZizooBoatBundle_show', array('id' => $id)));
         $request->query->set('ajax_url', $this->generateUrl('ZizooBoatBundle_booking_widget', array('id' => $id, 'request' => $request)));
         return $this->render('ZizooBoatBundle:Boat:show.html.twig', array(
-            'boat'      => $boat,
-            'map'       => $map,
-            'request'   => $request
+            'boat'          => $boat,
+            'map'           => $map,
+            'reservations'  => $reservations,
+            'prices'        => $prices,
+            'request'       => $request
         ));
     }
     
     
     
-    public function bookingWidgetAction($id, Request $request){
+    public function bookingWidgetAction($id, Request $request, $reservations=null, $prices=null){
         $session = $request->getSession();
         $em = $this->getDoctrine()->getEntityManager();
         $boat = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
@@ -111,21 +114,28 @@ class BoatController extends Controller
         $form = $this->createForm(new BookBoatType(), new BookBoat($id));
         $form->bindRequest($request);
         $bookBoat = $form->getData();
-        
-        $reservationAgent = $this->get('zizoo_reservation_reservation_agent');
-        $reservationExists = $reservationAgent->reservationExists($boat, $bookBoat->getReservationFrom(), $bookBoat->getReservationTo());
-        
-        $totalPrice = $reservationAgent->getTotalPrice($boat, $bookBoat->getReservationFrom(), $bookBoat->getReservationTo());
+            
+        $reservationAgent = $this->container->get('zizoo_reservation_reservation_agent');
+        try {
+            $totalPrice = $reservationAgent->getTotalPrice($boat, $bookBoat->getReservationFrom(), $bookBoat->getReservationTo(), false);
+        } catch (\Zizoo\ReservationBundle\Exception\InvalidReservationException $e){
+            $totalPrice = 0;
+        }
         
         $valid = false;
         
-        if ($form->isValid() && !$reservationExists && $bookBoat->getNumGuests()>0){
+        if ($form->isValid() && $bookBoat->getNumGuests()>0){
             $valid = true;
             $session->set('boat', $bookBoat);
+            $session->set('price', $totalPrice);
         } else {
             $valid = false;
             $session->remove('boat');
+            $session->remove('price');
         }
+        
+        if (!$reservations) $reservations = $boat->getReservation();
+        if (!$prices) $prices = $boat->getPrice();
         
         $url            = $request->query->get('url', null);
         $ajaxUrl        = $request->query->get('ajax_url', null);
@@ -137,8 +147,9 @@ class BoatController extends Controller
             'book_boat'             => $bookBoat,
             'total_price'           => $totalPrice,
             'form'                  => $form->createView(),
-            'reservation_exists'    => $reservationExists,
             'valid'                 => $valid,
+            'reservations'          => $reservations,
+            'prices'                => $prices,
             'url'                   => $url,
             'ajax_url'              => $ajaxUrl,
             'book_url'              => $this->generateUrl('ZizooBookingBundle_book')
@@ -251,11 +262,12 @@ class BoatController extends Controller
      */
     public function editAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em     = $this->getDoctrine()->getManager();
+        $user   = $this->getUser();
+        
+        $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
 
-        $boat = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
-
-        if (!$boat) {
+        if (!$boat || $boat->getUser()!=$user) {
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
 
@@ -274,11 +286,12 @@ class BoatController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em     = $this->getDoctrine()->getManager();
+        $user   = $this->getUser();
+        
+        $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
 
-        $boat = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
-
-        if (!$boat) {
+        if (!$boat || $boat->getUser()!=$user) {
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
 
@@ -310,10 +323,11 @@ class BoatController extends Controller
         $form->bind($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $boat = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
+            $em     = $this->getDoctrine()->getManager();
+            $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
+            $user   = $this->getUser();
 
-            if (!$boat) {
+            if (!$boat || $boat->getUser()==$user) {
                 throw $this->createNotFoundException('Unable to find Boat entity.');
             }
 

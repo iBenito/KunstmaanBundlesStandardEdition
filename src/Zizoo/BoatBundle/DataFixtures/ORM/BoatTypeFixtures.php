@@ -49,9 +49,9 @@ class BoatTypeFixtures implements OrderedFixtureInterface, SharedFixtureInterfac
         
         $boatService    = $this->container->get('boat_service');
             
-        $yachtType      = $boatService->createBoatType('Yacht', 0);
-        $catamaranType  = $boatService->createBoatType('Catamaran', 1);
-        $sailboatType   = $boatService->createBoatType('Sailboat', 2);
+        $yachtType      = $boatService->createBoatType('yacht', 'Yacht', 0);
+        $catamaranType  = $boatService->createBoatType('catamaran', 'Catamaran', 1);
+        $sailboatType   = $boatService->createBoatType('sailboat', 'Sailboat', 2);
                 
     }
 

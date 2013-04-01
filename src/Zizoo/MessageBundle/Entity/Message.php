@@ -40,6 +40,13 @@ class Message extends BaseMessage
      */
     protected $metadata;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Zizoo\MessageBundle\Entity\MessageType")
+     * @ORM\JoinColumn(name="message_type", referencedColumnName="id")
+     */
+    protected $messageType;
+        
+    
     public function __construct()
     {
         parent::__construct();
@@ -60,6 +67,30 @@ class Message extends BaseMessage
     public function addMetadata(ModelMessageMetadata $meta) {
         $meta->setMessage($this);
         parent::addMetadata($meta);
+    }
+    
+    
+    /**
+     * Set type
+     *
+     * @param MessageType $type
+     * @return Message
+     */
+    public function setMessageType($type)
+    {
+        $this->messageType = $type;
+    
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return MessageType 
+     */
+    public function getMessageType()
+    {
+        return $this->messageType;
     }
 
 }

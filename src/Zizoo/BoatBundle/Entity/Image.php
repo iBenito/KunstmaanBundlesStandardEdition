@@ -2,21 +2,16 @@
 
 namespace Zizoo\BoatBundle\Entity;
 
+use Zizoo\BaseBundle\Entity\BaseEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Zizoo\BoatBundle\Entity\ImageRepository")
  * @ORM\Table(name="image")
  */
-class Image
+class Image extends BaseEntity
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Boat", inversedBy="image")
      * @ORM\JoinColumn(name="boat_id", referencedColumnName="id")
@@ -28,15 +23,6 @@ class Image
      */
     protected $path;
     
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Set boat
@@ -83,4 +69,6 @@ class Image
     {
         return $this->path;
     }
+    
+   
 }

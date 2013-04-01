@@ -15,7 +15,6 @@ services:
             container:      "@service_container"
         tags:
             - { name: doctrine.event_listener, event: prePersist }
-            - { name: doctrine.event_listener, event: postPersist }
             
     zizoo_booking.twig.reservation_extension:
         class: Zizoo\ReservationBundle\Twig\ReservationExtension
