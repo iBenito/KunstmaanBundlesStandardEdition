@@ -1,9 +1,8 @@
 <?php
-// src/Zizoo/UserBundle/Form/Type/FacebookUserType.php
+// src/Zizoo/UserBundle/Form/Type/FacebookNewUserType.php
 namespace Zizoo\UserBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -18,10 +17,10 @@ class FacebookNewUserType extends AbstractType
     }
 
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver) 
     {
-        return array('data_class' => 'Zizoo\UserBundle\Entity\User',
-                     'validation_groups' => 'registration');
+        $resolver->setDefaults(array('data_class' => 'Zizoo\UserBundle\Entity\User',
+                     'validation_groups' => 'registration'));
     }
 
     public function getName()

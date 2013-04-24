@@ -3,7 +3,6 @@
 namespace Zizoo\UserBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -18,15 +17,15 @@ class FacebookLinkUserType extends AbstractType
     }
 
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver) 
     {
-        return array('data_class' => 'Zizoo\UserBundle\Entity\User',
-                     'validation_groups' => 'fb_link');
+        $resolver->setDefaults(array('data_class' => 'Zizoo\UserBundle\Entity\User',
+                     'validation_groups' => 'fb_link'));
     }
 
     public function getName()
     {
-        return 'facebooklinkuser';
+        return 'facebook_link_user';
     }
 }
 ?>

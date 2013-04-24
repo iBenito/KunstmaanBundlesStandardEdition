@@ -1,0 +1,9 @@
+Zizoo\ReservationBundle\Form\Model\DenyReservation:
+    properties:
+        denyMessage:
+            - NotBlank: { message: zizoo_reservation.error.deny_reservation_message_not_blank }
+
+Zizoo\ReservationBundle\Form\Model\AcceptReservation:
+    properties:
+        acceptMessage:
+            - NotBlank: { message: zizoo_reservation.error.accept_reservation_message_not_blank }

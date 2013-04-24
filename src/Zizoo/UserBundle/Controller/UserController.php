@@ -80,7 +80,7 @@ class UserController extends Controller
         }
         
         $em = $this->getDoctrine()
-                    ->getEntityManager();
+                    ->getManager();
             
         $user = $em->getRepository('ZizooUserBundle:User')->findOneByFacebookUID($obj['id']);
         
@@ -116,12 +116,12 @@ class UserController extends Controller
         $form = $this->createForm(new UserForgotPasswordType());
         
         if ($request->isMethod('POST')) {
-            $form->bindRequest($request);
+            $form->bind($request);
             $data = $form->getData();
             $user_or_email = $data['user_or_email'];
             
             $em = $this->getDoctrine()
-                       ->getEntityManager();
+                       ->getManager();
             
             $user = $em->getRepository('ZizooUserBundle:User')->findOneByUsername($user_or_email);
             if ($user==null) $user = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($user_or_email);
@@ -165,7 +165,7 @@ class UserController extends Controller
      */
     public function resetPasswordAction($token, $email){
         $em = $this->getDoctrine()
-                   ->getEntityManager();
+                   ->getManager();
         
         $user = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($email);
         
@@ -207,7 +207,7 @@ class UserController extends Controller
         $request = $this->getRequest();
         // If submit
         if ($request->isMethod('POST')) {
-            $form->bindRequest($request);
+            $form->bind($request);
             
             $newUser = $form->getData();
             if ($form->isValid()) {
@@ -218,7 +218,7 @@ class UserController extends Controller
                     $newPassword = $encoder->encodePassword($newPassword, $user->getSalt());
                     $user->setPassword($newPassword);
                     $em = $this->getDoctrine()
-                               ->getEntityManager();
+                               ->getManager();
                     $em->persist($user);
                     $em->flush();
 
@@ -247,7 +247,7 @@ class UserController extends Controller
         
         // If submit
         if ($isPost) {
-            $form->bindRequest($request);
+            $form->bind($request);
             
             $invitation = $form->getData();
             
@@ -255,7 +255,7 @@ class UserController extends Controller
                 $messenger  = $this->get('messenger');
                 $trans      = $this->get('translator');
                 $em         = $this->getDoctrine()
-                                    ->getEntityManager();
+                                    ->getManager();
                 
                 $inviteEmail = $invitation->getEmail1();
                 $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);

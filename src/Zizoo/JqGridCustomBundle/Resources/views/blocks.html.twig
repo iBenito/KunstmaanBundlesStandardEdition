@@ -61,6 +61,11 @@
             ],
             {{  grid.options|raw }}
             {% if grid.caption != '' %}caption:"{{ grid.caption }}", {% endif %}
+            {% if grid.subGrid %}
+            subGrid: true,
+            subGridUrl: '{{ grid.subGrid.getrouteurl }}',
+            subGridModel: [{{ jqgrid_subgridmodel(grid) }}]
+            ,{% endif %}
             pager: '#pager_{{ grid.name|raw }}'
         });
 

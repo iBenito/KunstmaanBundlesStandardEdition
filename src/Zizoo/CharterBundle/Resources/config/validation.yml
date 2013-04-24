@@ -1,0 +1,8 @@
+# src/Zizoo/CharterBundle/Resources/config/validation.yml
+Zizoo\CharterBundle\Entity\Charter:
+    properties:
+        charterName:
+            - NotBlank: { message: zizoo_charter.error.charter_name_not_blank, groups: [registration] }
+            
+        charterNumber:
+            - NotBlank: { message: zizoo_charter.error.charter_number_not_blank, groups: [registration] }

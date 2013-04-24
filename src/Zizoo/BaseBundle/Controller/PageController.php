@@ -19,7 +19,7 @@ class PageController extends Controller {
     public function indexAction() 
     {
         $request = $this->getRequest();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $boats = $em->getRepository('ZizooBoatBundle:Boat')->getBoats(3);
         
         $user = $this->getUser();
@@ -84,7 +84,7 @@ class PageController extends Controller {
 
         $request = $this->getRequest();
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->bind($request);
 
             if ($form->isValid()) {
 

@@ -52,9 +52,9 @@ ZizooBaseBundle_Dashboard:
     requirements:
         _method:  GET
         
-ZizooBaseBundle_Dashboard_UserWidget:
-    pattern:  /dashboard-user-widget
-    defaults: { _controller: ZizooBaseBundle:Dashboard:userWidget }
+ZizooBaseBundle_Dashboard_Widget:
+    pattern:  /dashboard-widget
+    defaults: { _controller: ZizooBaseBundle:Dashboard:widget }
     requirements:
         _method:  GET
         
@@ -105,7 +105,7 @@ ZizooBaseBundle_Dashboard_BoatPrice:
 
 ZizooBaseBundle_Dashboard_ConfirmBoatPrice:
     pattern:  /account/boat/{id}/confirm-price
-    defaults: { _controller: ZizooBaseBundle:Dashboard:confirmBoatPrice }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:boatConfirmPrice }
     requirements:
         _method:  GET|POST
         id: \d+

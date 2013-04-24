@@ -7,6 +7,7 @@ use Zizoo\BoatBundle\Entity\Price;
 use Zizoo\BoatBundle\Entity\Image;
 use Zizoo\BoatBundle\Entity\Equipment;
 
+use Zizoo\CharterBundle\Entity\Charter;
 use Zizoo\AddressBundle\Entity\BoatAddress;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -28,8 +29,9 @@ class BoatService {
     public function addPrice(Boat $boat, $from, $to, $p, $default=false, $flush=true){
         $from   = $from->setTime(0,0,0);
         $to     = $to->setTime(0,0,0);
-        $overlappingPrices = $this->em->getRepository('ZizooBoatBundle:Price')->getPrices($boat, $from, $to);
         
+        $overlappingPrices = $this->em->getRepository('ZizooBoatBundle:Price')->getPrices($boat, $from, $to);
+        //$overlappingPrices = new \Doctrine\Common\Collections\ArrayCollection(array());
         $priceArr = array();
         foreach ($overlappingPrices as $overlappingPrice){
             $overlappingDate = $overlappingPrice->getAvailable();
@@ -119,13 +121,14 @@ class BoatService {
         
     }
     
-    public function createBoat(Boat $boat, BoatAddress $address, BoatType $boatType, ArrayCollection $equipment=null){
+    public function createBoat(Boat $boat, BoatAddress $address, BoatType $boatType, Charter $charter, ArrayCollection $equipment=null, $flush=false){
 
         $boat->setBoatType($boatType);
-        
+        $boat->setCharter($charter);
         $address->fetchGeo();
         $address->setBoat($boat);
         $boat->setAddress($address);
+        $charter->addBoat($boat);
         
         if ($equipment){
             foreach ($equipment as $e){
@@ -135,7 +138,8 @@ class BoatService {
         
         $this->em->persist($address);
         $this->em->persist($boat);
-        $this->em->flush();
+        if ($flush) $this->em->flush();
+        
         return $boat;
     }
     

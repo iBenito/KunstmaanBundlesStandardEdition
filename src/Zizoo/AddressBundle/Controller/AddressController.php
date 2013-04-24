@@ -30,7 +30,7 @@ class AddressController extends Controller
     public function locationsAction(Request $request){       
         $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat(), array('filter' => true));
         
-        $form->bindRequest($request);
+        $form->bind($request);
         $searchBoat = $form->getData();
         
         // hack for location search
@@ -46,7 +46,7 @@ class AddressController extends Controller
         $pageSize   = $request->query->get('page_size', '9');
 
         $em = $this->getDoctrine()
-                   ->getEntityManager();
+                   ->getManager();
         
         $minMaxBoatValues   = $em->getRepository('ZizooBoatBundle:Boat')->getMaxBoatValues();
         $minMaxPrice     = $em->getRepository('ZizooBoatBundle:Price')->getMinimumAndMaximumPrice();
@@ -91,7 +91,7 @@ class AddressController extends Controller
     public function locations2Action(Request $request){
         $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat());
         
-        $form->bindRequest($request);
+        $form->bind($request);
         $searchBoat = $form->getData();
         
         // hack for location search
@@ -106,7 +106,7 @@ class AddressController extends Controller
         $pageSize   = $request->query->get('page_size', '9');
 
         $em = $this->getDoctrine()
-                   ->getEntityManager();
+                   ->getManager();
         
         $maxBoatValues   = $em->getRepository('ZizooBoatBundle:Boat')->getMaxBoatValues();
         

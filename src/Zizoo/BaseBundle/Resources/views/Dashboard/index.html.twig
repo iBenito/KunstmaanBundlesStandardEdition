@@ -24,12 +24,5 @@
     {% for booking in bookings %}    
         <p>Booked boat {{ booking.reservation.boat.title }} for {{ booking.cost }}</p>
     {% endfor %}
-        
-    <hr />
-        
-    <h3>Reservation Requests Received</h3>
-    {% for reservationRequest in reservationRequests %}    
-        <p>You Received a <a href="{{ path('ZizooReservationBundle_view', {id: reservationRequest.id}) }}">reservation request</a> from {{ reservationRequest.guest.profile.firstName }}</p>
-    {% endfor %}   
 
 {% endblock %}

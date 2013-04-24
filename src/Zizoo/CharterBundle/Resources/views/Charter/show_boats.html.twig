@@ -1,0 +1,39 @@
+<div id="charter_boats">
+    {% for i in 0..page_size-1 %}
+        {% if i < boats|length %}
+            {% set boat = boats[i] %}
+            <div class="boat">
+                <h3>{{ boat.name }}</h3>
+                <div class="price-container">{{ boat|displayFromPrice|raw }}</div>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+<input id="more_boats" type="hidden" value="{% if boats|length > page_size %}true{% else %}false{% endif %}" />
+<a id="show_more_boats_link" href="{{ path('ZizooCharterBundle_show_boats', {id: charter.id, page: page+1}) }}" style="display: none">Show more &raquo;</a>
+<img id="boats_loading" src="{{ asset('images/loader_16.gif') }}" style="display: none" />
+
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        {% if boats|length > page_size %}
+        $('#show_more_boats_link').show().click(function(){
+            $(this).hide();
+            $('#boats_loading').show();
+            var t = this;
+            $.ajax({
+                url: $(this).attr('href'),
+                success: function(data){
+                    $('#charter_boats').append($(data).find('.boat'));
+                    $('#show_more_boats_link').attr('href', $(data).find('#show_more_boats_link'));
+                    $('#boats_loading').hide();
+                    if ($(data).find('#more_boats').val()=='true') $(this).show();
+                }
+            });
+            return false;
+        });
+        {% endif %}
+    });
+</script>
+

@@ -7,11 +7,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\DBALException;
 
+use Zizoo\BaseBundle\Form\Type\ConfirmBoatPriceType;
+use Zizoo\BaseBundle\Form\Model\ConfirmBoatPrice;
+
 use Zizoo\BoatBundle\Entity\Boat;
 use Zizoo\BoatBundle\Entity\Price;
 use Zizoo\BoatBundle\Entity\Image;
 use Zizoo\BoatBundle\Form\ImageType;
 use Zizoo\BoatBundle\Exception\InvalidPriceException;
+
+use Zizoo\ReservationBundle\Form\Type\DenyReservationType;
+use Zizoo\ReservationBundle\Form\Model\DenyReservation;
 
 use Zizoo\CrewBundle\Form\SkillsType;
 
@@ -30,22 +36,53 @@ use Zizoo\ReservationBundle\Exception\InvalidReservationException;
  */
 class DashboardController extends Controller {
 
+    private function widgetCharterAction($charter, $route)
+    {
+        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_widget.html.twig', array(
+            'charter'   => $charter,
+            'route'     => $route,
+        ));
+    }
+    
+    private function widgetUserAction($user, $route, $showUser)
+    {
+        //$crew = (count($user->getSkills())) ? true : false;
+        return $this->render('ZizooBaseBundle:Dashboard:user_widget.html.twig', array(
+            'user'      => $user,
+            'route'     => $route,
+            'show_user' => $showUser
+            //'crew' => $crew
+        ));
+    }
+    
     /**
      * Displays Mini User Profile and Navigation
      * 
      * @return Response
      */
-    public function userWidgetAction()
+    public function widgetAction($route, $showUser=false)
     {
         $user = $this->getUser();
-
-        $owner = (count($user->getBoats())) ? true : false;
-//        $crew = (count($user->getSkills())) ? true : false;
         
-        return $this->render('ZizooBaseBundle::user_widget.html.twig', array(
-            'user' => $user,
-            'owner' => $owner,
-//            'crew' => $crew
+        if ($user->getCharter() && !$showUser){
+            return $this->widgetCharterAction($user->getCharter(), $route);
+        } else {
+            return $this->widgetUserAction($user, $route, $showUser);
+        }
+    }
+    
+    
+    /**
+     * Display Charter Dashboard
+     * 
+     * @return Response
+     */
+    private function indexCharterAction($charter)
+    {
+        $reservationRequests = $this->getDoctrine()->getRepository('ZizooReservationBundle:Reservation')->getReservationRequests($charter);
+        
+        return $this->render('ZizooBaseBundle:Dashboard:Charter/index.html.twig', array(
+            'reservationRequests' => $reservationRequests
         ));
     }
     
@@ -54,22 +91,35 @@ class DashboardController extends Controller {
      * 
      * @return Response
      */
-    public function indexAction()
+    private function indexUserAction($user)
     {
-        $user = $this->getUser();
-        
         $reservationsMade = $user->getReservations();
         $bookingsMade = $user->getBookings();
         
-        $boats = $user->getBoats();
-        
-        $reservationRequests = $this->getDoctrine()->getRepository('ZizooReservationBundle:Reservation')->getReservationRequests($user);
-
         return $this->render('ZizooBaseBundle:Dashboard:index.html.twig', array(
             'reservations' => $reservationsMade,
-            'bookings' => $bookingsMade,
-            'reservationRequests' => $reservationRequests
+            'bookings' => $bookingsMade
         ));
+    }
+    
+    /**
+     * Display User or Charter Dashboard
+     * 
+     * @return Response
+     */
+    public function indexAction()
+    {
+        $request    = $this->getRequest();
+        $showUser   = $request->query->get('show_user', false);
+        $user       = $this->getUser();
+        
+        
+        if ($user->getCharter() && !$showUser){
+            return $this->indexCharterAction($user->getCharter());
+        } else {
+            return $this->indexUserAction($user);
+        }
+        
     }
     
     /**
@@ -113,7 +163,7 @@ class DashboardController extends Controller {
     public function boatsAction()
     {
         $user = $this->getUser();
-        $boats = $user->getBoats();
+        $boats = $user->getCharter()->getBoats();
 
         return $this->render('ZizooBaseBundle:Dashboard:boats.html.twig', array(
             'boats' => $boats
@@ -146,7 +196,7 @@ class DashboardController extends Controller {
     {
         $user   = $this->getUser();
         $boat   = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
-        if (!$boat || $boat->getUser()!=$user) {
+        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
             
@@ -167,7 +217,7 @@ class DashboardController extends Controller {
     {
         $user   = $this->getUser();
         $boat   = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
-        if (!$boat || $boat->getUser()!=$user) {
+        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
         
@@ -209,7 +259,7 @@ class DashboardController extends Controller {
         $boatId = $this->getRequest()->get('boatId');
 
         $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($boatId);
-        if (!$boat || $boat->getUser()!=$user) {
+        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
         
@@ -246,14 +296,15 @@ class DashboardController extends Controller {
         return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_BoatEdit', array('id' => $boatId)));
     }
     
-    public function confirmBoatPriceAction($id)
+    public function boatConfirmPriceAction($id)
     {
+        $request            = $this->getRequest();
         $user               = $this->getUser();
         $session            = $this->container->get('session');
-        $em                 = $this->getDoctrine()->getEntityManager();
+        $em                 = $this->getDoctrine()->getManager();
         
         $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
-        if (!$boat || $boat->getUser()!=$user) {
+        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
         
@@ -279,8 +330,32 @@ class DashboardController extends Controller {
             $overlapExternalReservations    = $em->getRepository('ZizooReservationBundle:Reservation')->findByIds($externalIds);
         }
         
+        $form = $this->createForm(new ConfirmBoatPriceType(), new ConfirmBoatPrice($overlapRequestedReservations));
+        if ($request->isMethod('post')){
+            $form->bind($request);
+            if ($form->isValid()){
+                $em                 = $this->getDoctrine()->getManager();
+                foreach ($overlapRequestedReservations as $overlapRequestedReservation){
+                    //$overlapRequestedReservation->setBoat(null);
+                    //$boat->removeReservation($overlapRequestedReservation);
+                    //$em->remove($overlapRequestedReservation);
+                    $overlapRequestedReservation->setStatus(Reservation::STATUS_DENIED);
+                    $em->persist($overlapRequestedReservation);
+                }
+
+                foreach ($overlapExternalReservations as $overlapExternalReservation){
+                    $overlapExternalReservation->setBoat(null);
+                    $boat->removeReservation($overlapExternalReservation);
+                    $em->remove($overlapExternalReservation);
+                }
+                
+                return $this->forward('ZizooBaseBundle:Dashboard:boatPrice', array('id' => $id));
+            }
+        }
+        
         return $this->render('ZizooBaseBundle:Dashboard/Boat:price_confirm.html.twig', array(
             'boat'                              => $boat,
+            'form'                              => $form->createView(),
             'overlap_requested_reservations'    => $overlapRequestedReservations,
             'overlap_external_reservations'     => $overlapExternalReservations,
             'from'                              => $overlap['from'],
@@ -302,15 +377,16 @@ class DashboardController extends Controller {
         $boatService        = $this->container->get('boat_service');
         $reservationAgent   = $this->container->get('zizoo_reservation_reservation_agent');
         $user               = $this->getUser();
+        $charter            = $user->getCharter();
         
         $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
-        if (!$boat || $boat->getUser()!=$user) {
+        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
         
         $reservations   = $boat->getReservation();
         $prices         = $boat->getPrice();
-        
+    
         if ($request->isMethod('post')){
             $fromStr    = $request->request->get('date_from', null);
             $toStr      = $request->request->get('date_to', null);
@@ -321,27 +397,12 @@ class DashboardController extends Controller {
             
             $type               = $request->request->get('type', 'availability');
             
-            $overlapRequestedReservations   = $this->getDoctrine()->getRepository('ZizooReservationBundle:Reservation')->getReservations($user, $boat, $from, $to, array(Reservation::STATUS_REQUESTED));
-            $overlapExternalReservations    = $this->getDoctrine()->getRepository('ZizooReservationBundle:Reservation')->getReservations($user, $boat, $from, $to, array(Reservation::STATUS_SELF));
+            $overlapRequestedReservations   = $this->getDoctrine()->getRepository('ZizooReservationBundle:Reservation')->getReservations($charter, null, $boat, $from, $to, array(Reservation::STATUS_REQUESTED));
+            $overlapExternalReservations    = $this->getDoctrine()->getRepository('ZizooReservationBundle:Reservation')->getReservations($charter, null, $boat, $from, $to, array(Reservation::STATUS_SELF));
             if (count($overlapRequestedReservations)>0 || count($overlapExternalReservations)>0){
 
-                if ($confirmed){
-                    $em                 = $this->getDoctrine()->getEntityManager();
-
-                    foreach ($overlapRequestedReservations as $overlapRequestedReservation){
-                        $overlapRequestedReservation->setBoat(null);
-                        $boat->removeReservation($overlapRequestedReservation);
-                        $em->remove($overlapRequestedReservation);
-                    }
-
-                    foreach ($overlapExternalReservations as $overlapExternalReservation){
-                        $overlapExternalReservation->setBoat(null);
-                        $boat->removeReservation($overlapExternalReservation);
-                        $em->remove($overlapExternalReservation);
-                    }
-
-                } else {
-
+                if (!$confirmed){
+                    
                     $requestedIds = array();
                     foreach ($overlapRequestedReservations as $overlapRequestedReservation){
                         $requestedIds[] = $overlapRequestedReservation->getId();
@@ -444,7 +505,7 @@ class DashboardController extends Controller {
             if ($request->request->get('zizoo_billing_bank_account', null)){
                 if ($braintreeCustomer){
                     $formBraintree = $this->createForm($bankAccountType);
-                    $formBraintree->bindRequest($request);
+                    $formBraintree->bind($request);
 
                     if ($formBraintree->isValid()){
                         $bankAccount = $formBraintree->getData();
@@ -473,7 +534,7 @@ class DashboardController extends Controller {
             if ($request->request->get('zizoo_billing_paypal', null)){
                 if ($braintreeCustomer){
                     $formPayPal = $this->createForm($paypalType);
-                    $formPayPal->bindRequest($request);
+                    $formPayPal->bind($request);
                     
                     if ($formPayPal->isValid()){
                         $paypal = $formPayPal->getData();

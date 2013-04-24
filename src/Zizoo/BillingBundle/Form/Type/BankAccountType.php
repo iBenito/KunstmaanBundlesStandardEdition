@@ -4,6 +4,7 @@ namespace Zizoo\BillingBundle\Form\Type;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class BankAccountType extends AbstractType
 {
@@ -48,9 +49,9 @@ class BankAccountType extends AbstractType
     }
 
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array('data_class'   => 'Zizoo\BillingBundle\Form\Model\BankAccount');
+        $resolver->setDefaults(array('data_class'   => 'Zizoo\BillingBundle\Form\Model\BankAccount'));
     }
     
     public function getParent()

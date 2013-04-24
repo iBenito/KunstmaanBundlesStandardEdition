@@ -25,7 +25,7 @@ class Reservation extends BaseEntity
     protected $boat;
         
     /**
-     * @ORM\ManyToOne(targetEntity="Zizoo\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Zizoo\UserBundle\Entity\User", inversedBy="reservations")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      **/
     protected $guest;

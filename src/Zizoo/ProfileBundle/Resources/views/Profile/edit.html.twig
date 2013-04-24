@@ -3,7 +3,7 @@
 {% block body %}
 
     {% block edit_form %}
-        {% render 'ZizooProfileBundle:Profile:editWidget' with { 'profile': profile } %}
+        {% render controller('ZizooProfileBundle:Profile:editWidget', { 'profile': profile }) %}
     {% endblock %}
 
 {% endblock %}

@@ -3,5 +3,5 @@
 {% block dashboard_page_title %}Profile{% endblock %}
 
 {% block content %}
-    {% render 'ZizooProfileBundle:Profile:editWidget' with { 'profile': profile, 'formPath': formPath } %}
+    {% render controller('ZizooProfileBundle:Profile:editWidget', { 'profile': profile, 'formPath': formPath }) %}
 {% endblock %}

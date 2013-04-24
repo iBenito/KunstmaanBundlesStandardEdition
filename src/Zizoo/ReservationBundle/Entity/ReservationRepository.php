@@ -3,7 +3,7 @@
 namespace Zizoo\ReservationBundle\Entity;
 
 use Zizoo\BoatBundle\Entity\Boat;
-
+use Zizoo\CharterBundle\Entity\Charter;
 use Zizoo\UserBundle\Entity\User;
 
 use Doctrine\ORM\EntityRepository;
@@ -31,23 +31,36 @@ class ReservationRepository extends EntityRepository
         
     }
     
-    public function getReservations(User $user=null, Boat $boat=null, \DateTime $from=null, \DateTime $to=null, $statusArr=null, Reservation $exceptReservation=null)
+    public function getReservations(Charter $charter=null, User $user=null, Boat $boat=null, \DateTime $from=null, \DateTime $to=null, $statusArr=null, Reservation $exceptReservation=null)
     {
          $qb = $this->createQueryBuilder('reservation')
                     ->select('reservation, boat')
-                    ->leftJoin('reservation.boat', 'boat');
+                    ->leftJoin('reservation.boat', 'boat')
+                    ->leftJoin('boat.charter', 'charter');
          
          $firstWhere = true;
-         if ($user){
-             $qb = $qb->where('boat.user = :user')
-                       ->setParameter('user', $user);
+         if ($charter){
+             $qb = $qb->where('charter = :charter')
+                       ->setParameter('charter', $charter);
              $firstWhere = false;
+         }
+         
+         if ($user){
+             if ($firstWhere){
+                 $qb = $qb->where('reservation.guest = :guest')
+                       ->setParameter('guest', $user);
+                 $firstWhere = false;
+             } else {
+                 $qb = $qb->andWhere('reservation.guest = :guest')
+                       ->setParameter('guest', $user);
+             }
          }
          
          if ($boat){
              if ($firstWhere){
                  $qb = $qb->where('boat = :boat')
                             ->setParameter('boat', $boat);
+                 $firstWhere = false;
              } else {
                  $qb = $qb->andWhere('boat = :boat')
                             ->setParameter('boat', $boat);
@@ -61,6 +74,7 @@ class ReservationRepository extends EntityRepository
                             ->orWhere(':check_in BETWEEN reservation.check_in AND reservation.check_out')
                             ->setParameter('check_in', $from)
                             ->setParameter('check_out', $to);
+                 $firstWhere = false;
              } else {
                  $qb = $qb->andWhere('reservation.check_in BETWEEN :check_in AND :check_out')
                             ->orWhere('reservation.check_out BETWEEN :check_in AND :check_out')
@@ -74,6 +88,7 @@ class ReservationRepository extends EntityRepository
              if ($firstWhere){
                  $qb = $qb->where('reservation.status IN (:status)')
                             ->setParameter('status', $statusArr);
+                 $firstWhere = false;
              } else {
                 $qb = $qb->andWhere('reservation.status IN (:status)')
                             ->setParameter('status', $statusArr);
@@ -84,6 +99,7 @@ class ReservationRepository extends EntityRepository
              if ($firstWhere){
                  $qb = $qb->where('reservation != (:except_reservation)')
                             ->setParameter('except_reservation', $exceptReservation);
+                 $firstWhere = false;
              } else {
                  $qb = $qb->andWhere('reservation != (:except_reservation)')
                             ->setParameter('except_reservation', $exceptReservation);
@@ -93,8 +109,8 @@ class ReservationRepository extends EntityRepository
          return $qb->getQuery()->getResult();
     }
     
-    public function getReservationRequests(User $user=null, Boat $boat=null) {
-        return $this->getReservations($user, $boat, null, null, array(Reservation::STATUS_REQUESTED));
+    public function getReservationRequests(Charter $charter=null, Boat $boat=null) {
+        return $this->getReservations($charter, null, $boat, null, null, array(Reservation::STATUS_REQUESTED));
     }
     
     public function findByIds($ids)

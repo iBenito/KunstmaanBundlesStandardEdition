@@ -141,3 +141,7 @@
     color: #FFFFFF !important;
     font-weight: normal !important;
 }
+
+#availability-calendar .ui-datepicker-other-month {
+    display: none !important;
+}

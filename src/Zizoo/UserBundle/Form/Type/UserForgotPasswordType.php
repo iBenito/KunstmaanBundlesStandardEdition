@@ -3,8 +3,8 @@
 namespace Zizoo\UserBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class UserForgotPasswordType extends AbstractType
 {
@@ -13,14 +13,14 @@ class UserForgotPasswordType extends AbstractType
         $builder->add('user_or_email', 'text', array('label' => 'zizoo_user.label.username_or_email'));
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver) 
     {
-        return array('virtual' => true);
+        $resolver->setDefaults(array('virtual' => true));
     }
 
     public function getName()
     {
-        return 'userforgotpassword';
+        return 'user_forgot_password';
     }
 }
 ?>

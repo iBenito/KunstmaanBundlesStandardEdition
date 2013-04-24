@@ -68,6 +68,12 @@ class JqGridExtension extends \Twig_Extension
                                 'html'
                             )
                         )),
+                'jqgrid_subgridmodel' => new \Twig_Function_Method($this, 'subGridConfig',
+                        array(
+                            'is_safe' => array(
+                                'html'
+                            )
+                        )),
         );
     }
 
@@ -140,6 +146,24 @@ class JqGridExtension extends \Twig_Extension
         }
 
         return $this->templates;
+    }
+    
+    public function subGridConfig(Grid $grid)
+    {
+        $arr = array();
+        $names = array();
+        $widths = array();
+        foreach ($grid->getSubGrid()->getColumns() as $c){
+            $names[] = $c->getName();
+            $widths[] = $c->getField('width');
+        }
+        $arr['name']    = $names;
+        $arr['width']   = $widths;
+        $extraParams = $grid->getExtraParams();
+        if ($extraParams && array_key_exists('subGridParams', $extraParams)){
+            $arr['params']  = $extraParams['subGridParams'];
+        }
+        return json_encode($arr);
     }
 
     public function getName()

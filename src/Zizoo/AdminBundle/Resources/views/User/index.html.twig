@@ -1,0 +1,27 @@
+{% extends 'ZizooAdminBundle::layout.html.twig' %}
+{% block body %}
+
+    {{jqgrid(grid)}}
+
+    <script type="text/javascript">
+
+        function openUser(username){
+            window.location.href = '{{ path('ZizooAdminBundle_User_Edit', {username: null}) }}/'+username;
+        }
+
+        function userDoubleClick(rowId, rowIndex, colIndex, e){
+            var username = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', rowId, 'grid_usersusername');
+            openUser(username);
+        }
+
+        function loadComplete(){
+            
+            jQuery('#{{ grid.name|raw }}').jqGrid('setGridParam', { ondblClickRow: userDoubleClick } );
+            
+        }
+        
+        
+        
+    </script>
+
+{% endblock %}

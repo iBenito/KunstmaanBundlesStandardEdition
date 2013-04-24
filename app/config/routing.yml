@@ -1,3 +1,11 @@
+zizoo_charter:
+    resource: "@ZizooCharterBundle/Resources/config/routing.yml"
+    prefix:   /charter
+
+zizoo_admin:
+    resource: "@ZizooAdminBundle/Resources/config/routing.yml"
+    prefix:   /admin
+
 zizoo_notification:
     resource: "@ZizooNotificationBundle/Resources/config/routing.yml"
     prefix:   /

@@ -5,6 +5,7 @@ namespace Zizoo\UserBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class UserNewPasswordType extends AbstractType
 {
@@ -19,15 +20,15 @@ class UserNewPasswordType extends AbstractType
                                                     'second_options' => array('label' => 'zizoo_user.label.new_password_repeat')));
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver) 
     {
-        return array('data_class' => 'Zizoo\UserBundle\Entity\User',
-                     'validation_groups' => 'new_password');
+        $resolver->setDefaults(array('data_class' => 'Zizoo\UserBundle\Entity\User',
+                                    'validation_groups' => 'new_password'));
     }
 
     public function getName()
     {
-        return 'usernewpassword';
+        return 'user_new_password';
     }
 }
 ?>

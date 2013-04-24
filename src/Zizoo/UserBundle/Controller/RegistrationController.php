@@ -49,7 +49,7 @@ class RegistrationController extends Controller
         
         // If submit
         if ($isPost) {
-            $form->bindRequest($request);
+            $form->bind($request);
 
             $data = $form->getData();
             $user       = $data->getUser();
@@ -67,7 +67,7 @@ class RegistrationController extends Controller
                 // If that is the case, forward to "resend_confirmation". 
                 // Maybe this shouldn't be done automatically? But it's hard to get the "Have you previously signed up" message below the right form control (i.e. username or email)
                 $em = $this->getDoctrine()
-                            ->getEntityManager();
+                            ->getManager();
                 
                 // Validate user
                 $validator = $this->get('validator');
@@ -147,7 +147,7 @@ class RegistrationController extends Controller
         $request = $this->getRequest();
         $user = null;
         $em = $this->getDoctrine()
-                    ->getEntityManager();
+                    ->getManager();
         if ($email!=null){
             $user = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($email);
         } 
@@ -284,7 +284,7 @@ class RegistrationController extends Controller
         if ($isPost) {
             
             $form = $this->createForm(new FacebookNewRegistrationType());
-            $form->bindRequest($request);
+            $form->bind($request);
             
             $data = $form->getData();
             $user = $data->getUser();
@@ -307,7 +307,7 @@ class RegistrationController extends Controller
                 // If that is the case, forward to "resend_confirmation". 
                 // Maybe this shouldn't be done automatically? But it's hard to get the "Have you previously signed up" message below the right form control (i.e. username or email)
                 $em = $this->getDoctrine()
-                            ->getEntityManager();
+                            ->getManager();
 
                 // Validate user
                 $validator = $this->get('validator');
@@ -382,7 +382,7 @@ class RegistrationController extends Controller
         
         
         $em = $this->getDoctrine()
-                   ->getEntityManager();
+                   ->getManager();
         
         $existingUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($obj['email']);
         if (!$existingUser){
@@ -410,7 +410,7 @@ class RegistrationController extends Controller
         if ($isPost) {        
             
             $form = $this->createForm(new FacebookLinkRegistrationType());
-            $form->bindRequest($request);
+            $form->bind($request);
             $data = $form->getData();
             $linkUser = $data->getUser();
             
@@ -429,7 +429,7 @@ class RegistrationController extends Controller
                 // If that is the case, forward to "resend_confirmation". 
                 // Maybe this shouldn't be done automatically? But it's hard to get the "Have you previously signed up" message below the right form control (i.e. username or email)
                 $em = $this->getDoctrine()
-                            ->getEntityManager();
+                            ->getManager();
 
                 // Validate user
                 $validator = $this->get('validator');
@@ -474,7 +474,7 @@ class RegistrationController extends Controller
         $ajax = $request->query->get('ajax', false);
         
         $em = $this->getDoctrine()
-                   ->getEntityManager();
+                   ->getManager();
         
        
         

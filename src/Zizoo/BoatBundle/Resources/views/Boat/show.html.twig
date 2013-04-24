@@ -91,7 +91,7 @@
         </script>
         
         <div id="right-col" class="span3">
-            {% render 'ZizooBoatBundle:Boat:bookingWidget' with {id: boat.id, request:request, reservations: reservations, prices: prices} %}
+            {% render controller('ZizooBoatBundle:Boat:bookingWidget', {id: boat.id, request:request, reservations: reservations, prices: prices}) %}
         </div>
         
     </div>

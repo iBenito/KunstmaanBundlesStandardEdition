@@ -3,7 +3,7 @@ namespace Zizoo\BoatBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Zizoo\BoatBundle\Form\EventListener\AddTermsFieldSubscriber;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class BookBoatType extends AbstractType
 {
@@ -35,11 +35,11 @@ class BookBoatType extends AbstractType
     }
 
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array('data_class'   => 'Zizoo\BoatBundle\Form\Model\BookBoat',
+        $resolver->setDefaults(array('data_class'   => 'Zizoo\BoatBundle\Form\Model\BookBoat',
                         'csrf_protection' => false,
-                        'current'      => '-1');
+                        'current'      => '-1'));
     }
     
     public function getParent()

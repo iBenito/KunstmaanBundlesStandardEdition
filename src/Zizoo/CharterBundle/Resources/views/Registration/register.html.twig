@@ -1,0 +1,108 @@
+{# src/Zizoo/UserBundle/Resources/views/Registration/register.html.twig #}
+{% extends 'ZizooUserBundle::layout.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/zizoouser/js/register.js') }}"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/zizoouser/css/register.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block body %}
+    <div class="register" id="{% if ajax %}register_inner_ajax{% else %}register_inner{% endif %}">
+        <input type="hidden" value="ongoing" id="status" />
+
+        <div class="register_email">
+            <form novalidate="novalidate" action="{{ path('ZizooCharterBundle_register')}}" method="post" {{ form_enctype(form) }} class="register_form">
+                {{ form_errors(form) }}
+
+                <div id="general">
+                    
+                    <div>
+                        {{ form_label(form.charter.charter_name) }}
+                        {{ form_errors(form.charter.charter_name) }}
+                        {{ form_widget(form.charter.charter_name) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.charter.charter_number) }}
+                        {{ form_errors(form.charter.charter_number) }}
+                        {{ form_widget(form.charter.charter_number) }}
+                    </div>
+                    
+                </div>
+                    
+                <div id="main_contact">
+                    
+                    <div>
+                        {{ form_label(form.registration.profile.first_name) }}
+                        {{ form_errors(form.registration.profile.first_name) }}
+                        {{ form_widget(form.registration.profile.first_name) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.registration.profile.last_name) }}
+                        {{ form_errors(form.registration.profile.last_name) }}
+                        {{ form_widget(form.registration.profile.last_name) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.registration.user.username) }}
+                        {{ form_errors(form.registration.user.username) }}
+                        {% if unconfirmed_username %}
+                            <ul>
+                                <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooUserBundle_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
+                            </ul>
+                        {% endif %}
+                        {{ form_widget(form.registration.user.username) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.registration.user.email) }}
+                        {{ form_errors(form.registration.user.email) }}
+                        {% if unconfirmed_email %}
+                            <ul>
+                                <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooUserBundle_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
+                            </ul>
+                        {% endif %}
+                        {{ form_widget(form.registration.user.email) }}
+                    </div>
+                    
+                    <div>
+                        
+                        {{ form_errors(form.registration.user.password) }}
+                        {{ form_widget(form.registration.user.password) }}
+                    </div>
+                    
+                </div>
+
+                {{ form_rest(form) }}
+
+                <input type="submit" />
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.register_facebook_btn').click(function(){
+                //top.location.href = $(this).attr('href');
+                window.open($(this).attr('href'), 'Register with Facebook', "height=200,width=200");
+            });
+            {% if relogin %}
+                $('.register_facebook_btn:first-child').click();
+            {% endif %}
+        });
+    </script>
+    <style type="text/css">
+        {% if is_post == false %}
+        .register_email {
+            
+        }
+        {% endif %}
+    </style>
+{% endblock %}
+
+

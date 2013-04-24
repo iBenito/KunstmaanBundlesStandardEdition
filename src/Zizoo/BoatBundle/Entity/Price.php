@@ -10,15 +10,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * Availability
  * @ORM\Entity(repositoryClass="Zizoo\BoatBundle\Entity\PriceRepository")
- * @ORM\Table(name="boat_price", uniqueConstraints={@ORM\UniqueConstraint(columns={"available"})})
- * @UniqueEntity(fields="available", message="zizoo_boat.price_date_already_exists")
+ * @ORM\Table(name="boat_price", uniqueConstraints={@ORM\UniqueConstraint(columns={"boat_id", "available"})})
+ * @UniqueEntity(fields={"boat_id", "available"}, message="zizoo_boat.price_date_already_exists")
  * @ORM\HasLifecycleCallbacks()
  */
 class Price extends BaseEntity
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Zizoo\BoatBundle\Entity\Boat", inversedBy="availability")
+     * @ORM\ManyToOne(targetEntity="Zizoo\BoatBundle\Entity\Boat", inversedBy="price")
      * @ORM\JoinColumn(name="boat_id", referencedColumnName="id")
      */
     protected $boat;

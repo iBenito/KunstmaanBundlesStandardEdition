@@ -2,7 +2,7 @@
 
 {% block navigation %}
 {% include 'ZizooBaseBundle:Page:ajax_login_register.html.twig' %}
-{% render 'ZizooBaseBundle:Page:loginWidget' with {showLoginForm: false} %}
+{% render controller('ZizooBaseBundle:Page:loginWidget', {showLoginForm: false}) %}
 {% endblock %}
 
 {% block stylesheets %}

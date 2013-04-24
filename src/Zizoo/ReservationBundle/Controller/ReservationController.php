@@ -2,6 +2,10 @@
 
 namespace Zizoo\ReservationBundle\Controller;
 
+use Zizoo\ReservationBundle\Form\Type\AcceptReservationType;
+use Zizoo\ReservationBundle\Form\Model\AcceptReservation;
+use Zizoo\ReservationBundle\Form\Type\DenyReservationType;
+use Zizoo\ReservationBundle\Form\Model\DenyReservation;
 use Zizoo\ReservationBundle\Entity\Reservation;
 use Zizoo\BoatBundle\Form\Model\BookBoat;
 
@@ -20,9 +24,9 @@ class ReservationController extends Controller
         $ajax       = $request->isXmlHttpRequest();
         $user       = $this->getUser();
         
-        $em                 = $this->getDoctrine()->getEntityManager();
+        $em                 = $this->getDoctrine()->getManager();
         $reservation        = $em->getRepository('ZizooReservationBundle:Reservation')->findOneById($id);
-        if (!$reservation || $reservation->getBoat()->getUser()!=$user){
+        if (!$reservation || $reservation->getBoat()->getCharter()->getAdminUser()!=$user){
             return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
         }
                 
@@ -46,9 +50,9 @@ class ReservationController extends Controller
         $ajax       = $request->isXmlHttpRequest();
         $user       = $this->getUser();
         
-        $em                 = $this->getDoctrine()->getEntityManager();
+        $em                 = $this->getDoctrine()->getManager();
         $reservation        = $em->getRepository('ZizooReservationBundle:Reservation')->findOneById($id);
-        if (!$reservation || $reservation->getBoat()->getUser()!=$user){
+        if (!$reservation || $reservation->getBoat()->getCharter()->getAdminUser()!=$user){
             return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
         }
         
@@ -58,41 +62,34 @@ class ReservationController extends Controller
         
         $thread             = $em->getRepository('ZizooMessageBundle:Thread')->findOneByReservation($reservation);
         
-        $acceptForm         = $this->container->get('zizoo_message.reply_form.factory')->create($thread);
-        $denyForm           = $this->container->get('zizoo_message.reply_form.factory')->create($thread);
-        
         $overlappingReservationRequests = $em->getRepository('ZizooReservationBundle:Reservation')
                                                 ->getReservations($user, $reservation->getBoat(), 
                                                                     $reservation->getCheckIn(), $reservation->getCheckOut(),
                                                                     array(Reservation::STATUS_REQUESTED), $reservation);
+        
+        $form = $this->createForm(new AcceptReservationType(), new AcceptReservation($overlappingReservationRequests));
+        
         if ($request->isMethod('post')){
             if ($request->request->get('accept', null)){
-                
-                if (count($overlappingReservationRequests)>0){
-                    $denyForm->bindRequest($request);
-                    if ($denyForm->isValid()){
-                        
-                        try {
-                            foreach ($overlappingReservationRequests as $overlappingReservationRequest){
-                                $reservationAgent->denyReservation($overlappingReservationRequest, false);
-                                $bookingAgent->void($overlappingReservationRequest->getBooking(), false);
-                            }
- 
+                $form->bind($request);
+                if ($form->isValid()){
+                    $acceptReservation = $form->getData();
+                    
+                    try {
+                        // Reject any overlapping reservation requests
+                        foreach ($overlappingReservationRequests as $overlappingReservationRequest){
+                            $reservationAgent->denyReservation($overlappingReservationRequest, false);
+                            $bookingAgent->void($overlappingReservationRequest->getBooking(), false);
                             $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_reservation.request_denied_success'));
-                            
-                        } catch (\Exception $e){
-                            $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_reservation.request_denied_error'));
-                            return $this->redirect($this->generateUrl('ZizooReservationBundle_view', array('id' => $id)));
                         }
-                        
+
+                    } catch (\Exception $e){
+                        $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_reservation.request_denied_error'));
+                        return $this->redirect($this->generateUrl('ZizooReservationBundle_view', array('id' => $id)));
                     }
                     
-                }
-                
-                $acceptForm->bindRequest($request);
-                if ($acceptForm->isValid()){
-
                     try {
+                        // Accept reservation request
                         $reservationAgent->acceptReservation($reservation, false);
                         $bookingAgent->submitForSettlement($reservation->getBooking(), false);
 
@@ -101,54 +98,49 @@ class ReservationController extends Controller
                         $messageTypeRepo    = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooMessageBundle:MessageType');
                         
                         if ($thread){
-                            $replyMessage = $acceptForm->getData();
-
+                            // Send accept message
                             $thread = $composer->reply($thread)
                                                 ->setSender($user)
-                                                ->setBody($replyMessage->getBody());
+                                                ->setBody($acceptReservation->getAcceptMessage());
 
                             $message =  $thread->getMessage()
                                                 ->setMessageType($messageTypeRepo->findOneById('accepted'));
 
                             $sender->send($message);
                         }
+                        
+                        // Send deny message for each denied reservation request
+                        foreach ($overlappingReservationRequests as $overlappingReservationRequest){
+                            $thread = $em->getRepository('ZizooMessageBundle:Thread')->findOneByReservation($overlappingReservationRequest);
+                            if ($thread){
+                                $thread = $composer->reply($thread)
+                                                    ->setSender($user)
+                                                    ->setBody($acceptReservation->getDenyReservation()->getDenyMessage());
 
-                        if (count($overlappingReservationRequests)>0 && $denyForm->isValid()){
-                            foreach ($overlappingReservationRequests as $overlappingReservationRequest){
-                                
-                                $thread = $em->getRepository('ZizooMessageBundle:Thread')->findOneByReservation($overlappingReservationRequest);
-                                if ($thread){
-                                    
-                                    $replyMessage = $denyForm->getData();
+                                $message =  $thread->getMessage()
+                                                    ->setMessageType($messageTypeRepo->findOneById('declined'));
 
-                                    $thread = $composer->reply($thread)
-                                                        ->setSender($user)
-                                                        ->setBody($replyMessage->getBody());
-
-                                    $message =  $thread->getMessage()
-                                                        ->setMessageType($messageTypeRepo->findOneById('declined'));
-
-                                    $sender->send($message);
-                                }
+                                $sender->send($message);
                             }
                         }
                         
-                        $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_reservation.request_accepted_success'));
+                        $em->flush();
+                        $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_reservation.request_accepted_success'));
                         return $this->redirect($this->generateUrl('ZizooReservationBundle_view', array('id' => $id)));
+                        
                     } catch (\Exception $e){
                         $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_reservation.request_accepted_error'));
                         return $this->redirect($this->generateUrl('ZizooReservationBundle_view', array('id' => $id)));
                     }
                 } else {
-                    return $this->redirect($this->generateUrl('ZizooReservationBundle_view', array('id' => $id)));
+                    //return $this->redirect($this->generateUrl('ZizooReservationBundle_view', array('id' => $id)));
                 }
             }
         }
         
         return $this->render('ZizooReservationBundle:Reservation:accept_reservation.html.twig', array(
             'reservation'                       => $reservation,
-            'accept_form'                       => $acceptForm->createView(),
-            'deny_form'                         => $denyForm->createView(),
+            'form'                              => $form->createView(),
             'overlap_requested_reservations'    => $overlappingReservationRequests,
             'ajax'                              => $ajax,
         ));
@@ -162,9 +154,9 @@ class ReservationController extends Controller
         
         $user       = $this->getUser();
         
-        $em                 = $this->getDoctrine()->getEntityManager();
+        $em                 = $this->getDoctrine()->getManager();
         $reservation        = $em->getRepository('ZizooReservationBundle:Reservation')->findOneById($id);
-        if (!$reservation || $reservation->getBoat()->getUser()!=$user){
+        if (!$reservation || $reservation->getBoat()->getCharter()->getAdminUser()!=$user){
             return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
         }
         
@@ -174,10 +166,10 @@ class ReservationController extends Controller
         
         $thread             = $em->getRepository('ZizooMessageBundle:Thread')->findOneByReservation($reservation);
         
-        $form               = $this->container->get('zizoo_message.reply_form.factory')->create($thread);
+        $form = $this->createForm(new DenyReservationType(), new DenyReservation());
         
         if ($request->isMethod('post')){
-            $form->bindRequest($request);
+            $form->bind($request);
             if ($form->isValid()){
                 if ($request->request->get('deny', null)){
                     try {
@@ -189,11 +181,11 @@ class ReservationController extends Controller
                             $sender         = $this->container->get('fos_message.sender');
                             $messageTypeRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooMessageBundle:MessageType');
 
-                            $replyMessage = $form->getData();
+                            $denyReservation = $form->getData();
 
                             $thread = $composer->reply($thread)
                                                 ->setSender($user)
-                                                ->setBody($replyMessage->getBody());
+                                                ->setBody($denyReservation->getDenyMessage());
 
                             $message =  $thread->getMessage()
                                                 ->setMessageType($messageTypeRepo->findOneById('denied'));

@@ -3,6 +3,7 @@ namespace Zizoo\AddressBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class FilterBoatType extends AbstractType
 {
@@ -37,10 +38,10 @@ class FilterBoatType extends AbstractType
     }
 
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array('data_class'   => 'Zizoo\AddressBundle\Form\Model\FilterBoat',
-                     'current'      => '-1');
+        $resolver->setDefaults(array('data_class'   => 'Zizoo\AddressBundle\Form\Model\FilterBoat',
+                     'current'      => '-1'));
     }
     
     public function getParent()

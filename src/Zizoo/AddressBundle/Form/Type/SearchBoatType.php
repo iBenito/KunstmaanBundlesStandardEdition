@@ -4,6 +4,7 @@ namespace Zizoo\AddressBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class SearchBoatType extends AbstractType
 {
@@ -47,11 +48,11 @@ class SearchBoatType extends AbstractType
     }
 
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array('data_class'   => 'Zizoo\AddressBundle\Form\Model\SearchBoat',
+        $resolver->setDefaults(array('data_class'   => 'Zizoo\AddressBundle\Form\Model\SearchBoat',
                      'filter'       => false,
-                     'current'      => '-1');
+                     'current'      => '-1'));
     }
     
     public function getParent()

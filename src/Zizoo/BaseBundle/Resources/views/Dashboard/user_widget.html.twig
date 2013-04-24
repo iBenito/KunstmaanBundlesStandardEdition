@@ -1,0 +1,33 @@
+{% trans_default_domain "labels" %}
+
+<div id="dashboard_user">
+    <div class="avatar">
+        {% if user.profile.picture is not null %}
+            <img src="{{ asset(user.profile|pictureWebPath) }}" alt="image not found" class="large" />
+        {% endif %}
+    </div>
+    <h3>{{ user.profile.firstName }} {{ user.profile.lastName }}</h3>
+
+    {% if crew is defined %}
+        <p>Sailor!</p>
+    {% endif %} 
+        
+    <a id="add_skills" href="{{ path('ZizooBaseBundle_Dashboard_Skills') }}">Add Skills</a>
+</div>
+
+<hr />
+
+<div class="dashboard_navigation">
+    <ul class="nav">
+      <li class="active"><a href="{{ path('ZizooBaseBundle_Dashboard', {show_user: show_user}) }}">Dashboard</a></li>
+      <li><a href="{{ path('fos_message_inbox', {show_user: show_user}) }}">Inbox</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Profile', {show_user: show_user}) }}">Profile</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Trips', {show_user: show_user}) }}">Trips</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Skills', {show_user: show_user}) }}">Skills</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Account', {show_user: show_user}) }}">Account</a></li>
+    </ul>
+    
+    {% if user.charter %}
+        <a href="{{ path('ZizooBaseBundle_Dashboard') }}">Switch to charter view</a>
+    {% endif %}
+</div>

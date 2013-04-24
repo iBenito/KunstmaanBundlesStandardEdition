@@ -73,4 +73,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $q->getResult();
     }
     
+    
+    
 }

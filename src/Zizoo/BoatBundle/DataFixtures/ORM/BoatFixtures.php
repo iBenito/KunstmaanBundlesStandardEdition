@@ -58,6 +58,9 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $equipmentBattenedMainsail  = $equipmentRepo->findOneById('battened_mainsail');
         $equipmentTeakDeck          = $equipmentRepo->findOneById('teak_deck');
         
+        $charter1 = $manager->merge($this->getReference('charter-1'));
+        $charter2 = $manager->merge($this->getReference('charter-2'));
+        
         $boat1 = new Boat();
         $boat1->setName('Sandali');
         $boat1->setTitle('The Ocean Explorer');
@@ -75,22 +78,21 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat1Address->setLocality('Krk');
         $boat1Address->setPostcode('54321');
         $boat1Address->setCountry($manager->merge($this->getReference('countryHR')));
-   
-        $boat1 = $boatService->createBoat($boat1, $boat1Address, $boatTypeRepo->findOneByName('Yacht'), new ArrayCollection(array($equipmentBattenedMainsail, $equipmentMainsailFurling)));
         
-        $from = new \DateTime();
-        $from->modify( 'first day of last month' );
-        $to = new \DateTime();
-        $to->modify( 'last day of next month' );
-        $boatService->addPrice($boat1, $from, $to, 9.99, false, true);
-        
-        $from = clone $to;
-        $from->modify( '+1 day' );
-        $to = clone $from;
-        $to->modify( '+1 month' );
-        $boatService->addPrice($boat1, $from, $to, 299.99, false, true);
-        
-        $boat1->setUser($manager->merge($this->getReference('user-1')));
+        $boat1 = $boatService->createBoat($boat1, $boat1Address, $boatTypeRepo->findOneByName('Yacht'), $charter1, new ArrayCollection(array($equipmentBattenedMainsail, $equipmentMainsailFurling)));
+//        
+//        $from = new \DateTime();
+//        $from->modify( 'first day of last month' );
+//        $to = new \DateTime();
+//        $to->modify( 'last day of next month' );
+//        $boatService->addPrice($boat1, $from, $to, 9.99, false, true);
+//        
+//        $from = clone $to;
+//        $from->modify( '+1 day' );
+//        $to = clone $from;
+//        $to->modify( '+1 month' );
+//        //$boatService->addPrice($boat1, $from, $to, 299.99, false, true);
+//        
         $manager->persist($boat1);
         $this->addReference('boat-1', $boat1);
         
@@ -113,12 +115,11 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat2Address->setProvince('Some spanish province');
         $boat2Address->setCountry($manager->merge($this->getReference('countryES')));
         
-        $boat2 = $boatService->createBoat($boat2, $boat2Address, $boatTypeRepo->findOneByName('Yacht'));
-        
-        $boat2->setUser($manager->merge($this->getReference('user-2')));
+        $boat2 = $boatService->createBoat($boat2, $boat2Address, $boatTypeRepo->findOneByName('Yacht'), $charter1);
         $manager->persist($boat2);
         
         $this->addReference('boat-2', $boat2);
+        
         
         $boat3 = new Boat();
         $boat3->setName('Serenity');
@@ -139,10 +140,9 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat3Address->setCountry($manager->merge($this->getReference('countryGB')));   
         
 
-        $boat3 = $boatService->createBoat($boat3, $boat3Address, $boatTypeRepo->findOneByName('Yacht'));
-        
-        $boat3->setUser($manager->merge($this->getReference('user-2')));
+        $boat3 = $boatService->createBoat($boat3, $boat3Address, $boatTypeRepo->findOneByName('Yacht'), $charter2);
         $manager->persist($boat3);
+        
         
         $this->addReference('boat-3', $boat3);
         
@@ -164,44 +164,13 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat4Address->setPostcode('BS1 5QA');
         $boat4Address->setCountry($manager->merge($this->getReference('countryGB')));
         
-        $boat4 = $boatService->createBoat($boat4, $boat4Address, $boatTypeRepo->findOneByName('Yacht'));
-        
-        $boat4->setUser($manager->merge($this->getReference('user-2')));
+        $boat4 = $boatService->createBoat($boat4, $boat4Address, $boatTypeRepo->findOneByName('Yacht'), $charter2);
         $manager->persist($boat4);
         
         $this->addReference('boat-4', $boat4);
         
         $manager->flush();
-        /**
-        // Load test
-        for ($i=0; $i<100; $i++){
-            $boat1Address = new BoatAddress();
-            $boat1Address->setStreet('Krk Marina');
-            $boat1Address->setPremise('48');
-            $boat1Address->setLocality('Krk');
-            $boat1Address->setPostcode('54321');
-            $boat1Address->setCountry($manager->merge($this->getReference('countryHR')));
-
-            $boat1Availability = new Availability();
-            $boat1AvailabilityAddress = $boat1Address->createAvailabilityAddress();
-            $boat1AvailabilityAddress->setAvailability($boat1Availability);
-            $boat1Availability->setAddress($boat1AvailabilityAddress);
-            $from = new \DateTime();
-            $from->modify( 'first day of last month' );
-            $from->setTime(0,0,0);
-            $boat1Availability->setAvailableFrom($from);
-            $to = new \DateTime();
-            $to->modify( 'last day of next month' );
-            $to->setTime(23,59,59);
-            $boat1Availability->setAvailableUntil($to);
-            $boat1Availability->setPrice(9.99);
-
-            $description = 'Lorem ipsum dolor sit amet, consectetur adipiscing eletra electrify denim vel ports.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut velocity magna. Etiam vehicula nunc non leo hendrerit commodo. Vestibulum vulputate mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras el mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra. Cras elementum molestie vestibulum. Morbi id quam nisl. Praesent hendrerit, orci sed elementum lobortis, justo mauris lacinia libero, non facilisis purus ipsum non mi. Aliquam sollicitudin, augue id vestibulum iaculis, sem lectus convallis nunc, vel scelerisque lorem tortor ac nunc. Donec pharetra eleifend enim vel porta.';
-            $boat1 = $boatService->createBoat('Sandali', 'The Ocean Explorer', $description, 'Seasy', '911', 5, 6, 12, $boat1Address, $boatTypeRepo->findOneByName('Yacht'), new ArrayCollection(array($boat1Availability)));
-        }
-         
-         */
-                
+        
     }
 
     public function getOrder()

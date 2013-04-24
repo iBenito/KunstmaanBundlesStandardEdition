@@ -24,10 +24,10 @@ class UserType extends AbstractType
     }
 
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver) 
     {
-        return array('data_class' => 'Zizoo\UserBundle\Entity\User',
-                     'validation_groups' => 'registration');
+        $resolver->setDefaults(array('data_class' => 'Zizoo\UserBundle\Entity\User',
+                                    'validation_groups' => 'registration'));
     }
 
     public function getName()

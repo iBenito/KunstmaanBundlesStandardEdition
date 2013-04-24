@@ -27,7 +27,8 @@ class PriceRepository extends EntityRepository
                     ->setParameter('boat', $boat)
                     ->orderBy('price.available', 'ASC');
         
-        $prices = new \Doctrine\Common\Collections\ArrayCollection($qb->getQuery()->getResult());
+        $result = $qb->getQuery()->getResult();
+        $prices = new \Doctrine\Common\Collections\ArrayCollection($result);
         
         return $prices;
     }

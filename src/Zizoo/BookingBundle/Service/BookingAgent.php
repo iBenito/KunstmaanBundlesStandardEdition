@@ -293,7 +293,7 @@ class BookingAgent {
         
         $thread = $composer->newThread()
                             ->setSender($user)
-                            ->addRecipient($boat->getUser())
+                            ->addRecipient($boat->getCharter()->getAdminUser())
                             ->setSubject($bookingForm->getMessageToOwner()->getSubject()?$bookingForm->getMessageToOwner()->getSubject():'Reservation request')
                             ->setBody($bookingForm->getMessageToOwner()->getBody()?$bookingForm->getMessageToOwner()->getBody():'...')
                             ->setReservation($booking->getReservation());

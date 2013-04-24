@@ -3,8 +3,8 @@
 namespace Zizoo\MessageBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class DeleteSentMessageType extends AbstractType
 {
@@ -13,15 +13,15 @@ class DeleteSentMessageType extends AbstractType
         $builder->add('confirm_delete', 'checkbox', array('label' => 'zizoo_message.label.confirm_delete_sent_message'));
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver) 
     {
-        return array('data_class' => 'Zizoo\MessageBundle\Entity\Message',
-                     'validation_groups' => 'delete_message');
+        $resolver->setDefaults(array('data_class' => 'Zizoo\MessageBundle\Entity\Message',
+                     'validation_groups' => 'delete_message'));
     }
 
     public function getName()
     {
-        return 'deletesentmessage';
+        return 'delete_received_message';
     }
 }
 ?>

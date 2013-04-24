@@ -1,0 +1,41 @@
+# Registration
+ZizooCharterBundle_register:
+  pattern:    /register
+  defaults:   {_controller: ZizooCharterBundle:Charter:register }  
+  
+ZizooCharterBundle_submitted:
+  pattern:    /submitted
+  defaults:   {_controller: ZizooCharterBundle:Charter:submitted }
+  requirements:
+        _method:  GET
+
+ZizooCharterBundle_confirm:
+  pattern:    /confirm/{token}/email/{email}
+  defaults:   {_controller: ZizooCharterBundle:Charter:confirm }
+  requirements:
+        _method:  GET
+        
+ZizooCharterBundle_confirmed:
+  pattern:    /confirmed
+  defaults:   {_controller: ZizooCharterBundle:Charter:confirmed }
+  requirements:
+        _method:  GET|POST
+        
+ZizooCharterBundle_resend_confirmation:
+  pattern:    /resend-confirmation/email/{email}
+  defaults:   {_controller: ZizooCharterBundle:Charter:resendConfirmation }
+  requirements:
+        _method:  GET|POST
+
+# Boats
+ZizooCharterBundle_show:
+    pattern:  /{id}/show
+    defaults: { _controller: ZizooCharterBundle:Charter:show }
+    requirements:
+        _method:  GET
+        
+ZizooCharterBundle_show_boats:
+    pattern:  /{id}/show-boats/{page}
+    defaults: { _controller: ZizooCharterBundle:Charter:showBoats }
+    requirements:
+        _method:  GET

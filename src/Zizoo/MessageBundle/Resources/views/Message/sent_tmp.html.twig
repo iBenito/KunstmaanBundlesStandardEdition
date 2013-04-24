@@ -16,7 +16,7 @@
     </div>
 
     <div id="context_hidden" style="display: none">
-        <div id="delete_hidden" class="empty">{% render 'ZizooMessageBundle:Message:deleteMessage' with {ajax: true, inbox: false} %}</div>
+        <div id="delete_hidden" class="empty">{% render controller('ZizooMessageBundle:Message:deleteMessage', {ajax: true, inbox: false} %})</div>
         <div id="thread_hidden" class="empty"></div>
     </div>
 

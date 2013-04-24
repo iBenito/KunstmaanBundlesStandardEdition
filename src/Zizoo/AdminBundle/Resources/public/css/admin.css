@@ -1,0 +1,12 @@
+#navigation {
+    width: 300px;
+    float: left;
+}
+
+#container {
+    float: left;
+}
+
+#footer {
+    clear: both;
+}

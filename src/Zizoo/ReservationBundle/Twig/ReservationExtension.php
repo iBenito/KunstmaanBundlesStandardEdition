@@ -4,8 +4,16 @@ namespace Zizoo\ReservationBundle\Twig;
 
 use Zizoo\ReservationBundle\Entity\Reservation;
 
+use Symfony\Component\DependencyInjection\Container;
+
 class ReservationExtension extends \Twig_Extension
 {
+    protected $container;
+    
+    public function __construct(Container $container) {
+        $this->container = $container;
+    }
+    
     public function getFilters()
     {
         return array(
@@ -24,26 +32,8 @@ class ReservationExtension extends \Twig_Extension
     
     public function statusToString(Reservation $reservation)
     {
-        switch ($reservation->getStatus()){
-            case Reservation::STATUS_REQUESTED:
-                return 'Requested';
-                break;
-            case Reservation::STATUS_ACCEPTED:
-                return 'Accepted';
-                break;
-            case Reservation::STATUS_EXPIRED:
-                return 'Expired';
-                break;
-            case Reservation::STATUS_DENIED:
-                return 'Denied';
-                break;
-            case Reservation::STATUS_SELF:
-                return 'Reserved';
-                break;
-            default:
-                return 'Unkown status';
-                break;
-        }
+        $reservationAgent = $this->container->get('zizoo_reservation_reservation_agent');
+        return $reservationAgent->statusToString($reservation->getStatus());
     }
     
     public function getName()

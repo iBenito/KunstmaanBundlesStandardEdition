@@ -50,7 +50,7 @@ class ReservationListener
     
 //    public function onFlush(OnFlushEventArgs $args)
 //    {
-//        $em     = $args->getEntityManager();
+//        $em     = $args->getManager();
 //        $uow    = $em->getUnitOfWork();
 //        
 //        foreach ($uow->getScheduledEntityInsertions() AS $entity) {

@@ -19,11 +19,6 @@ class MessageToOwnerType extends AbstractType
         $builder->add('body', 'textarea', array('property_path' => 'body'));
     }
     
-    public function getDefaultOptions(array $options)
-    {
-        return array('data_class' => 'Zizoo\BookingBundle\Form\Model\MessageToOwner');
-    }
-    
     public function setDefaultOptions(OptionsResolverInterface $resolver) 
     {
         $resolver->setDefaults(array(

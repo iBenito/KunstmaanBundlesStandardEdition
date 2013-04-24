@@ -18,5 +18,16 @@ services:
             
     zizoo_booking.twig.reservation_extension:
         class: Zizoo\ReservationBundle\Twig\ReservationExtension
+        arguments:
+            container:      "@service_container"
         tags:
             - { name: twig.extension }
+
+    # FORM TYPES
+    zizoo_reservation.deny_reservation_type:
+        class:  Zizoo\ReservationBundle\Form\Type\DenyReservationType
+        arguments: ["@service_container"]
+        tags:
+            - { name: form.type, alias: zizoo_reservation_deny }
+            
+    # VALIDATORS

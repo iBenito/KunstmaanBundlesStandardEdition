@@ -64,6 +64,7 @@ class Grid extends GridTools
     private $onlyData;
 
     private $sourceData;
+    private $qb;
     private $name;
     private $options;
     private $routeforced;
@@ -200,6 +201,13 @@ class Grid extends GridTools
      * Set the query builder that will be used to get data to the grid
      *
      */
+    public function setSource(QueryBuilder $qb)
+    {
+        $this->qb = $qb;
+        //generate hash
+        $this->createHash();
+    }
+    
     public function setSourceData($data)
     {
         $this->sourceData = $data;
@@ -334,15 +342,15 @@ class Grid extends GridTools
     }
 
     /**
-     * @param \Zizoo\JqGridCustomBundle\Grid $grid
+     * @param \Zizoo\JqGridCustomBundle\Grid\Grid $grid
      */
-    public function setSubGrid(\Zizoo\JqGridCustomBundle\Grid $grid)
+    public function setSubGrid(\Zizoo\JqGridCustomBundle\Grid\Grid $grid)
     {
         $this->subGrid = $grid;
     }
 
     /**
-     * @return \Zizoo\JqGridCustomBundle\Grid
+     * @return \Zizoo\JqGridCustomBundle\Grid\Grid
      */
     public function getSubGrid()
     {
@@ -384,12 +392,22 @@ class Grid extends GridTools
             $page = $this->request->query->get('page');
             $limit = $this->request->query->get('rows');
 
-            /**
-            if ($search) {
-                $this->generateFilters();
-            }*/
+            if ($this->sourceData){
+                $pagination = $this->paginator->paginate($this->sourceData, $page, $limit);
+            } else {
+                $sidx = $this->request->query->get('sidx');
+                $sord = $this->request->query->get('sord');
+                $search = $this->request->query->get('_search');
 
-            $pagination = $this->paginator->paginate($this->sourceData, $page, $limit);
+                if ($sidx != '') {
+                    $this->qb->orderBy($sidx, $sord);
+                }
+
+                if ($search) {
+                    $this->generateFilters();
+                }
+                $pagination = $this->paginator->paginate($this->qb->getQuery()->setHydrationMode(Query::HYDRATE_ARRAY), $page, $limit);
+            }
 
             $nbRec = $pagination->getTotalItemCount();
 
@@ -552,6 +570,14 @@ class Grid extends GridTools
     
     public function getSourceData(){
         return $this->sourceData;
+    }
+    
+    /**
+    * @return \Doctrine\ORM\QueryBuilder
+    */
+    public function getQueryBuilder()
+    {
+        return $this->qb;
     }
     
     public function setGetDataFunctionResponse($response){

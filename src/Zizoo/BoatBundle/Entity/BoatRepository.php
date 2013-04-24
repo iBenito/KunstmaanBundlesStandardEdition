@@ -3,7 +3,7 @@
 namespace Zizoo\BoatBundle\Entity;
 
 use Zizoo\BoatBundle\Entity\Price;
-use Zizoo\UserBundle\Entity\User;
+use Zizoo\CharterBundle\Entity\Charter;
 use Zizoo\BoatBundle\Extensions\DoctrineExtensions\CustomWalker\SortableNullsWalker;
 use Zizoo\AddressBundle\Form\Model\SearchBoat;
 
@@ -221,26 +221,28 @@ class BoatRepository extends EntityRepository
         return $qb->getQuery()->getSingleResult();
     }
     
-    public function getLatestUserBoats(User $user, $pageSize, $page)
+    public function getLatestCharterBoats(Charter $charter, $pageSize, $page)
     {
         $start = ($page-1)*($pageSize-1);
         $limit = $pageSize;
         $qb = $this->createQueryBuilder('boat')
+                   ->leftJoin('boat.charter', 'charter')
                    ->select('boat')
-                   ->where('boat.user = :user')
-                   ->setParameter('user', $user)
+                   ->where('charter = :charter')
+                   ->setParameter('charter', $charter)
                    ->setFirstResult($start)
                    ->setMaxResults($limit);
         
         return $qb->getQuery()->getResult();
     }
     
-    public function getNumberOfUserBoats(User $user)
+    public function getNumberOfCharterBoats(Charter $charter)
     {
         $qb = $this->createQueryBuilder('boat')
+                   ->leftJoin('boat.charter', 'charter')
                    ->select('COUNT(boat.id) as num_boats')
-                   ->where('boat.user = :user')
-                   ->setParameter('user', $user);
+                   ->where('charter = :charter')
+                   ->setParameter('charter', $charter);
         
         return $qb->getQuery()->getSingleScalarResult();
     }

@@ -27,7 +27,7 @@ class BoatController extends Controller
      */
     public function showAction($id) 
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $boat = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
 
@@ -40,7 +40,9 @@ class BoatController extends Controller
         $map->setAsync(true);
         $map->setAutoZoom(false);
         $boatAddress = $boat->getAddress();
-        $map->setCenter($boatAddress->getLat(), $boatAddress->getLng(), true);
+        if ($boatAddress->getLat() && $boatAddress->getLng()){
+            $map->setCenter($boatAddress->getLat(), $boatAddress->getLng(), true);
+        }
         $map->setMapOption('zoom', 4);
         $map->setMapOption('disableDefaultUI', true);
         $map->setMapOption('zoomControl', true);
@@ -49,42 +51,46 @@ class BoatController extends Controller
             'height' => '300px'
         ));
         
-        $marker = $this->get('ivory_google_map.marker');
-        $marker->setPosition($boatAddress->getLat(), $boatAddress->getLng(), true);
-        $marker->setOption('title', $boat->getName());
-        $marker->setOption('clickable', true);
-        $marker->setIcon('http://www.incrediblue.com/assets/map-pin.png');
-        
-        /** info window
-         * 
-         
-        // Requests the ivory google map info window service
-        $infoWindow = $this->get('ivory_google_map.info_window');
-        // Add your info window to the marker
-        $marker->setInfoWindow($infoWindow);
-        */
-        
-        /** Event
-         * 
-         
-        // Requests the ivory google map event service
-        $event = $this->get('ivory_google_map.event');
-        
-        $instance = $marker->getJavascriptVariable();
-        // Configure your event
-        $handle = 'function(){alert("The event has been triggered");}';
-        $event->setInstance($instance);
-        $event->setEventName('click');
-        $event->setHandle($handle);
+        if ($boatAddress->getLat() && $boatAddress->getLng()){
+            $marker = $this->get('ivory_google_map.marker');
+            $marker->setPosition($boatAddress->getLat(), $boatAddress->getLng(), true);
+            $marker->setOption('title', $boat->getName());
+            $marker->setOption('clickable', true);
+            $marker->setIcon('http://www.incrediblue.com/assets/map-pin.png');
+            
+            /** info window
+            * 
 
-        // It can only be used with a DOM event
-        // By default, the capture flag is false
-        $event->setCapture(true);
-         
-         // Add a DOM event
-        $map->getEventManager()->addDomEvent($event);
-        */
-        $map->addMarker($marker);
+           // Requests the ivory google map info window service
+           $infoWindow = $this->get('ivory_google_map.info_window');
+           // Add your info window to the marker
+           $marker->setInfoWindow($infoWindow);
+           */
+
+           /** Event
+            * 
+
+           // Requests the ivory google map event service
+           $event = $this->get('ivory_google_map.event');
+
+           $instance = $marker->getJavascriptVariable();
+           // Configure your event
+           $handle = 'function(){alert("The event has been triggered");}';
+           $event->setInstance($instance);
+           $event->setEventName('click');
+           $event->setHandle($handle);
+
+           // It can only be used with a DOM event
+           // By default, the capture flag is false
+           $event->setCapture(true);
+
+            // Add a DOM event
+           $map->getEventManager()->addDomEvent($event);
+           */
+           $map->addMarker($marker);
+        }
+        
+        
         
         $reservations   = $boat->getReservation();
         $prices         = $boat->getPrice();
@@ -105,14 +111,14 @@ class BoatController extends Controller
     
     public function bookingWidgetAction($id, Request $request, $reservations=null, $prices=null){
         $session = $request->getSession();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $boat = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
         if (!$boat) {
             throw $this->createNotFoundException('Unable to find boat post.');
         }  
         
         $form = $this->createForm(new BookBoatType(), new BookBoat($id));
-        $form->bindRequest($request);
+        $form->bind($request);
         $bookBoat = $form->getData();
             
         $reservationAgent = $this->container->get('zizoo_reservation_reservation_agent');
@@ -178,7 +184,7 @@ class BoatController extends Controller
         ));
         
         /* Build List of Marinas */
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $marinas = $em->getRepository('ZizooAddressBundle:Marina')->getAllMarinas();
         foreach ($marinas as $marina){
             $marker = $this->get('ivory_google_map.marker');
@@ -234,16 +240,23 @@ class BoatController extends Controller
      */
     public function createAction(Request $request)
     {
+        $user       = $this->getUser();
+        $charter    = $user->getCharter();
+        
+        if (!$charter || $charter->getAdminUser()!=$user){
+            throw $this->createNotFoundException('You must be the admin user of the charter to add boats.');
+        }
+        
         $boat = new Boat();
         $form = $this->createForm(new BoatType(), $boat);
         $form->bind($request);
 
         if ($form->isValid()) {
-            $boat->setUser($this->getUser());
+            $boat->setCharter($charter);
             
             /* Boat creation is done by Boat Service class */
             $boatService = $this->get('boat_service');
-            $boatCreated = $boatService->createBoat($boat, $boat->getAddress(), $boat->getBoatType());
+            $boatCreated = $boatService->createBoat($boat, $boat->getAddress(), $boat->getBoatType(), $charter, null, true);
             
             $redirect = $request->query->get('formRedirect');
             return $this->redirect($this->generateUrl($redirect, array('id' => $boatCreated->getId())));
@@ -267,7 +280,7 @@ class BoatController extends Controller
         
         $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
 
-        if (!$boat || $boat->getUser()!=$user) {
+        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
 
@@ -291,7 +304,7 @@ class BoatController extends Controller
         
         $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
 
-        if (!$boat || $boat->getUser()!=$user) {
+        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
 
@@ -300,6 +313,7 @@ class BoatController extends Controller
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
+            $boat->getAddress()->fetchGeo();
             $em->persist($boat);
             $em->flush();
 
@@ -327,7 +341,7 @@ class BoatController extends Controller
             $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
             $user   = $this->getUser();
 
-            if (!$boat || $boat->getUser()==$user) {
+            if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
                 throw $this->createNotFoundException('Unable to find Boat entity.');
             }
 

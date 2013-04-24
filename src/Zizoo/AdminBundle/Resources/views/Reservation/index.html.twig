@@ -1,0 +1,125 @@
+{% extends 'ZizooAdminBundle::layout.html.twig' %}
+{% block body %}
+
+    <div class="contextMenu" id="contextMenu" style="display: none">
+        <ul style="width: 400px">
+            <li id="open_reservation">
+                <span class="ui-icon ui-icon-folder-open" style="float:left"></span>
+                <span style="font-size:11px; font-family:Verdana">Open</span>
+            </li>
+            <li id="open_boat">
+                <span class="ui-icon ui-icon-folder-open" style="float:left"></span>
+                <span style="font-size:11px; font-family:Verdana">Open boat</span>
+            </li>
+            <li id="open_guest">
+                <span class="ui-icon ui-icon-folder-open" style="float:left"></span>
+                <span style="font-size:11px; font-family:Verdana" >Open guest</span>
+            </li>
+            <li id="open_owner">
+                <span class="ui-icon ui-icon-folder-open" style="float:left"></span>
+                <span style="font-size:11px; font-family:Verdana" >Open owner</span>
+            </li>
+            <li id="open_booking" style="display: none">
+                <span class="ui-icon ui-icon-folder-open" style="float:left"></span>
+                <span style="font-size:11px; font-family:Verdana" >Open booking</span>
+            </li>
+        </ul>
+    </div>
+
+    {{jqgrid(grid)}}
+
+    <script type="text/javascript">
+
+        function openReservation(reservationId){
+            window.location.href = '{{ path('ZizooAdminBundle_Reservation_Edit', {id: null}) }}/'+reservationId;
+        }
+
+        function openUser(username){
+            window.location.href = '{{ path('ZizooAdminBundle_User_Edit', {username: null}) }}/'+username;
+        }
+
+        function openBoat(boatId){
+            window.location.href = '{{ path('ZizooAdminBundle_Boat_Edit', {id: null}) }}/'+boatId;
+        }
+        
+        function openBooking(bookingId){
+            window.location.href = '{{ path('ZizooAdminBundle_Booking_Edit', {id: null}) }}/'+bookingId;
+        }
+
+        function reservationDoubleClick(rowId, rowIndex, colIndex, e){
+            var reservationId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', rowId, 'grid_reservationsid');
+            openReservation(reservationId);
+        }
+
+        function loadComplete(){
+            
+            $("tr.jqgrow", this).contextMenu('contextMenu', {
+                bindings: {
+                    'open_reservation': function(trigger) {
+                        // trigger is the DOM element ("tr.jqgrow") which is triggered
+                        var reservationId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_reservationsid');
+                        openReservation(reservationId);
+                    },
+                    'open_boat': function(trigger) {
+                        // trigger is the DOM element ("tr.jqgrow") which is triggered
+                        var boatId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_reservationsboatid');
+                        openBoat(boatId);
+                    },
+                    'open_guest': function(trigger) {
+                        // trigger is the DOM element ("tr.jqgrow") which is triggered
+                        var userId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_reservationsguest');
+                        openUser(userId);
+                    },
+                    'open_owner': function(trigger) {
+                        // trigger is the DOM element ("tr.jqgrow") which is triggered
+                        var userId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_reservationsowner');
+                        openUser(userId);
+                    },
+                    'open_booking': function(trigger) {
+                        // trigger is the DOM element ("tr.jqgrow") which is triggered
+                        var bookingId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_reservationsbooking_id');
+                        openBooking(bookingId);
+                    }
+                },
+                onContextMenu: function(event/*, menu*/) {
+                    var rowId = $(event.target).closest("tr.jqgrow").attr("id");
+                    jQuery('#{{ grid.name|raw }}').jqGrid('setSelection', rowId);
+                    var hasBooking = jQuery('#{{ grid.name|raw }}').jqGrid('getCell',rowId,'{{ grid.name|raw }}booking_id') != '-';
+                    if (hasBooking){
+                        $('#contextMenu #open_booking').show();
+                    } else {
+                        $('#contextMenu #open_booking').hide();
+                    }
+                    return true;
+                }
+            });
+            
+            jQuery('#{{ grid.name|raw }}').jqGrid('setGridParam', { ondblClickRow: reservationDoubleClick } );
+            
+        }
+        
+        
+        
+    </script>
+    
+    <style type="text/css">
+        #pager_{{ grid.name|raw }}_left table.navtable tbody tr label {
+            font-size: 11px;
+            display: inline;
+            margin-left: 2px;
+        }
+                
+        ul.ui-menu li .ui-icon {
+            position: static;
+        }
+        
+        .ui-menu-item {
+            cursor: pointer;
+        }
+        
+        .ui-menu-item:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+{% endblock %}

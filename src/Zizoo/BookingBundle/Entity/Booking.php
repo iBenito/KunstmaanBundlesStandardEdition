@@ -24,7 +24,7 @@ class Booking extends BaseEntity
     private $status;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Zizoo\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Zizoo\UserBundle\Entity\User", inversedBy="bookings")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      **/
     protected $renter;

@@ -1,0 +1,7 @@
+parameters:
+#    zizoo_admin.example.class: Zizoo\AdminBundle\Example
+
+services:
+#    zizoo_admin.example:
+#        class: %zizoo_admin.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

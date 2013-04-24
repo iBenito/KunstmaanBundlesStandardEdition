@@ -1,0 +1,41 @@
+ZizooAdminBundle_login_widget:
+    pattern:  /login-widget
+    defaults: { _controller: ZizooAdminBundle:Page:loginWidget }
+    requirements:
+        _method:  GET
+        
+ZizooAdminBundle_User:
+    pattern:  /users/
+    defaults: { _controller: ZizooAdminBundle:User:index }
+
+ZizooAdminBundle_User_Edit:
+    pattern:  /users/{username}
+    defaults: { _controller: ZizooAdminBundle:User:edit, username: null }
+    
+ZizooAdminBundle_Boat:
+    pattern:  /boats/
+    defaults: { _controller: ZizooAdminBundle:Boat:index }
+
+ZizooAdminBundle_Boat_Edit:
+    pattern:  /boats/{id}
+    defaults: { _controller: ZizooAdminBundle:Boat:edit, id: null }
+    
+ZizooAdminBundle_Reservation:
+    pattern:  /reservations
+    defaults: { _controller: ZizooAdminBundle:Reservation:index }
+   
+ZizooAdminBundle_Reservation_sub:
+    pattern:  /reservations/sub
+    defaults: { _controller: ZizooAdminBundle:Reservation:subGrid }
+    
+ZizooAdminBundle_Reservation_Edit:
+    pattern:  /reservations/edit/{id}
+    defaults: { _controller: ZizooAdminBundle:Reservation:edit, id: null }
+    
+ZizooAdminBundle_Booking:
+    pattern:  /bookings/
+    defaults: { _controller: ZizooAdminBundle:Booking:index }
+
+ZizooAdminBundle_Booking_Edit:
+    pattern:  /bookings/{id}
+    defaults: { _controller: ZizooAdminBundle:Booking:edit, id: null }

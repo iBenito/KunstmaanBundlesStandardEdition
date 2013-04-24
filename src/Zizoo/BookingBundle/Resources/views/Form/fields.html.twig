@@ -1,0 +1,65 @@
+{# src/Zizoo/BookingBundle/Resources/views/Form/fields.html.twig #}
+{% block transaction_widget %}
+    <div class="transaction_widget" id="form_transaction">
+        
+        {% spaceless %}
+            {% if compound %}
+                {{ block('form_widget_compound') }}
+            {% else %}
+                {{ block('form_widget_simple') }}
+            {% endif %}
+        {% endspaceless %}
+        <script type="text/javascript">
+            function selectPaymentMethod(method, animate){
+                if (method=='credit_card'){
+                    if (animate){
+                        $('#form_transaction .credit_card_row').slideDown();
+                        $('#form_transaction .billing_row').slideDown();
+                    } else {
+                        $('#form_transaction .credit_card_row').show();
+                        $('#form_transaction .billing_row').show();
+                    }
+                } else {
+                    if (animate){
+                        $('#form_transaction .credit_card_row').slideUp();
+                        $('#form_transaction .billing_row').slideUp();
+                    } else {
+                        $('#form_transaction .credit_card_row').hide();
+                        $('#form_transaction .billing_row').hide();
+                    }
+                }
+            }
+            
+            $(document).ready(function(){
+                
+                $('#transaction_payment_method').change(function(){
+                    var method = $(this).val();
+                    selectPaymentMethod(method, true);
+                });
+                
+                selectPaymentMethod($('#transaction_payment_method').val(), false);
+                
+            });
+        </script>
+    </div>
+{% endblock %}
+
+{% block credit_card_row %}
+    {% spaceless %}
+        <div class="credit_card_row">
+            {{ form_label(form) }}
+            {{ form_errors(form) }}
+            {{ form_widget(form) }}
+        </div>
+    {% endspaceless %}
+{% endblock %}
+
+{% block billing_row %}
+    {% spaceless %}
+        <div class="billing_row">
+            {{ form_label(form) }}
+            {{ form_errors(form) }}
+            {{ form_widget(form) }}
+        </div>
+    {% endspaceless %}
+{% endblock %}

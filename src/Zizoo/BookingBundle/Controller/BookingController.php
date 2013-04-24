@@ -20,7 +20,7 @@ class BookingController extends Controller
     public function viewAllBookingsAction()
     {
         $user = $this->getUser();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $bookings = $em->getRepository('ZizooBookingBundle:Booking')->findByRenter($user->getId());
         return $this->render('ZizooBookingBundle:Booking:view_all_bookings.html.twig', array('bookings'       => $bookings));
     }
@@ -28,7 +28,7 @@ class BookingController extends Controller
     public function viewBookingAction($id)
     {
         $user   = $this->getUser();
-        $em     = $this->getDoctrine()->getEntityManager();
+        $em     = $this->getDoctrine()->getManager();
         $booking = $em->getRepository('ZizooBookingBundle:Booking')->findOneById($id);
         if (!$booking || $booking->getRenter()!=$user){
             return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
@@ -99,7 +99,7 @@ class BookingController extends Controller
         }
         
         // Get Boat entity
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $boat = $em->getRepository('ZizooBoatBundle:Boat')->find($bookBoat->getBoatId());
         if (!$boat) {
             return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
@@ -148,7 +148,7 @@ class BookingController extends Controller
         }
         
         if ($request->isMethod('POST')){
-            $form->bindRequest($request);
+            $form->bind($request);
             $bookingForm = $form->getData();
             
             if ($form->isValid()){

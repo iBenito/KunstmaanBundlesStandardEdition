@@ -8,7 +8,7 @@
 
     <div id="edit-boat">
         <h3>Boat Details</h3>
-        {% render 'ZizooBoatBundle:Boat:boatFormWidget' with { 'boat': boat, 'formAction': formAction, 'formRedirect': formRedirect } %}
+        {% render controller('ZizooBoatBundle:Boat:boatFormWidget', { 'boat': boat, 'formAction': formAction, 'formRedirect': formRedirect }) %}
     </div>
 
 {% endblock %}

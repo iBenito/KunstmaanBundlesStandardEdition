@@ -3,13 +3,7 @@ ZizooProfileBundle_show:
     defaults: { _controller: ZizooProfileBundle:Profile:show }
     requirements:
         _method:  GET
-        
-ZizooProfileBundle_show_boats:
-    pattern:  /{username}/show-boats/{page}
-    defaults: { _controller: ZizooProfileBundle:Profile:showBoats }
-    requirements:
-        _method:  GET
-        
+
 ZizooProfileBundle_edit:
     pattern:  /{id}/edit
     defaults: { _controller: ZizooProfileBundle:Profile:edit }

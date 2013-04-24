@@ -1,0 +1,37 @@
+{% extends 'ZizooCharterBundle::layout.html.twig' %}
+
+{% trans_default_domain "labels" %}
+
+{% block body %}
+
+    <div class="span4 hero-unit">
+        <section class="user">
+            <h2>PICTURE BOX</h2>
+            <div class="avatar">
+                {% if charter.picture is not null %}
+                    <img src="{{ asset(charter|pictureWebPath) }}" alt="image not found" class="large" />
+                {% endif %}
+            </div>
+            <p>{{ charter.charterName }}</p>
+        </section>
+            
+        <section class="boats">
+            <h2>Boats</h2>
+            {% render controller('ZizooCharterBundle:Charter:showBoats', {id: charter.id, page: 1}) %}
+        </section>
+    </div>
+
+    <div class="span8 hero-unit">
+        <header>
+            <h2>Profile</h2>
+        </header>
+            
+        <section class="details" id="profile">
+            <h3>{% trans %}zizoo_charter.label.about{% endtrans %}</h3>
+            <p>{{ charter.about }}</p>
+            
+        </section>
+
+    </div>
+  
+{% endblock %} 

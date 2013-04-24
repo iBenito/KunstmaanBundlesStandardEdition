@@ -24,10 +24,10 @@
                     <a href="{{ path('ZizooBoatBundle_show', { 'id': boat.id }) }}">{% include 'ZizooBoatBundle:Image:index.html.twig' with { 'images': boat.image, 'single': true } %}</a>
                 </section>
                 <section class="user-carousel">
-                    {% if boat.user.profile.picture is not null %}
-                        <img src="{{ asset(boat.user.profile|pictureWebPath) }}" alt="image not found" class="large" />
+                    {% if boat.charter.picture is not null %}
+                        <img src="{{ asset(boat.charter|pictureWebPath) }}" alt="image not found" class="large" />
                     {% endif %}
-                    <a href="{{ path('ZizooProfileBundle_show', { 'username': boat.user.username }) }}"> <p>{{ boat.user.profile.firstName }}</p></a>
+                    <a href="{{ path('ZizooCharterBundle_show', { 'id': boat.charter.id }) }}"> <p>{{ boat.charter.charterName }}</p></a>
                 </section>
             </div>
         {% else %}

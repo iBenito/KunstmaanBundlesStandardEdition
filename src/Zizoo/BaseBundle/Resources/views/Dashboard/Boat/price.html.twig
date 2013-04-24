@@ -146,7 +146,7 @@
                             } else if (reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_REQUESTED') }}){
                                 return {selectable: true, dateClass: 'day_requested', title: 'Requested', content: date.getDateFormatted() + '<span class="day_price">&euro;' + priceDate[0] + '</span><input type="hidden" class="reservation_id" value="'+reservedDate[1]+'" /><input type="hidden" class="type" value="reserved" />'};
                             } else {
-                                return defaultDate(date.getDateFormatted());
+                                return {selectable: true, dateClass: 'day_available', title: '&euro; ' + priceDate[0], content: date.getDateFormatted() + '<span class="day_price">&euro;' + priceDate[0] + '</span>'};
                             }
                         } else {
                             return {selectable: true, dateClass: 'day_available', title: '&euro; ' + priceDate[0], content: date.getDateFormatted() + '<span class="day_price">&euro;' + priceDate[0] + '</span>'};

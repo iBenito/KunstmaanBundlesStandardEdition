@@ -26,13 +26,13 @@ class Contact
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Zizoo\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Zizoo\UserBundle\Entity\User", inversedBy="myContacts")
      * @ORM\JoinColumn(name="sender_id", referencedColumnName="id")
      */
     protected $sender;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Zizoo\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Zizoo\UserBundle\Entity\User", inversedBy="contactsWithMe")
      * @ORM\JoinColumn(name="recipient_id", referencedColumnName="id")
      */
     protected $recipient;

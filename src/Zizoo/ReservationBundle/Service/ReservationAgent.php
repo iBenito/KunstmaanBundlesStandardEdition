@@ -218,5 +218,30 @@ class ReservationAgent {
             return $totalSetPrice['set_price'];
         }
     }
+    
+    
+    public function statusToString($status)
+    {
+        switch ($status){
+            case Reservation::STATUS_REQUESTED:
+                return 'Requested';
+                break;
+            case Reservation::STATUS_ACCEPTED:
+                return 'Accepted';
+                break;
+            case Reservation::STATUS_EXPIRED:
+                return 'Expired';
+                break;
+            case Reservation::STATUS_DENIED:
+                return 'Denied';
+                break;
+            case Reservation::STATUS_SELF:
+                return 'Reserved';
+                break;
+            default:
+                return 'Unkown status';
+                break;
+        }
+    }
 }
 ?>

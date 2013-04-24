@@ -1,0 +1,84 @@
+{% extends 'ZizooAdminBundle::layout.html.twig' %}
+{% block body %}
+
+    <div class="contextMenu" id="contextMenu" style="display: none">
+        <ul style="width: 400px">
+            <li id="open_boat">
+                <span class="ui-icon ui-icon-folder-open" style="float:left"></span>
+                <span style="font-size:11px; font-family:Verdana">Open</span>
+            </li>
+            <li id="open_user">
+                <span class="ui-icon ui-icon-folder-open" style="float:left"></span>
+                <span style="font-size:11px; font-family:Verdana" >Open user</span>
+            </li>
+        </ul>
+    </div>
+
+    {{jqgrid(grid)}}
+
+    <script type="text/javascript">
+
+        function openUser(username){
+            window.location.href = '{{ path('ZizooAdminBundle_User_Edit', {username: null}) }}/'+username;
+        }
+
+        function openBoat(boatId){
+            window.location.href = '{{ path('ZizooAdminBundle_Boat_Edit', {id: null}) }}/'+boatId;
+        }
+
+        function boatDoubleClick(rowId, rowIndex, colIndex, e){
+            var boatId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', rowId, 'grid_boatsid');
+            openBoat(boatId);
+        }
+
+        function loadComplete(){
+            
+            $("tr.jqgrow", this).contextMenu('contextMenu', {
+                bindings: {
+                    'open_boat': function(trigger) {
+                        // trigger is the DOM element ("tr.jqgrow") which is triggered
+                        var boatId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_boatsid');
+                        openBoat(boatId);
+                    },
+                    'open_user': function(trigger) {
+                        // trigger is the DOM element ("tr.jqgrow") which is triggered
+                        var userId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_boatsusername');
+                        openUser(userId);
+                    }
+                },
+                onContextMenu: function(event/*, menu*/) {
+                    var rowId = $(event.target).closest("tr.jqgrow").attr("id");
+                    jQuery('#{{ grid.name|raw }}').jqGrid('setSelection', rowId);
+                    return true;
+                }
+            });
+            
+            jQuery('#{{ grid.name|raw }}').jqGrid('setGridParam', { ondblClickRow: boatDoubleClick } );
+            
+        }
+        
+        
+        
+    </script>
+    
+    <style type="text/css">
+        #pager_{{ grid.name|raw }}_left table.navtable tbody tr label {
+            font-size: 11px;
+            display: inline;
+            margin-left: 2px;
+        }
+                
+        ul.ui-menu li .ui-icon {
+            position: static;
+        }
+        
+        .ui-menu-item {
+            cursor: pointer;
+        }
+        
+        .ui-menu-item:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+{% endblock %}

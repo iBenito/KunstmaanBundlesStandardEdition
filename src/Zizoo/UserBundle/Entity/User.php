@@ -86,16 +86,15 @@ class User extends BaseEntity implements AdvancedUserInterface, \Serializable, P
     private $skills;
     
     /**
-     * @ORM\OneToMany(targetEntity="\Zizoo\BoatBundle\Entity\Boat", mappedBy="user")
-     */
-    private $boats;
-        
+    * @ORM\ManyToMany(targetEntity="\Zizoo\CharterBundle\Entity\Charter", mappedBy="users")
+    */
+    protected $charter;
+    
     /**
      * @ORM\OneToMany(targetEntity="Zizoo\ReservationBundle\Entity\Reservation", mappedBy="guest")
      */
     private $reservations;
-    
-         
+          
     /**
      * @ORM\OneToMany(targetEntity="Zizoo\BookingBundle\Entity\Booking", mappedBy="renter")
      */
@@ -128,8 +127,7 @@ class User extends BaseEntity implements AdvancedUserInterface, \Serializable, P
         parent::__construct();
         $this->isActive = false;
         $this->groups = new ArrayCollection();
-        
-        $this->boats = new ArrayCollection();
+        $this->charter = new ArrayCollection();
         $this->reservations = new ArrayCollection();
         $this->bookings = new ArrayCollection();
     }
@@ -470,84 +468,81 @@ class User extends BaseEntity implements AdvancedUserInterface, \Serializable, P
     }
     
     /**
-     * Add boat
-     *
-     * @param \Zizoo\BoatBundle\Entity\Boat
-     * @return User
+     * Set charter
+     * 
+     * @param \Zizoo\UserBundle\Entity\Charter $charter
+     * @return \Zizoo\UserBundle\Entity\User
      */
-    public function addBoat(\Zizoo\BoatBundle\Entity\Boat $boat) {
-        $this->boats[] = $boat;
-
+    
+    public function setCharter(\Zizoo\CharterBundle\Entity\Charter $charter)
+    {
+        $this->charter = new ArrayCollection(array($charter));
         return $this;
     }
-
+    
     /**
-     * Remove boat
+     * Get charter
      *
-     * @param \Zizoo\BoatBundle\Entity\Boat $boat
+     * @return \Zizoo\CharterBundle\Entity\Charter $charter
      */
-    public function removeBoat(\Zizoo\BoatBundle\Entity\Boat $boat) {
-        $this->boats->removeElement($boat);
+    public function getCharter() {
+        return $this->charter->first();
     }
-
+    
     /**
-     * Get boats
+     * Add reservations
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @param \Zizoo\ReservationBundle\Entity\Reservation $reservations
+     * @return Charter
      */
-    public function getBoats() {
-        return $this->boats;
-    }
-        
-    /**
-     * Add reservation
-     *
-     * @param \Zizoo\ReservationBundle\Entity\Reservation
-     * @return User
-     */
-    public function addReservation(\Zizoo\ReservationBundle\Entity\Reservation $reservation) {
-        $this->reservations[] = $reservation;
-
+    public function addReservation(\Zizoo\ReservationBundle\Entity\Reservation $reservations)
+    {
+        $this->reservations[] = $reservations;
+    
         return $this;
     }
 
     /**
      * Remove reservations
      *
-     * @param \Zizoo\ReservationBundle\Entity\Reservation $reservation
+     * @param \Zizoo\ReservationBundle\Entity\Reservation $reservations
      */
-    public function removeReservation(\Zizoo\ReservationBundle\Entity\Reservation $reservation) {
-        $this->reservations->removeElement($reservation);
+    public function removeReservation(\Zizoo\ReservationBundle\Entity\Reservation $reservations)
+    {
+        $this->reservations->removeElement($reservations);
     }
 
     /**
      * Get reservations
      *
-     * @return \Zizoo\ReservationBundle\Entity\Reservation 
+     * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getReservations() {
+    public function getReservations()
+    {
         return $this->reservations;
     }
-    
-        /**
-     * Add booking
-     *
-     * @param \Zizoo\BookingBundle\Entity\Booking
-     * @return User
-     */
-    public function addBooking(\Zizoo\BookingBundle\Entity\Booking $booking) {
-        $this->bookings[] = $booking;
 
+    /**
+     * Add bookings
+     *
+     * @param \Zizoo\BookingBundle\Entity\Booking $bookings
+     * @return Charter
+     */
+    public function addBooking(\Zizoo\BookingBundle\Entity\Booking $bookings)
+    {
+        $this->bookings[] = $bookings;
+    
         return $this;
     }
 
     /**
-     * Remove booking
+     * Remove bookings
      *
-     * @param \Zizoo\BookingBundle\Entity\Booking $booking
+     * @param \Zizoo\BookingBundle\Entity\Booking $bookings
      */
-    public function removeBooking(\Zizoo\BookingBundle\Entity\Booking $booking) {
-        $this->bookings->removeElement($booking);
+    public function removeBooking(\Zizoo\BookingBundle\Entity\Booking $bookings)
+    {
+        $this->bookings->removeElement($bookings);
     }
 
     /**
@@ -555,7 +550,9 @@ class User extends BaseEntity implements AdvancedUserInterface, \Serializable, P
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getBookings() {
+    public function getBookings()
+    {
         return $this->bookings;
     }
+        
 }

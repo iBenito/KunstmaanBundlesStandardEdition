@@ -60,7 +60,7 @@ class Column extends GridTools
      * @param string $fieldname
      * @return mixed
      */
-    private function getField($fieldname)
+    public function getField($fieldname)
     {
         if (array_key_exists($fieldname, $this->colmodel)) {
             return $this->colmodel[$fieldname];

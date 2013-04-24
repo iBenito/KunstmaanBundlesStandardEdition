@@ -14,11 +14,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Boat extends BaseEntity
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Zizoo\UserBundle\Entity\User", inversedBy="boats")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
-    protected $user;
+   /**
+    * @ORM\ManyToMany(targetEntity="\Zizoo\CharterBundle\Entity\Charter", mappedBy="boats")
+    */
+    protected $charter;
     
     /**
      * @ORM\Column(type="text")
@@ -350,26 +349,26 @@ class Boat extends BaseEntity
     }
 
     /**
-     * Set user
+     * Set charter
      *
-     * @param \Zizoo\UserBundle\Entity\User $user
+     * @param \Zizoo\CharterBundle\Entity\Charter $charter
      * @return Boat
      */
-    public function setUser(\Zizoo\UserBundle\Entity\User $user = null)
+    public function setCharter(\Zizoo\CharterBundle\Entity\Charter $charter = null)
     {
-        $this->user = $user;
+        $this->charter = new \Doctrine\Common\Collections\ArrayCollection(array($charter));
     
         return $this;
     }
 
     /**
-     * Get user
+     * Get charter
      *
-     * @return \Zizoo\UserBundle\Entity\User 
+     * @return \Zizoo\CharterBundle\Entity\Charter 
      */
-    public function getUser()
+    public function getCharter()
     {
-        return $this->user;
+        return $this->charter->first();
     }
 
     /**

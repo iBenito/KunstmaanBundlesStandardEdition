@@ -1,0 +1,9 @@
+parameters:
+#    zizoo_charter.example.class: Zizoo\CharterBundle\Example
+
+services:
+      zizoo_charter_charter_service:
+              class:  Zizoo\CharterBundle\Service\CharterService
+              arguments: 
+                  entityManager:  "@doctrine.orm.entity_manager"
+                  container:      "@service_container" 

@@ -1,0 +1,12 @@
+{% extends 'ZizooBaseBundle:Dashboard/Charter:base.html.twig' %}
+
+{% block dashboard_page_title %}Notifications{% endblock %}
+
+{% block content %}
+
+    <h3>Reservation Requests Received</h3>
+    {% for reservationRequest in reservationRequests %}    
+        <p>You Received a <a href="{{ path('ZizooReservationBundle_view', {id: reservationRequest.id}) }}">reservation request</a> from {{ reservationRequest.guest.profile.firstName }}</p>
+    {% endfor %}   
+
+{% endblock %}
