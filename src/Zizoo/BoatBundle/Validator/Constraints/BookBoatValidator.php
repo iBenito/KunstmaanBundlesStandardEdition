@@ -22,18 +22,20 @@ class BookBoatValidator extends ConstraintValidator
         $boat               = $em->getRepository('ZizooBoatBundle:Boat')->findOneById($bookBoat->getBoatId());
                 
         if ($bookBoat->getNumGuests() > $boat->getNrGuests()){
-            $this->context->addViolationAtSubPath('num_guests', $constraint->messageNumGuests, array(), null);
+            $this->context->addViolationAt('num_guests', $constraint->messageNumGuests, array(), null);
         }
                 
-        $from   = $bookBoat->getReservationFrom();
-        $to     = $bookBoat->getReservationTo();
-        if ($from && $to){
+        $reservationRange   = $bookBoat->getReservationRange();
+        if ($reservationRange){
+            $from               = $reservationRange->getReservationFrom();
+            $to                 = $reservationRange->getReservationTo();
+            $interval           = $from->diff($to);
             if ($from >= $to){
-                $this->context->addViolationAtSubPath('reservation_from', $constraint->messageNotBookable, array(), null);
-                $this->context->addViolationAtSubPath('reservation_to', $constraint->messageNotBookable, array(), null);
+                $this->context->addViolationAt('reservation_range', $constraint->messageNotBookable, array(), null);
             } else if ($reservationAgent->reservationExists($boat, $from, $to) || !$reservationAgent->available($boat, $from, $to)){
-                $this->context->addViolationAtSubPath('reservation_from', $constraint->messageNotBookable, array(), null);
-                $this->context->addViolationAtSubPath('reservation_to', $constraint->messageNotBookable, array(), null);
+                $this->context->addViolationAt('reservation_range', $constraint->messageNotBookable, array(), null);
+            } else if ($boat->getMinimumDays() && $interval->days < $boat->getMinimumDays()){
+                $this->context->addViolationAt('reservation_range', $constraint->messageMinDays, array('%days%' => $boat->getMinimumDays()), null);
             }
         }
     }

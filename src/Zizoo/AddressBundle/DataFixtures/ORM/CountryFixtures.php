@@ -111,6 +111,7 @@ class CountryFixtures extends AbstractFixture implements OrderedFixtureInterface
         $countryAT->setName("AUSTRIA");
         $countryAT->setNumcode("40");
         $countryAT->setPrintableName("Austria");
+        $countryAT->setOrder(0);
         $manager->persist($countryAT);
 
         $countryAU = new Country();
@@ -393,6 +394,7 @@ class CountryFixtures extends AbstractFixture implements OrderedFixtureInterface
         $countryCS->setIso("CS");
         $countryCS->setName("SERBIA AND MONTENEGRO");
         $countryCS->setPrintableName("Serbia and Montenegro");
+        $countryCS->setOrder(0);
         $manager->persist($countryCS);
 
         $countryCU = new Country();
@@ -423,6 +425,7 @@ class CountryFixtures extends AbstractFixture implements OrderedFixtureInterface
         $countryCY->setName("CYPRUS");
         $countryCY->setNumcode("196");
         $countryCY->setPrintableName("Cyprus");
+        $countryCY->setOrder(0);
         $manager->persist($countryCY);
 
         $countryCZ = new Country();
@@ -527,6 +530,7 @@ class CountryFixtures extends AbstractFixture implements OrderedFixtureInterface
         $countryES->setName("SPAIN");
         $countryES->setNumcode("724");
         $countryES->setPrintableName("Spain");
+        $countryES->setOrder(0);
         $manager->persist($countryES);
 
         $countryET = new Country();
@@ -583,6 +587,7 @@ class CountryFixtures extends AbstractFixture implements OrderedFixtureInterface
         $countryFR->setName("FRANCE");
         $countryFR->setNumcode("250");
         $countryFR->setPrintableName("France");
+        $countryFR->setOrder(0);
         $manager->persist($countryFR);
 
         $countryGA = new Country();
@@ -687,6 +692,7 @@ class CountryFixtures extends AbstractFixture implements OrderedFixtureInterface
         $countryGR->setName("GREECE");
         $countryGR->setNumcode("300");
         $countryGR->setPrintableName("Greece");
+        $countryGR->setOrder(0);
         $manager->persist($countryGR);
 
         $countryGS = new Country();
@@ -755,6 +761,7 @@ class CountryFixtures extends AbstractFixture implements OrderedFixtureInterface
         $countryHR->setName("CROATIA");
         $countryHR->setNumcode("191");
         $countryHR->setPrintableName("Croatia");
+        $countryHR->setOrder(0);
         $manager->persist($countryHR);
 
         $countryHT = new Country();
@@ -841,6 +848,7 @@ class CountryFixtures extends AbstractFixture implements OrderedFixtureInterface
         $countryIT->setName("ITALY");
         $countryIT->setNumcode("380");
         $countryIT->setPrintableName("Italy");
+        $countryIT->setOrder(0);
         $manager->persist($countryIT);
 
         $countryJM = new Country();
@@ -1707,6 +1715,7 @@ class CountryFixtures extends AbstractFixture implements OrderedFixtureInterface
         $countryTR->setName("TURKEY");
         $countryTR->setNumcode("792");
         $countryTR->setPrintableName("Turkey");
+        $countryTR->setOrder(0);
         $manager->persist($countryTR);
 
         $countryTT = new Country();

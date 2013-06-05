@@ -1,9 +1,27 @@
 Zizoo\BillingBundle\Form\Model\BankAccount:
     properties:
+        accountOwner:
+            - NotBlank: { message: zizoo_billing.error.account_owner_not_blank, groups: [payout_settings.bank_account] }
+            
+        bankName:
+            - NotBlank: { message: zizoo_billing.error.bank_name_not_blank, groups: [payout_settings.bank_account] }
+            
+        country:
+            - NotNull: { message: zizoo_billing.error.bank_country_not_blank, groups: [payout_settings.bank_account] }
+            
         iban:
-            - NotBlank: { message: zizoo_billing.error.iban_not_blank }
-            - Zizoo\BillingBundle\Validator\Constraints\Iban: ~
+            - NotBlank: { message: zizoo_billing.error.iban_not_blank, groups: [payout_settings.bank_account] }
+            - Zizoo\BillingBundle\Validator\Constraints\Iban: { message: zizoo_billing.error.iban_not_valid, groups: [payout_settings.bank_account] }
             
         bic:
-            - NotBlank: { message: zizoo_billing.error.bic_not_blank }
-            - Zizoo\BillingBundle\Validator\Constraints\Bic: ~
+            - NotBlank: { message: zizoo_billing.error.bic_not_blank, groups: [payout_settings.bank_account] }
+            - Zizoo\BillingBundle\Validator\Constraints\Bic: { message: zizoo_billing.error.bic_not_valid, groups: [payout_settings.bank_account] }
+            
+Zizoo\BillingBundle\Form\Model\PayPal:
+    properties:
+        username:
+            - NotBlank: { message: zizoo_billing.error.paypal_email_not_blank, groups: [payout_settings.paypal] }
+            - Email:
+                message: zizoo_billing.error.paypal_valid_email
+                checkMX: true
+                groups: [payout_settings.paypal]

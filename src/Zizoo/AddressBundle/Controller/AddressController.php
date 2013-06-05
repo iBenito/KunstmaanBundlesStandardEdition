@@ -66,8 +66,8 @@ class AddressController extends Controller
                 'num_pages'         => $numPages,                
                 'max_length'        => $minMaxBoatValues['max_length'],
                 'max_cabins'        => $minMaxBoatValues['max_cabins'],
-                'min_price'         => min(array($minMaxBoatValues['min_default_price'], $minMaxPrice['max_price'])),
-                'max_price'         => max(array($minMaxBoatValues['max_default_price'], $minMaxPrice['max_price'])),
+                'min_price'         => min(array($minMaxBoatValues['min_lowest_price'], $minMaxPrice['max_price'])),
+                'max_price'         => max(array($minMaxBoatValues['min_lowest_price'], $minMaxPrice['max_price'])),
                 'form'              => $form->createView()
             ));
         } else {
@@ -78,8 +78,8 @@ class AddressController extends Controller
                 'num_pages'         => $numPages,
                 'max_length'        => $minMaxBoatValues['max_length'],
                 'max_cabins'        => $minMaxBoatValues['max_cabins'],
-                'min_price'         => min(array($minMaxBoatValues['min_default_price'], $minMaxPrice['max_price'])),
-                'max_price'         => max(array($minMaxBoatValues['max_default_price'], $minMaxPrice['max_price'])),
+                'min_price'         => min(array($minMaxBoatValues['min_lowest_price'], $minMaxPrice['max_price'])),
+                'max_price'         => max(array($minMaxBoatValues['min_lowest_price'], $minMaxPrice['max_price'])),
                 'form'              => $form->createView()
             ));
         }

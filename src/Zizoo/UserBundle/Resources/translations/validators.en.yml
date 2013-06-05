@@ -8,3 +8,5 @@ zizoo_user.error.password_not_blank: "You must enter a password"
 zizoo_user.error.password_min_length: "Your password must have at least {{ limit }} characters.|Your password must have at least {{ limit }} characters."
 
 zizoo_user.error.password_mismatch: "The password fields must match."
+
+zizoo_user.error.new_email_valid: "You must enter a valid email address."

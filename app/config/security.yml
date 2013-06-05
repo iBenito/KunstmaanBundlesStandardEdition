@@ -10,10 +10,11 @@ security:
             iterations: 10
 
     role_hierarchy:
-        ROLE_ZIZOO_USER:  ROLE_USER
-        ROLE_ADMIN:       [ROLE_USER, ROLE_ZIZOO_USER]
-        ROLE_ZIZOO_ADMIN: [ROLE_ZIZOO_USER]
-        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_ZIZOO_USER:    ROLE_USER
+        ROLE_ZIZOO_CHARTER: [ROLE_USER, ROLE_ZIZOO_USER]
+        ROLE_ADMIN:         [ROLE_USER, ROLE_ZIZOO_USER, ROLE_ZIZOO_CHARTER]
+        ROLE_ZIZOO_ADMIN:   [ROLE_ZIZOO_USER, ROLE_ZIZOO_CHARTER]
+        ROLE_SUPER_ADMIN:   [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     providers:
         main:
@@ -50,6 +51,7 @@ security:
         - { path: ^/account/, roles: ROLE_ZIZOO_USER }
         - { path: ^/profile, roles: ROLE_ZIZOO_USER }
         - { path: ^/dashboard, roles: ROLE_ZIZOO_USER }
-        - { path: ^/messages, roles: ROLE_ZIZOO_USER }        
+        - { path: ^/messages, roles: ROLE_ZIZOO_USER }
+        - { path: ^/charter/account, roles: ROLE_ZIZOO_CHARTER }
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
         #- { path: ^/_internal/secure, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }

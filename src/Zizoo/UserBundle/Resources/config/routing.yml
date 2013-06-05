@@ -15,6 +15,12 @@ ZizooUserBundle_confirm:
   requirements:
         _method:  GET
         
+ZizooUserBundle_change_email_confirm:
+  pattern:    /change-email/{token}/email/{email}
+  defaults:   {_controller: ZizooUserBundle:User:confirmChangeEmail }
+  requirements:
+        _method:  GET
+        
 ZizooUserBundle_confirmed:
   pattern:    /confirmed
   defaults:   {_controller: ZizooUserBundle:Registration:confirmed }
@@ -100,12 +106,6 @@ ZizooUserBundle_reset_password_confirm:
 
         _method:  GET|POST
         
-ZizooUserBundle_change_password:
-  pattern:    /account/change-password/
-  defaults:   {_controller: ZizooUserBundle:User:changePassword }
-  requirements:
-        _method:  GET|POST 
-        
 ZizooUserBundle_invite:
   pattern:    /account/invite/
   defaults:   {_controller: ZizooUserBundle:User:inviteFriends }
@@ -115,3 +115,9 @@ ZizooUserBundle_invite:
 ZizooUserBundle_forward:
   pattern:    /forward/{action}
   defaults:   {_controller: ZizooUserBundle:Registration:forward }
+  
+ZizooUserBundle_User_AccountSettings:
+  pattern:    /account/settings/
+  defaults:   {_controller: ZizooUserBundle:User:accountSettings }
+  requirements:
+        _method:  GET|POST 

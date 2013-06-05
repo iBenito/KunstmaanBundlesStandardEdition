@@ -15,8 +15,8 @@ class MessageToOwnerType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('subject', 'text', array('property_path' => 'subject'));
-        $builder->add('body', 'textarea', array('property_path' => 'body'));
+        $builder->add('subject', 'text', array('property_path' => 'subject', 'data' => 'Reservation Request'));
+        $builder->add('message', 'textarea', array('property_path' => 'body'));
     }
     
     public function setDefaultOptions(OptionsResolverInterface $resolver) 
@@ -24,6 +24,14 @@ class MessageToOwnerType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'Zizoo\BookingBundle\Form\Model\MessageToOwner',
             'cascade_validation' => true,
+            'validation_groups' => function(FormInterface $form) {
+                $data = $form->getParent()->getData();
+                if ($data->getPaymentMethod()->getID()=='credit_card') {
+                    return array('booking.credit_card');
+                } else {
+                    return array('booking.bank_transfer');
+                }
+            },
         ));
     }
     

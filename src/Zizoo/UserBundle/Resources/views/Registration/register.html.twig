@@ -18,6 +18,10 @@
             <input type="button" value="With EMAIL account" class="register_email_btn" />
             or
             <input type="button" value="Connect with FACEBOOK" class="register_facebook_btn" href="{{ facebook.loginUrl({ scope: 'email', redirect_uri: url('ZizooUserBundle_register_facebook', {ajax: ajax}), display: 'popup' }) }}" />
+            or
+            <form method="get" action="{{ path('ZizooCharterBundle_register') }}">
+                <input type="submit" value="I am a Charter" class="charter_register_btn" />
+            </form>
         </div>
 
         <div class="register_email">

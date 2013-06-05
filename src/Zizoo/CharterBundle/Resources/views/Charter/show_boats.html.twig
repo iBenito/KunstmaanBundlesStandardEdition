@@ -10,7 +10,7 @@
     {% endfor %}
 </div>
 <input id="more_boats" type="hidden" value="{% if boats|length > page_size %}true{% else %}false{% endif %}" />
-<a id="show_more_boats_link" href="{{ path('ZizooCharterBundle_show_boats', {id: charter.id, page: page+1}) }}" style="display: none">Show more &raquo;</a>
+<a id="show_more_boats_link" href="{{ path('ZizooCharterBundle_Charter_ShowBoats', {id: charter.id, page: page+1}) }}" style="display: none">Show more &raquo;</a>
 <img id="boats_loading" src="{{ asset('images/loader_16.gif') }}" style="display: none" />
 
 

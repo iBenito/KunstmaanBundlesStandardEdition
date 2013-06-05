@@ -5,6 +5,15 @@ namespace Zizoo\CharterBundle\Controller;
 use Zizoo\CharterBundle\Form\Type\CharterRegistrationType;
 use Zizoo\CharterBundle\Entity\CharterRepository;
 
+use Zizoo\BillingBundle\Form\Type\PayoutSettingsType;
+use Zizoo\BillingBundle\Form\Model\PayoutSettings;
+use Zizoo\BillingBundle\Form\Type\BankAccountType;
+use Zizoo\BillingBundle\Form\Model\BankAccount;
+use Zizoo\BillingBundle\Form\Type\PayPalType;
+use Zizoo\BillingBundle\Form\Model\PayPal;
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class CharterController extends Controller
@@ -23,6 +32,11 @@ class CharterController extends Controller
         ));
     }
     
+    /**
+     * Display Charter Boats
+     * 
+     * @return Response
+     */
     public function showBoatsAction($id, $page=1)
     {
         $pageSize   = 3;
@@ -31,183 +45,206 @@ class CharterController extends Controller
         
         return $this->render('ZizooCharterBundle:Charter:show_boats.html.twig', array(
             'charter'      => $charter,
-            'boats'     => $boats,
-            'page'      => $page,
-            'page_size' => $pageSize
+            'boats'         => $boats,
+            'page'          => $page,
+            'page_size'     => $pageSize
         ));
     }
     
-    private function doLogin($user, $url=null){
-        $token = new UsernamePasswordToken($user, $user->getPassword(), 'main', $user->getRoles());
-        $securityContext = $this->get('security.context');
-        $securityContext->setToken($token);
-        if ($url) return $this->redirect($url);
-    }
+    public function boatsAction(Request $request)
+    {
+        $user       = $this->getUser();
+        $charter    = $user->getCharter();
+        $boats      = $charter->getBoats();
+        
+        $sort               = $request->query->get('sort', 'b.id');
+        $dir                = $request->query->get('direction', 'desc');
+        $searchBoatName     = $request->query->get('boat_name', null);
+        $searchBoatType     = $request->query->get('boat_type', null);
+        $page               = $this->get('request')->query->get('page', 1);
+        $pageSize           = $this->get('request')->query->get('page_size', 25);
+        
+        $em    = $this->getDoctrine()->getEntityManager();
+        //$dql   = "SELECT b, c FROM ZizooBoatBundle:Boat b, ZizooCharterBundle:Charter c WHERE ";
+        $dql = 'SELECT b, c FROM ZizooBoatBundle:Boat b JOIN b.charter c WHERE c.id = '.$charter->getId();
+        
+        if ($searchBoatName) {
+            $dql .= " AND (b.name LIKE '%".$searchBoatName."%' OR b.title LIKE '%".$searchBoatName."%')";
+        }
+        
+        if ($searchBoatType){
+            $dql .= " AND b.boatType = '" . $searchBoatType . "'";
+        }
+        
+        if ($sort && $dir){
+            $dql .= " ORDER BY " . $sort . " " . $dir;
+        }
+        $query = $em->createQuery($dql);
 
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $page/*page number*/,
+            $pageSize/*limit per page*/
+        );
+        
+        return $this->render('ZizooCharterBundle:Charter:boats.html.twig', array(
+            'pagination'        => $pagination,
+            'direction'         => $dir,
+            'sort'              => $sort,
+            'page'              => $page,
+            'page_size'         => $pageSize,
+            'request_uri'       => $request->getSchemeAndHttpHost().$request->getRequestUri(),
+            'search_boat_name'  => $searchBoatName,
+            'search_boat_type'  => $searchBoatType,
+            'boat_types'        => $em->getRepository('ZizooBoatBundle:BoatType')->findAll()
+        ));
+    }
     
     /**
-     * Try to register a user.
+     * Edit Charter Profile
      * 
-     * @author Alex Fuckert <alexf83@gmail.com>
+     * @return Response
      */
-    public function registerAction()
+    public function profileAction()
     {
-        $form = $this->createForm(new CharterRegistrationType());
-        $request = $this->getRequest();
-        $relogin = $request->query->get('relogin', false);
-        $isPost = $request->isMethod('POST');
-        $facebook = $this->get('facebook');
+        $user       = $this->getUser();
+        $charter    = $user->getCharter();
         
-        // If submit
-        if ($isPost) {
-            $form->bind($request);
+        if (!$charter) {
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
+        }
+      
+        return $this->render('ZizooCharterBundle:Charter:profile.html.twig',array(
+            'charter'   => $charter,
+            'formPath'  => $this->getRequest()->get('_route')
+        ));
 
-            $data = $form->getData();
-            $charter    = $data->getCharter();
-            $user       = $data->getRegistration()->getUser();
-            $profile    = $data->getRegistration()->getProfile();
-            if ($form->isValid()) {
-                $charterService = $this->get('zizoo_charter_charter_service');
-                $userService    = $this->get('zizoo_user_user_service');
-                $messenger      = $this->get('messenger');
-                
-                $charterService->createCharter($charter->getCharterName(), $charter->getCharterNumber(), $user, $user, false);
-                $user = $userService->registerUser($user, $profile);
-                $messenger->sendConfirmationEmail($user);
+    }
+    
+    
+    /**
+     * Edit Payout Settings
+     * 
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return Response
+     */
+    public function payoutSettingsAction(Request $request)
+    {
+        // Include Braintree API
+        require_once $this->container->getParameter('braintree_path').'/lib/Braintree.php';
+        \Braintree_Configuration::environment($this->container->getParameter('braintree_environment'));
+        \Braintree_Configuration::merchantId($this->container->getParameter('braintree_merchant_id'));
+        \Braintree_Configuration::publicKey($this->container->getParameter('braintree_public_key'));
+        \Braintree_Configuration::privateKey($this->container->getParameter('braintree_private_key'));
+        
+        $userService        = $this->container->get('zizoo_user_user_service');
+        $trans              = $this->get('translator');
+        $payoutSettingsType = new PayoutSettingsType();
+        
+        $form = $this->createForm($payoutSettingsType);
+        
+        $user               = $this->getUser();
+        $braintreeCustomer  = $userService->getPaymentUser($user);
 
-                return $this->redirect($this->generateUrl('ZizooCharterBundle_submitted'));
-            } else {
-                // Form is not valid. Check if the user is valid. If not, see if it's because the user already exists and hasn't completed registration (i.e. confirmation)
-                // If that is the case, forward to "resend_confirmation". 
-                // Maybe this shouldn't be done automatically? But it's hard to get the "Have you previously signed up" message below the right form control (i.e. username or email)
-                $em = $this->getDoctrine()
-                            ->getManager();
-                
-                // Validate user
-                $validator = $this->get('validator');
-                $errors = $validator->validate($user, 'registration');
-                $num_errors = $errors->count();
-                
-                // See if invalid because user or email already taken.
-                $possibleUnconfirmedUser = null;
-                for ($i=0; $i<$num_errors; $i++){
-                    $msgTemplate = $errors->get($i)->getMessageTemplate();
-                    if ($msgTemplate=='zizoo_user.error.email_taken'){
-                        $email = $errors->get($i)->getRoot()->getEmail();
-                        if ($email){
-                            $possibleUnconfirmedUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($email);
-                            // If email already taken and not yet confirmed, forward.
-                            if ($possibleUnconfirmedUser->getConfirmationToken()!=null && !$possibleUnconfirmedUser->getIsActive()){
-                                return $this->render('ZizooCharterBundle:Registration:register.html.twig', array('form' => $form->createView(), 
-                                                                                                                'unconfirmed_user'      => $possibleUnconfirmedUser, 
-                                                                                                                'unconfirmed_email'     => true, 
-                                                                                                                'unconfirmed_username'  => false, 
-                                                                                                                'facebook'              => $facebook, 
-                                                                                                                'is_post'               => $isPost, 
-                                                                                                                'relogin'               => $relogin,
-                                                                                                                'ajax'                  => $request->isXmlHttpRequest()));
-                            }
-                        }
-                    } else if ($msgTemplate=='zizoo_user.error.user_taken'){
-                        $username = $errors->get($i)->getRoot()->getUsername();
-                        if ($username){
-                            $possibleUnconfirmedUser = $em->getRepository('ZizooUserBundle:User')->findOneByUsername($username);
-                            // If username already taken and not yet confirmed, forward.
-                            if ($possibleUnconfirmedUser->getConfirmationToken()!=null && !$possibleUnconfirmedUser->getIsActive()){
-                                return $this->render('ZizooCharterBundle:Registration:register.html.twig', array('form' => $form->createView(), 
-                                                                                                                'unconfirmed_user'      => $possibleUnconfirmedUser, 
-                                                                                                                'unconfirmed_email'     => false, 
-                                                                                                                'unconfirmed_username'  => true, 
-                                                                                                                'facebook'              => $facebook, 
-                                                                                                                'is_post'               => $isPost, 
-                                                                                                                'relogin'               => $relogin,
-                                                                                                                'ajax'                  => $request->isXmlHttpRequest()));
-                            }
-                        }
+        if ($request->isMethod('POST')){
+            
+            if ($braintreeCustomer){
+                $form->bind($request);
+
+                if ($form->isValid()){
+                    $payoutSettings = $form->getData();
+                    $bankAccount    = $payoutSettings->getBankAccount();
+                    $paypal         = $payoutSettings->getPayPal();
+                    
+                    if ($payoutSettings->getPayoutMethod()=='bank_account'){
+                        $updateResult = \Braintree_Customer::update(
+                            $braintreeCustomer->id,
+                            array(
+                              'customFields' => array(  'payout_method' => $payoutSettings->getPayoutMethod(),
+                                                        'account_owner' => $bankAccount->getAccountOwner(),
+                                                        'bank_name'     => $bankAccount->getBankName(),
+                                                        'bank_country'  => $bankAccount->getCountry()->getIso(),
+                                                        'iban'          => $bankAccount->getIBAN(), 
+                                                        'bic'           => $bankAccount->getBIC())
+                          )
+                        );
+                    } else if ($payoutSettings->getPayoutMethod()=='paypal'){
+                        $updateResult = \Braintree_Customer::update(
+                            $braintreeCustomer->id,
+                            array(
+                              'customFields' => array(  'payout_method' => $payoutSettings->getPayoutMethod(),
+                                                        'paypal'        => $paypal->getUsername())
+                          )
+                        );
+                    } else {
+                        $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_billing.payout_settings_not_changed'));
+                        return $this->redirect($this->generateUrl('ZizooCharterBundle_Charter_PayoutSettings'));
+                    }
+
+                    if ($updateResult->success){
+                        $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_billing.payout_settings_changed'));
+                        return $this->redirect($this->generateUrl('ZizooCharterBundle_Charter_PayoutSettings'));
+                    } else {
+                        $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_billing.payout_settings_not_changed'));
                     }
                 }
                 
             }
-        }
-
-        return $this->render('ZizooCharterBundle:Registration:register.html.twig', array('form' => $form->createView(), 
-                                                                                        'unconfirmed_user'  => null, 
-                                                                                        'unconfirmed_email'     => false, 
-                                                                                        'unconfirmed_username'  => false, 
-                                                                                        'facebook'              => $facebook, 
-                                                                                        'is_post'               => $isPost, 
-                                                                                        'relogin'               => $relogin,
-                                                                                        'ajax'                  => $request->isXmlHttpRequest()));
-    }
-    
-    /**
-     * Registration form submitted successfully.
-     * Redirected to from registerAction() (which also sends confirmation email, by calling sendConfirmationEmail()).
-     * 
-     * @author Alex Fuckert <alexf83@gmail.com>
-     */
-    public function submittedAction(){
-        $request = $this->getRequest();
-        
-        return $this->render('ZizooCharterBundle:Registration:submitted.html.twig', array( 'ajax' => $request->isXmlHttpRequest() ));
-    }
-    
-    /**
-     * Resend confirmation email.
-     * @param string $email
-     * @author Alex Fuckert <alexf83@gmail.com>
-     */
-    public function resendConfirmationAction($email){
-        $request = $this->getRequest();
-        $user = null;
-        $em = $this->getDoctrine()
-                    ->getManager();
-        if ($email!=null){
-            $user = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($email);
-        } 
-        if ($user==null || $user->getConfirmationToken()==null){
-            return $this->redirect($this->generateUrl('ZizooCharterBundle_submitted'));
-        }
-        if ($request->isMethod('POST')) {
-            $messenger = $this->get('messenger');
-            $messenger->sendConfirmationEmail($user);
-            return $this->redirect($this->generateUrl('ZizooCharterBundle_submitted'));
-        }
-        return $this->render('ZizooCharterBundle:Registration:resend_confirmation.html.twig');
-    }
-    
-    /**
-     * Confirm a registration by token and email. This is done by clicking on the link in the confirmation email.
-     * 
-     * @param string $token
-     * @param string $email
-     * @author Alex Fuckert <alexf83@gmail.com>
-     */
-    public function confirmAction($token, $email){
-        $userService = $this->get('zizoo_user_user_service');
-        $user = $userService->confirmUser($token, $email);
-        
-        if ($user){
-            $messenger = $this->container->get('messenger');        
-            $message = $messenger->sendRegistrationEmail($user);
             
-            return $this->doLogin($user, $this->generateUrl('ZizooCharterBundle_confirmed'));
+            
         } else {
-            return $this->redirect($this->generateUrl('ZizooCharterBundle_register'));
+            if ($braintreeCustomer){
+                $bankAccount    = new BankAccount();
+                $paypal         = new PayPal();
+                $payoutSettings = new PayoutSettings();
+                $payoutSettings->setBankAccount($bankAccount);
+                $payoutSettings->setPayPal($paypal);
+                
+                if (is_array($braintreeCustomer->customFields)){
+                    if (array_key_exists('payout_method', $braintreeCustomer->customFields)){
+                        $payoutSettings->setPayoutMethod($braintreeCustomer->customFields['payout_method']);
+                    }
+                    if (array_key_exists('account_owner', $braintreeCustomer->customFields)){
+                        $bankAccount->setAccountOwner($braintreeCustomer->customFields['account_owner']);
+                    }
+                    if (array_key_exists('bank_name', $braintreeCustomer->customFields)){
+                        $bankAccount->setBankName($braintreeCustomer->customFields['bank_name']);
+                    }
+                    if (array_key_exists('bank_country', $braintreeCustomer->customFields)){
+                        $em = $this->getDoctrine()->getManager();
+                        $country = $em->getRepository('ZizooAddressBundle:Country')->findOneByIso($braintreeCustomer->customFields['bank_country']);
+                        $bankAccount->setCountry($country);
+                    }
+                    if (array_key_exists('iban', $braintreeCustomer->customFields)){
+                        $bankAccount->setIBAN($braintreeCustomer->customFields['iban']);
+                    }
+                    if (array_key_exists('bic', $braintreeCustomer->customFields)){
+                        $bankAccount->setBIC($braintreeCustomer->customFields['bic']);
+                    }
+                    if (array_key_exists('paypal', $braintreeCustomer->customFields)){
+                        $paypal->setUsername($braintreeCustomer->customFields['paypal']);
+                    }
+                }
+                
+                $form = $this->createForm(new PayoutSettingsType(), $payoutSettings);
+               
+            }
+            
         }
         
+        return $this->render('ZizooCharterBundle:Charter:payout_settings.html.twig', array(
+                    'form'              => $form?$form->createView():null,
+                    'braintree_valid'   => $braintreeCustomer!=null
+        ));
     }
     
-    /**
-     * Registration confirmed.
-     * 
-     * @author Alex Fuckert <alexf83@gmail.com>
-     */
-    public function confirmedAction(){
-        $request = $this->getRequest();
-        $user = $this->getUser();
-        
-        return $this->render('ZizooCharterBundle:Registration:confirmed.html.twig', array( 'user'    => $user,
-                                                                                                'ajax'    => $request->isXmlHttpRequest() ));
-    }
+    
+    
+    
+    
+    
+    
+    
+    
 }

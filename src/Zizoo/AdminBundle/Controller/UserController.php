@@ -32,10 +32,10 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $qb = $em->createQueryBuilder()->from('ZizooUserBundle:User', 'user')
-                                        ->leftJoin('user.boats', 'boat')
+                                        ->leftJoin('user.charter', 'charter')
                                         ->leftJoin('user.profile', 'profile')
                                         ->leftJoin('user.bookings', 'booking')
-                                        ->select('user.id, user.username, user.email, profile.firstName, profile.lastName, count(boat) as num_boats, count(booking) as num_bookings, user.created, user')
+                                        ->select('user.id, user.username, user.email, profile.firstName, profile.lastName, charter, count(booking) as num_bookings, user.created, user')
                                         ->groupBy('user.id');
         $grid->setSource($qb);
                 
@@ -48,7 +48,7 @@ class UserController extends Controller
         $grid->addColumn('Email', array('name' => 'email', 'jsonmap' => 'cell.2', 'index' => 'user.email', 'width' => '200', 'sortable' => true, 'search' => true));
         $grid->addColumn('First Name', array('name' => 'firstName', 'jsonmap' => 'cell.3', 'index' => 'profile.firstName', 'width' => '200', 'sortable' => true, 'search' => true));
         $grid->addColumn('Last Name', array('name' => 'lastName', 'jsonmap' => 'cell.4', 'index' => 'profile.lastName', 'width' => '200', 'sortable' => true, 'search' => true));
-        $grid->addColumn('Boats', array('name' => 'num_boats', 'jsonmap' => 'cell.5', 'index' => 'num_boats', 'having' => 'count(boat.id)', 'width' => '70', 'sortable' => true, 'search' => true));
+        $grid->addColumn('Charter', array('name' => 'charter', 'jsonmap' => 'cell.5', 'index' => 'charter', 'width' => '70', 'sortable' => true, 'search' => true));
         $grid->addColumn('Bookings', array('name' => 'num_bookings', 'jsonmap' => 'cell.6', 'index' => 'num_bookings', 'having' => 'count(booking.id)', 'width' => '70', 'sortable' => true, 'search' => true));
         $grid->addColumn('Created', array('name' => 'created', 'jsonmap' => 'cell.7.date', 'index' => 'user.created', 'formatter' => 'date', 'formatoptions' => array( 'srcformat' => 'Y-m-d H:i:s', 'newformat' => 'd/m/Y H:i' ), 'datepicker' => true, 'sortable' => true, 'search' => true));
 //        $grid->addColumn('Type', array('name' => 'Type', 'jsonmap' => 'cell.2', 'width' => '75', 'sortable' => false, 'search' => false, 'formatter' => $formatFnc));

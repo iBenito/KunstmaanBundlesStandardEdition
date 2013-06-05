@@ -17,8 +17,8 @@
     </form>
     {% if valid == true %}
         <form id="booking_form" action="{{ book_url }}" method="get">
-            <input name="zizoo_boat_book[reservation_from]" type="hidden" value="{{ form.vars.value.reservationFrom is empty ? "" : form.vars.value.reservationFrom|date }}" autocomplete="off" />
-            <input name="zizoo_boat_book[reservation_to]" type="hidden" value="{{ form.vars.value.reservationTo is empty ? "" : form.vars.value.reservationTo|date }}" autocomplete="off" />
+            <input name="zizoo_boat_book[reservation_from]" type="hidden" value="{{ form.vars.value.reservationRange.reservationFrom is empty ? "" : form.vars.value.reservationRange.reservationFrom|date }}" autocomplete="off" />
+            <input name="zizoo_boat_book[reservation_to]" type="hidden" value="{{ form.vars.value.reservationRange.reservationTo is empty ? "" : form.vars.value.reservationRange.reservationTo|date }}" autocomplete="off" />
             <input name="zizoo_boat_book[num_guests]" type="hidden" value="{{ form.vars.value.numGuests }}" />
             <button type="submit" id="book_btn">Book It</button>
         </form>
@@ -36,14 +36,14 @@
 
     var bookingWidgetReservedDates      = {{ boat|reservedDates(reservations)|raw }};
     var bookingWidgetPriceDates         = {{ boat|priceDates(prices)|raw }};
-    var bookingWidgetDefaultAllowed     = {{ boat.defaultPrice > 0 ? 'true' : 'false' }};
-    var bookingWidgetDefaultPrice       = {{ boat.defaultPrice }};
+    var bookingWidgetDefaultAllowed     = {{ boat.defaultPrice is not null ? 'true' : 'false' }};
+    var bookingWidgetDefaultPrice       = {{ boat.defaultPrice is not null ? boat.defaultPrice : 'null' }};
     
     function reloadWidget(){
-        var dateFrom    = $('#zizoo_boat_book_reservation_from').datepick('getDate');
-        var dateUntil   = $('#zizoo_boat_book_reservation_to').datepick('getDate');
+        var dateFrom    = $('#zizoo_boat_book_reservation_range_reservation_from').datepick('getDate');
+        var dateUntil   = $('#zizoo_boat_book_reservation_range_reservation_to').datepick('getDate');
         
-        if ($('#zizoo_boat_book_reservation_from').val()=='' || $('#zizoo_boat_book_reservation_to').val()=='') {
+        if ($('#zizoo_boat_book_reservation_range_reservation_from').val()=='' || $('#zizoo_boat_book_reservation_range_reservation_to').val()=='') {
             $('#booking_price').html('...');
             return;
         }
@@ -160,7 +160,7 @@
             }
         });
         
-        $( "#zizoo_boat_book_reservation_from" ).datepick({
+        $( "#zizoo_boat_book_reservation_range_reservation_from" ).datepick({
             rangeSelect: false,
             changeMonth: false,
             defaultDate: "+1d",
@@ -175,11 +175,11 @@
                     var d = dates[0];
                     if (this.id == 'zizoo_boat_book_reservation_from') {
                         d = $.datepick.add(d, 1, 'd');
-                        $('#zizoo_boat_book_reservation_to').datepick('option', 'minDate', d || null); 
+                        $('#zizoo_boat_book_reservation_range_reservation_to').datepick('option', 'minDate', d || null); 
                     } 
                     else {
                         d = $.datepick.add(d, -1, 'd'); 
-                        $('#zizoo_boat_book_reservation_from').datepick('option', 'maxDate', d || null); 
+                        $('#zizoo_boat_book_reservation_range_reservation_from').datepick('option', 'maxDate', d || null); 
                     }
                 }
                 reloadWidget();
@@ -188,7 +188,7 @@
             renderer: $.datepick.themeRollerRenderer
         });
         
-        $( "#zizoo_boat_book_reservation_to" ).datepick({
+        $( "#zizoo_boat_book_reservation_range_reservation_to" ).datepick({
             rangeSelect: false,
             changeMonth: false,
             defaultDate: "+1d",
@@ -203,11 +203,11 @@
                     var d = dates[0];
                     if (this.id == 'zizoo_boat_book_reservation_from') {
                         d = $.datepick.add(d, 1, 'd');
-                        $('#zizoo_boat_book_reservation_to').datepick('option', 'minDate', d || null); 
+                        $('#zizoo_boat_book_reservation_range_reservation_to').datepick('option', 'minDate', d || null); 
                     } 
                     else {
                         d = $.datepick.add(d, -1, 'd'); 
-                        $('#zizoo_boat_book_reservation_from').datepick('option', 'maxDate', d || null); 
+                        $('#zizoo_boat_book_reservation_range_reservation_from').datepick('option', 'maxDate', d || null); 
                     }
                 }
                 reloadWidget();

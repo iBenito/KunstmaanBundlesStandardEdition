@@ -5,6 +5,8 @@ namespace Zizoo\BoatBundle\Controller;
 use Zizoo\BoatBundle\Form\Type\BookBoatType;
 use Zizoo\BoatBundle\Form\Model\BookBoat;
 
+use Zizoo\ReservationBundle\Entity\Reservation;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,7 +14,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 use Zizoo\BoatBundle\Entity\Boat;
 use Zizoo\BoatBundle\Entity\Image;
-use Zizoo\BoatBundle\Form\BoatType;
+use Zizoo\BoatBundle\Form\Type\BoatType;
 
 /**
  * Boat controller.
@@ -123,7 +125,10 @@ class BoatController extends Controller
             
         $reservationAgent = $this->container->get('zizoo_reservation_reservation_agent');
         try {
-            $totalPrice = $reservationAgent->getTotalPrice($boat, $bookBoat->getReservationFrom(), $bookBoat->getReservationTo(), false);
+            $reservationRange = $bookBoat->getReservationRange();
+            $from   = $reservationRange?$reservationRange->getReservationFrom():null;
+            $until  = $reservationRange?$reservationRange->getReservationTo():null;
+            $totalPrice = $reservationAgent->getTotalPrice($boat, $from, $until, false);
         } catch (\Zizoo\ReservationBundle\Exception\InvalidReservationException $e){
             $totalPrice = 0;
         }
@@ -185,16 +190,16 @@ class BoatController extends Controller
         
         /* Build List of Marinas */
         $em = $this->getDoctrine()->getManager();
-        $marinas = $em->getRepository('ZizooAddressBundle:Marina')->getAllMarinas();
-        foreach ($marinas as $marina){
-            $marker = $this->get('ivory_google_map.marker');
-            $marker->setPosition($marina->getLat(), $marina->getLng(), true);
-            $marker->setOption('title', $marina->getName());
-            $marker->setOption('clickable', true);
-            $marker->setIcon('http://www.incrediblue.com/assets/map-pin.png');
-            
-            $map->addMarker($marker);
-        }
+        //$marinas = $em->getRepository('ZizooAddressBundle:Marina')->getAllMarinas();
+//        foreach ($marinas as $marina){
+//            $marker = $this->get('ivory_google_map.marker');
+//            $marker->setPosition($marina->getLat(), $marina->getLng(), true);
+//            $marker->setOption('title', $marina->getName());
+//            $marker->setOption('clickable', true);
+//            $marker->setIcon('http://www.incrediblue.com/assets/map-pin.png');
+//            
+//            $map->addMarker($marker);
+//        }
         
         return $this->render('ZizooBoatBundle:Boat:boat_form_widget.html.twig', array(
             'boat' => $boat,
@@ -287,9 +292,10 @@ class BoatController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('ZizooBoatBundle:Boat:edit.html.twig', array(
-            'boat'      => $boat,
-            'delete_form' => $deleteForm->createView(),
-            'formAction' => 'ZizooBoatBundle_update'
+            'boat'          => $boat,
+            'delete_form'   => $deleteForm->createView(),
+            'formAction'    => 'ZizooBoatBundle_update',
+            'formRedirect'  => 'ZizooBoatBundle_edit'
         ));
     }
 
@@ -359,5 +365,186 @@ class BoatController extends Controller
             ->getForm()
         ;
     }
+    
+    public function boatConfirmPriceAction($id)
+    {
+        $request            = $this->getRequest();
+        $user               = $this->getUser();
+        $session            = $this->container->get('session');
+        $em                 = $this->getDoctrine()->getManager();
+        
+        $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
+        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+            throw $this->createNotFoundException('Unable to find Boat entity.');
+        }
+        
+        $overlap        = $session->get('overlap_'.$id);
+        if (!$overlap){
+            return $this->redirect($this->generateUrl('ZizooBoatBundle_Boat_BoatPrice', array('id' => $id)));
+        }
+        
+        $requestedIds   = $overlap['requested_reservations'];
+        $externalIds    = $overlap['external_reservations'];
+        
+        if (count($requestedIds)==0 && count($externalIds)==0){
+            return $this->redirect($this->generateUrl('ZizooBoatBundle_Boat_BoatPrice', array('id' => $id)));
+        }
+        
+        $overlapRequestedReservations = array();
+        if (count($requestedIds)>0){
+            $overlapRequestedReservations   = $em->getRepository('ZizooReservationBundle:Reservation')->findByIds($requestedIds);
+        }
+        
+        $overlapExternalReservations = array();
+        if (count($externalIds)>0){
+            $overlapExternalReservations    = $em->getRepository('ZizooReservationBundle:Reservation')->findByIds($externalIds);
+        }
+        
+        $form = $this->createForm(new ConfirmBoatPriceType(), new ConfirmBoatPrice($overlapRequestedReservations));
+        if ($request->isMethod('post')){
+            $form->bind($request);
+            if ($form->isValid()){
+                $em                 = $this->getDoctrine()->getManager();
+                foreach ($overlapRequestedReservations as $overlapRequestedReservation){
+                    //$overlapRequestedReservation->setBoat(null);
+                    //$boat->removeReservation($overlapRequestedReservation);
+                    //$em->remove($overlapRequestedReservation);
+                    $overlapRequestedReservation->setStatus(Reservation::STATUS_DENIED);
+                    $em->persist($overlapRequestedReservation);
+                }
+
+                foreach ($overlapExternalReservations as $overlapExternalReservation){
+                    $overlapExternalReservation->setBoat(null);
+                    $boat->removeReservation($overlapExternalReservation);
+                    $em->remove($overlapExternalReservation);
+                }
+                
+                return $this->forward('ZizooBoat:Boat:boatPrice', array('id' => $id));
+            }
+        }
+        
+        return $this->render('ZizooBoatBundle:Boat:price_confirm.html.twig', array(
+            'boat'                              => $boat,
+            'form'                              => $form->createView(),
+            'overlap_requested_reservations'    => $overlapRequestedReservations,
+            'overlap_external_reservations'     => $overlapExternalReservations,
+            'from'                              => $overlap['from'],
+            'to'                                => $overlap['to'],
+            'price'                             => $overlap['price'],
+            'type'                              => $overlap['type'],
+        ));
+    }
+    
+    /**
+     * Update the Boat Pricing
+     * 
+     * @return Response
+     */
+    public function boatPriceAction($id)
+    {
+        $request            = $this->getRequest();
+        $session            = $this->container->get('session');
+        $boatService        = $this->container->get('boat_service');
+        $reservationAgent   = $this->container->get('zizoo_reservation_reservation_agent');
+        $user               = $this->getUser();
+        $charter            = $user->getCharter();
+        
+        $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
+        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+            throw $this->createNotFoundException('Unable to find Boat entity.');
+        }
+        
+        $reservations   = $boat->getReservation();
+        $prices         = $boat->getPrice();
+    
+        if ($request->isMethod('post')){
+            $fromStr    = $request->request->get('date_from', null);
+            $toStr      = $request->request->get('date_to', null);
+            $p          = $request->request->get('price', null);
+            $from       = new \DateTime($fromStr);
+            $to         = new \DateTime($toStr);
+            $confirmed  = $request->request->get('confirmed', false)=='true';
+            
+            $type               = $request->request->get('type', 'availability');
+            
+            $overlapRequestedReservations   = $this->getDoctrine()->getRepository('ZizooReservationBundle:Reservation')->getReservations($charter, null, $boat, $from, $to, array(Reservation::STATUS_REQUESTED));
+            $overlapExternalReservations    = $this->getDoctrine()->getRepository('ZizooReservationBundle:Reservation')->getReservations($charter, null, $boat, $from, $to, array(Reservation::STATUS_SELF));
+            if (count($overlapRequestedReservations)>0 || count($overlapExternalReservations)>0){
+
+                if (!$confirmed){
+                    
+                    $requestedIds = array();
+                    foreach ($overlapRequestedReservations as $overlapRequestedReservation){
+                        $requestedIds[] = $overlapRequestedReservation->getId();
+                    }
+
+                    $externalIds = array();
+                    foreach ($overlapExternalReservations as $overlapExternalReservation){
+                        $externalIds[] = $overlapExternalReservation->getId();
+                    }
+                    
+                    $session->set('overlap_'.$id, array('requested_reservations' => $requestedIds, 'external_reservations' => $externalIds, 'from' => $fromStr, 'to' => $toStr, 'price' => $p, 'type' => $type));
+                    return $this->redirect($this->generateUrl('ZizooBoatBundle_Boat_ConfirmBoatPrice', array('id' => $id)));
+                }
+            }
+            
+            if ($type=='availability' || $type=='default'){
+               
+                try {
+                    $default = $type=='default';
+                    $boatService->addPrice($boat, $from, $to, $p, $default, true);
+                } catch (InvalidPriceException $e){
+                    $this->container->get('session')->getFlashBag()->add('error', $e->getMessage());
+                } catch (DBALException $e){
+                    $this->container->get('session')->getFlashBag()->add('error', 'Something went wrong');
+                }
+                return $this->redirect($this->generateUrl('ZizooBoatBundle_Boat_BoatPrice', array('id' => $id)));
+            } else if ($type=='unavailability'){
+                try {
+                    $reservationAgent->makeReservationForSelf($boat, $from, $to, true);
+                } catch (InvalidReservationException $e){
+                    $this->container->get('session')->getFlashBag()->add('error', $e->getMessage());
+                }
+                return $this->redirect($this->generateUrl('ZizooBoatBundle_Boat_BoatPrice', array('id' => $id)));
+            }
+        }
+        
+        $session->remove('overlap_'.$id);
+        
+        return $this->render('ZizooBoatBundle:Boat:price.html.twig', array(
+            'boat'          => $boat,
+            'reservations'  => $reservations,
+            'prices'        => $prices,
+        ));
+    }
+    
+    
+    /**
+     * Activate/hide a specific boat
+     * 
+     * @return Response
+     */
+    public function activeAction($id=null)
+    {
+        $request            = $this->getRequest();
+        $boatService        = $this->container->get('boat_service');
+        $user               = $this->getUser();
+        $active             = $request->request->get('active_'.$id, false)=='on';
+        
+        if (!$id) $id = $request->request->get('boat_id', null);
+        
+        $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
+        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+            throw $this->createNotFoundException('Unable to find Boat entity.');
+        }
+        
+        $boat->setActive($active);
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->persist($boat);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('ZizooCharterBundle_Charter_Boats'));
+    }
+
 
 }

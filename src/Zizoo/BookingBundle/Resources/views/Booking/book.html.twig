@@ -91,6 +91,10 @@
                 $('#booking_form').append('<input type="hidden" name="'+$(el).attr('name')+'" value="'+$(selected).val()+'" />');
                 
             });
+            $('#tr_booking_form textarea').each(function(index,el){
+                $('#booking_form').append('<input type="hidden" name="'+$(el).attr('name')+'" value="'+$(el).val()+'" />');
+                
+            });
             $('#transaction__token').appendTo('#booking_form');
         }
         

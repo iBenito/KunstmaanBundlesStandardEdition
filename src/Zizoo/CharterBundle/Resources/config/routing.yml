@@ -1,41 +1,61 @@
 # Registration
-ZizooCharterBundle_register:
+ZizooCharterBundle_Registration_register:
   pattern:    /register
-  defaults:   {_controller: ZizooCharterBundle:Charter:register }  
+  defaults:   {_controller: ZizooCharterBundle:Registration:register }  
   
-ZizooCharterBundle_submitted:
+ZizooCharterBundle_Registration_submitted:
   pattern:    /submitted
-  defaults:   {_controller: ZizooCharterBundle:Charter:submitted }
+  defaults:   {_controller: ZizooCharterBundle:Registration:submitted }
   requirements:
         _method:  GET
 
-ZizooCharterBundle_confirm:
+ZizooCharterBundle_Registration_confirm:
   pattern:    /confirm/{token}/email/{email}
-  defaults:   {_controller: ZizooCharterBundle:Charter:confirm }
+  defaults:   {_controller: ZizooCharterBundle:Registration:confirm }
   requirements:
         _method:  GET
         
-ZizooCharterBundle_confirmed:
+ZizooCharterBundle_Registration_confirmed:
   pattern:    /confirmed
-  defaults:   {_controller: ZizooCharterBundle:Charter:confirmed }
+  defaults:   {_controller: ZizooCharterBundle:Registration:confirmed }
   requirements:
         _method:  GET|POST
         
-ZizooCharterBundle_resend_confirmation:
+ZizooCharterBundle_Registration_resend_confirmation:
   pattern:    /resend-confirmation/email/{email}
-  defaults:   {_controller: ZizooCharterBundle:Charter:resendConfirmation }
+  defaults:   {_controller: ZizooCharterBundle:Registration:resendConfirmation }
   requirements:
         _method:  GET|POST
 
-# Boats
-ZizooCharterBundle_show:
+
+# Charter (show)
+ZizooCharterBundle_Charter_Show:
     pattern:  /{id}/show
     defaults: { _controller: ZizooCharterBundle:Charter:show }
     requirements:
         _method:  GET
         
-ZizooCharterBundle_show_boats:
+ZizooCharterBundle_Charter_ShowBoats:
     pattern:  /{id}/show-boats/{page}
     defaults: { _controller: ZizooCharterBundle:Charter:showBoats }
     requirements:
         _method:  GET
+
+# Charter (edit)
+ZizooCharterBundle_Charter_Profile:
+    pattern:  /account/profile
+    defaults: { _controller: ZizooCharterBundle:Charter:profile }
+    requirements:
+        _method:  GET
+        
+ZizooCharterBundle_Charter_Boats:
+    pattern:  /account/boats
+    defaults: { _controller: ZizooCharterBundle:Charter:boats }
+    requirements:
+        _method:  GET
+        
+ZizooCharterBundle_Charter_PayoutSettings:
+    pattern:  /account/payout_settings
+    defaults: { _controller: ZizooCharterBundle:Charter:payoutSettings }
+    requirements:
+        _method:  GET|POST

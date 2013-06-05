@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity(repositoryClass="Zizoo\BoatBundle\Entity\BoatRepository")
  * @ORM\Table(name="boat")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Boat extends BaseEntity
 {
@@ -85,7 +86,7 @@ class Boat extends BaseEntity
     protected $reservation;
     
     /**
-     * @ORM\Column(name="default_price", type="decimal", precision=19, scale=4)
+     * @ORM\Column(name="default_price", type="decimal", precision=19, scale=4, nullable=true)
      */
     protected $defaultPrice;
 
@@ -93,6 +94,11 @@ class Boat extends BaseEntity
      * @ORM\OneToMany(targetEntity="Zizoo\BoatBundle\Entity\Price", mappedBy="boat")
      */
     protected $price;
+    
+    /**
+     * @ORM\Column(name="lowest_price", type="decimal", precision=19, scale=4, nullable=true)
+     */
+    protected $lowestPrice;
     
     /**
      * @ORM\ManyToOne(targetEntity="Zizoo\BoatBundle\Entity\BoatType")
@@ -106,7 +112,17 @@ class Boat extends BaseEntity
      **/
     protected $equipment;
     
+    /**
+     * @ORM\Column(name="active", type="boolean")
+     */
+    protected $active;
+    
+    /**
+     * @ORM\Column(name="min_days", type="integer", nullable=true)
+     */
+    protected $minimumDays;
 
+    
     public function __construct()
     {
         
@@ -539,6 +555,29 @@ class Boat extends BaseEntity
         return $this->defaultPrice;
     }
     
+    /**
+     * Set defaultPrice
+     *
+     * @param float $defaultPrice
+     * @return Boat
+     */
+    public function setLowestPrice($lowestPrice)
+    {
+        $this->lowestPrice = $lowestPrice;
+    
+        return $this;
+    }
+
+    /**
+     * Get lowestPrice
+     *
+     * @return float 
+     */
+    public function getLowestPrice()
+    {
+        return $this->lowestPrice;
+    }
+    
     
     /**
      * Add equipment
@@ -571,6 +610,55 @@ class Boat extends BaseEntity
     public function getEquipment()
     {
         return $this->equipment;
+    }
+    
+    public function setActive($active)
+    {
+        $this->active = $active;
+        return $this;
+    }
+    
+    public function getActive()
+    {
+        return $this->active;
+    }
+    
+    public function setMinimumDays($minimumDays)
+    {
+        $this->minimumDays = $minimumDays;
+        return $this;
+    }
+    
+    public function getMinimumDays()
+    {
+        return $this->minimumDays;
+    }
+    
+    /**
+    * @ORM\preUpdate
+    */
+    public function updateLowestPrice()
+    {
+        $lowestPrice = null;
+        $allPrices = $this->getPrice();
+        foreach ($allPrices as $price){
+            if (!$lowestPrice) {
+                $lowestPrice = $price->getPrice();
+            } else {
+                if ($price->getPrice() < $lowestPrice) $lowestPrice = $price->getPrice();
+            }
+        }
+        $defaultPrice = $this->getDefaultPrice();
+        if ($lowestPrice && $defaultPrice){
+            $this->setLowestPrice($lowestPrice<$defaultPrice?$lowestPrice:$defaultPrice);
+        } else if ($lowestPrice){
+            $this->setLowestPrice($lowestPrice);
+        } else if ($defaultPrice){
+            $this->setLowestPrice($defaultPrice);
+        } else {
+            $this->setLowestPrice(null);
+        }
+        
     }
     
 }

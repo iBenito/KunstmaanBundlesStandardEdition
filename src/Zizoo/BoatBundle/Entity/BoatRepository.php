@@ -23,6 +23,7 @@ class BoatRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('b')
                    ->select('b')
+                   ->where('b.active = true')
                    ->addOrderBy('b.created', 'DESC');
 
         if (false === is_null($limit))
@@ -201,6 +202,13 @@ class BoatRepository extends EntityRepository
             }
         }
         
+        if ($firstWhere){
+            $qb->where('boat.active = true');
+            $firstWhere = false;
+        } else {
+            $qb->andWhere('boat.active = true');
+        }
+        
         $qb->addOrderBy('reservation.id', 'asc');
 
         
@@ -214,9 +222,13 @@ class BoatRepository extends EntityRepository
     }
     
     
-    public function getMaxBoatValues(){
+    public function getMaxBoatValues($boat = null){
         $qb = $this->createQueryBuilder('boat')
-                   ->select('MAX(boat.cabins) as max_cabins, MAX(boat.length) as max_length, MAX(boat.defaultPrice) as max_default_price, MIN(boat.defaultPrice) as min_default_price');
+                   ->select('MAX(boat.cabins) as max_cabins, MAX(boat.length) as max_length, MAX(boat.defaultPrice) as max_default_price, MIN(boat.lowestPrice) as min_lowest_price');
+        if ($boat){
+            $qb->where('boat = :boat');
+            $qb->setParameter('boat', $boat);
+        }
         
         return $qb->getQuery()->getSingleResult();
     }

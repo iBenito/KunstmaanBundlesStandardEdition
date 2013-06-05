@@ -31,15 +31,10 @@ class ProfileController extends Controller
      * @param integer $id
      * @return Response
      */
-    public function editAction($id) 
+    public function editAction() 
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $profile = $em->getRepository('ZizooProfileBundle:Profile')->find($id);
-        
-        if (!$profile) {
-            throw $this->createNotFoundException('Unable to find Profile entity.');
-        }
+        $user       = $this->getUser();
+        $profile    = $user->getProfile();
 
         return $this->render('ZizooProfileBundle:Profile:edit.html.twig', array(
             'profile' => $profile

@@ -23,7 +23,7 @@ class CustomFieldsType extends AbstractType
             'cascade_validation' => true,
             'validation_groups' => function(FormInterface $form) {
                 $data = $form->getParent()->getData();
-                if ($data->getPaymentMethod()=='credit_card') {
+                if ($data->getPaymentMethod()->getID()=='credit_card') {
                     return array('booking.credit_card');
                 } else {
                     return array('booking.bank_transfer');

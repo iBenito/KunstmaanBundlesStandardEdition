@@ -155,6 +155,32 @@ class UserService
         }
     }
     
+    public function changeEmail(User $user, $newEmail)
+    {
+        $user->setChangeEmailToken(uniqid());
+        $user->setNewEmail($newEmail);
+        
+        $this->em->persist($user);
+        $this->em->flush();
+    }
+    
+    public function confirmChangeEmail($token, $email){
+        $user = $this->em->getRepository('ZizooUserBundle:User')->findOneByEmail($email);
+        
+        if ($user && $user->getChangeEmailToken()===$token){
+            $user->setChangeEmailToken(null);
+            $user->setEmail($user->getNewEmail());
+            $user->setNewEmail(null);
+            
+            $this->em->persist($user);
+            $this->em->flush();
+            
+            return $user;
+        } else {
+            return null;
+        }
+    }
+    
     
 }
 

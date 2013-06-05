@@ -20,6 +20,6 @@ use Symfony\Component\Validator\Constraint;
 */
 class Bic extends Constraint
 {
-    public $message = 'This is not a valid SWIFT Bank Identifier Code (BIC).';
+    public $message = 'Invalid BIC.';
 }
 ?>

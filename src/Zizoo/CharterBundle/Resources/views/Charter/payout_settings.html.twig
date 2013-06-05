@@ -1,0 +1,79 @@
+{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
+    
+{% block dashboard_page_title %}Payout Settings{% endblock %}
+
+{% block content %}
+
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+            {{ flashMessage}}
+        </div>
+    {% endfor %}
+
+    {% for flashMessage in app.session.flashbag.get('error') %}
+        <div class="flash-error">
+            {{ flashMessage}}
+        </div>
+    {% endfor %}
+
+    {% if form %}
+
+        <form method="post" novalidate="novalidate">
+            
+            <div id="payout_method">
+                {{ form_label(form.payout_method) }}
+                {{ form_errors(form.payout_method) }}
+                {{ form_widget(form.payout_method) }}
+            </div>
+            
+            <div id="bank_account" class="section">
+                {{ form_label(form.bank_account) }}
+                {{ form_errors(form.bank_account) }}
+                {{ form_widget(form.bank_account) }}
+            </div>
+
+            <div id="paypal" class="section">
+                {{ form_label(form.paypal) }}
+                {{ form_errors(form.paypal) }}
+                {{ form_widget(form.paypal) }}
+            </div>
+
+            {{ form_rest(form) }}
+                
+            <button type="submit">Save</button>
+
+        </form>
+
+    {% else %}
+        <p>Please try again later.</p>
+    {% endif %}
+        
+    <style type="text/css">
+        .nonactive {
+            opacity: 0.7;
+        }
+    </style>
+        
+    <script type="text/javascript">
+        
+        $(document).ready(function(){
+                        
+            $('#zizoo_billing_payout_settings_payout_method').change(function(e){
+                var selectedOption = $(this).find(':selected');
+                if (selectedOption!=null){
+                    var selectedMethod = selectedOption.val();
+                    var disableSelect = '.section:not(#'+selectedMethod+') input, .section:not(#'+selectedMethod+') select';
+                    var enableSelect  = '.section#'+selectedMethod+' input, .section#'+selectedMethod+' select';
+                    $(disableSelect).attr('readonly', 'readonly').addClass('nonactive');
+                    $(enableSelect).attr('readonly', null).removeClass('nonactive');
+                }
+                
+            });
+            
+            $('#zizoo_billing_payout_settings_payout_method').change();
+            
+        });
+        
+    </script>
+    
+{% endblock %}

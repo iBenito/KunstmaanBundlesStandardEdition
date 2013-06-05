@@ -19,11 +19,8 @@ class CharterService
         
     }
     
-    public function createCharter($charterName, $charterNumber, User $adminUser, User $billingUser, $flush){
-        $charter = new Charter();
-        $charter->setCharterName($charterName);
-        $charter->setCharterNumber($charterNumber);
-        
+    public function setupCharter($charter, User $adminUser, User $billingUser, $flush){
+
         $charter->setAdminUser($adminUser);
         $charter->setBillingUser($billingUser);
         $charter->addUser($adminUser);
@@ -34,6 +31,10 @@ class CharterService
         $adminUser->setCharter($charter);
         $billingUser->setCharter($charter);
         
+        $charterAddress = $charter->getAddress();
+        $charterAddress->setCharter($charter);
+        
+        $this->em->persist($charterAddress);
         $this->em->persist($charter);
         $this->em->persist($adminUser);
         $this->em->persist($billingUser);

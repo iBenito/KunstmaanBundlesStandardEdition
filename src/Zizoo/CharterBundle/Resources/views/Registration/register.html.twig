@@ -1,8 +1,12 @@
 {# src/Zizoo/UserBundle/Resources/views/Registration/register.html.twig #}
+{% form_theme form 'ZizooAddressBundle:Form:fields.html.twig' %}
 {% extends 'ZizooUserBundle::layout.html.twig' %}
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/tags/markermanager/1.0/src/markermanager.js"></script>
+    <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer_compiled.js"></script>
     <script type="text/javascript" src="{{ asset('bundles/zizoouser/js/register.js') }}"></script>
 {% endblock %}
 
@@ -17,10 +21,11 @@
 
         <div class="register_email">
             <form novalidate="novalidate" action="{{ path('ZizooCharterBundle_register')}}" method="post" {{ form_enctype(form) }} class="register_form">
+                
                 {{ form_errors(form) }}
 
                 <div id="general">
-                    
+                    <h2>General</h2>
                     <div>
                         {{ form_label(form.charter.charter_name) }}
                         {{ form_errors(form.charter.charter_name) }}
@@ -28,15 +33,21 @@
                     </div>
 
                     <div>
-                        {{ form_label(form.charter.charter_number) }}
-                        {{ form_errors(form.charter.charter_number) }}
-                        {{ form_widget(form.charter.charter_number) }}
+                        {{ form_label(form.charter.charter_address) }}
+                        {{ form_errors(form.charter.charter_address) }}
+                        {{ form_widget(form.charter.charter_address) }}
+                    </div>
+                    
+                    <div>
+                        {{ form_label(form.charter.charter_phone) }}
+                        {{ form_errors(form.charter.charter_phone) }}
+                        {{ form_widget(form.charter.charter_phone) }}
                     </div>
                     
                 </div>
                     
                 <div id="main_contact">
-                    
+                    <h2>Main Contact</h2>
                     <div>
                         {{ form_label(form.registration.profile.first_name) }}
                         {{ form_errors(form.registration.profile.first_name) }}
@@ -54,7 +65,7 @@
                         {{ form_errors(form.registration.user.username) }}
                         {% if unconfirmed_username %}
                             <ul>
-                                <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooUserBundle_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
+                                <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooCharterBundle_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
                             </ul>
                         {% endif %}
                         {{ form_widget(form.registration.user.username) }}
@@ -65,7 +76,7 @@
                         {{ form_errors(form.registration.user.email) }}
                         {% if unconfirmed_email %}
                             <ul>
-                                <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooUserBundle_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
+                                <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooCharterBundle_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
                             </ul>
                         {% endif %}
                         {{ form_widget(form.registration.user.email) }}
@@ -87,13 +98,7 @@
     </div>
     <script type="text/javascript">
         $(document).ready(function(){
-            $('.register_facebook_btn').click(function(){
-                //top.location.href = $(this).attr('href');
-                window.open($(this).attr('href'), 'Register with Facebook', "height=200,width=200");
-            });
-            {% if relogin %}
-                $('.register_facebook_btn:first-child').click();
-            {% endif %}
+            
         });
     </script>
     <style type="text/css">

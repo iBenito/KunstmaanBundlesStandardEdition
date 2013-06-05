@@ -1,43 +1,21 @@
 <?php
-// src/Zizoo/UserBundle/Form/Model/Registration.php
+// src/Zizoo/UserBundle/Form/Model/UserNewPassword.php
 namespace Zizoo\UserBundle\Form\Model;
-
-use Symfony\Component\Validator\Constraints as Assert;
-
-use Zizoo\UserBundle\Entity\User;
 
 class UserNewPassword
 {
-    /**
-     * @Assert\Type(type="Zizoo\UserBundle\Entity\User")
-     */
-    protected $user;
+    protected $password;
 
-    /**
-     * @Assert\True(message="You must accept the Terms & Conditions.")
-     */
-    protected $termsAccepted;
-
-    public function setUser(User $user)
+    public function setPassword($password)
     {
-        $this->user = $user;
+        $this->password = $password;
+        return $this;
     }
 
-    public function getUser()
+    public function getPassword()
     {
-        return $this->user;
+        return $this->password;
     }
 
-    protected $newPassword;
-
-    public function getNewPassword()
-    {
-        return $this->newPassword;
-    }
-
-    public function setNewPassword($newPassword)
-    {
-        $this->newPassword = $newPassword;
-    }
 }
 ?>

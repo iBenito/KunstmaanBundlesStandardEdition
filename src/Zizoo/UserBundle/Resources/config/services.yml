@@ -7,7 +7,12 @@ services:
         class:  Zizoo\UserBundle\Service\UserService
         arguments: 
             entityManager:  "@doctrine.orm.entity_manager"
-            container:      "@service_container"        
+            container:      "@service_container"
+            
+    zizoo_user.change_email_type:
+        class:  Zizoo\UserBundle\Form\Type\UserNewEmailType
+        tags:
+            - { name: form.type, alias: zizoo_change_email }
 #    zizoo_user.example:
 #        class: %zizoo_user.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]

@@ -4,8 +4,8 @@ ZizooProfileBundle_show:
     requirements:
         _method:  GET
 
-ZizooProfileBundle_edit:
-    pattern:  /{id}/edit
+ZizooProfileBundle_Profile_Edit:
+    pattern:  /account/edit
     defaults: { _controller: ZizooProfileBundle:Profile:edit }
     requirements:
         _method:  GET

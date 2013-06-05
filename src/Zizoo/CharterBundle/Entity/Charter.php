@@ -59,7 +59,7 @@ class Charter extends BaseEntity
     protected $charterName;
     
     /**
-     * @ORM\Column(name="charter_number", type="string", length=255)
+     * @ORM\Column(name="charter_number", type="string", length=255, nullable=true)
      */
     protected $charterNumber;
 
@@ -82,6 +82,11 @@ class Charter extends BaseEntity
      * @var File  - not a persisted field!
      */
     protected $file;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Zizoo\AddressBundle\Entity\CharterAddress", mappedBy="charter")
+     */
+    protected $address;
     
     /**
      * Get id
@@ -334,5 +339,28 @@ class Charter extends BaseEntity
     public function getCharterNumber()
     {
         return $this->charterNumber;
+    }
+    
+    /**
+     * Set address
+     *
+     * @param \Zizoo\AddressBundle\Entity\CharterAddress $address
+     * @return Charter
+     */
+    public function setAddress(\Zizoo\AddressBundle\Entity\CharterAddress $address = null)
+    {
+        $this->address = $address;
+    
+        return $this;
+    }
+
+    /**
+     * Get address
+     *
+     * @return \Zizoo\AddressBundle\Entity\CharterAddress 
+     */
+    public function getAddress()
+    {
+        return $this->address;
     }
 }

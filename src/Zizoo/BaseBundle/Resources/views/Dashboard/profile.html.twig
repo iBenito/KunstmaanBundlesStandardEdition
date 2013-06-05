@@ -1,7 +1,0 @@
-{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
-
-{% block dashboard_page_title %}Profile{% endblock %}
-
-{% block content %}
-    {% render controller('ZizooProfileBundle:Profile:editWidget', { 'profile': profile, 'formPath': formPath }) %}
-{% endblock %}

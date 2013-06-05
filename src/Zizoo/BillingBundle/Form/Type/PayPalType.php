@@ -1,6 +1,7 @@
 <?php
 namespace Zizoo\BillingBundle\Form\Type;
 
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -25,7 +26,15 @@ class PayPalType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('data_class'   => 'Zizoo\BillingBundle\Form\Model\PayPal'));
+        $resolver->setDefaults(array(   'data_class'   => 'Zizoo\BillingBundle\Form\Model\PayPal',
+                                        'validation_groups' => function(FormInterface $form) {
+                                            $data = $form->getParent()->getData();
+                                            if ($data->getPayoutMethod()=='bank_account') {
+                                                return array('payout_settings.bank_account');
+                                            } else {
+                                                return array('payout_settings.paypal');
+                                            }
+                                        }));
     }
     
     public function getParent()

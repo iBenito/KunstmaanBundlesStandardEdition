@@ -335,6 +335,14 @@ class RegistrationController extends Controller
                         }
                     }
                 }
+                
+                return $this->render('ZizooUserBundle:Registration:register_facebook_new.html.twig', array('form'                   => $form->createView(), 
+                                                                                                    'facebook'              => $facebook, 
+                                                                                                    'data'                  => $obj, 
+                                                                                                    'unconfirmed_user'      => null, 
+                                                                                                    'unconfirmed_email'     => false, 
+                                                                                                    'unconfirmed_username'  => false,
+                                                                                                    'ajax'                  => $request->isXmlHttpRequest()));
             }
                
         }

@@ -16,17 +16,19 @@ class BookBoatType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('reservation_from', 'date', array('required'      => false,
-                                                        'by_reference'  => false,
-                                                        'widget'        => 'single_text',
-                                                        'format'        => 'dd/MM/yyyy',
-                                                        'attr'          => array('autocomplete' => 'off')));
+        $builder->add('reservation_range', new ReservationRangeType(), array(   'required'      => false));
         
-        $builder->add('reservation_to', 'date', array('required'        => false,
-                                                        'by_reference'  => false,
-                                                        'widget'        => 'single_text',
-                                                        'format'        => 'dd/MM/yyyy',
-                                                        'attr'          => array('autocomplete' => 'off')));
+//        $builder->add('reservation_from', 'date', array('required'      => false,
+//                                                        'by_reference'  => false,
+//                                                        'widget'        => 'single_text',
+//                                                        'format'        => 'dd/MM/yyyy',
+//                                                        'attr'          => array('autocomplete' => 'off')));
+//        
+//        $builder->add('reservation_to', 'date', array('required'        => false,
+//                                                        'by_reference'  => false,
+//                                                        'widget'        => 'single_text',
+//                                                        'format'        => 'dd/MM/yyyy',
+//                                                        'attr'          => array('autocomplete' => 'off')));
         
         $builder->add('num_guests', 'integer', array('required'         => false,
                                                         'by_reference'  => false,
@@ -37,9 +39,10 @@ class BookBoatType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('data_class'   => 'Zizoo\BoatBundle\Form\Model\BookBoat',
-                        'csrf_protection' => false,
-                        'current'      => '-1'));
+        $resolver->setDefaults(array(   'data_class'            => 'Zizoo\BoatBundle\Form\Model\BookBoat',
+                                        'cascade_validation'    => true,
+                                        'csrf_protection'       => false,
+                                        'current'               => '-1'));
     }
     
     public function getParent()

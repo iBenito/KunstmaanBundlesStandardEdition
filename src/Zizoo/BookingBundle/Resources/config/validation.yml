@@ -33,3 +33,11 @@ Zizoo\BookingBundle\Form\Model\CustomFields:
         termsAccepted:
             - "True": { message: zizoo_booking.error.terms, groups: [booking.credit_card, booking.bank_transfer] }
             
+Zizoo\BookingBundle\Form\Model\MessageToOwner:
+    properties:
+        subject:
+            - NotBlank: {message: zizoo_booking.error.message_to_owner_subject, groups: [booking.credit_card, booking.bank_transfer] }
+            
+        body:
+            - NotBlank: {message: zizoo_booking.error.message_to_owner_body, groups: [booking.credit_card, booking.bank_transfer] }
+            

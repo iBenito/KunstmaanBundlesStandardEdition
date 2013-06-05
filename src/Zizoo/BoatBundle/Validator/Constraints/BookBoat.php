@@ -9,8 +9,9 @@ use Symfony\Component\Validator\Constraint;
  */
 class BookBoat extends Constraint
 {
-    public $messageNumGuests    = 'This boat cannot handle so many guests.';
-    public $messageNotBookable  = 'This boat is not bookable for these dates.';
+    public $messageNumGuests    = 'zizoo_boat.error.booking_num_guest';
+    public $messageNotBookable  = 'zizoo_boat.error.booking_not_available';
+    public $messageMinDays      = 'zizoo_boat.error.booking_minimum_days';
     
     public function validatedBy()
     {

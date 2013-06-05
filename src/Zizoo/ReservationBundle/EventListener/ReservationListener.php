@@ -26,7 +26,8 @@ class ReservationListener
         $until              = $reservation->getCheckOut();
         $from->setTime(0,0,0);
         $until->setTime(23,59,59);
-
+        $interval = $from->diff($to);
+        
         $reservationAgent   = $this->container->get('zizoo_reservation_reservation_agent');
 
         if ($reservationAgent->reservationExists($boat, $from, $until) || !$reservationAgent->available($boat, $from, $until))
@@ -35,6 +36,8 @@ class ReservationListener
         } else if ($reservation->getNrGuests() > $boat->getNrGuests())
         {
             throw new InvalidReservationException('Too many guests: '.$reservation->getNrGuests().'>'.$boat->getNrGuests());
+        } else if ($boat->getMinimumDays() && $interval->days < $boat->getMinimumDays()){
+            throw new InvalidReservationException('Boat must be booked for a minimum of '.$boat->getMinimumDays().' days.');
         }
     }
     

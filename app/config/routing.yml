@@ -1,3 +1,7 @@
+zizoo_event:
+    resource: "@ZizooEventBundle/Resources/config/routing.yml"
+    prefix:   /
+
 zizoo_charter:
     resource: "@ZizooCharterBundle/Resources/config/routing.yml"
     prefix:   /charter

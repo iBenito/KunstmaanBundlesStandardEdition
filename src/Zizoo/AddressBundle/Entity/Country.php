@@ -47,7 +47,18 @@ class Country
      */
     private $numcode;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="order_num", type="integer", nullable=false)
+     */
+    private $order;
+    
 
+    public function __construct() {
+        $this->order = 1;
+    }
+    
     public function setIso($iso){
         $this->iso = $iso;
         
@@ -154,5 +165,21 @@ class Country
     public function getNumcode()
     {
         return $this->numcode;
+    }
+    
+    public function setOrder($order)
+    {
+        $this->order = $order;
+        
+        return $this;
+    }
+    
+    public function getOrder()
+    {
+        return $this->order;
+    }
+    
+    public function __toString() {
+        return $this->printableName;
     }
 }

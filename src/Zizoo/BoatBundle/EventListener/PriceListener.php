@@ -55,14 +55,16 @@ class PriceListener
 //        if ($entity instanceof Price) {
 //            $this->handlePriceEntity($entity);
 //        }
-//    }
+//    
+   
+   
     
     public function onFlush(OnFlushEventArgs $args)
     {
         $em     = $args->getEntityManager();
         $uow    = $em->getUnitOfWork();
         
-        $instertUpdateEntities = array_merge(
+        $insertUpdateEntities = array_merge(
             $uow->getScheduledEntityInsertions(),
             $uow->getScheduledEntityUpdates()
         );
@@ -70,7 +72,7 @@ class PriceListener
         
         $prices = array();
         
-        foreach ($instertUpdateEntities as $entity){
+        foreach ($insertUpdateEntities as $entity){
             if ($entity instanceof Price) {
                 $prices[] = $entity;
             }
@@ -103,6 +105,9 @@ class PriceListener
                     throw new InvalidPriceException('Overlapping reservation: ' . $reservationStr);
                 }
             }
+            $boat->updateLowestPrice();
+            //$class = $em->getClassMetadata( get_class( $boat ) );
+            $uow->computeChangeSets();
         }
         
     }

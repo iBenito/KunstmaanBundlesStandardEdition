@@ -3,12 +3,18 @@
 // src/Zizoo/UserBundle/Controller/UserController.php;
 namespace Zizoo\UserBundle\Controller;
 
+
+use Zizoo\UserBundle\Form\Type\AccountSettingsType;
+use Zizoo\UserBundle\Form\Model\AccountSettings;
+
 use Zizoo\UserBundle\Entity\User;
 use Zizoo\UserBundle\Form\Type\UserForgotPasswordType;
-use Zizoo\UserBundle\Form\Type\UserNewPasswordType;
 use Zizoo\UserBundle\Form\Type\InvitationType;
 use Zizoo\UserBundle\Form\Model\Invitation;
+use Zizoo\UserBundle\Form\Type\UserNewPasswordType;
+use Zizoo\UserBundle\Form\Model\UserNewEmail;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
@@ -17,10 +23,11 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 class UserController extends Controller
 {
     
-    private function doLogin($user){
+    private function doLogin($user, $url=null){
         $token = new UsernamePasswordToken($user, $user->getPassword(), 'main', $user->getRoles());
         $securityContext = $this->get('security.context');
         $securityContext->setToken($token);
+        if ($url) return $this->redirect($url);
     }
     
     /**
@@ -58,7 +65,7 @@ class UserController extends Controller
         
         $facebook = $this->get('facebook');
         
-        return $this->render('ZizooUserBundle:User:ZizooUserBundle_login_facebook_fail.html.twig', array( 'ajax'        => $request->isXmlHttpRequest(),
+        return $this->render('ZizooUserBundle:User:login_facebook_fail.html.twig', array( 'ajax'        => $request->isXmlHttpRequest(),
                                                                                           'facebook'    => $facebook));
     }
         
@@ -153,7 +160,7 @@ class UserController extends Controller
      */
     public function resetPasswordEmailAction(){
         $request = $this->getRequest();
-        return $this->render('ZizooUserBundle:User:ZizooUserBundle_reset_password_email.html.twig', array( 'ajax' => $request->isXmlHttpRequest() ));
+        return $this->render('ZizooUserBundle:User:reset_password_email.html.twig', array( 'ajax' => $request->isXmlHttpRequest() ));
     }
     
     /**
@@ -180,7 +187,7 @@ class UserController extends Controller
             
             $messenger = $this->get('messenger');
             $messenger->sendNewPasswordEmail($user, $pass_plain);
-            return $this->render('ZizooUserBundle:User:ZizooUserBundle_reset_password_confirm.html.twig');
+            return $this->render('ZizooUserBundle:User:reset_password_confirm.html.twig');
         } else {
             return $this->redirect($this->generateUrl('ZizooUserBundle_login'));
         }
@@ -193,48 +200,6 @@ class UserController extends Controller
      */
     public function resetPasswordConfirmAction(){
         return $this->render('ZizooUserBundle:Email:reset_password.html.twig');
-    }
-    
-    
-    /**
-     * Change password. Must only be allowed when user is logged in!
-     * 
-     * @author Alex Fuckert <alexf83@gmail.com>
-     */
-    public function changePasswordAction(){
-        $user = $this->getUser();
-        $form = $this->createForm(new UserNewPasswordType());
-        $request = $this->getRequest();
-        // If submit
-        if ($request->isMethod('POST')) {
-            $form->bind($request);
-            
-            $newUser = $form->getData();
-            if ($form->isValid()) {
-                $encoder = new MessageDigestPasswordEncoder('sha512', true, 10);
-                $allegedCurrentPassword = $encoder->encodePassword($newUser->getPassword(), $user->getSalt());
-                if ($allegedCurrentPassword==$user->getPassword()){
-                    $newPassword = $newUser->getNewPassword();
-                    $newPassword = $encoder->encodePassword($newPassword, $user->getSalt());
-                    $user->setPassword($newPassword);
-                    $em = $this->getDoctrine()
-                               ->getManager();
-                    $em->persist($user);
-                    $em->flush();
-
-                    $trans = $this->get('translator');
-                    $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.message.password_changed'));
-                    return $this->redirect($this->generateUrl('ZizooUserBundle_change_password'));
-
-                } else {
-                    $trans = $this->get('translator');
-                    $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.message.password_not_changed'));
-                    return $this->redirect($this->generateUrl('ZizooUserBundle_change_password'));
-                }
-            }
-   
-        }
-        return $this->render('ZizooUserBundle:User:ZizooUserBundle_change_password.html.twig', array('form' => $form->createView()));
     }
     
     
@@ -311,6 +276,102 @@ class UserController extends Controller
             'form'  => $form->createView(),
             'ajax'  => $ajax
         ));
+    }
+    
+    
+    /**
+     * Confirm change of email by token and email. This is done by clicking on the link in the confirmation email.
+     * 
+     * @param string $token
+     * @param string $email
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
+    public function confirmChangeEmailAction($token, $email){
+        $userService = $this->get('zizoo_user_user_service');
+        $user = $userService->confirmChangeEmail($token, $email);
+        
+        if ($user){
+            $trans = $this->get('translator');
+            $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.message.email_changed_confirmed', array('%email%' => $user->getEmail())));      
+            
+            return $this->doLogin($user, $this->generateUrl('ZizooBaseBundle_Dashboard_AccountSettings'));
+        } else {
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_AccountSettings'));
+        }
+        
+    }
+    
+    /**
+     * Edit Account Settings: change email address and/or change password.
+     * 
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return Response
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
+    public function accountSettingsAction(Request $request){
+        $user = $this->getUser();
+        $form = $this->createForm(new AccountSettingsType());
+        
+        // If submit
+        if ($request->isMethod('POST')) {
+            $form->bind($request);
+            $trans = $this->get('translator');
+            
+            $accountSettings = $form->getData();
+            if ($form->isValid()) {
+                $encoder = new MessageDigestPasswordEncoder('sha512', true, 10);
+                $allegedCurrentPassword = $encoder->encodePassword($accountSettings->getPassword(), $user->getSalt());
+                if ($allegedCurrentPassword==$user->getPassword()){
+                    
+                    $newEmail = $accountSettings->getNewEmail();
+                    if ($newEmail!=null && $newEmail!=$user->getEmail()){
+                        
+                        $existingUser = $this->getDoctrine()->getRepository('ZizooUserBundle:User')->findOneByEmail($newEmail);
+                        if ($existingUser){
+                            $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.error.email_taken'));
+                            return $this->redirect($this->generateUrl('ZizooUserBundle_User_AccountSettings'));
+                        }
+                        
+                        $userService    = $this->get('zizoo_user_user_service');
+                        $messenger      = $this->get('messenger');
+                        $userService->changeEmail($user, $newEmail);
+                        $messenger->sendChangeEmailConfirmationEmail($user);
+                        $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.message.email_changed', array('%email%' => $newEmail)));
+                    }
+                    
+                    $newPassword = $accountSettings->getNewPassword();
+                    if ($newPassword->getPassword()!=null){
+                        
+                        $user->setPassword($encoder->encodePassword($newPassword->getPassword(), $user->getSalt()));
+                        
+                        $em = $this->getDoctrine()
+                                   ->getManager();
+                        $em->persist($user);
+                        $em->flush();
+
+                        
+                        $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.message.password_changed'));
+                        
+                        
+                    }
+                    
+                    return $this->redirect($this->generateUrl('ZizooUserBundle_User_AccountSettings'));
+
+                } else {
+                    $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.message.account_settings_not_changed'));
+                    return $this->redirect($this->generateUrl('ZizooUserBundle_User_AccountSettings'));
+                }
+            }
+   
+        } else {
+            $newEmail = new UserNewEmail();
+            $newEmail->setEmail($user->getEmail());
+            $accountSettings = new AccountSettings();
+            $accountSettings->setNewEmail($newEmail);
+            $form = $this->createForm(new AccountSettingsType(), $accountSettings);
+        }
+        
+        return $this->render('ZizooUserBundle:User:account_settings.html.twig', array('form' => $form->createView()));
     }
    
 }

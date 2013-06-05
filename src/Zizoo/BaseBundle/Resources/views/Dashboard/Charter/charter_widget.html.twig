@@ -1,6 +1,6 @@
 {% trans_default_domain "labels" %}
 
-<div id="dashboard_user">
+<div id="dashboard_charter">
     <div class="avatar">
         {% if charter.picture is not null %}
             <img src="{{ asset(charter|pictureWebPath) }}" alt="image not found" class="large" />
@@ -21,8 +21,8 @@
       <li class="active"><a href="{{ path('ZizooBaseBundle_Dashboard') }}">Dashboard</a></li>
       <li><a href="{{ path('fos_message_inbox') }}">Inbox</a></li>
       <li><a href="{{ path('fos_message_sent') }}">Sent Messages</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Boats') }}">Boats</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Account') }}">Account</a></li>
+      <li><a href="{{ path('ZizooCharterBundle_Charter_Boats') }}">Boats</a></li>
+      <li><a href="{{ path('ZizooCharterBundle_Charter_PayoutSettings') }}">Payout Settings</a></li>
     </ul>
     <a href="{{ path('ZizooBaseBundle_Dashboard', {show_user: 'true'}) }}">Switch to user view</a>
 </div>

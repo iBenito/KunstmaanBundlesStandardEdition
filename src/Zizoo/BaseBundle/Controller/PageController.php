@@ -139,12 +139,21 @@ class PageController extends Controller {
         
         $user = $this->getUser();
        
-        return $this->render('ZizooBaseBundle:Page:login_widget.html.twig', array(
-            // last username entered by the user
-            'user' => $user,
-            'logged_in' => $isLoggedIn,
-            'show_login_form' => $showLoginForm
-        ));
+        if ($user && $user->getCharter()){
+            return $this->render('ZizooBaseBundle:Page:login_charter_widget.html.twig', array(
+                // last username entered by the user
+                'user'              => $user,
+                'logged_in'         => $isLoggedIn,
+                'show_login_form'   => $showLoginForm
+            ));
+        } else {
+            return $this->render('ZizooBaseBundle:Page:login_user_widget.html.twig', array(
+                // last username entered by the user
+                'user'              => $user,
+                'logged_in'         => $isLoggedIn,
+                'show_login_form'   => $showLoginForm
+            ));
+        }
     }
     
 }

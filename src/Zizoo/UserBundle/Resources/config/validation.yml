@@ -13,13 +13,23 @@ Zizoo\UserBundle\Entity\User:
                 groups: [registration, fb_link]
                 
         password:
-            - NotBlank: { message: zizoo_user.error.password_not_blank, groups: [registration, new_password, fb_link] }
-            - MinLength: { limit: 5, message: zizoo_user.error.password_min_length, groups: [registration, new_password, fb_link] }
+            - NotBlank: { message: zizoo_user.error.password_not_blank, groups: [registration, fb_link] }
+            - MinLength: { limit: 5, message: zizoo_user.error.password_min_length, groups: [registration, fb_link] }
+    
+Zizoo\UserBundle\Form\Model\UserNewPassword:
+    properties:
+        password:
+            - NotBlank: { message: zizoo_user.error.new_password_not_blank, groups: [change_password] }
+            - MinLength: { limit: 5, message: zizoo_user.error.password_min_length, groups: [change_password] }
             
-        newPassword:
-            - NotBlank: { message: zizoo_user.error.password_not_blank, groups: [new_password] }
-            - MinLength: { limit: 5, message: zizoo_user.error.password_min_length, groups: [new_password] }
-            
+Zizoo\UserBundle\Form\Model\UserNewEmail:
+    properties:
+        email:
+            - NotBlank: { message: zizoo_user.error.new_email_not_blank, groups: [change_email] }
+            - Email:
+                message: zizoo_user.error.new_email_valid
+                checkMX: true
+                groups: [change_email]
             
 Zizoo\UserBundle\Form\Model\Invitation:
     properties:

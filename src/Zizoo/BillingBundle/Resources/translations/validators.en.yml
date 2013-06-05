@@ -1,0 +1,12 @@
+zizoo_billing.error.account_owner_not_blank: "Please enter the name of the account owner."
+zizoo_billing.error.bank_name_not_blank: "Please enter the name of the bank."
+zizoo_billing.error.bank_country_not_blank: "Please select the country of the bank."
+
+zizoo_billing.error.iban_not_valid: "This is not a valid International Bank Account Number (IBAN)."
+zizoo_billing.error.bic_not_valid: "This is not a valid SWIFT Bank Identifier Code (BIC)."
+
+zizoo_billing.error.iban_not_blank: "Please enter a valid International Bank Account Number (IBAN)."
+zizoo_billing.error.bic_not_blank: "Please enter a valid SWIFT Bank Identifier Code (BIC)."
+
+zizoo_billing.error.paypal_email_not_blank: "Please enter your PayPal email address."
+zizoo_billing.error.paypal_valid_email: "Please enter a valid email address."

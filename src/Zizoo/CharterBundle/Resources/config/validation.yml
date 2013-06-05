@@ -4,5 +4,22 @@ Zizoo\CharterBundle\Entity\Charter:
         charterName:
             - NotBlank: { message: zizoo_charter.error.charter_name_not_blank, groups: [registration] }
             
-        charterNumber:
-            - NotBlank: { message: zizoo_charter.error.charter_number_not_blank, groups: [registration] }
+        phone:
+            - NotBlank: { message: zizoo_charter.error.charter_phone_not_blank, groups: [registration] }
+            
+Zizoo\AddressBundle\Entity\CharterAddress:
+    properties:
+        street:
+            - NotBlank: { message: zizoo_charter.error.charter_address_street_not_blank, groups: [registration] }
+            
+        premise:
+            - NotBlank: { message: zizoo_charter.error.charter_address_premise_not_blank, groups: [registration] }
+            
+        postcode:
+            - NotBlank: { message: zizoo_charter.error.charter_address_postcode_not_blank, groups: [registration] }
+            
+        locality:
+            - NotBlank: { message: zizoo_charter.error.charter_address_locality_not_blank, groups: [registration] }
+            
+        country:
+            - NotNull: { message: zizoo_charter.error.charter_address_country_not_null, groups: [registration] }

@@ -5,7 +5,7 @@ class BankAccount {
  
     protected $accountOwner;
     protected $bankName;
-    protected $bankCountry;
+    protected $country;
     protected $iban;
     protected $bic;
     
@@ -31,15 +31,15 @@ class BankAccount {
         return $this->bankName;
     }
     
-    public function setBankCountry($bankCountry)
+    public function setCountry($country)
     {
-        $this->bankCountry = $bankCountry;
+        $this->country = $country;
         return $this;
     }
     
-    public function getBankCountry()
+    public function getCountry()
     {
-        return $this->bankCountry;
+        return $this->country;
     }
     
     public function setIBAN($iban)

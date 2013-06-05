@@ -20,10 +20,6 @@ class CharterRegistration
      */
     protected $registration;
     
-    protected $charterName;
-    
-    protected $charterNumber;
-    
     public function setCharter(Charter $charter)
     {
         $this->charter = $charter;
@@ -43,25 +39,6 @@ class CharterRegistration
     {
         return $this->registration;
     }
-    
-    public function setCharterName($charterName)
-    {
-        $this->charterName = $charterName;
-    }
-
-    public function getCharterName()
-    {
-        return $this->charterName;
-    }
-
-    public function setCharterNumber($charterNumber)
-    {
-        $this->charterNumber = $charterNumber;
-    }
-
-    public function getCharterNumber()
-    {
-        return $this->charterNumber;
-    }
+   
 }
 ?>

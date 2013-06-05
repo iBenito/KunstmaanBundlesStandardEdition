@@ -37,12 +37,16 @@ class User extends BaseEntity implements AdvancedUserInterface, \Serializable, P
      * @ORM\Column(type="string", length=255)
      */
     private $password;
-    private $newPassword;
     
     /**
      * @ORM\Column(type="string", length=60, unique=true)
      */
     private $email;
+    
+    /**
+     * @ORM\Column(type="string", length=60, unique=false, nullable=true)
+     */
+    private $newEmail;
 
     /**
      * @ORM\Column(name="is_active", type="boolean")
@@ -53,6 +57,11 @@ class User extends BaseEntity implements AdvancedUserInterface, \Serializable, P
      * @ORM\Column(name="confirmation_token", type="string", length=255, nullable=true)
      */
     private $confirmationToken;
+    
+    /**
+     * @ORM\Column(name="change_email_token", type="string", length=255, nullable=true)
+     */
+    private $changeEmailToken;
     
     /**
      * @ORM\Column(name="fb_uid", type="string", length=255, nullable=true)
@@ -156,10 +165,6 @@ class User extends BaseEntity implements AdvancedUserInterface, \Serializable, P
         return $this->password;
     }
     
-    public function getNewPassword(){
-        return $this->newPassword;
-    }
-
     /**
      * @inheritDoc
      */
@@ -240,13 +245,7 @@ class User extends BaseEntity implements AdvancedUserInterface, \Serializable, P
     
         return $this;
     }
-    
-    public function setNewPassword($newPassword){
-        $this->newPassword = $newPassword;
         
-        return $this;
-    }
-    
     /**
      * Set email
      *
@@ -268,6 +267,29 @@ class User extends BaseEntity implements AdvancedUserInterface, \Serializable, P
     public function getEmail()
     {
         return $this->email;
+    }
+    
+    /**
+     * Set email
+     *
+     * @param string $email
+     * @return User
+     */
+    public function setNewEmail($newEmail)
+    {
+        $this->newEmail = $newEmail;
+    
+        return $this;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string 
+     */
+    public function getNewEmail()
+    {
+        return $this->newEmail;
     }
 
     /**
@@ -347,6 +369,29 @@ class User extends BaseEntity implements AdvancedUserInterface, \Serializable, P
     public function getConfirmationToken()
     {
         return $this->confirmationToken;
+    }
+    
+    /**
+     * Set changeEmailToken
+     *
+     * @param string $changeEmailToken
+     * @return User
+     */
+    public function setChangeEmailToken($changeEmailToken)
+    {
+        $this->changeEmailToken = $changeEmailToken;
+    
+        return $this;
+    }
+
+    /**
+     * Get changeEmailToken
+     *
+     * @return string 
+     */
+    public function getChangeEmailToken()
+    {
+        return $this->changeEmailToken;
     }
     
    

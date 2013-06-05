@@ -1,0 +1,3 @@
+zizoo_boat.error.booking_num_guest: "This boat cannot handle so many guests."
+zizoo_boat.error.booking_not_available: "This boat is not bookable for these dates."
+zizoo_boat.error.booking_minimum_days: "This boat must be booked for a minimum of %days% days."

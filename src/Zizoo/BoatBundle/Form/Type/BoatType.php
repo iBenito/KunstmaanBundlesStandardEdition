@@ -1,7 +1,9 @@
 <?php
 
-namespace Zizoo\BoatBundle\Form;
+namespace Zizoo\BoatBundle\Form\Type;
+
 use Zizoo\BoatBundle\Form\Type\BoatTypeType;
+use Zizoo\BaseBundle\Form\Type\NumberNullableType;
 use Zizoo\AddressBundle\Form\BoatAddressType;
 
 use Symfony\Component\Form\AbstractType;
@@ -20,7 +22,9 @@ class BoatType extends AbstractType
             ->add('boat_type', 'entity', array(
                 'class' => 'ZizooBoatBundle:BoatType',
                 'property' => 'name',))
-            ->add('default_price')
+            //->add('default_price', 'number', array('required' => false))
+            ->add('default_price', 'zizoo_number_nullable', array())
+            ->add('minimum_days', 'zizoo_number_nullable', array())
             ->add('brand')
             ->add('model')
             ->add('length')

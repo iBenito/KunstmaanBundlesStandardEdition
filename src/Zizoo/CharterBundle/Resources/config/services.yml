@@ -7,3 +7,8 @@ services:
               arguments: 
                   entityManager:  "@doctrine.orm.entity_manager"
                   container:      "@service_container" 
+                  
+      zizoo_charter.charter_registration_type:
+        class:  Zizoo\CharterBundle\Form\Type\CharterRegistrationType
+        tags:
+            - { name: form.type, alias: zizoo_charter_registration_type }

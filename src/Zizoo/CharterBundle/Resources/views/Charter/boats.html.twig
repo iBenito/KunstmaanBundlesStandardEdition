@@ -1,0 +1,206 @@
+{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
+    
+{% block dashboard_page_title %}My Boats{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/jquery.switchButton.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+    
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/jquery.switchButton.js') }}" type="text/javascript"></script>
+{% endblock %}
+
+{% block content %}
+
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+            {{ flashMessage}}
+        </div>
+    {% endfor %}
+
+    {% for flashMessage in app.session.flashbag.get('error') %}
+        <div class="flash-error">
+            {{ flashMessage}}
+        </div>
+    {% endfor %}
+
+    <div id="filter">
+        <form method="get" id="filter_form">
+            <label for="sort">Sort by</label>
+            <select name="sort" id="sort" autocomplete="off">
+                <option value="b.id"{% if pagination.isSorted('b.id') %} selected="selected"{% endif %}>Id</option>
+                <option value="b.name"{% if pagination.isSorted('b.name') %} selected="selected"{% endif %}>Name</option>
+            </select>
+            <label for="direction">Direction</label>
+            <select name="direction" id="direction" autocomplete="off">
+                <option value="asc"{% if direction=='asc' %} selected="selected"{% endif %}>Ascending</option>
+                <option value="desc"{% if direction =='desc' %} selected="selected"{% endif %}>Descending</option>
+            </select>
+            
+            
+            <input type="input" name="boat_name" placeholder="Boat Name" {% if search_boat_name %}value="{{ search_boat_name }}{% endif %}" />
+            
+            <label for="boat_type">Boat Type:</label>
+            <select name="boat_type" autocomplete="off">
+                <option value="">All</option>
+                {% for boat_type in boat_types %}
+                    <option value="{{ boat_type.id }}" {% if search_boat_type==boat_type.id %}selected="selected"{% endif %}>{{ boat_type.name }}</option>
+                {% endfor %}
+            </select>
+            
+            <div id="page_size_container">
+                <label for="page_size">Boats per page:</label>
+                <select name="page_size" id="page_size_select" autocomplete="off">
+                    <option value="1" {% if page_size==1 %}selected="selected" {% endif %}>1</option>
+                    <option value="5" {% if page_size==5 %}selected="selected" {% endif %}>5</option>
+                    <option value="10" {% if page_size==10 %}selected="selected" {% endif %}>10</option>
+                    <option value="25" {% if page_size==25 %}selected="selected" {% endif %}>25</option>
+                    <option value="50" {% if page_size==50 %}selected="selected" {% endif %}>50</option>
+                </select>
+            </div>
+            
+            <button type="submit">Filter</button>
+        </form>
+    </div>
+
+    <div id="boats">
+        <div class="page" id="page_{{ page }}">
+            <input type="hidden" class="page_num" value="{{ page }} " />
+            <input type="hidden" class="request_uri" value="{{ request_uri }} " />
+            {% for boat in pagination %}
+                <div class="boat_image">
+                    {% if boat.image %}
+                        <img src="{{ boat.image.first.path }}" />
+                    {% endif %}
+                </div>
+                <div class="boat_details">
+                    <h3 class="boat_name">{{ boat.name }}</h3>
+                    <h4 class="boat_title">{{ boat.title }}</h4>
+                    <form action="{{ path('ZizooBoatBundle_Boat_Active', {id: boat.id}) }}" method="post">
+                        <input type="hidden" name="boat_id" value="{{ boat.id }}" />
+                        <label for="active_{{ boat.id }}"></label>
+                        <input id="active_{{ boat.id }}" name="active_{{ boat.id }}" type="checkbox" class="active_control" {% if boat.active %}value="1" checked{% endif %} autocomplete="off" />
+                        <noscript>
+                            <button type="submit">Save</button>
+                        </noscript>
+                    </form>
+                    <div class="controls">
+                        <a href="{{ path('ZizooBoatBundle_show', {id: boat.id}) }}" target="_blank">View</a>
+                        <a href="{{ path('ZizooBoatBundle_edit', {id: boat.id}) }}" target="_blank">Edit</a>
+                        <a href="{{ path('ZizooBoatBundle_Boat_BoatPrice', {id: boat.id}) }}" target="_blank">Calendar</a>
+                        <a href="" target="_blank">Delete</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# display navigation #}
+    <div id="navigation_container">
+        <div id="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </div>
+        
+    <style type="text/css">
+        
+    </style>
+        
+    <script type="text/javascript">
+        
+        function doBlock(block){
+            if (block){
+                $('#navigation_container').block({ message: null }); 
+                $('#boats').block({ message: null }); 
+                $('#filter').block({ message: null });
+            } else {
+                $('#navigation_container').unblock();
+                $('#boats').unblock();
+                $('#filter').unblock();
+            }
+        }
+        
+        function loadPage(page){
+            $('#page_'+page).find('.active_control').each(function(){
+                $(this).switchButton({
+                    on_label: 'Active',
+                    off_label: 'Hidden'
+                });
+                $(this).change(function(){
+                    doBlock(true);
+                    $.ajax({
+                        type: 'post', 
+                        url: '{{ path('ZizooBoatBundle_Boat_Active') }}',
+                        data: $(this).parent('form').serialize(),
+                        success: function(data, textStatus, XHR){
+                            doBlock(false);
+                        }
+                    });
+                });
+            });
+        }
+        
+        function setupFilter(){
+            
+            $('#navigation_container').prepend($('#page_size_container'));
+            $('#filter_form').append('<input id="page_size" name="page_size" type="hidden" />');
+            $('#page_size_select').change(function(){
+                $('#page_size').val($(this).val());
+                $('#filter_form').submit();
+            });
+            
+            
+            $('#filter_form').submit(function(){
+                doBlock(true);
+                $.ajax({
+                    type: 'get',
+                    url: '{{ path('ZizooCharterBundle_Charter_Boats') }}',
+                    data: $('#filter_form').serialize(),
+                    success: function(data, textStatus, XHR){
+                        var newPage = $(data).find('#boats .page_num').val();
+                        var newUrl = $(data).find('#boats .request_uri').val();
+                        $('#boats').html($(data).find('#boats'));
+                        $('#navigation').html($(data).find('#navigation'));
+                        loadPage(newPage);
+                        window.history.pushState('string', 'title', newUrl);
+                        doBlock(false);
+                    }
+                });
+                return false;
+            });
+        }
+        
+        $(document).ready(function(){
+            
+            setupFilter();
+                        
+            $('#navigation').delegate('a', 'click', function(){
+                doBlock(true);
+                var newUrl = $(this).attr('href');
+                $.ajax({
+                    type: 'get', 
+                    url: newUrl,
+                    success: function(data, textStatus, XHR){
+                        var newPage = $(data).find('#boats .page_num').val();
+                        $('#boats').html($(data).find('#boats'));
+                        $('#navigation').html($(data).find('#navigation'));
+                        loadPage(newPage);
+                        window.history.pushState('string', 'title', newUrl);
+                        doBlock(false);
+                    },
+                    failure: function(data, textStatus, XHR){
+                        doBlock(false);
+                    }
+                });
+                return false;
+            });
+            
+            loadPage({{ page }});
+            
+        });
+        
+    </script>
+    
+{% endblock %}

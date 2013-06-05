@@ -136,9 +136,12 @@ class Messenger {
      * @author Alex Fuckert <alexf83@gmail.com>
      */
     public function sendConfirmationEmail(User $user){
-        $activationLink = $this->container->get('router')->generate('ZizooUserBundle_confirm', array('token' => $user->getConfirmationToken(), 'email' => $user->getEmail()), true);
+        $isCharter = $user->getCharter()!=null;
+        $confirmRoute = $isCharter?'ZizooCharterBundle_confirm':'ZizooUserBundle_confirm';
+        $activationLink = $this->container->get('router')->generate($confirmRoute, array('token' => $user->getConfirmationToken(), 'email' => $user->getEmail()), true);
         $twig = $this->container->get('twig');
-        $template = $twig->loadTemplate('ZizooUserBundle:Email:confirm.html.twig');
+        $templateLocation = $isCharter?'ZizooUserBundle:Email:confirm_charter.html.twig':'ZizooUserBundle:Email:confirm.html.twig';
+        $template = $twig->loadTemplate($templateLocation);
         $context = array('link' => $activationLink);
         $subject = $template->renderBlock('subject', $context);
         $textBody = $template->renderBlock('body_text', $context);
@@ -160,6 +163,37 @@ class Messenger {
     }
     
     
+    /**
+     * Send email to user wanting to change email address, with confirmation link
+     * 
+     * @param Zizoo\UserBundle\Entity\User $user
+     * @author Alex Fuckert <alexf83@gmail.com>
+     */
+    public function sendChangeEmailConfirmationEmail(User $user){
+        $isCharter = $user->getCharter()!=null;
+        $activationLink = $this->container->get('router')->generate('ZizooUserBundle_change_email_confirm', array('token' => $user->getChangeEmailToken(), 'email' => $user->getEmail()), true);
+        $twig = $this->container->get('twig');
+        $templateLocation = 'ZizooUserBundle:Email:change_email_confirm.html.twig';
+        $template = $twig->loadTemplate($templateLocation);
+        $context = array('link' => $activationLink);
+        $subject = $template->renderBlock('subject', $context);
+        $textBody = $template->renderBlock('body_text', $context);
+        $htmlBody = $template->renderBlock('body_html', $context);
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($this->container->getParameter('email_register'))
+            ->setTo($user->getEmail());
+
+        if (!empty($htmlBody)) {
+            $message->setBody($htmlBody, 'text/html')
+                ->addPart($textBody, 'text/plain');
+        } else {
+            $message->setBody($textBody);
+        }
+
+        $this->container->get('mailer')->send($message);
+    }
     
     /**
      * Send email to user with link for generating new password.

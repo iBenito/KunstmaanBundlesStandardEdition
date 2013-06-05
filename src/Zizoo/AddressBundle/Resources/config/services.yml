@@ -3,6 +3,11 @@ parameters:
 
 services:
     
+    zizoo_address.address_type:
+        class:  Zizoo\AddressBundle\Form\Type\AddressType
+        tags:
+            - { name: form.type, alias: zizoo_address }
+    
     zizoo_address.unique_locations_type:
         class:  Zizoo\AddressBundle\Form\Type\UniqueLocationsType
         tags:
@@ -19,6 +24,12 @@ services:
         arguments: ["@service_container"]
         tags:
             - { name: form.type, alias: zizoo_boat_search }
+            
+            
+    zizoo_address.address_type_extension:
+        class: Zizoo\AddressBundle\Form\Extension\AddressTypeExtension
+        tags:
+            - { name: form.type_extension, alias: zizoo_address }
             
     
 #    zizoo_address.example:

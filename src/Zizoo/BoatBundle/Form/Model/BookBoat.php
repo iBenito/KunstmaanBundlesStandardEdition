@@ -11,8 +11,9 @@ class BookBoat
     
     protected $guestId;
     
-    protected $reservation_from;
-    protected $reservation_to;
+//    protected $reservation_from;
+//    protected $reservation_to;
+    protected $reservationRange;
     
     protected $num_guests;
  
@@ -35,26 +36,37 @@ class BookBoat
         return $this;
     }
     
-    public function getReservationFrom()
-    {
-        return $this->reservation_from;
-    }
+//    public function getReservationFrom()
+//    {
+//        return $this->reservation_from;
+//    }
+//    
+//    public function setReservationFrom($from)
+//    {
+//        $this->reservation_from = $from;
+//        return $this;
+//    }
+//    
+//    public function getReservationTo()
+//    {
+//        return $this->reservation_to;
+//    }
+//    
+//    public function setReservationTo($to)
+//    {
+//        $this->reservation_to = $to;
+//        return $this;
+//    }
     
-    public function setReservationFrom($from)
+    public function setReservationRange($reservationRange)
     {
-        $this->reservation_from = $from;
+        $this->reservationRange = $reservationRange;
         return $this;
     }
     
-    public function getReservationTo()
+    public function getReservationRange()
     {
-        return $this->reservation_to;
-    }
-    
-    public function setReservationTo($to)
-    {
-        $this->reservation_to = $to;
-        return $this;
+        return $this->reservationRange;
     }
     
     public function getNumGuests()

@@ -27,7 +27,7 @@
                     {% if boat.charter.picture is not null %}
                         <img src="{{ asset(boat.charter|pictureWebPath) }}" alt="image not found" class="large" />
                     {% endif %}
-                    <a href="{{ path('ZizooCharterBundle_show', { 'id': boat.charter.id }) }}"> <p>{{ boat.charter.charterName }}</p></a>
+                    <a href="{{ path('ZizooCharterBundle_Charter_Show', { 'id': boat.charter.id }) }}"> <p>{{ boat.charter.charterName }}</p></a>
                 </section>
             </div>
         {% else %}

@@ -21,10 +21,10 @@
     <ul class="nav">
       <li class="active"><a href="{{ path('ZizooBaseBundle_Dashboard', {show_user: show_user}) }}">Dashboard</a></li>
       <li><a href="{{ path('fos_message_inbox', {show_user: show_user}) }}">Inbox</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Profile', {show_user: show_user}) }}">Profile</a></li>
+      <li><a href="{{ path('ZizooProfileBundle_Profile_Edit', {show_user: show_user}) }}">Profile</a></li>
       <li><a href="{{ path('ZizooBaseBundle_Dashboard_Trips', {show_user: show_user}) }}">Trips</a></li>
       <li><a href="{{ path('ZizooBaseBundle_Dashboard_Skills', {show_user: show_user}) }}">Skills</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Account', {show_user: show_user}) }}">Account</a></li>
+      <li><a href="{{ path('ZizooUserBundle_User_AccountSettings', {show_user: show_user}) }}">Account Settings</a></li>
     </ul>
     
     {% if user.charter %}

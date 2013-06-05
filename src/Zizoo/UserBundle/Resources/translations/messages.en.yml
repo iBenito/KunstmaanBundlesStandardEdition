@@ -1,8 +1,9 @@
 Bad credentials: Username/email and/or password incorrect
 
 zizoo_user.message.password_changed: "Your password was changed successfully!"
-
-zizoo_user.message.password_not_changed: "Your password was not changed because you entered your current password wrong."
+zizoo_user.message.email_changed: "An email with a confirmation link was sent to %email%. Please click on the link to confirm the new email address."
+zizoo_user.message.email_changed_confirmed: "Your email address was changed to %email%."
+zizoo_user.message.account_settings_not_changed: "Wrong current password."
 
 zizoo_user.label.username: Username
 zizoo_user.label.email: Email

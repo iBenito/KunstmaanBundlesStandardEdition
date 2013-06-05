@@ -114,7 +114,7 @@ class ReservationAgent {
     
     public function makeReservationForSelf(Boat $boat, $from, $to, $flush=false)
     {
-        return $this->makeReservationWithStatus($boat, $from, $to, 0, 0, $boat->getUser(), Reservation::STATUS_SELF, $flush);
+        return $this->makeReservationWithStatus($boat, $from, $to, 0, 0, $boat->getCharter()->getAdminUser(), Reservation::STATUS_SELF, $flush);
     }
     
     public function makeReservation(Boat $boat, BookBoat $bookBoat, $cost, User $guest, $flush=false)
