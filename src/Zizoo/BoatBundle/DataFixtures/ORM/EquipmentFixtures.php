@@ -46,7 +46,7 @@ class EquipmentFixtures implements OrderedFixtureInterface, SharedFixtureInterfa
     
     public function load(ObjectManager $manager)
     {
-        
+        return;
         $boatService    = $this->container->get('boat_service');
             
         $boatService->createEquipment('mainsail_furning', 'Mainsail Furning', 0);

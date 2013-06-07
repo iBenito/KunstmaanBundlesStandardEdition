@@ -55,7 +55,9 @@ class CharterController extends Controller
     {
         $user       = $this->getUser();
         $charter    = $user->getCharter();
-        $boats      = $charter->getBoats();
+        if (!$charter){
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
+        }
         
         $sort               = $request->query->get('sort', 'b.id');
         $dir                = $request->query->get('direction', 'desc');
@@ -64,7 +66,7 @@ class CharterController extends Controller
         $page               = $this->get('request')->query->get('page', 1);
         $pageSize           = $this->get('request')->query->get('page_size', 25);
         
-        $em    = $this->getDoctrine()->getEntityManager();
+        $em    = $this->getDoctrine()->getManager();
         //$dql   = "SELECT b, c FROM ZizooBoatBundle:Boat b, ZizooCharterBundle:Charter c WHERE ";
         $dql = 'SELECT b, c FROM ZizooBoatBundle:Boat b JOIN b.charter c WHERE c.id = '.$charter->getId();
         
@@ -112,7 +114,7 @@ class CharterController extends Controller
         $charter    = $user->getCharter();
         
         if (!$charter) {
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
         }
       
         return $this->render('ZizooCharterBundle:Charter:profile.html.twig',array(
@@ -145,6 +147,12 @@ class CharterController extends Controller
         $form = $this->createForm($payoutSettingsType);
         
         $user               = $this->getUser();
+        $charter            = $user->getCharter();
+        
+        if (!$charter) {
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
+        }
+        
         $braintreeCustomer  = $userService->getPaymentUser($user);
 
         if ($request->isMethod('POST')){
@@ -240,7 +248,18 @@ class CharterController extends Controller
     }
     
     
-    
+    public function usersAction()
+    {
+        $user       = $this->getUser();
+        $charter    = $user->getCharter();
+        
+        if (!$charter) {
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
+        }
+        
+        
+        
+    }
     
     
     

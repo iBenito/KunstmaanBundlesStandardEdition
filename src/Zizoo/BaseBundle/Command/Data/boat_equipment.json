@@ -1,0 +1,17 @@
+[
+    {
+        "id":       "mainsail_furning",
+        "name":     "Mainsail Furning",
+        "order":    0
+    },
+    {
+        "id":       "battened_mainsail",
+        "name":     "Battened Mainsail",
+        "order":    1
+    },
+    {
+        "id":       "teak_deck",
+        "name":     "Teak Deck",
+        "order":    2
+    }
+]

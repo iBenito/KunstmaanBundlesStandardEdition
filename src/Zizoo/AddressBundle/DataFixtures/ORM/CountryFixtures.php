@@ -11,6 +11,7 @@ class CountryFixtures extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
+        return;
         $countryAD = new Country();
         $countryAD->setIso("AD");
         $countryAD->setIso3("AND");

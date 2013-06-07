@@ -92,8 +92,9 @@ class BoatController extends Controller
            $map->addMarker($marker);
         }
         
-        
-        
+        $equipment         = $em->getRepository('ZizooBoatBundle:Equipment')->findAll();
+        $allOptionalExtras = $em->getRepository('ZizooBoatBundle:OptionalExtra')->findAll();
+
         $reservations   = $boat->getReservation();
         $prices         = $boat->getPrice();
         
@@ -101,11 +102,13 @@ class BoatController extends Controller
         $request->query->set('url', $this->generateUrl('ZizooBoatBundle_show', array('id' => $id)));
         $request->query->set('ajax_url', $this->generateUrl('ZizooBoatBundle_booking_widget', array('id' => $id, 'request' => $request)));
         return $this->render('ZizooBoatBundle:Boat:show.html.twig', array(
-            'boat'          => $boat,
-            'map'           => $map,
-            'reservations'  => $reservations,
-            'prices'        => $prices,
-            'request'       => $request
+            'boat'              => $boat,
+            'map'               => $map,
+            'reservations'      => $reservations,
+            'prices'            => $prices,
+            'equipment'         => $equipment,
+            'optional_extras'   => $allOptionalExtras,
+            'request'           => $request
         ));
     }
     
@@ -319,7 +322,8 @@ class BoatController extends Controller
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
-            $boat->getAddress()->fetchGeo();
+            //$boat->getAddress()->fetchGeo();
+            //$boat = $editForm->getData();
             $em->persist($boat);
             $em->flush();
 

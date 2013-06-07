@@ -22,7 +22,6 @@ class BoatType extends AbstractType
             ->add('boat_type', 'entity', array(
                 'class' => 'ZizooBoatBundle:BoatType',
                 'property' => 'name',))
-            //->add('default_price', 'number', array('required' => false))
             ->add('default_price', 'zizoo_number_nullable', array())
             ->add('minimum_days', 'zizoo_number_nullable', array())
             ->add('brand')
@@ -32,9 +31,18 @@ class BoatType extends AbstractType
             ->add('bathrooms')
             ->add('nr_guests')
             ->add('bathrooms')
+            ->add('crew_optional', 'choice', array( 'required'      => true,
+                                                    'label'         => false,
+                                                    'expanded'      => true,
+                                                    'multiple'      => false,
+                                                    'choices'       => array(false => 'Included', true => 'Optional'),
+                                                    'property_path' => 'crewOptional'))
+            ->add('num_crew', 'number', array('label'   => false))
+            ->add('crew_price', 'number', array('label'   => false))
             ->add('address',new BoatAddressType())
 
         ;
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -46,6 +54,6 @@ class BoatType extends AbstractType
 
     public function getName()
     {
-        return 'zizoo_boattype';
+        return 'zizoo_boat';
     }
 }

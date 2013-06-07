@@ -13,6 +13,21 @@ services:
         class:  Zizoo\UserBundle\Form\Type\UserNewEmailType
         tags:
             - { name: form.type, alias: zizoo_change_email }
-#    zizoo_user.example:
-#        class: %zizoo_user.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+            
+    zizoo_user.invite_type:
+        class:  Zizoo\UserBundle\Form\Type\InviteType
+        tags:
+            - { name: form.type, alias: zizoo_invite }
+            
+    zizoo_user.invite_single_type:
+        class:  Zizoo\UserBundle\Form\Type\InviteSingleType
+        tags:
+            - { name: form.type, alias: zizoo_invite_single }
+            
+    # VALIDATORS
+    zizoo_user.invite_single_validator:
+        class: Zizoo\UserBundle\Validator\Constraints\InviteSingleValidator
+        arguments: ["@service_container"]
+        tags:
+            - { name: validator.constraint_validator, alias: validator.invite_single_validator }
+            

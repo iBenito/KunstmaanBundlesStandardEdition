@@ -1,0 +1,16 @@
+[{
+    "username":     "zizoo_register",
+    "email":        "email_register",
+    "password":     "seaman",
+    "profile":{     "first_name":   "Zizoo",
+                    "last_name":    "Register",
+                    "country":      "AT"}
+},
+{
+    "username":     "zizoo_info",
+    "email":        "email_info",
+    "password":     "seaman",
+    "profile":{     "first_name":   "Zizoo",
+                    "last_name":    "Info",
+                    "country":      "AT"}
+}]

@@ -77,7 +77,7 @@ class Messenger {
     
     
     public function sendInvitationEmail($to, User $from){
-        $inviteLink = $this->container->get('router')->generate('ZizooBaseBundle_homepage', array(), true);
+        $inviteLink = $this->container->get('router')->generate('ZizooUserBundle_register', array('email' => $to), true);
         $twig = $this->container->get('twig');
         $template = $twig->loadTemplate('ZizooUserBundle:Email:invite.html.twig');
         

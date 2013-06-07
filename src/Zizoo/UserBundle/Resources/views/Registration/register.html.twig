@@ -19,7 +19,7 @@
             or
             <input type="button" value="Connect with FACEBOOK" class="register_facebook_btn" href="{{ facebook.loginUrl({ scope: 'email', redirect_uri: url('ZizooUserBundle_register_facebook', {ajax: ajax}), display: 'popup' }) }}" />
             or
-            <form method="get" action="{{ path('ZizooCharterBundle_register') }}">
+            <form method="get" action="{{ path('ZizooCharterBundle_Registration_register') }}">
                 <input type="submit" value="I am a Charter" class="charter_register_btn" />
             </form>
         </div>
@@ -80,7 +80,7 @@
         });
     </script>
     <style type="text/css">
-        {% if is_post == false %}
+        {% if is_post == false and email is null %}
         .register_email {
             display: none;
         }

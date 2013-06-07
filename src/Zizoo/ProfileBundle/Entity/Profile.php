@@ -53,7 +53,7 @@ class Profile extends BaseEntity
     /**
      * @var File  - not a persisted field!
      */
-    protected $file;
+    public $file;
    
     /**
      * @ORM\OneToOne(targetEntity="Zizoo\ProfileBundle\Entity\Profile\NotificationSettings", cascade={"persist"})

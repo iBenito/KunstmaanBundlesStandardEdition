@@ -48,7 +48,7 @@ class MessageTypeFixtures implements OrderedFixtureInterface, SharedFixtureInter
     
     public function load(ObjectManager $manager)
     {
-        
+        return;
         /**
          *  Inquiry
             Expired

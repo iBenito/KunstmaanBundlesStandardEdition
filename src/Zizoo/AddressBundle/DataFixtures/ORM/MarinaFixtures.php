@@ -11,7 +11,7 @@ class MarinaFixtures extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        //return;
+        return;
         $getMarinas = file_get_contents(dirname(__FILE__).'/marinas.json');
        
         $marinas = json_decode($getMarinas);

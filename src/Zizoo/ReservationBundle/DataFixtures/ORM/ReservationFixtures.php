@@ -5,6 +5,7 @@ namespace Zizoo\ReservationBundle\DataFixtures\ORM;
 use Zizoo\ReservationBundle\Entity\Reservation;
 use Zizoo\BoatBundle\Entity\Boat;
 use Zizoo\BoatBundle\Form\Model\BookBoat;
+use Zizoo\BoatBundle\Form\Model\ReservationRange;
 use Zizoo\BookingBundle\Form\Model\Booking;
 use Zizoo\BookingBundle\Form\Model\CreditCard;
 use Zizoo\BookingBundle\Form\Model\BillingAddress;
@@ -63,10 +64,12 @@ class ReservationFixtures implements OrderedFixtureInterface, SharedFixtureInter
         $to->modify('+1 week');
 
         $bookBoat = new BookBoat($boat1->getId());
-        $bookBoat->setNumGuests(5);
+        $bookBoat->setNumGuests(5);       
         $bookBoat->setGuestId($user2->getId());
-        $bookBoat->setReservationFrom($from);
-        $bookBoat->setReservationTo($to);
+        $reservationRange = new ReservationRange();
+        $reservationRange->setReservationFrom($from);
+        $reservationRange->setReservationTo($to);
+        $bookBoat->setReservationRange($reservationRange);
         
         $cost = $reservationAgent->getTotalPrice($boat1, $from, $to);
         

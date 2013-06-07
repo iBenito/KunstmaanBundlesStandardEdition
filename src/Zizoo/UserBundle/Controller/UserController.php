@@ -11,6 +11,10 @@ use Zizoo\UserBundle\Entity\User;
 use Zizoo\UserBundle\Form\Type\UserForgotPasswordType;
 use Zizoo\UserBundle\Form\Type\InvitationType;
 use Zizoo\UserBundle\Form\Model\Invitation;
+use Zizoo\UserBundle\Form\Type\InviteType;
+use Zizoo\UserBundle\Form\Model\Invite;
+use Zizoo\UserBundle\Form\Type\InviteSingleType;
+use Zizoo\UserBundle\Form\Model\InviteSingle;
 use Zizoo\UserBundle\Form\Type\UserNewPasswordType;
 use Zizoo\UserBundle\Form\Model\UserNewEmail;
 
@@ -203,71 +207,109 @@ class UserController extends Controller
     }
     
     
+//    public function inviteFriendsAction(){
+//        $user       = $this->getUser();
+//        $request    = $this->getRequest();
+//        $isPost     = $request->isMethod('POST');
+//        $ajax       = $request->isXmlHttpRequest();      
+//        $form       = $this->createForm(new InvitationType(), new Invitation());
+//        
+//        // If submit
+//        if ($isPost) {
+//            $form->bind($request);
+//            
+//            $invitation = $form->getData();
+//            
+//            if ($form->isValid()){
+//                $messenger  = $this->get('messenger');
+//                $trans      = $this->get('translator');
+//                $em         = $this->getDoctrine()
+//                                    ->getManager();
+//                
+//                $inviteEmail = $invitation->getEmail1();
+//                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
+//                if ($inviteUser){
+//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
+//                } else if ($inviteEmail!='') {
+//                    $messenger->sendInvitationEmail($inviteEmail, $user);
+//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
+//                }
+//                
+//                $inviteEmail = $invitation->getEmail2();
+//                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
+//                if ($inviteUser){
+//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
+//                } else if ($inviteEmail!='') {
+//                    $messenger->sendInvitationEmail($inviteEmail, $user);
+//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
+//                }
+//                
+//                $inviteEmail = $invitation->getEmail3();
+//                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
+//                if ($inviteUser){
+//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
+//                } else if ($inviteEmail!='') {
+//                    $messenger->sendInvitationEmail($inviteEmail, $user);
+//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
+//                }
+//                
+//                $inviteEmail = $invitation->getEmail4();
+//                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
+//                if ($inviteUser){
+//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
+//                } else if ($inviteEmail!='') {
+//                    $messenger->sendInvitationEmail($inviteEmail, $user);
+//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
+//                }
+//                
+//                $inviteEmail = $invitation->getEmail5();
+//                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
+//                if ($inviteUser){
+//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
+//                } else if ($inviteEmail!='') {
+//                    $messenger->sendInvitationEmail($inviteEmail, $user);
+//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
+//                }
+//                
+//
+//                return $this->redirect($this->generateUrl('ZizooUserBundle_invite', array('form' => $form)));
+//            }
+//        }
+//        
+//        return $this->container->get('templating')->renderResponse('ZizooUserBundle:User:invite.html.twig', array(
+//            'form'  => $form->createView(),
+//            'ajax'  => $ajax
+//        ));
+//    }
+    
     public function inviteFriendsAction(){
         $user       = $this->getUser();
         $request    = $this->getRequest();
         $isPost     = $request->isMethod('POST');
         $ajax       = $request->isXmlHttpRequest();      
-        $form       = $this->createForm(new InvitationType(), new Invitation());
+        $newInvite  = new Invite();
+        $newInviteSingle = new InviteSingle();
+        $newInviteSingle->setEmail('');
+        $newInvite->addEmail($newInviteSingle);
+        
+        $form       = $this->createForm('zizoo_invite', $newInvite);
         
         // If submit
         if ($isPost) {
             $form->bind($request);
             
-            $invitation = $form->getData();
+            $newInvite = $form->getData();
             
             if ($form->isValid()){
                 $messenger  = $this->get('messenger');
                 $trans      = $this->get('translator');
                 $em         = $this->getDoctrine()
-                                    ->getManager();
+                                    ->getManager();         
                 
-                $inviteEmail = $invitation->getEmail1();
-                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
-                if ($inviteUser){
-                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
-                } else if ($inviteEmail!='') {
-                    $messenger->sendInvitationEmail($inviteEmail, $user);
-                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
+                foreach ($newInvite->getEmails() as $singleInvite){
+                    $messenger->sendInvitationEmail($singleInvite->getEmail(), $user);
+                    $this->get('session')->getFlashBag()->add('notice', $singleInvite->getEmail() . ' ' . $trans->trans('zizoo_user.friends_invited'));
                 }
-                
-                $inviteEmail = $invitation->getEmail2();
-                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
-                if ($inviteUser){
-                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
-                } else if ($inviteEmail!='') {
-                    $messenger->sendInvitationEmail($inviteEmail, $user);
-                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
-                }
-                
-                $inviteEmail = $invitation->getEmail3();
-                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
-                if ($inviteUser){
-                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
-                } else if ($inviteEmail!='') {
-                    $messenger->sendInvitationEmail($inviteEmail, $user);
-                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
-                }
-                
-                $inviteEmail = $invitation->getEmail4();
-                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
-                if ($inviteUser){
-                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
-                } else if ($inviteEmail!='') {
-                    $messenger->sendInvitationEmail($inviteEmail, $user);
-                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
-                }
-                
-                $inviteEmail = $invitation->getEmail5();
-                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
-                if ($inviteUser){
-                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
-                } else if ($inviteEmail!='') {
-                    $messenger->sendInvitationEmail($inviteEmail, $user);
-                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
-                }
-                
-
                 return $this->redirect($this->generateUrl('ZizooUserBundle_invite', array('form' => $form)));
             }
         }

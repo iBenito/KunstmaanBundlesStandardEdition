@@ -10,11 +10,12 @@ security:
             iterations: 10
 
     role_hierarchy:
-        ROLE_ZIZOO_USER:    ROLE_USER
-        ROLE_ZIZOO_CHARTER: [ROLE_USER, ROLE_ZIZOO_USER]
-        ROLE_ADMIN:         [ROLE_USER, ROLE_ZIZOO_USER, ROLE_ZIZOO_CHARTER]
-        ROLE_ZIZOO_ADMIN:   [ROLE_ZIZOO_USER, ROLE_ZIZOO_CHARTER]
-        ROLE_SUPER_ADMIN:   [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_ZIZOO_USER:          [ROLE_USER]
+        ROLE_ZIZOO_CHARTER:       [ROLE_ZIZOO_USER]
+        ROLE_ZIZOO_CHARTER_ADMIN: [ROLE_ZIZOO_CHARTER]
+        
+        ROLE_ZIZOO_ADMIN:         [ROLE_ZIZOO_CHARTER_ADMIN]
+        ROLE_ZIZOO_SUPER_ADMIN:   [ROLE_ZIZOO_CHARTER_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     providers:
         main:
@@ -42,6 +43,8 @@ security:
               lifetime: 31536000 # 365 days in seconds
               path:     /
               domain:   ~ # Defaults to the current domain from $_SERVER
+
+    access_denied_url: /
 
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }

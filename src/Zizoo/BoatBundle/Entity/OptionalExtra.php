@@ -7,10 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * BoatType
  *
- * @ORM\Table(name="boatequipment", uniqueConstraints={@ORM\UniqueConstraint(name="id", columns={"name"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Zizoo\BoatBundle\Entity\OptionalExtraRepository")
+ * @ORM\Table(name="boatoptional_extra", uniqueConstraints={@ORM\UniqueConstraint(name="id", columns={"name"})})
  */
-class Equipment
+class OptionalExtra
 {
 
     /**
@@ -36,7 +36,7 @@ class Equipment
     private $order;
     
     /**
-     * @ORM\ManyToMany(targetEntity="Zizoo\BoatBundle\Entity\Boat", mappedBy="equipment")
+     * @ORM\ManyToMany(targetEntity="Zizoo\BoatBundle\Entity\Boat", mappedBy="optionalExtra")
      */
     protected $boats;
     

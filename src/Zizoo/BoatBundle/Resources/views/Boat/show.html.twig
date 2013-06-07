@@ -75,10 +75,38 @@
                 {% if boat.bathrooms %}
                     <p>{% trans %}zizoo_boat.label.bathrooms{% endtrans %}: {{ boat.bathrooms }}</p>
                 {% endif %}
+                    
+                <div id="equipment_div">
+                    <h4>Equipment</h4>
+                    <ul id="equipment" class="checklist">
+                        {% for e in equipment %}
+                            {{ boat|displayEquipment(e)|raw }}
+                        {% endfor %}
+                    </ul>
+                </div>
+                    
+                <div id="optional_extras_div">
+                    <h4>Optional Extras</h4>
+                    <ul id="optional_extras" class="checklist">
+                        {% for optional_extra in optional_extras %}
+                            {{ boat|displayOptionalExtra(optional_extra)|raw }}
+                        {% endfor %}
+                    </ul>
+                </div>
 
             </section>
 
         </div>
+        
+        <style type="text/css">
+            .checklist .active {
+                color: green;
+            }
+            
+            .checklist .inactive {
+                color: grey;
+            }
+        </style>
         
         <script type="text/javascript">
             var availabilityReservedDates   = {{ boat|reservedDates(reservations)|raw }}; 

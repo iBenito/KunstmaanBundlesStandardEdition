@@ -23,37 +23,10 @@
         <div id="invite">
             <form novalidate="novalidate" action="{{ path('ZizooUserBundle_invite')}}" method="post" {{ form_enctype(form) }} class="invite_form">
                 
-                <div class="firstfriend">
-                    {{ form_label(form.email1) }}
-                    {{ form_errors(form.email1) }}
-                    {{ form_widget(form.email1) }}
+                <div>
+                    {{ form_widget(form) }}
                 </div>
                 
-                <div class="friend">
-                    {{ form_label(form.email2) }}
-                    {{ form_errors(form.email2) }}
-                    {{ form_widget(form.email2) }}
-                </div>
-                
-                <div class="friend">
-                    {{ form_label(form.email3) }}
-                    {{ form_errors(form.email3) }}
-                    {{ form_widget(form.email3) }}
-                </div>
-                
-                <div class="friend">
-                    {{ form_label(form.email3) }}
-                    {{ form_errors(form.email4) }}
-                    {{ form_widget(form.email4) }}
-                </div>
-                
-                <div class="friend">
-                    {{ form_label(form.email5) }}
-                    {{ form_errors(form.email5) }}
-                    {{ form_widget(form.email5) }}
-                </div>
-                
-                {{ form_widget(form) }}
 
                 <input type="submit" />
             </form>

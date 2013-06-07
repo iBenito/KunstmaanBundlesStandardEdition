@@ -48,33 +48,37 @@ class UserFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
     
     public function load(ObjectManager $manager)
     {
-        $encoderRegister = new MessageDigestPasswordEncoder('sha512', true, 10);
-        $user_register = new User();
-        $user_register->setUsername('zizoo_registration');
-        $user_register->setEmail($this->container->getParameter('email_register'));
-        $user_register->setSalt(md5(time()));
-        $password_register = $encoderRegister->encodePassword('seaman', $user_register->getSalt());
-        $user_register->setPassword($password_register);
-        $user_register->setIsActive(true);
-        $user_register->addGroup($manager->merge($this->getReference('group_admin')));
-       
-        $this->addReference('user-register', $user_register);
+//        
+//        $encoderRegister = new MessageDigestPasswordEncoder('sha512', true, 10);
+//        $user_register = new User();
+//        $user_register->setUsername('zizoo_registration');
+//        $user_register->setEmail($this->container->getParameter('email_register'));
+//        $user_register->setSalt(md5(time()));
+//        $password_register = $encoderRegister->encodePassword('seaman', $user_register->getSalt());
+//        $user_register->setPassword($password_register);
+//        $user_register->setIsActive(true);
+//        $user_register->addGroup($manager->merge($this->getReference('group_super_admin')));
+//       
+//        $this->addReference('user-register', $user_register);
+//        
+//        
+//        
+//        $encoderInfo = new MessageDigestPasswordEncoder('sha512', true, 10);
+//        $user_info = new User();
+//        $user_info->setUsername('zizoo_info');
+//        $user_info->setEmail($this->container->getParameter('email_info'));
+//        $user_info->setSalt(md5(time()));
+//        $password_info = $encoderInfo->encodePassword('seaman', $user_info->getSalt());
+//        $user_info->setPassword($password_info);
+//        $user_info->setIsActive(true);
+//        $user_info->addGroup($manager->merge($this->getReference('group_super_admin')));
+//       
+//        $this->addReference('user-info', $user_info);
         
+        $em = $this->container->get('doctrine.orm.entity_manager');
         
-        
-        $encoderInfo = new MessageDigestPasswordEncoder('sha512', true, 10);
-        $user_info = new User();
-        $user_info->setUsername('zizoo_info');
-        $user_info->setEmail($this->container->getParameter('email_info'));
-        $user_info->setSalt(md5(time()));
-        $password_info = $encoderInfo->encodePassword('seaman', $user_info->getSalt());
-        $user_info->setPassword($password_info);
-        $user_info->setIsActive(true);
-        $user_info->addGroup($manager->merge($this->getReference('group_admin')));
-       
-        $this->addReference('user-info', $user_info);
-        
-        
+        $group_super_admin = $em->getRepository('ZizooUserBundle:Group')->findOneById('ROLE_ZIZOO_SUPER_ADMIN');
+        $group_user = $em->getRepository('ZizooUserBundle:Group')->findOneById('ROLE_ZIZOO_USER');
         
         $encoder1 = new MessageDigestPasswordEncoder('sha512', true, 10);
         $user_1 = new User();
@@ -84,7 +88,7 @@ class UserFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $password1 = $encoder1->encodePassword('hahaha', $user_1->getSalt());
         $user_1->setPassword($password1);
         $user_1->setIsActive(true);
-        $user_1->addGroup($manager->merge($this->getReference('group_admin')));
+        $user_1->addGroup($group_super_admin);
        
         $this->addReference('user-1', $user_1);
         
@@ -98,7 +102,7 @@ class UserFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $user_2->setPassword($password2);
         $user_2->setIsActive(true);
         $user_2->setFacebookUID('733240253');
-        $user_2->addGroup($manager->merge($this->getReference('group_admin')));
+        $user_2->addGroup($group_super_admin);
         
         $this->addReference('user-2', $user_2);
         
@@ -111,24 +115,10 @@ class UserFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $password3 = $encoder3->encodePassword('sinan', $user_3->getSalt());
         $user_3->setPassword($password3);
         $user_3->setIsActive(true);
-        $user_3->addGroup($manager->merge($this->getReference('group_user')));
+        $user_3->addGroup($group_user);
         
         $this->addReference('user-3', $user_3);
         
-        
-        $encoder4 = new MessageDigestPasswordEncoder('sha512', true, 10);
-        $user_4 = new User();
-        $user_4->setUsername('tilentravnik');
-        $user_4->setEmail('tilen.travnik@dlabs.si');
-        $user_4->setSalt('85b2814b88930894720b636feba55968');
-        $user_4->setPassword('14kBeIa/vkdxJeFWMi25uyXfbpdRpnABDZQQuxdwdTlkbjuBZTzFld4i9vGMfyR/akT2wXeIDSxqjVTmkKO3Vg==');
-        $user_4->setIsActive(true);
-        $user_4->addGroup($manager->merge($this->getReference('group_user')));
-        
-        $this->addReference('user-4', $user_4);
-        
-        $manager->persist($user_info);
-        $manager->persist($user_register);
         $manager->persist($user_1);
         $manager->persist($user_2);
         $manager->persist($user_3);

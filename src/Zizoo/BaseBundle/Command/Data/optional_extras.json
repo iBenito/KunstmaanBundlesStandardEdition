@@ -1,0 +1,17 @@
+[
+    {
+        "id":       "transfer",
+        "name":     "Transfer",
+        "order":    0
+    },
+    {
+        "id":       "car_parking",
+        "name":     "Car Parking",
+        "order":    1
+    },
+    {
+        "id":       "snorkeling_equipment",
+        "name":     "Snorkeling Equipment",
+        "order":    2
+    }
+]

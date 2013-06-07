@@ -42,7 +42,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             // if there is no record matching the criteria.
             $user = $q->getSingleResult();
         } catch (NoResultException $e) {
-            throw new UsernameNotFoundException(sprintf('Unable to find an active admin ZizooUserBundle:User object identified by "%s".', $username), null, 0, $e);
+            throw new UsernameNotFoundException(sprintf('Unable to find an active admin ZizooUserBundle:User object identified by "%s".', $username), 0, $e);
         }
 
         return $user;

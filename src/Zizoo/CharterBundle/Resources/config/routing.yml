@@ -59,3 +59,9 @@ ZizooCharterBundle_Charter_PayoutSettings:
     defaults: { _controller: ZizooCharterBundle:Charter:payoutSettings }
     requirements:
         _method:  GET|POST
+        
+ZizooCharterBundle_Charter_Users:
+    pattern:  /account/users
+    defaults: { _controller: ZizooCharterBundle:Charter:users }
+    requirements:
+        _method:  GET|POST

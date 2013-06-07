@@ -113,6 +113,12 @@ class Boat extends BaseEntity
     protected $equipment;
     
     /**
+     * @ORM\ManyToMany(targetEntity="Zizoo\BoatBundle\Entity\OptionalExtra", inversedBy="boats")
+     * @ORM\JoinTable(name="boat_optional_extras")
+     **/
+    protected $optionalExtra;
+    
+    /**
      * @ORM\Column(name="active", type="boolean")
      */
     protected $active;
@@ -121,6 +127,21 @@ class Boat extends BaseEntity
      * @ORM\Column(name="min_days", type="integer", nullable=true)
      */
     protected $minimumDays;
+    
+    /**
+     * @ORM\Column(name="crew_price", type="decimal", precision=19, scale=4, nullable=true)
+     */
+    protected $crewPrice;
+    
+    /**
+     * @ORM\Column(name="num_crew", type="integer", nullable=true)
+     */
+    protected $numCrew;
+    
+    /**
+     * @ORM\Column(name="crew_optional", type="boolean")
+     */
+    protected $crewOptional;
 
     
     public function __construct()
@@ -131,6 +152,7 @@ class Boat extends BaseEntity
         $this->created      = new \DateTime();
         $this->updated      = new \DateTime();
         $this->status       = 0;
+        $this->active       = 0;
     }
     
 
@@ -612,6 +634,39 @@ class Boat extends BaseEntity
         return $this->equipment;
     }
     
+    /**
+     * Add optional extra
+     *
+     * @param \Zizoo\BoatBundle\Entity\OptionalExtra $optionalExtra
+     * @return Boat
+     */
+    public function addOptionalExtra(\Zizoo\BoatBundle\Entity\OptionalExtra $optionalExtra)
+    {
+        $this->optionalExtra[] = $optionalExtra;
+    
+        return $this;
+    }
+
+    /**
+     * Remove equipment
+     *
+     * @param \Zizoo\BoatBundle\Entity\Equipment $equipment
+     */
+    public function removeOptionalExtra(\Zizoo\BoatBundle\Entity\OptionalExtra $optionalExtra)
+    {
+        $this->equipment->removeElement($optionalExtra);
+    }
+
+    /**
+     * Get optional extras
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getOptionalExtra()
+    {
+        return $this->optionalExtra;
+    }
+    
     public function setActive($active)
     {
         $this->active = $active;
@@ -632,6 +687,39 @@ class Boat extends BaseEntity
     public function getMinimumDays()
     {
         return $this->minimumDays;
+    }
+    
+    public function setCrewPrice($crewPrice)
+    {
+        $this->crewPrice = $crewPrice;
+        return $this;
+    }
+    
+    public function getCrewPrice()
+    {
+        return $this->crewPrice;
+    }
+    
+    public function setNumCrew($numCrew)
+    {
+        $this->numCrew = $numCrew;
+        return $this;
+    }
+    
+    public function getNumCrew()
+    {
+        return $this->numCrew;
+    }
+    
+    public function setCrewOptional($crewOptional)
+    {
+        $this->crewOptional = $crewOptional;
+        return $this;
+    }
+    
+    public function getCrewOptional()
+    {
+        return $this->crewOptional;
     }
     
     /**

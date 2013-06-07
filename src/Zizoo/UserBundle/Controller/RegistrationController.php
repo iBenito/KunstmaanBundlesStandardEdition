@@ -41,11 +41,21 @@ class RegistrationController extends Controller
      */
     public function registerAction()
     {
-        $form = $this->createForm(new RegistrationType());
-        $request = $this->getRequest();
-        $relogin = $request->query->get('relogin', false);
-        $isPost = $request->isMethod('POST');
-        $facebook = $this->get('facebook');
+        $request        = $this->getRequest();
+        $relogin        = $request->query->get('relogin', false);
+        $intitalEmail   = $request->query->get('email', null);
+        $isPost         = $request->isMethod('POST');
+        $facebook       = $this->get('facebook');
+        
+        $registration   = new Registration();
+        $user           = new User();
+        if ($intitalEmail) {
+            $user->setEmail($intitalEmail);
+        }
+        $registration->setUser($user);
+        
+        $form = $this->createForm(new RegistrationType(), $registration);
+        
         
         // If submit
         if ($isPost) {
@@ -70,8 +80,8 @@ class RegistrationController extends Controller
                             ->getManager();
                 
                 // Validate user
-                $validator = $this->get('validator');
-                $errors = $validator->validate($user, 'registration');
+                $validator  = $this->get('validator');
+                $errors     = $validator->validate($user, 'registration');
                 $num_errors = $errors->count();
                 
                 // See if invalid because user or email already taken.
@@ -123,6 +133,7 @@ class RegistrationController extends Controller
                                                                                         'facebook'              => $facebook, 
                                                                                         'is_post'               => $isPost, 
                                                                                         'relogin'               => $relogin,
+                                                                                        'email'                 => $intitalEmail,
                                                                                         'ajax'                  => $request->isXmlHttpRequest()));
     }
     

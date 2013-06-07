@@ -85,41 +85,43 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
             $notificationUsers = $this->container->parameters['notification_users'];
         }
         
-        $ref = 'user-register';
-        $profile = new Profile();
-        $profile->setFirstName('Zizoo');
-        $profile->setLastName('Register');
-        $profile->setCreated(new \DateTime());
-        $profile->setUpdated($profile->getCreated());
-        $profile->setUser($manager->merge($this->getReference($ref)));
-        if ($this->isNotificationUser($notificationUsers, $ref)){
-            $this->setAllNotificationSettings($profile->getNotificationSettings(), true);
-        }
+//        $ref = 'user-register';
+//        $profile = new Profile();
+//        $profile->setFirstName('Zizoo');
+//        $profile->setLastName('Register');
+//        $profile->setCreated(new \DateTime());
+//        $profile->setUpdated($profile->getCreated());
+//        $profile->setUser($manager->merge($this->getReference($ref)));
+//        if ($this->isNotificationUser($notificationUsers, $ref)){
+//            $this->setAllNotificationSettings($profile->getNotificationSettings(), true);
+//        }
+//        
+//        $profileAddress = new ProfileAddress();
+//        $profileAddress->setCountry($manager->merge($this->getReference('countryAT')));
+//        $profileAddress->setProfile($profile);
+//                
+//        $manager->persist($profileAddress);
+//        $manager->persist($profile);
+//        
+//        $ref = 'user-info';
+//        $profile = new Profile();
+//        $profile->setFirstName('Zizoo');
+//        $profile->setLastName('Info');
+//        $profile->setCreated(new \DateTime());
+//        $profile->setUpdated($profile->getCreated());
+//        $profile->setUser($manager->merge($this->getReference($ref)));
+//        if ($this->isNotificationUser($notificationUsers, $ref)){
+//            $this->setAllNotificationSettings($profile->getNotificationSettings(), true);
+//        }
+//        
+//        $profileAddress = new ProfileAddress();
+//        $profileAddress->setCountry($manager->merge($this->getReference('countryAT')));
+//        $profileAddress->setProfile($profile);
+//        
+//        $manager->persist($profileAddress);
+//        $manager->persist($profile);
         
-        $profileAddress = new ProfileAddress();
-        $profileAddress->setCountry($manager->merge($this->getReference('countryAT')));
-        $profileAddress->setProfile($profile);
-                
-        $manager->persist($profileAddress);
-        $manager->persist($profile);
-        
-        $ref = 'user-info';
-        $profile = new Profile();
-        $profile->setFirstName('Zizoo');
-        $profile->setLastName('Info');
-        $profile->setCreated(new \DateTime());
-        $profile->setUpdated($profile->getCreated());
-        $profile->setUser($manager->merge($this->getReference($ref)));
-        if ($this->isNotificationUser($notificationUsers, $ref)){
-            $this->setAllNotificationSettings($profile->getNotificationSettings(), true);
-        }
-        
-        $profileAddress = new ProfileAddress();
-        $profileAddress->setCountry($manager->merge($this->getReference('countryAT')));
-        $profileAddress->setProfile($profile);
-        
-        $manager->persist($profileAddress);
-        $manager->persist($profile);
+        $em = $this->container->get('doctrine.orm.entity_manager');
         
         $ref = 'user-1';
         $profile = new Profile();
@@ -140,7 +142,7 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
         $profileAddress->setPremise('20');
         $profileAddress->setLocality('Waldbrunn');
         $profileAddress->setPostcode('69429');
-        $profileAddress->setCountry($manager->merge($this->getReference('countryDE')));
+        $profileAddress->setCountry($em->getRepository('ZizooAddressBundle:Country')->findOneByIso('DE'));
         $profileAddress->setProfile($profile);
         
         $profileAddress2 = new ProfileAddress();
@@ -148,7 +150,7 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
         $profileAddress2->setPremise('20');
         $profileAddress2->setLocality('Bruxelles');
         $profileAddress2->setPostcode('1050');
-        $profileAddress2->setCountry($manager->merge($this->getReference('countryBE')));
+        $profileAddress2->setCountry($em->getRepository('ZizooAddressBundle:Country')->findOneByIso('BE'));
         $profileAddress2->setProfile($profile);
         
         $manager->persist($profileAddress);
@@ -175,7 +177,7 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
         $profileAddress->setPremise('80');
         $profileAddress->setLocality('Wien');
         $profileAddress->setPostcode('77777');
-        $profileAddress->setCountry($manager->merge($this->getReference('countryAT')));
+        $profileAddress->setCountry($em->getRepository('ZizooAddressBundle:Country')->findOneByIso('AT'));
         $profileAddress->setProfile($profile);
         
         $manager->persist($profileAddress);
@@ -198,7 +200,7 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
         $profileAddress = new ProfileAddress();
         
         $profileAddress->setLocality('Wien');
-        $profileAddress->setCountry($manager->merge($this->getReference('countryAT')));
+        $profileAddress->setCountry($em->getRepository('ZizooAddressBundle:Country')->findOneByIso('AT'));
         $profileAddress->setProfile($profile);
         
         $manager->persist($profileAddress);
@@ -206,26 +208,6 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
         
         $this->addReference('profile-3', $profile);
         
-        $ref = 'user-4';
-        $profile = new Profile();
-        $profile->setFirstName('Tilen');
-        $profile->setLastName('Travnik');
-        $profile->setCreated(new \DateTime());
-        $profile->setUpdated($profile->getCreated());
-        $profile->setUser($manager->merge($this->getReference($ref)));
-        if (!$this->isNotificationUser($notificationUsers, $ref)){
-            $this->setAllNotificationSettings($profile->getNotificationSettings(), false);
-        }
-        
-        $profileAddress = new ProfileAddress();
-        
-        $profileAddress->setCountry($manager->merge($this->getReference('countrySI')));
-        $profileAddress->setProfile($profile);
-        
-        $manager->persist($profileAddress);
-        $manager->persist($profile);
-        
-        $this->addReference('profile-4', $profile);
         
         $manager->flush();
 

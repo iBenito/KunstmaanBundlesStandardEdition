@@ -55,10 +55,6 @@ class ProfileFixtures2 extends AbstractFixture implements OrderedFixtureInterfac
         $this->setAllNotificationSettings($profile->getNotificationSettings(), true);
         $manager->persist($profile);
         
-        $profile = $this->getReference('profile-4');
-        $this->setAllNotificationSettings($profile->getNotificationSettings(), true);
-        $manager->persist($profile);
-        
         $manager->flush();
 
     }

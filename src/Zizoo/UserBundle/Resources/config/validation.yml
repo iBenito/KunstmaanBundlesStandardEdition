@@ -30,7 +30,19 @@ Zizoo\UserBundle\Form\Model\UserNewEmail:
                 message: zizoo_user.error.new_email_valid
                 checkMX: true
                 groups: [change_email]
-            
+
+Zizoo\UserBundle\Form\Model\InviteSingle:
+    constraints:
+        - Zizoo\UserBundle\Validator\Constraints\InviteSingle: { message: "test", groups: [invitation] }
+    properties:
+        email:
+            - NotBlank: { message: zizoo_user.error.email_email, groups: [invitation] }
+            - Email:
+                message: zizoo_user.error.email_email
+                checkMX: true
+                groups: [invitation]
+
+                
 Zizoo\UserBundle\Form\Model\Invitation:
     properties:
         email1:
@@ -58,4 +70,4 @@ Zizoo\UserBundle\Form\Model\Invitation:
               message: zizoo_user.error.email_email
               checkMX: true
               groups: [invitation]
-              
+
