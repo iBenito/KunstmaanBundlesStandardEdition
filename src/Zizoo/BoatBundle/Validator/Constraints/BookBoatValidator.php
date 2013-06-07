@@ -24,7 +24,10 @@ class BookBoatValidator extends ConstraintValidator
         if ($bookBoat->getNumGuests() > $boat->getNrGuests()){
             $this->context->addViolationAt('num_guests', $constraint->messageNumGuests, array(), null);
         }
-                
+        if (!$boat->getCrewOptional() && !$bookBoat->getCrew()){
+            $this->context->addViolationAt('crew', $constraint->messageCrew, array(), null);
+        }   
+        
         $reservationRange   = $bookBoat->getReservationRange();
         if ($reservationRange){
             $from               = $reservationRange->getReservationFrom();

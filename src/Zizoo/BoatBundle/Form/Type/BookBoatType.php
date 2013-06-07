@@ -1,39 +1,33 @@
 <?php
 namespace Zizoo\BoatBundle\Form\Type;
 
+use Zizoo\BoatBundle\Form\EventListener\BookBoatSubscriber;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\DependencyInjection\Container;
 
 class BookBoatType extends AbstractType
 {
     protected $container;
     
-    public function __construct() {
-        
+    public function __construct(Container $container) {
+        $this->container = $container;
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
-        $builder->add('reservation_range', new ReservationRangeType(), array(   'required'      => false));
         
-//        $builder->add('reservation_from', 'date', array('required'      => false,
-//                                                        'by_reference'  => false,
-//                                                        'widget'        => 'single_text',
-//                                                        'format'        => 'dd/MM/yyyy',
-//                                                        'attr'          => array('autocomplete' => 'off')));
-//        
-//        $builder->add('reservation_to', 'date', array('required'        => false,
-//                                                        'by_reference'  => false,
-//                                                        'widget'        => 'single_text',
-//                                                        'format'        => 'dd/MM/yyyy',
-//                                                        'attr'          => array('autocomplete' => 'off')));
+        $builder->add('crew', 'checkbox', array(   'required'      => true));
+        
+        $builder->add('reservation_range', new ReservationRangeType(), array(   'required'      => false));
         
         $builder->add('num_guests', 'integer', array('required'         => false,
                                                         'by_reference'  => false,
                                                         'attr'          => array('autocomplete' => 'off')));
-  
+        //$subscriber = new BookBoatSubscriber($builder->getFormFactory(), $this->container);
+        //$builder->addEventSubscriber($subscriber);
     }
 
 

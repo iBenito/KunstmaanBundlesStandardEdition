@@ -50,8 +50,16 @@ services:
             
     zizoo_boat.book_boat_type:
         class:  Zizoo\BoatBundle\Form\Type\BookBoatType
+        arguments: ["@service_container"]
         tags:
             - { name: form.type, alias: zizoo_boat_book }
+            
+            
+    # FORM EXTENSIONS
+    zizoo_boat.book_boat_type_extension:
+        class:  Zizoo\BoatBundle\Form\Extension\BookBoatTypeExtension
+        tags:
+            - { name: form.type_extension, alias: zizoo_boat_book }
             
             
     # VALIDATORS

@@ -113,10 +113,10 @@ class Boat extends BaseEntity
     protected $equipment;
     
     /**
-     * @ORM\ManyToMany(targetEntity="Zizoo\BoatBundle\Entity\OptionalExtra", inversedBy="boats")
-     * @ORM\JoinTable(name="boat_optional_extras")
+     * @ORM\ManyToMany(targetEntity="Zizoo\BoatBundle\Entity\IncludedExtra", inversedBy="boats")
+     * @ORM\JoinTable(name="boat_included_extras")
      **/
-    protected $optionalExtra;
+    protected $includedExtra;
     
     /**
      * @ORM\Column(name="active", type="boolean")
@@ -152,7 +152,8 @@ class Boat extends BaseEntity
         $this->created      = new \DateTime();
         $this->updated      = new \DateTime();
         $this->status       = 0;
-        $this->active       = 0;
+        $this->active       = false;
+        $this->crewOptional = false;
     }
     
 
@@ -635,36 +636,36 @@ class Boat extends BaseEntity
     }
     
     /**
-     * Add optional extra
+     * Add included extra
      *
-     * @param \Zizoo\BoatBundle\Entity\OptionalExtra $optionalExtra
+     * @param \Zizoo\BoatBundle\Entity\IncludedExtra $includedlExtra
      * @return Boat
      */
-    public function addOptionalExtra(\Zizoo\BoatBundle\Entity\OptionalExtra $optionalExtra)
+    public function addIncludedExtra(\Zizoo\BoatBundle\Entity\IncludedExtra $includedlExtra)
     {
-        $this->optionalExtra[] = $optionalExtra;
+        $this->includedExtra[] = $includedlExtra;
     
         return $this;
     }
 
     /**
-     * Remove equipment
+     * Remove included extra
      *
-     * @param \Zizoo\BoatBundle\Entity\Equipment $equipment
+     * @param \Zizoo\BoatBundle\Entity\IncludedExtra $equipment
      */
-    public function removeOptionalExtra(\Zizoo\BoatBundle\Entity\OptionalExtra $optionalExtra)
+    public function removeIncludedExtra(\Zizoo\BoatBundle\Entity\IncludedExtra $includedExtra)
     {
-        $this->equipment->removeElement($optionalExtra);
+        $this->includedExtra->removeElement($includedExtra);
     }
 
     /**
-     * Get optional extras
+     * Get included extras
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getOptionalExtra()
+    public function getIncludedExtra()
     {
-        return $this->optionalExtra;
+        return $this->includedExtra;
     }
     
     public function setActive($active)
@@ -736,7 +737,8 @@ class Boat extends BaseEntity
                 if ($price->getPrice() < $lowestPrice) $lowestPrice = $price->getPrice();
             }
         }
-        $defaultPrice = $this->getDefaultPrice();
+        $defaultPrice   = $this->getDefaultPrice();
+        $crewPrice      = $this->getCrewPrice();
         if ($lowestPrice && $defaultPrice){
             $this->setLowestPrice($lowestPrice<$defaultPrice?$lowestPrice:$defaultPrice);
         } else if ($lowestPrice){
@@ -746,7 +748,7 @@ class Boat extends BaseEntity
         } else {
             $this->setLowestPrice(null);
         }
-        
+        if ($crewPrice && $this->getLowestPrice()) $this->setLowestPrice ($this->getLowestPrice()+$crewPrice);
     }
     
 }

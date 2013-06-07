@@ -10,7 +10,7 @@ use Zizoo\ProfileBundle\Entity\Profile;
 use Zizoo\ProfileBundle\Entity\Profile\NotificationSettings;
 use Zizoo\MessageBundle\Entity\MessageType;
 use Zizoo\BoatBundle\Entity\Equipment;
-use Zizoo\BoatBundle\Entity\OptionalExtras;
+use Zizoo\BoatBundle\Entity\IncludedExtra;
 
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -208,20 +208,20 @@ class LoadDataCommand extends ContainerAwareCommand
         }
     }
     
-    private function loadOptionalExtras()
+    private function loadIncludedExtras()
     {
-        $getOptionalExtras = file_get_contents(dirname(__FILE__).'/Data/optional_extras.json');
+        $getIncludedExtras = file_get_contents(dirname(__FILE__).'/Data/included_extras.json');
        
-        $optionalExtras = json_decode($getOptionalExtras);
+        $includedExtras = json_decode($getIncludedExtras);
         
-        foreach ($optionalExtras as $e)
+        foreach ($includedExtras as $e)
         {
-            $optionalExtra = new OptionalExtra();
-            $optionalExtra->setId($e->id);
-            $optionalExtra->setName($e->name);
-            $optionalExtra->setOrder($e->order);
+            $includedExtra = new IncludedExtra();
+            $includedExtra->setId($e->id);
+            $includedExtra->setName($e->name);
+            $includedExtra->setOrder($e->order);
             
-            $this->em->persist($optionalExtra);
+            $this->em->persist($includedExtra);
         }
     }
     
@@ -266,7 +266,7 @@ class LoadDataCommand extends ContainerAwareCommand
         $this->loadCountries();
         $this->loadMarinas();
         $this->loadEquipment();
-        $this->loadOptionalExtras();
+        $this->loadIncludedExtras();
         $this->loadGroups();
         $this->loadMessageTypes();
         $this->loadSuperAdminUsers();

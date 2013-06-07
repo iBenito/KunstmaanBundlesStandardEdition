@@ -1,10 +1,20 @@
 <div id="booking_widget">
     <form id="availability_form" action="{{ url }}" method="get">
         
-        <div id="booking_price_container">
-            <label for="booking_price">Price</label>
-            <div id="booking_price">{{ book_boat|BookBoat_price(total_price)}}</div>
-        </div>
+        <table id="booking_price_container">
+            <tr>
+                <td>Price</td>
+                <td>{{ book_boat|BookBoat_price(subtotal)|raw}}</td>
+            </tr>
+            <tr>
+                <td>{{ form_widget(form.crew) }} Crew {{ form_errors(form.crew) }}</td>
+                <td>{{ book_boat|BookBoat_price(crew_price)|raw}}</td>
+            </tr>
+            <tr>
+                <td>Total</td>
+                <td>{{ book_boat|BookBoat_price(total)|raw}}</td>
+            </tr>
+        </table>
         
         <input type="hidden" name="url" value="{{ url }}" />
         <input type="hidden" name="ajax_url" value="{{ ajax_url }}" />
@@ -44,7 +54,7 @@
         var dateUntil   = $('#zizoo_boat_book_reservation_range_reservation_to').datepick('getDate');
         
         if ($('#zizoo_boat_book_reservation_range_reservation_from').val()=='' || $('#zizoo_boat_book_reservation_range_reservation_to').val()=='') {
-            $('#booking_price').html('...');
+            $('#booking_price').html('');
             return;
         }
         $('#booking_widget').block({ message: null });
@@ -76,6 +86,9 @@
     
     
         $('#zizoo_boat_book_num_guests').change(function(){
+            reloadWidget();
+        });
+        $('#zizoo_boat_book_crew').change(function(){
             reloadWidget();
         });
         

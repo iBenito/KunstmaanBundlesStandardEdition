@@ -88,8 +88,8 @@
                 <div id="optional_extras_div">
                     <h4>Optional Extras</h4>
                     <ul id="optional_extras" class="checklist">
-                        {% for optional_extra in optional_extras %}
-                            {{ boat|displayOptionalExtra(optional_extra)|raw }}
+                        {% for included_extra in included_extras %}
+                            {{ boat|displayIncludedExtra(included_extra)|raw }}
                         {% endfor %}
                     </ul>
                 </div>

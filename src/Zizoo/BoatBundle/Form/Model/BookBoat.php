@@ -7,22 +7,26 @@ use Doctrine\Common\Collections\ArrayCollection;
 class BookBoat
 {
     
-    protected $boatId;
+    protected $boat_id;
     
     protected $guestId;
     
-//    protected $reservation_from;
-//    protected $reservation_to;
+    protected $crew;
+    
     protected $reservationRange;
     
     protected $num_guests;
+    
+    protected $subtotal;
+    protected $crew_price;
+    protected $total;
  
-    public function __construct($boatId) {
-        $this->boatId = $boatId;
+    public function __construct($boat_id) {
+        $this->boat_id = $boat_id;
     }
     
     public function getBoatId(){
-        return $this->boatId;
+        return $this->boat_id;
     }
     
     public function getGuestId()
@@ -36,27 +40,16 @@ class BookBoat
         return $this;
     }
     
-//    public function getReservationFrom()
-//    {
-//        return $this->reservation_from;
-//    }
-//    
-//    public function setReservationFrom($from)
-//    {
-//        $this->reservation_from = $from;
-//        return $this;
-//    }
-//    
-//    public function getReservationTo()
-//    {
-//        return $this->reservation_to;
-//    }
-//    
-//    public function setReservationTo($to)
-//    {
-//        $this->reservation_to = $to;
-//        return $this;
-//    }
+    public function setCrew($crew)
+    {
+        $this->crew = $crew;
+        return $this;
+    }
+    
+    public function getCrew()
+    {
+        return $this->crew;
+    }
     
     public function setReservationRange($reservationRange)
     {
@@ -80,12 +73,45 @@ class BookBoat
         return $this;
     }
     
-    public function getPrice($availability){
-        $from   = $this->getReservationFrom();
-        $to     = $this->getReservationTo();
-        if (!$from || !$to) return null;
-        $interval = $from->diff($to);
-        return $availability->getPrice() * $interval->days;
+//    public function getPrice($availability){
+//        $from   = $this->getReservationFrom();
+//        $to     = $this->getReservationTo();
+//        if (!$from || !$to) return null;
+//        $interval = $from->diff($to);
+//        return $availability->getPrice() * $interval->days;
+//    }
+    
+    public function setSubtotal($subtotal)
+    {
+        $this->subtotal = $subtotal;
+        return $this;
+    }
+    
+    public function getSubtotal()
+    {
+        return $this->subtotal;
+    }
+    
+    public function setCrewPrice($crewPrice)
+    {
+        $this->crew_price = $crewPrice;
+        return $this;
+    }
+    
+    public function getCrewPrice()
+    {
+        return $this->crew_price;
+    }
+    
+    public function setTotal($total)
+    {
+        $this->total = $total;
+        return $this;
+    }
+    
+    public function getTotal()
+    {
+        return $this->total;
     }
 }
 

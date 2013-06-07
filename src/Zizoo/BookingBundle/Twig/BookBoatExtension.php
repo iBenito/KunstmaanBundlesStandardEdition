@@ -20,8 +20,9 @@ class BookBoatExtension extends \Twig_Extension
         );
     }
     
-    public function price($bookBoat, $totalPrice){
-        return number_format($totalPrice, 2);
+    public function price($bookBoat, $price){
+        if (!$price) return '';
+        return number_format($price, 2) . ' &euro;';
     }
 
     public function numberOfDays($bookBoat){

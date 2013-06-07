@@ -197,7 +197,9 @@ class ReservationAgent {
         }
     }
     
-    public function getTotalPrice(Boat $boat, $from, $to){
+    public function getTotalPrice(Boat $boat, $from, $to, $includeCrew, $arrayFormat=false){
+        //if (!$boat->getCrewOptional() && !$includeCrew) throw new InvalidReservationException('Boat must be booked with crew');
+        
         if (!$from || !$to) return null;
         $from = $from->setTime(0,0,0);
         $to = $to->setTime(0,0,0);
@@ -210,12 +212,33 @@ class ReservationAgent {
         if ($numDays > $totalSetPrice['num_days']){
             if ($boat->getDefaultPrice()>0){
                 $diffDays = $numDays-$totalSetPrice['num_days'];
-                return $totalSetPrice['set_price'] + ($diffDays*$boat->getDefaultPrice());
+                $subtotal = $totalSetPrice['set_price'] + ($diffDays*$boat->getDefaultPrice());
+                $crewPrice = $diffDays*$boat->getCrewPrice();
+                $total = $subtotal;
+                if ($includeCrew){
+                    $total = $subtotal + $crewPrice;
+                }
+                if ($arrayFormat){
+                    return array('subtotal' => $subtotal, 'crew_price' => $crewPrice, 'total' => $total);
+                } else {
+                    return $subtotal + $crewPrice;
+                }
             } else {
                 throw new InvalidReservationException('Boat not available for '.$from->format('d/m/Y') . ' - ' . $to->format('d/m/Y'));
             }
         } else {
-            return $totalSetPrice['set_price'];
+            $subtotal = $totalSetPrice['set_price'];
+            $crewPrice = $diffDays*$boat->getCrewPrice();
+            $total = $subtotal;
+            if ($includeCrew){
+                $total = $subtotal + $crewPrice;
+            }
+            $total = $subtotal + $crewPrice;
+            if ($arrayFormat){
+                return array('subtotal' => $subtotal, 'crew_price' => $crewPrice, 'total' => $total);
+            } else {
+                return $total;
+            }
         }
     }
     

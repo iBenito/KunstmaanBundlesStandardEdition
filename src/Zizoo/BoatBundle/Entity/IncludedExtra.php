@@ -5,12 +5,11 @@ namespace Zizoo\BoatBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * BoatType
  *
- * @ORM\Entity(repositoryClass="Zizoo\BoatBundle\Entity\OptionalExtraRepository")
- * @ORM\Table(name="boatoptional_extra", uniqueConstraints={@ORM\UniqueConstraint(name="id", columns={"name"})})
+ * @ORM\Entity(repositoryClass="Zizoo\BoatBundle\Entity\IncludedExtraRepository")
+ * @ORM\Table(name="boatincluded_extra", uniqueConstraints={@ORM\UniqueConstraint(name="id", columns={"name"})})
  */
-class OptionalExtra
+class IncludedExtra
 {
 
     /**
@@ -36,7 +35,7 @@ class OptionalExtra
     private $order;
     
     /**
-     * @ORM\ManyToMany(targetEntity="Zizoo\BoatBundle\Entity\Boat", mappedBy="optionalExtra")
+     * @ORM\ManyToMany(targetEntity="Zizoo\BoatBundle\Entity\Boat", mappedBy="includedExtra")
      */
     protected $boats;
     

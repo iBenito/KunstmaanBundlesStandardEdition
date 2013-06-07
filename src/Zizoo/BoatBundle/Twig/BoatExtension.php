@@ -22,7 +22,7 @@ class BoatExtension extends \Twig_Extension
             'priceDates' => new \Twig_Filter_Method($this, 'priceDates'),
             'displayDefaultPrice' => new \Twig_Filter_Method($this, 'displayDefaultPrice'),
             'displayFromPrice' => new \Twig_Filter_Method($this, 'displayFromPrice'),
-            'displayOptionalExtra' => new \Twig_Filter_Method($this, 'displayOptionalExtra'),
+            'displayIncludedExtra' => new \Twig_Filter_Method($this, 'displayIncludedExtra'),
             'displayEquipment' => new \Twig_Filter_Method($this, 'displayEquipment'),
         );
     }
@@ -99,10 +99,10 @@ class BoatExtension extends \Twig_Extension
         }
     }
     
-    public function displayOptionalExtra($boat, $optionalExtra)
+    public function displayIncludedExtra($boat, $includedExtra)
     {
-        $contains = $boat->getOptionalExtra()->contains($optionalExtra);
-        return '<li class="'.($contains?'active':'inactive').'">'.$optionalExtra->getName().'</li>';
+        $contains = $boat->getIncludedExtra()->contains($includedExtra);
+        return '<li class="'.($contains?'active':'inactive').'">'.$includedExtra->getName().'</li>';
     }
     
     public function displayEquipment($boat, $equipment)

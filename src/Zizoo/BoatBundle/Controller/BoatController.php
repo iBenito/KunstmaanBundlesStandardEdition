@@ -93,7 +93,7 @@ class BoatController extends Controller
         }
         
         $equipment         = $em->getRepository('ZizooBoatBundle:Equipment')->findAll();
-        $allOptionalExtras = $em->getRepository('ZizooBoatBundle:OptionalExtra')->findAll();
+        $allIncludedExtras = $em->getRepository('ZizooBoatBundle:IncludedExtra')->findAll();
 
         $reservations   = $boat->getReservation();
         $prices         = $boat->getPrice();
@@ -107,7 +107,7 @@ class BoatController extends Controller
             'reservations'      => $reservations,
             'prices'            => $prices,
             'equipment'         => $equipment,
-            'optional_extras'   => $allOptionalExtras,
+            'included_extras'   => $allIncludedExtras,
             'request'           => $request
         ));
     }
@@ -122,7 +122,7 @@ class BoatController extends Controller
             throw $this->createNotFoundException('Unable to find boat post.');
         }  
         
-        $form = $this->createForm(new BookBoatType(), new BookBoat($id));
+        $form = $this->createForm('zizoo_boat_book', new BookBoat($id), array());
         $form->bind($request);
         $bookBoat = $form->getData();
             
@@ -131,9 +131,12 @@ class BoatController extends Controller
             $reservationRange = $bookBoat->getReservationRange();
             $from   = $reservationRange?$reservationRange->getReservationFrom():null;
             $until  = $reservationRange?$reservationRange->getReservationTo():null;
-            $totalPrice = $reservationAgent->getTotalPrice($boat, $from, $until, false);
+            $totals = $reservationAgent->getTotalPrice($boat, $from, $until, $bookBoat->getCrew(), true);
+            $bookBoat->setSubtotal($totals['subtotal']);
+            $bookBoat->setCrewPrice($totals['crew_price']);
+            $bookBoat->setTotal($totals['total']);
         } catch (\Zizoo\ReservationBundle\Exception\InvalidReservationException $e){
-            $totalPrice = 0;
+            $totals = null;
         }
         
         $valid = false;
@@ -141,11 +144,9 @@ class BoatController extends Controller
         if ($form->isValid() && $bookBoat->getNumGuests()>0){
             $valid = true;
             $session->set('boat', $bookBoat);
-            $session->set('price', $totalPrice);
         } else {
             $valid = false;
             $session->remove('boat');
-            $session->remove('price');
         }
         
         if (!$reservations) $reservations = $boat->getReservation();
@@ -159,7 +160,9 @@ class BoatController extends Controller
         return $this->render('ZizooBoatBundle:Boat:booking_widget.html.twig', array(
             'boat'                  => $boat,
             'book_boat'             => $bookBoat,
-            'total_price'           => $totalPrice,
+            'subtotal'              => $totals?$totals['subtotal']:null,
+            'crew_price'            => $totals?$totals['crew_price']:null,
+            'total'                 => $totals?$totals['total']:null,
             'form'                  => $form->createView(),
             'valid'                 => $valid,
             'reservations'          => $reservations,
