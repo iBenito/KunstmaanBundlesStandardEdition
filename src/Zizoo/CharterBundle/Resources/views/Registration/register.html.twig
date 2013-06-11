@@ -65,7 +65,7 @@
                         {{ form_errors(form.registration.user.username) }}
                         {% if unconfirmed_username %}
                             <ul>
-                                <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooCharterBundle_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
+                                <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooCharterBundle_Registration_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
                             </ul>
                         {% endif %}
                         {{ form_widget(form.registration.user.username) }}
@@ -76,7 +76,7 @@
                         {{ form_errors(form.registration.user.email) }}
                         {% if unconfirmed_email %}
                             <ul>
-                                <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooCharterBundle_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
+                                <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooCharterBundle_Registration_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
                             </ul>
                         {% endif %}
                         {{ form_widget(form.registration.user.email) }}
