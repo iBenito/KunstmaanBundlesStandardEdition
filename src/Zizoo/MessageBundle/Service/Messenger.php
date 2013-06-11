@@ -137,7 +137,7 @@ class Messenger {
      */
     public function sendConfirmationEmail(User $user){
         $isCharter = $user->getCharter()!=null;
-        $confirmRoute = $isCharter?'ZizooCharterBundle_confirm':'ZizooUserBundle_confirm';
+        $confirmRoute = $isCharter?'ZizooCharterBundle_Registration_confirm':'ZizooUserBundle_confirm';
         $activationLink = $this->container->get('router')->generate($confirmRoute, array('token' => $user->getConfirmationToken(), 'email' => $user->getEmail()), true);
         $twig = $this->container->get('twig');
         $templateLocation = $isCharter?'ZizooUserBundle:Email:confirm_charter.html.twig':'ZizooUserBundle:Email:confirm.html.twig';
