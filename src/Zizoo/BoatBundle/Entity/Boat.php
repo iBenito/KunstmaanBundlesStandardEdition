@@ -750,9 +750,6 @@ class Boat extends BaseEntity
         return $this->crewOptional;
     }
     
-    /**
-    * @ORM\preUpdate
-    */
     public function updateLowestAndHighestPrice()
     {
         $lowestPrice    = null;
@@ -760,16 +757,18 @@ class Boat extends BaseEntity
         
         // Determine lowest and highest set price (i.e. for specific days)
         $allPrices = $this->getPrice();
-        foreach ($allPrices as $price){
-            if (!$lowestPrice) {
-                $lowestPrice = $price->getPrice();
-            } else {
-                if ($price->getPrice() < $lowestPrice) $lowestPrice = $price->getPrice();
-            }
-            if (!$highestPrice) {
-                $highestPrice = $price->getPrice();
-            } else {
-                if ($price->getPrice() > $highestPrice) $highestPrice = $price->getPrice();
+        if ($allPrices){
+            foreach ($allPrices as $price){
+                if (!$lowestPrice) {
+                    $lowestPrice = $price->getPrice();
+                } else {
+                    if ($price->getPrice() < $lowestPrice) $lowestPrice = $price->getPrice();
+                }
+                if (!$highestPrice) {
+                    $highestPrice = $price->getPrice();
+                } else {
+                    if ($price->getPrice() > $highestPrice) $highestPrice = $price->getPrice();
+                }
             }
         }
         $defaultPrice   = $this->getDefaultPrice();
@@ -810,6 +809,22 @@ class Boat extends BaseEntity
             if ($this->getLowestPrice()) $this->setLowestPrice($this->getLowestPrice() + $crewPrice);
             if ($this->getHighestPrice()) $this->setHighestPrice($this->getHighestPrice() + $crewPrice);
         }
+    }
+    
+    /**
+    * @ORM\preUpdate
+    */
+    public function preUpdate()
+    {
+        $this->updateLowestAndHighestPrice();
+    }
+    
+    /**
+    * @ORM\prePersist
+    */
+    public function prePersist()
+    {
+        $this->updateLowestAndHighestPrice();
     }
     
 }

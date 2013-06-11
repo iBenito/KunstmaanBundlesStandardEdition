@@ -307,7 +307,8 @@ class BoatController extends Controller
         return $this->render('ZizooBoatBundle:Boat:new.html.twig', array(
             'boat' => $boat,
             'form' => $form->createView(),
-            'formAction' => 'ZizooBoatBundle_create'
+            'formAction' => 'ZizooBoatBundle_create',
+            'formRedirect'  => 'ZizooBoatBundle_edit'
         ));
     }
 

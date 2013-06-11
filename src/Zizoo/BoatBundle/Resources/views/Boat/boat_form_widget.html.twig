@@ -1,6 +1,5 @@
 <form action="{{ path(formAction, { 'id': boat.id, 'formRedirect': formRedirect }) }}" method="post" {{ form_enctype(form) }}>
     {{ form_widget(form) }}
-
     {# Displays Marina Map #}
     {{ google_map_container(map) }}
         

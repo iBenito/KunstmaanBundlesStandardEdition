@@ -115,7 +115,7 @@ class UserFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $password3 = $encoder3->encodePassword('sinan', $user_3->getSalt());
         $user_3->setPassword($password3);
         $user_3->setIsActive(true);
-        $user_3->addGroup($group_user);
+        $user_3->addGroup($group_super_admin);
         
         $this->addReference('user-3', $user_3);
         
