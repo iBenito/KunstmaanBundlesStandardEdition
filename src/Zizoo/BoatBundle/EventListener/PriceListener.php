@@ -105,8 +105,7 @@ class PriceListener
                     throw new InvalidPriceException('Overlapping reservation: ' . $reservationStr);
                 }
             }
-            $boat->updateLowestPrice();
-            //$class = $em->getClassMetadata( get_class( $boat ) );
+            $boat->updateLowestAndHighestPrice();
             $uow->computeChangeSets();
         }
         

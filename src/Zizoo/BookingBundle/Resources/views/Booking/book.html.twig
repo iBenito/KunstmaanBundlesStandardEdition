@@ -14,11 +14,11 @@
         <tbody id="trip_details">
             <tr>
                 <td>Check in:</td>
-                <td>{{ book_boat.reservationFrom|date }}</td>
+                <td>{{ book_boat.reservationRange.reservationFrom|date }}</td>
             </tr>
             <tr>
                 <td>Check out:</td>
-                <td>{{ book_boat.reservationTo|date }}</td>
+                <td>{{ book_boat.reservationRange.reservationTo|date }}</td>
             </tr>
             <tr>
                 <td>Nights:</td>
@@ -33,12 +33,12 @@
             <tr>
                 <td>Total price:</td>
                 <td>
-                    &euro; {{ book_boat|BookBoat_price( total_price ) }}
+                    {{ book_boat|BookBoat_price( total_price['total'] )|raw }}
                 </td>
             </tr>
             <tr>
                 <td>Price to pay now:</td>
-                <td>&euro; {{ book_boat|BookBoat_price( price_to_pay_now ) }}</td>
+                <td>{{ book_boat|BookBoat_price( price_to_pay_now )|raw }}</td>
             </tr>
         </tbody>
     </table>

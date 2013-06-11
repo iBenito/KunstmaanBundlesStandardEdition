@@ -32,17 +32,17 @@ class BoatType extends AbstractType
             ->add('nr_guests')
             ->add('bathrooms')
             ->add('crew_optional', 'choice', array( 'required'      => true,
-                                                    'label'         => false,
+                                                    'label'         => 'Crew',
                                                     'expanded'      => true,
                                                     'multiple'      => false,
                                                     'choices'       => array(false => 'Included', true => 'Optional'),
                                                     'property_path' => 'crewOptional'))
-            ->add('num_crew', 'number', array('label'   => false))
-            ->add('crew_price', 'number', array('label'   => false))
-            ->add('address',new BoatAddressType())
-
-        ;
-
+            ->add('num_crew', 'number', array(  'label'     => 'Optional number of crew provided',
+                                                'required'  => false))
+            ->add('crew_price', 'number', array('label'     => 'Total price of crew per day',
+                                                'required'  => false))
+            ->add('address',new BoatAddressType());
+        
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

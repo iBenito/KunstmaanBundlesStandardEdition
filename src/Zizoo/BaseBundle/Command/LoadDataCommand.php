@@ -11,6 +11,7 @@ use Zizoo\ProfileBundle\Entity\Profile\NotificationSettings;
 use Zizoo\MessageBundle\Entity\MessageType;
 use Zizoo\BoatBundle\Entity\Equipment;
 use Zizoo\BoatBundle\Entity\IncludedExtra;
+use Zizoo\BoatBundle\Entity\BoatType;
 
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -251,6 +252,23 @@ class LoadDataCommand extends ContainerAwareCommand
         
     }
     
+    private function loadBoatTypes()
+    {
+        $getBoatTypes = file_get_contents(dirname(__FILE__).'/Data/boat_types.json');
+       
+        $boatTypes = json_decode($getBoatTypes);
+        
+        foreach ($boatTypes as $b)
+        {
+            $boatType = new BoatType();
+            $boatType->setId($b->id);
+            $boatType->setName($b->name);
+            $boatType->setOrder($b->order);
+            
+            $this->em->persist($boatType);
+        }
+    }
+    
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         
@@ -267,6 +285,7 @@ class LoadDataCommand extends ContainerAwareCommand
         $this->loadMarinas();
         $this->loadEquipment();
         $this->loadIncludedExtras();
+        $this->loadBoatTypes();
         $this->loadGroups();
         $this->loadMessageTypes();
         $this->loadSuperAdminUsers();

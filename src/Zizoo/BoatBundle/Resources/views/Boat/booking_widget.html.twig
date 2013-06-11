@@ -6,10 +6,12 @@
                 <td>Price</td>
                 <td>{{ book_boat|BookBoat_price(subtotal)|raw}}</td>
             </tr>
+            {% if boat.crewOptional == true %}
             <tr>
                 <td>{{ form_widget(form.crew) }} Crew {{ form_errors(form.crew) }}</td>
                 <td>{{ book_boat|BookBoat_price(crew_price)|raw}}</td>
             </tr>
+            {% endif %}
             <tr>
                 <td>Total</td>
                 <td>{{ book_boat|BookBoat_price(total)|raw}}</td>

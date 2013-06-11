@@ -21,8 +21,9 @@ class BookBoat
     protected $crew_price;
     protected $total;
  
-    public function __construct($boat_id) {
-        $this->boat_id = $boat_id;
+    public function __construct($boat_id, $crew) {
+        $this->boat_id  = $boat_id;
+        $this->crew     = $crew;
     }
     
     public function getBoatId(){

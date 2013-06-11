@@ -26,8 +26,9 @@ class BookBoatExtension extends \Twig_Extension
     }
 
     public function numberOfDays($bookBoat){
-        $from   = $bookBoat->getReservationFrom();
-        $to     = $bookBoat->getReservationTo();
+        $reservationRange = $bookBoat->getReservationRange();
+        $from   = $reservationRange->getReservationFrom();
+        $to     = $reservationRange->getReservationTo();
         if (!$from || !$to) return '...';
         $interval = $from->diff($to);
         return $interval->days;

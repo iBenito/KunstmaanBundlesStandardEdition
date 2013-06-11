@@ -112,7 +112,30 @@ class BoatController extends Controller
         ));
     }
     
-    
+    private function allParametersSet($request)
+    {
+        $boatBookArr = $request->query->get('zizoo_boat_book', null);
+        if (!$boatBookArr) return false;
+        if (!array_key_exists('reservation_range', $boatBookArr)) return false;
+        $reservationRange = $boatBookArr['reservation_range'];
+        if (!array_key_exists('reservation_from', $reservationRange)) return false;
+        $from = $reservationRange['reservation_from'];
+        if ($from=='') return false;
+        try {
+            \DateTime::createFromFormat('d/m/Y', $from);
+        } catch (\Exception $e){
+            return false;
+        }
+        if (!array_key_exists('reservation_to', $reservationRange)) return false;
+        $to = $reservationRange['reservation_to'];
+        if ($to=='') return false;
+        try {
+            \DateTime::createFromFormat('d/m/Y', $to);
+        } catch (\Exception $e){
+            return false;
+        }
+        return true;
+    }
     
     public function bookingWidgetAction($id, Request $request, $reservations=null, $prices=null){
         $session = $request->getSession();
@@ -122,31 +145,39 @@ class BoatController extends Controller
             throw $this->createNotFoundException('Unable to find boat post.');
         }  
         
-        $form = $this->createForm('zizoo_boat_book', new BookBoat($id), array());
-        $form->bind($request);
-        $bookBoat = $form->getData();
-            
-        $reservationAgent = $this->container->get('zizoo_reservation_reservation_agent');
-        try {
-            $reservationRange = $bookBoat->getReservationRange();
-            $from   = $reservationRange?$reservationRange->getReservationFrom():null;
-            $until  = $reservationRange?$reservationRange->getReservationTo():null;
-            $totals = $reservationAgent->getTotalPrice($boat, $from, $until, $bookBoat->getCrew(), true);
-            $bookBoat->setSubtotal($totals['subtotal']);
-            $bookBoat->setCrewPrice($totals['crew_price']);
-            $bookBoat->setTotal($totals['total']);
-        } catch (\Zizoo\ReservationBundle\Exception\InvalidReservationException $e){
-            $totals = null;
-        }
-        
         $valid = false;
+        $totals = null;
         
-        if ($form->isValid() && $bookBoat->getNumGuests()>0){
-            $valid = true;
-            $session->set('boat', $bookBoat);
-        } else {
-            $valid = false;
-            $session->remove('boat');
+        $crew = !$boat->getCrewOptional();
+        $boatBookArr = $request->query->get('zizoo_boat_book', null);
+        if ($boatBookArr && array_key_exists('crew', $boatBookArr)) $crew = $boatBookArr['crew']=='true';
+        $bookBoat = new BookBoat($id, $crew);
+                
+        $form = $this->createForm('zizoo_boat_book', $bookBoat, array());
+        if ($request->isMethod('post') || $this->allParametersSet($request)){
+            $form->bind($request);
+            $bookBoat = $form->getData();
+
+            $reservationAgent = $this->container->get('zizoo_reservation_reservation_agent');
+            try {
+                $reservationRange = $bookBoat->getReservationRange();
+                $from   = $reservationRange?$reservationRange->getReservationFrom():null;
+                $until  = $reservationRange?$reservationRange->getReservationTo():null;
+                $totals = $reservationAgent->getTotalPrice($boat, $from, $until, $bookBoat->getCrew(), true);
+                $bookBoat->setSubtotal($totals['subtotal']);
+                $bookBoat->setCrewPrice($totals['crew_price']);
+                $bookBoat->setTotal($totals['total']);
+            } catch (\Zizoo\ReservationBundle\Exception\InvalidReservationException $e){
+                $totals = null;
+            }
+
+            if ($form->isValid() && $bookBoat->getNumGuests()>0){
+                $valid = true;
+                $session->set('boat', $bookBoat);
+            } else {
+                $valid = false;
+                $session->remove('boat');
+            }
         }
         
         if (!$reservations) $reservations = $boat->getReservation();

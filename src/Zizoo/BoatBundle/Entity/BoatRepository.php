@@ -224,7 +224,7 @@ class BoatRepository extends EntityRepository
     
     public function getMaxBoatValues($boat = null){
         $qb = $this->createQueryBuilder('boat')
-                   ->select('MAX(boat.cabins) as max_cabins, MAX(boat.length) as max_length, MAX(boat.defaultPrice) as max_default_price, MIN(boat.lowestPrice) as min_lowest_price');
+                   ->select('MAX(boat.cabins) as max_cabins, MAX(boat.length) as max_length, MAX(boat.highestPrice) as max_highest_price, MIN(boat.lowestPrice) as min_lowest_price');
         if ($boat){
             $qb->where('boat = :boat');
             $qb->setParameter('boat', $boat);

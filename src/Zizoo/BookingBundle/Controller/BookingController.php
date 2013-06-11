@@ -8,6 +8,9 @@ use Zizoo\BookingBundle\Form\Model\Booking as BookingForm;
 use Zizoo\BookingBundle\Form\Type\BookingType;
 use Zizoo\ReservationBundle\Entity\Reservation;
 use Zizoo\BoatBundle\Form\Model\BookBoat;
+use Zizoo\BaseBundle\Util\ZizooMath;
+
+use Zizoo\BookingBundle\Exception\InvalidBookingException;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -93,7 +96,7 @@ class BookingController extends Controller
         $user           = $this->getUser();
         $session        = $request->getSession();
         $bookBoat       = $session->get('boat');
-        $intendedPrice  = $session->get('price');
+        $intendedPrice  = $bookBoat->getTotal();
         if (!$bookBoat || !$intendedPrice){
             return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
         }
@@ -115,7 +118,8 @@ class BookingController extends Controller
         }
         
         // Calculate price
-        $totalPrice = $reservationAgent->getTotalPrice($boat, $bookBoat->getReservationFrom(), $bookBoat->getReservationTo());
+        $reservationRange = $bookBoat->getReservationRange();
+        $totalPrice = $reservationAgent->getTotalPrice($boat, $reservationRange->getReservationFrom(), $reservationRange->getReservationTo(), $bookBoat->getCrew(), true);
         
         // Get list of countries
         $countries = $em->getRepository('ZizooAddressBundle:Country')->findAll();
@@ -125,7 +129,7 @@ class BookingController extends Controller
             array(
                 'transaction' => array(
                     'type'      => \Braintree_Transaction::SALE,
-                    'amount'    => $bookingAgent->priceToPayNow($totalPrice),
+                    'amount'    => $bookingAgent->priceToPayNow($totalPrice['total']),
                     'customerId'    => $user->getID(),
                     'options'       => array(
                         'storeInVaultOnSuccess'             => true,
@@ -143,8 +147,8 @@ class BookingController extends Controller
         
         $braintreeTransactionKind = $request->query->get('kind', null);
         
-        if ($intendedPrice!=$totalPrice){
-            throw new InvalidBookingException('Price mismatch: ' . $intendedPrice . ' != ' . $totalPrice);
+        if (!ZizooMath::floatcmp($intendedPrice, $totalPrice['total'])){
+            throw new InvalidBookingException('Price mismatch: ' . $intendedPrice . ' != ' . $totalPrice['total']);
         }
         
         if ($request->isMethod('POST')){
@@ -187,7 +191,7 @@ class BookingController extends Controller
         return $this->render('ZizooBookingBundle:Booking:book.html.twig', array('boat'              => $boat,
                                                                                 'book_boat'         => $bookBoat,
                                                                                 'total_price'       => $totalPrice,
-                                                                                'price_to_pay_now'  => $bookingAgent->priceToPayNow($totalPrice),
+                                                                                'price_to_pay_now'  => $bookingAgent->priceToPayNow($totalPrice['total']),
                                                                                 'client_key'        => $clientSideBraintreeKey,
                                                                                 'tr_data'           => $trData,
                                                                                 'braintree_action'  => \Braintree_TransparentRedirect::url(),

@@ -1,0 +1,17 @@
+[
+    {
+        "id":       "yacht",
+        "name":     "Yacht",
+        "order":    0
+    },
+    {
+        "id":       "catamaran",
+        "name":     "Catamaran",
+        "order":    1
+    },
+    {
+        "id":       "sailboat",
+        "name":     "Sailboat",
+        "order":    2
+    }
+]

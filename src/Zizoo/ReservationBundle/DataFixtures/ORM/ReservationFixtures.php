@@ -63,7 +63,7 @@ class ReservationFixtures implements OrderedFixtureInterface, SharedFixtureInter
         $from->modify('-1 week');
         $to->modify('+1 week');
 
-        $bookBoat = new BookBoat($boat1->getId());
+        $bookBoat = new BookBoat($boat1->getId(), !$boat1->getCrewOptional());
         $bookBoat->setNumGuests(5);       
         $bookBoat->setGuestId($user2->getId());
         $reservationRange = new ReservationRange();

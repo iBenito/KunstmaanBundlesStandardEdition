@@ -262,6 +262,17 @@ class CharterController extends Controller
     }
     
     
+    public function bookingsAction()
+    {
+        $user       = $this->getUser();
+        $charter    = $user->getCharter();
+        
+        if (!$charter) {
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
+        }
+        
+        
+    }
     
     
     

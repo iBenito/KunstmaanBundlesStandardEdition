@@ -101,6 +101,11 @@ class Boat extends BaseEntity
     protected $lowestPrice;
     
     /**
+     * @ORM\Column(name="highest_price", type="decimal", precision=19, scale=4, nullable=true)
+     */
+    protected $highestPrice;
+    
+    /**
      * @ORM\ManyToOne(targetEntity="Zizoo\BoatBundle\Entity\BoatType")
      * @ORM\JoinColumn(name="boat_type", referencedColumnName="id")
      */
@@ -579,9 +584,9 @@ class Boat extends BaseEntity
     }
     
     /**
-     * Set defaultPrice
+     * Set lowestPrice
      *
-     * @param float $defaultPrice
+     * @param float $lowestPrice
      * @return Boat
      */
     public function setLowestPrice($lowestPrice)
@@ -601,6 +606,28 @@ class Boat extends BaseEntity
         return $this->lowestPrice;
     }
     
+    /**
+     * Set highestPrice
+     *
+     * @param float $highestPrice
+     * @return Boat
+     */
+    public function setHighestPrice($highestPrice)
+    {
+        $this->highestPrice = $highestPrice;
+    
+        return $this;
+    }
+
+    /**
+     * Get highestPrice
+     *
+     * @return float 
+     */
+    public function getHighestPrice()
+    {
+        return $this->highestPrice;
+    }
     
     /**
      * Add equipment
@@ -726,9 +753,12 @@ class Boat extends BaseEntity
     /**
     * @ORM\preUpdate
     */
-    public function updateLowestPrice()
+    public function updateLowestAndHighestPrice()
     {
-        $lowestPrice = null;
+        $lowestPrice    = null;
+        $highestPrice   = null;
+        
+        // Determine lowest and highest set price (i.e. for specific days)
         $allPrices = $this->getPrice();
         foreach ($allPrices as $price){
             if (!$lowestPrice) {
@@ -736,19 +766,50 @@ class Boat extends BaseEntity
             } else {
                 if ($price->getPrice() < $lowestPrice) $lowestPrice = $price->getPrice();
             }
+            if (!$highestPrice) {
+                $highestPrice = $price->getPrice();
+            } else {
+                if ($price->getPrice() > $highestPrice) $highestPrice = $price->getPrice();
+            }
         }
         $defaultPrice   = $this->getDefaultPrice();
         $crewPrice      = $this->getCrewPrice();
+        
+        // Lowest
         if ($lowestPrice && $defaultPrice){
+            // If a set price exists and default price exists, determine the lower of the two
             $this->setLowestPrice($lowestPrice<$defaultPrice?$lowestPrice:$defaultPrice);
         } else if ($lowestPrice){
+            // If a set price exists but not default price exists, the set price is the lowest price
             $this->setLowestPrice($lowestPrice);
         } else if ($defaultPrice){
+            // If a default price exists but no set price exists, the default price is the lowest price
             $this->setLowestPrice($defaultPrice);
         } else {
+            // Neither a set price nor a default price exist, so the lowest price cannot be determined
             $this->setLowestPrice(null);
         }
-        if ($crewPrice && $this->getLowestPrice()) $this->setLowestPrice ($this->getLowestPrice()+$crewPrice);
+        
+        // Highest
+        if ($highestPrice && $defaultPrice){
+            // If a set price exists and default price exists, determine the higher of the two
+            $this->setHighestPrice($highestPrice>$defaultPrice?$highestPrice:$defaultPrice);
+        } else if ($highestPrice){
+            // If a set price exists but not default price exists, the set price is the highest price
+            $this->setHighestPrice($highestPrice);
+        } else if ($defaultPrice){
+            // If a default price exists but no set price exists, the default price is the highest price
+            $this->setHighestPrice($defaultPrice);
+        } else {
+            // Neither a set price nor a default price exist, so the highest price cannot be determined
+            $this->setHighestPrice(null);
+        }
+        
+        // Add crew price to already determined lowest and highest prices only if crew is included
+        if ($crewPrice && $this->getCrewOptional()){
+            if ($this->getLowestPrice()) $this->setLowestPrice($this->getLowestPrice() + $crewPrice);
+            if ($this->getHighestPrice()) $this->setHighestPrice($this->getHighestPrice() + $crewPrice);
+        }
     }
     
 }

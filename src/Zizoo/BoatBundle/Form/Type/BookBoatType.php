@@ -19,15 +19,16 @@ class BookBoatType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         
-        $builder->add('crew', 'checkbox', array(   'required'      => true));
+        
         
         $builder->add('reservation_range', new ReservationRangeType(), array(   'required'      => false));
         
         $builder->add('num_guests', 'integer', array('required'         => false,
                                                         'by_reference'  => false,
                                                         'attr'          => array('autocomplete' => 'off')));
-        //$subscriber = new BookBoatSubscriber($builder->getFormFactory(), $this->container);
-        //$builder->addEventSubscriber($subscriber);
+        
+        $subscriber = new BookBoatSubscriber($builder->getFormFactory(), $this->container);
+        $builder->addEventSubscriber($subscriber);
     }
 
 
