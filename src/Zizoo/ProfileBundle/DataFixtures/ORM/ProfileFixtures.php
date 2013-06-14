@@ -138,16 +138,14 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
         }
         
         $profileAddress = new ProfileAddress();
-        $profileAddress->setStreet('Im Bräunlesrot');
-        $profileAddress->setPremise('20');
+        $profileAddress->setAddressLine1('Im Bräunlesrot 20');
         $profileAddress->setLocality('Waldbrunn');
         $profileAddress->setPostcode('69429');
         $profileAddress->setCountry($em->getRepository('ZizooAddressBundle:Country')->findOneByIso('DE'));
         $profileAddress->setProfile($profile);
         
         $profileAddress2 = new ProfileAddress();
-        $profileAddress2->setStreet('Brusselsstreet');
-        $profileAddress2->setPremise('20');
+        $profileAddress2->setAddressLine1('Brusselsstreet 20');
         $profileAddress2->setLocality('Bruxelles');
         $profileAddress2->setPostcode('1050');
         $profileAddress2->setCountry($em->getRepository('ZizooAddressBundle:Country')->findOneByIso('BE'));
@@ -173,8 +171,7 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
         }
         
         $profileAddress = new ProfileAddress();
-        $profileAddress->setStreet('Wienerstr.');
-        $profileAddress->setPremise('80');
+        $profileAddress->setAddressLine1('Wienerstr. 80');
         $profileAddress->setLocality('Wien');
         $profileAddress->setPostcode('77777');
         $profileAddress->setCountry($em->getRepository('ZizooAddressBundle:Country')->findOneByIso('AT'));
