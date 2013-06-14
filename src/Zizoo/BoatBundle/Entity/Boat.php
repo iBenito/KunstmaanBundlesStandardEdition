@@ -820,7 +820,7 @@ class Boat extends BaseEntity
     }
     
     /**
-    * @ORM\prePersist
+    * @ORM\PrePersist
     */
     public function prePersist()
     {
