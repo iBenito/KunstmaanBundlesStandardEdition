@@ -12,6 +12,7 @@ use Zizoo\MessageBundle\Entity\MessageType;
 use Zizoo\BoatBundle\Entity\Equipment;
 use Zizoo\BoatBundle\Entity\IncludedExtra;
 use Zizoo\BoatBundle\Entity\BoatType;
+use Zizoo\BookingBundle\Entity\PaymentMethod;
 
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -200,12 +201,30 @@ class LoadDataCommand extends ContainerAwareCommand
         
         foreach ($equipment as $e)
         {
-            $equipment = new Equipment();
-            $equipment->setId($e->id);
-            $equipment->setName($e->name);
-            $equipment->setOrder($e->order);
+            $equipmentEntity = new Equipment();
+            $equipmentEntity->setId($e->id);
+            $equipmentEntity->setName($e->name);
+            $equipmentEntity->setOrder($e->order);
             
-            $this->em->persist($equipment);
+            $this->em->persist($equipmentEntity);
+        }
+    }
+    
+    private function loadPaymentMethods()
+    {
+        $getPaymentMethods = file_get_contents(dirname(__FILE__).'/Data/payment_methods.json');
+       
+        $paymentMethods = json_decode($getPaymentMethods);
+        
+        foreach ($paymentMethods as $p)
+        {
+            $paymentMethod = new PaymentMethod();
+            $paymentMethod->setId($p->id);
+            $paymentMethod->setName($p->name);
+            $paymentMethod->setOrder($p->order);
+            $paymentMethod->setEnabled(true);
+            
+            $this->em->persist($paymentMethod);
         }
     }
     
@@ -286,6 +305,7 @@ class LoadDataCommand extends ContainerAwareCommand
         $this->loadEquipment();
         $this->loadIncludedExtras();
         $this->loadBoatTypes();
+        $this->loadPaymentMethods();
         $this->loadGroups();
         $this->loadMessageTypes();
         $this->loadSuperAdminUsers();

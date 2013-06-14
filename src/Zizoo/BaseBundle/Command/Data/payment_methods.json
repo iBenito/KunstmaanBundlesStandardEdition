@@ -1,0 +1,12 @@
+[
+    {
+        "id":       "credit_card",
+        "name":     "Credit Card",
+        "order":    0
+    },
+    {
+        "id":       "bank_transfer",
+        "name":     "Bank Transfer",
+        "order":    1
+    }
+]

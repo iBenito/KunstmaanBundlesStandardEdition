@@ -302,6 +302,7 @@ class MessageController extends BaseController
         if (!$ajax) $ajax       = $request->isXmlHttpRequest();
         
         $user           = $this->container->get('security.context')->getToken()->getUser();
+        $charter        = $user->getCharter();
         
         $provider       = $this->getProvider();
         $thread         = $provider->getThread($threadId);
@@ -329,6 +330,7 @@ class MessageController extends BaseController
                 'thread'        => $thread,
                 'inquiry_type'  => $messageTypeRepo->findOneById('inquiry'),
                 'user'          => $user,
+                'charter'       => $charter,
                 'ajax'          => $ajax
             ));
         } else {
@@ -337,6 +339,7 @@ class MessageController extends BaseController
                 'thread'        => $thread,
                 'inquiry_type'  => $messageTypeRepo->findOneById('inquiry'),
                 'user'          => $user,
+                'charter'       => $charter,
                 'ajax'          => $ajax
             ));
         }

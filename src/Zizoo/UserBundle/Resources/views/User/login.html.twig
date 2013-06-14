@@ -24,7 +24,9 @@
             <button type="submit">{% trans %}zizoo_user.label.login{% endtrans %}</button>
         </form>
         
-        {% if error %}
+        {% if unconfirmed_user is not null %}
+            <div>You need to <a class="resend_confirmation_link" href="{{ path('ZizooUserBundle_resend_confirmation', {email: unconfirmed_user.email}) }}">{% trans %}confirm your account{% endtrans %}</a></div>
+        {% elseif error %}
             <div>{{ error.message }}</div>
             <a class="forgot_password_link" href="{{ path('ZizooUserBundle_forgot_password') }}">{% trans %}zizoo_user.label.forgot_password{% endtrans %}</a>
         {% endif %}

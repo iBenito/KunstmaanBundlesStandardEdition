@@ -46,7 +46,7 @@ class RegistrationController extends Controller
                 $messenger      = $this->get('messenger');
                 
                 $charterService->setupCharter($charter, $user, $user, false);
-                $user = $userService->registerUser($user, $profile);
+                $user = $userService->registerUser($user, $profile, true);
                 $messenger->sendConfirmationEmail($user);
 
                 return $this->redirect($this->generateUrl('ZizooCharterBundle_Registration_submitted'));

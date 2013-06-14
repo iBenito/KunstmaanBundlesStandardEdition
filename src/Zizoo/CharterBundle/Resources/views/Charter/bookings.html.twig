@@ -1,0 +1,175 @@
+{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
+    
+{% block dashboard_page_title %}My Bookings{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/zizoojqgridcustom/css/ui.jqgrid.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('css/custom_combobox.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+    
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/main.js') }}" type="text/javascript"></script>
+    <script type="text/javascript" src="{{ asset('bundles/zizoojqgridcustom/js/i18n/grid.locale-en.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/zizoojqgridcustom/js/jquery.jqGrid.src.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/zizoojqgridcustom/js/jquery.contextmenu-ui.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/custom_combobox.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+            {{ flashMessage}}
+        </div>
+    {% endfor %}
+
+    {% for flashMessage in app.session.flashbag.get('error') %}
+        <div class="flash-error">
+            {{ flashMessage}}
+        </div>
+    {% endfor %}
+
+    {{jqgrid(grid)}}
+    
+    <div class="contextMenu" id="contextMenu" style="display: none">
+        <ul style="width: 400px">
+            <li id="open">
+                <span class="ui-icon ui-icon-folder-open" style="float:left"></span>
+                <span style="font-size:11px; font-family:Verdana">Open</span>
+            </li>
+            <li id="view_guest_profile">
+                <span class="ui-icon ui-icon-search" style="float:left"></span>
+                <span style="font-size:11px; font-family:Verdana" >View guest profile</span>
+            </li>
+        </ul>
+    </div>
+         
+    <style type="text/css">
+        .ui-jqgrid-titlebar {
+            display: none;
+        }
+        
+        ul.ui-menu li .ui-icon {
+            position: static;
+        }
+    </style>
+    
+    <script type="text/javascript">
+
+        function openBooking(bookingId){
+            alert("open booking " + bookingId);
+        }
+        
+        function openGuestProfile(guestUsername){
+            var url = '{{ path('ZizooProfileBundle_show', {username: '_replaceme_'}) }}';
+            url = url.replace('_replaceme_', guestUsername)
+            window.location.href = url;
+        }
+
+        function bookingDoubleClick(rowId, rowIndex, colIndex, e){
+            var bookingId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', rowId, 'grid_bookingsreservation_id');
+            openBooking(bookingId);
+        }
+
+        function createBookingSearch(elem){
+            $(elem).attr('class', 'search');
+            var id = $(elem).attr('id');
+            var newSelect = $('<select id="'+id+'_search" class="zizoo_combobox">{% for status_id, status_val in grid.extraParams['bookingOptions'] %}<option value="{{ status_id }}">{{ status_val }}</option>{% endfor %}</select>').hide();
+            $(elem).hide().after(newSelect);
+        }
+        
+        function createBoatSearch(elem){
+            $(elem).attr('class', 'search');
+            var id = $(elem).attr('id');
+            var newSelect = $('<select id="'+id+'_search" class="zizoo_combobox">{% for status_id, status_val in grid.extraParams['boatOptions'] %}<option value="{{ status_id }}">{{ status_val }}</option>{% endfor %}</select>').hide();
+            $(elem).hide().after(newSelect);
+        }
+        
+        function createGuestSearch(elem){
+            $(elem).attr('class', 'search');
+            var id = $(elem).attr('id');
+            var newSelect = $('<select id="'+id+'_search" class="zizoo_combobox">{% for status_id, status_val in grid.extraParams['guestOptions'] %}<option value="{{ status_id }}">{{ status_val }}</option>{% endfor %}</select>').hide();
+            $(elem).hide().after(newSelect);
+        }
+        
+        function createStatusSearch(elem){
+            $(elem).attr('class', 'search');
+            var id = $(elem).attr('id');
+            var newSelect = $('<select id="'+id+'_search" class="zizoo_combobox">{% for status_id, status_val in grid.extraParams['statusOptions'] %}<option value="{{ status_id }}">{{ status_val }}</option>{% endfor %}</select>').hide();
+            $(elem).hide().after(newSelect);
+        }
+
+        function resizeColumn(newWidth, index){
+            var comboSpan = $('#gview_{{ grid.name }} tr.ui-search-toolbar th:eq('+index+') span.custom-combobox');
+            $(comboSpan).width(newWidth);
+            var input = $(comboSpan).children('input.custom-combobox-input');
+            $(input).width(newWidth-31);
+        }
+        
+        function setupContextMenu(grid){
+            $("tr.jqgrow", grid).contextMenu('contextMenu', {
+                bindings: {
+                    'open': function(trigger) {
+                        // trigger is the DOM element ("tr.jqgrow") which is triggered
+                        var bookingId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_bookingsreservation_id');
+                        openBooking(bookingId);
+                    },
+                    'view_guest_profile': function(trigger) {
+                        // trigger is the DOM element ("tr.jqgrow") which is triggered
+                        var guestUsername = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_bookingsguest_username');
+                        openGuestProfile(guestUsername);
+                    }
+                },
+                onContextMenu: function(event/*, menu*/) {
+                    var rowId = $(event.target).closest("tr.jqgrow").attr("id");
+                    jQuery('#{{ grid.name|raw }}').jqGrid('setSelection', rowId);
+                    var isRead = jQuery('#{{ grid.name|raw }}').jqGrid('getCell',rowId,'{{ grid.name|raw }}IsRead') == 'true';
+                    if (isRead){
+                        $('#contextMenu #mark_read').hide();
+                        //$('#contextMenu #mark_unread').show();
+                    } else {
+                        $('#contextMenu #mark_read').show();
+                        //$('#contextMenu #mark_unread').hide();
+                    }
+                    return true;
+                }
+            });
+        }
+        
+        function loadComplete(){
+            setupContextMenu(this);
+            
+            
+            $('#gview_{{ grid.name }} .ui-search-toolbar .zizoo_combobox').each(function(index,el){
+                $(el).combobox({    select: function(val, option){ 
+                                        var sel = $(option.item).parent();
+                                        var actualInput = $(sel).parent().children('input.search');
+                                        $(actualInput).val($(option.item).val());
+                                        $(actualInput).trigger(jQuery.Event( 'keypress', { charCode: $.ui.keyCode.ENTER } ));
+                                    },
+                                    keypress: function(e){
+                                        if (e.keyCode==13){
+                                            var input = $(e.currentTarget);
+                                            var actualInput = $(input).parent().parent().children('input.search');
+                                            $(actualInput).val($(input).val());
+                                            $(actualInput).trigger(jQuery.Event( 'keypress', { charCode: $.ui.keyCode.ENTER } ));
+                                        }
+                                    },
+                                    autocompletechange: function(e){}
+                });
+                var th = $(el).parent().parent();
+                resizeColumn($(th).width(), $(th).index());
+            });
+            
+        }
+        
+        $(document).ready(function(){
+            
+            jQuery('#{{ grid.name|raw }}').jqGrid('setGridParam', { ondblClickRow: bookingDoubleClick } );
+        });
+        
+    </script>
+    
+{% endblock %}

@@ -139,7 +139,7 @@ class Column extends GridTools
         $dp = '';
 
         if (array_key_exists('datepicker', $model) && $model['datepicker']) {
-            $dp = ' ,"searchoptions" : {dataInit : datePick, "attr" : { "title": "Choisir une date" }}';
+            $dp = ' ,"searchoptions" : {dataInit : datePick, "attr" : { "title": "Select a date" }}';
         }
 
         if (array_key_exists('autocomplete', $model)) {

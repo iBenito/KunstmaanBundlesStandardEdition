@@ -26,7 +26,7 @@ class ReservationListener
         $until              = $reservation->getCheckOut();
         $from->setTime(0,0,0);
         $until->setTime(23,59,59);
-        $interval = $from->diff($to);
+        $interval = $from->diff($until);
         
         $reservationAgent   = $this->container->get('zizoo_reservation_reservation_agent');
 
@@ -36,9 +36,10 @@ class ReservationListener
         } else if ($reservation->getNrGuests() > $boat->getNrGuests())
         {
             throw new InvalidReservationException('Too many guests: '.$reservation->getNrGuests().'>'.$boat->getNrGuests());
-        } else if ($boat->getMinimumDays() && $interval->days < $boat->getMinimumDays()){
+        } else if ($boat->getMinimumDays() && $interval->days < $boat->getMinimumDays() && $reservation->getStatus()!=Reservation::STATUS_SELF){
             throw new InvalidReservationException('Boat must be booked for a minimum of '.$boat->getMinimumDays().' days.');
         }
+
     }
     
     public function prePersist(LifecycleEventArgs $args)

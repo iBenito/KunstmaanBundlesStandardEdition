@@ -823,7 +823,12 @@ $.fn.jqGrid = function( pin ) {
 						}
 					}
 					$(ts).triggerHandler("jqGridResizeStop", [nw, idx]);
-					if($.isFunction(p.resizeStop)) { p.resizeStop.call(this,nw,idx); }
+					if($.isFunction(p.resizeStop)) { 
+                                            p.resizeStop.call(this,nw,idx); 
+                                        } else if(p.resizeStop != undefined && !$.isFunction(p.resizeStop)) {
+                                            eval("p.resizeStop = " + p.resizeStop);
+                                            p.resizeStop.call(this,nw,idx);
+                                        }
 				}
 				this.curGbox = null;
 				document.onselectstart=function(){return true;};

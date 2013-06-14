@@ -65,3 +65,10 @@ ZizooCharterBundle_Charter_Users:
     defaults: { _controller: ZizooCharterBundle:Charter:users }
     requirements:
         _method:  GET|POST
+        
+ZizooCharterBundle_Charter_Bookings:
+    pattern:  /account/bookings
+    defaults: { _controller: ZizooCharterBundle:Charter:bookings }
+    requirements:
+        _method:  GET|POST
+        

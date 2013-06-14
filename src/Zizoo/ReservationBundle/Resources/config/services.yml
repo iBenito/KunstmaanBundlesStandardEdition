@@ -1,4 +1,5 @@
 parameters:
+    zizoo_reservation.reservation_request_response_hours: 48
 #    zizoo_reservation.example.class: Zizoo\ReservationBundle\Example
 
 services:

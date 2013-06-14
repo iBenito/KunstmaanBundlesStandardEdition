@@ -71,7 +71,7 @@
             <input type="hidden" class="request_uri" value="{{ request_uri }} " />
             {% for boat in pagination %}
                 <div class="boat_image">
-                    {% if boat.image %}
+                    {% if boat.image.first != false %}
                         <img src="{{ boat.image.first.path }}" />
                     {% endif %}
                 </div>

@@ -46,6 +46,7 @@ class PaymentMethodFixtures implements OrderedFixtureInterface, SharedFixtureInt
     
     public function load(ObjectManager $manager)
     {        
+        return;
         $paymentMethod = new PaymentMethod('credit_card', 'Credit Card', 0);
         $manager->persist($paymentMethod);
      

@@ -33,6 +33,18 @@ class BoatRepository extends EntityRepository
                   ->getResult();
     }
     
+    public function getCharterBoats($charter)
+    {
+        $qb = $this->createQueryBuilder('boat')
+                   ->leftJoin('boat.charter', 'charter')
+                   ->select('boat, charter')
+                   ->where('charter = :charter')
+                   ->setParameter('charter', $charter);
+
+        return $qb->getQuery()
+                  ->getResult();
+    }
+    
     /**
      * 
      * @param string $search      Optional location search value

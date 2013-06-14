@@ -568,10 +568,10 @@ class BoatController extends Controller
         $request            = $this->getRequest();
         $boatService        = $this->container->get('boat_service');
         $user               = $this->getUser();
+        
+        if (!$id) $id       = $request->request->get('boat_id', null);
         $active             = $request->request->get('active_'.$id, false)=='on';
-        
-        if (!$id) $id = $request->request->get('boat_id', null);
-        
+                
         $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
         if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
             throw $this->createNotFoundException('Unable to find Boat entity.');

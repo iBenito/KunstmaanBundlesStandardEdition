@@ -81,21 +81,24 @@ class UserService
         }
     }
     
-    public function registerUser(User $user, Profile $profile){
+    public function registerUser(User $user, Profile $profile, $charter=false){
         $user->setSalt(md5(time()));
         $encoder = new MessageDigestPasswordEncoder('sha512', true, 10);
         $password = $encoder->encodePassword($user->getPassword(), $user->getSalt());
         $user->setPassword($password);
         $user->setConfirmationToken(uniqid());
         
-        $zizooUserGroup = $this->em->getRepository('ZizooUserBundle:Group')->findOneByRole('ROLE_ZIZOO_USER');
-        $user->addGroup($zizooUserGroup);
+        $groupRepo = $this->em->getRepository('ZizooUserBundle:Group');
+        if ($charter){
+            $user->addGroup($groupRepo->findOneByRole('ROLE_ZIZOO_CHARTER_ADMIN'));
+        } else {
+            $user->addGroup($groupRepo->findOneByRole('ROLE_ZIZOO_USER'));
+        }
         
         $profile->setCreated($user->getCreated());
         $profile->setUpdated($user->getUpdated());
         $profile->setUser($user);
         
-        $this->em->persist($zizooUserGroup);
         $this->em->persist($user);
         $this->em->persist($profile);
         $this->em->flush();

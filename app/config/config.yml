@@ -97,4 +97,3 @@ fos_message:
         type:               zizoo_message.reply_form_type
         handler:            zizoo_message.reply_form.handler
         model:              Zizoo\MessageBundle\Form\Model\ReplyMessage
-        

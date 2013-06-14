@@ -3,8 +3,54 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "294e0b6daf396057fcc583a79e072681",
+    "hash": "ce13ba7c16c74602001dc973d37c2cfb",
     "packages": [
+        {
+            "name": "ali/datatable",
+            "version": "dev-master",
+            "target-dir": "Ali/DatatableBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/AliHichem/AliDatatableBundle.git",
+                "reference": "37547870ef33cdd4a80dd2330fc817fabf0bdab8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/AliHichem/AliDatatableBundle/zipball/37547870ef33cdd4a80dd2330fc817fabf0bdab8",
+                "reference": "37547870ef33cdd4a80dd2330fc817fabf0bdab8",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/common": ">=2.1,<2.4.x-dev",
+                "php": ">=5.3.0",
+                "twig/twig": ">=1.8,<2.0-dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Ali\\DatatableBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ali hichem",
+                    "email": "ali.hichem@mail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Symfony2 Ajax Datagrid Bundle for doctrine2 entities",
+            "homepage": "https://github.com/AliHichem/AliDatatableBundle",
+            "keywords": [
+                "Symfony2",
+                "datatable",
+                "jquery"
+            ],
+            "time": "2013-06-01 16:35:11"
+        },
         {
             "name": "braintree/braintree_php",
             "version": "dev-master",
@@ -2872,7 +2918,8 @@
         "braintree/braintree_php": 20,
         "friendsofsymfony/message-bundle": 20,
         "punkave/symfony2-file-uploader-bundle": 20,
-        "willdurand/geocoder": 20
+        "willdurand/geocoder": 20,
+        "ali/datatable": 20
     },
     "platform": {
         "php": ">=5.3.3"

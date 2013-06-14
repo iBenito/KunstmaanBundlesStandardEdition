@@ -54,13 +54,27 @@ class UserController extends Controller
         $routeName = $request->get('_route');
         $facebook = $this->get('facebook');
         
+        $unconfirmedUser    = null;
+        if ($error instanceof \Symfony\Component\Security\Core\Exception\DisabledException){
+            $lastUsername   = $session->get(SecurityContext::LAST_USERNAME);
+            $userRepo       = $this->getDoctrine()->getManager()->getRepository('ZizooUserBundle:User');
+            $emailUser      = $userRepo->findOneByEmail($lastUsername);
+            $usernameUser   = $userRepo->findOneByUsername($lastUsername);
+            if ($emailUser){
+                $unconfirmedUser = $emailUser->getConfirmationToken()!=null?$emailUser:null;
+            } else if ($usernameUser){
+                $unconfirmedUser = $usernameUser->getConfirmationToken()!=null?$usernameUser:null;
+            }
+        }
+        
         return $this->render('ZizooUserBundle:User:login.html.twig', array(
             // last username entered by the user
-            'last_username' => $session->get(SecurityContext::LAST_USERNAME),
-            'error'         => $error,
-            'current_route' => $routeName,
-            'facebook'      => $facebook,
-            'ajax'          => $request->isXmlHttpRequest()
+            'last_username'         => $session->get(SecurityContext::LAST_USERNAME),
+            'error'                 => $error,
+            'unconfirmed_user'      => $unconfirmedUser,
+            'current_route'         => $routeName,
+            'facebook'              => $facebook,
+            'ajax'                  => $request->isXmlHttpRequest()
         ));
     }
     
@@ -205,82 +219,7 @@ class UserController extends Controller
     public function resetPasswordConfirmAction(){
         return $this->render('ZizooUserBundle:Email:reset_password.html.twig');
     }
-    
-    
-//    public function inviteFriendsAction(){
-//        $user       = $this->getUser();
-//        $request    = $this->getRequest();
-//        $isPost     = $request->isMethod('POST');
-//        $ajax       = $request->isXmlHttpRequest();      
-//        $form       = $this->createForm(new InvitationType(), new Invitation());
-//        
-//        // If submit
-//        if ($isPost) {
-//            $form->bind($request);
-//            
-//            $invitation = $form->getData();
-//            
-//            if ($form->isValid()){
-//                $messenger  = $this->get('messenger');
-//                $trans      = $this->get('translator');
-//                $em         = $this->getDoctrine()
-//                                    ->getManager();
-//                
-//                $inviteEmail = $invitation->getEmail1();
-//                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
-//                if ($inviteUser){
-//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
-//                } else if ($inviteEmail!='') {
-//                    $messenger->sendInvitationEmail($inviteEmail, $user);
-//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
-//                }
-//                
-//                $inviteEmail = $invitation->getEmail2();
-//                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
-//                if ($inviteUser){
-//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
-//                } else if ($inviteEmail!='') {
-//                    $messenger->sendInvitationEmail($inviteEmail, $user);
-//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
-//                }
-//                
-//                $inviteEmail = $invitation->getEmail3();
-//                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
-//                if ($inviteUser){
-//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
-//                } else if ($inviteEmail!='') {
-//                    $messenger->sendInvitationEmail($inviteEmail, $user);
-//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
-//                }
-//                
-//                $inviteEmail = $invitation->getEmail4();
-//                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
-//                if ($inviteUser){
-//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
-//                } else if ($inviteEmail!='') {
-//                    $messenger->sendInvitationEmail($inviteEmail, $user);
-//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
-//                }
-//                
-//                $inviteEmail = $invitation->getEmail5();
-//                $inviteUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($inviteEmail);
-//                if ($inviteUser){
-//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friend_already_exists'));
-//                } else if ($inviteEmail!='') {
-//                    $messenger->sendInvitationEmail($inviteEmail, $user);
-//                    $this->get('session')->getFlashBag()->add('notice', $inviteEmail . ' ' . $trans->trans('zizoo_user.friends_invited'));
-//                }
-//                
-//
-//                return $this->redirect($this->generateUrl('ZizooUserBundle_invite', array('form' => $form)));
-//            }
-//        }
-//        
-//        return $this->container->get('templating')->renderResponse('ZizooUserBundle:User:invite.html.twig', array(
-//            'form'  => $form->createView(),
-//            'ajax'  => $ajax
-//        ));
-//    }
+ 
     
     public function inviteFriendsAction(){
         $user       = $this->getUser();

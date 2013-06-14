@@ -14,8 +14,9 @@ class AddressType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('street', 'text')
-            ->add('premise', 'text')
+            ->add('address_line_1')
+            ->add('address_line_2', 'text', array(  'label'     => 'Address Line 2 (optional)',
+                                                    'required'  => false))
             ->add('postcode', 'text')
             ->add('locality', 'text')
             ->add('sub_locality', 'text')

@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class ReservationRepository extends EntityRepository
 {
-    
+        
     public function getReservationBoatIds($resFrom, $resTo) {
         
         $qb = $this->createQueryBuilder('r')

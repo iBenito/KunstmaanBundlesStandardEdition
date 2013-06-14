@@ -12,4 +12,19 @@ use Doctrine\ORM\EntityRepository;
  */
 class BookingRepository extends EntityRepository
 {
+    
+    public function getCharterBookings($charter)
+    {
+        $qb = $this->createQueryBuilder('booking')
+                   ->leftJoin('booking.reservation', 'reservation')
+                   ->leftJoin('reservation.boat', 'boat')
+                   ->leftJoin('reservation.guest', 'guest')
+                   ->leftJoin('boat.charter', 'charter')
+                   ->select('booking')
+                   ->where('charter = :charter')
+                   ->setParameter('charter', $charter);
+
+        return $qb->getQuery()
+                  ->getResult();
+    }
 }

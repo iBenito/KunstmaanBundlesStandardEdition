@@ -9,12 +9,9 @@ Zizoo\CharterBundle\Entity\Charter:
             
 Zizoo\AddressBundle\Entity\CharterAddress:
     properties:
-        street:
+        addressLine1:
             - NotBlank: { message: zizoo_charter.error.charter_address_street_not_blank, groups: [registration] }
-            
-        premise:
-            - NotBlank: { message: zizoo_charter.error.charter_address_premise_not_blank, groups: [registration] }
-            
+
         postcode:
             - NotBlank: { message: zizoo_charter.error.charter_address_postcode_not_blank, groups: [registration] }
             

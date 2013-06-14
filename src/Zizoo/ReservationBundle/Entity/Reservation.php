@@ -18,6 +18,8 @@ class Reservation extends BaseEntity
     const STATUS_SELF       = 5;
     const STATUS_HOLD       = 6;
     
+    const NUM_STATUS        = 6;
+    
     /**
      * @ORM\ManyToOne(targetEntity="Zizoo\BoatBundle\Entity\Boat", inversedBy="reservation")
      * @ORM\JoinColumn(name="boat_id", referencedColumnName="id")
@@ -71,7 +73,12 @@ class Reservation extends BaseEntity
      * @ORM\Column(type="text", nullable=true)
      */
     protected $reason;
-        
+    
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    protected $hours_to_respond;
+    
     
     public function __construct()
     {
@@ -307,6 +314,17 @@ class Reservation extends BaseEntity
     public function getReason()
     {
         return $this->reason;
+    }
+    
+    public function setHoursToRespond($hoursToRespond)
+    {
+        $this->hours_to_respond = $hoursToRespond;
+        return $this;
+    }
+    
+    public function getHoursToRespond()
+    {
+        return $this->hours_to_respond;
     }
     
 }

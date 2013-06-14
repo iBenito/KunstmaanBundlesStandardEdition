@@ -16,7 +16,7 @@
                 {% elseif thread.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') %}
                     <p>The request was tenatively accepted.</p>
                 {% endif %}
-            {% elseif thread.reservation.boat.user == user %}
+            {% elseif thread.reservation.boat.charter == charter %}
                 <p>You received reservation request for boat {{ thread.reservation.boat.id }}</p>
                 {% if thread.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_REQUESTED') %}
                     <p>Please <a href="{{ path('ZizooReservationBundle_view', {id: thread.reservation.id}) }}">respond to the request</a>.</p>

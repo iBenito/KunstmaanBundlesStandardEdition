@@ -27,16 +27,16 @@ class AddressBase
     /**
      * @var string
      *
-     * @ORM\Column(name="street", type="string", length=255, nullable=true)
+     * @ORM\Column(name="addr_line_1", type="string", length=255, nullable=true)
      */
-    protected $street;
+    protected $addressLine1;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="premise", type="string", length=255, nullable=true)
+     * @ORM\Column(name="addr_line_2", type="string", length=255, nullable=true)
      */
-    protected $premise;
+    protected $addressLine2;
 
     /**
      * @var string
@@ -73,6 +73,7 @@ class AddressBase
      */
     protected $province;
 
+    
     /**
      * @var string
      *
@@ -111,10 +112,10 @@ class AddressBase
             $this->setExtra2($address->getExtra2());
             $this->setLocality($address->getLocality());
             $this->setPostcode($address->getPostcode());
-            $this->setPremise($address->getPremise());
             $this->setProvince($address->getProvince());
             $this->setState($address->getState());
-            $this->setStreet($address->getStreet());
+            $this->setAddressLine1($address->getAddressLine1());
+            $this->setAddressLine2($address->getAddressLine2());
             $this->setSubLocality($address->getSubLocality());
         }
     }
@@ -130,49 +131,49 @@ class AddressBase
     }
 
     /**
-     * Set street
+     * Set address line 1
      *
-     * @param string $street
+     * @param string $addressLine1
      * @return AddressBase
      */
-    public function setStreet($street)
+    public function setAddressLine1($addressLine1)
     {
-        $this->street = $street;
+        $this->addressLine1 = $addressLine1;
     
         return $this;
     }
 
     /**
-     * Get street
+     * Get address line 1
      *
      * @return string 
      */
-    public function getStreet()
+    public function getAddressLine1()
     {
-        return $this->street;
+        return $this->addressLine1;
     }
 
     /**
-     * Set premise
+     * Set address line 2
      *
-     * @param string $premise
+     * @param string $addressLine2
      * @return AddressBase
      */
-    public function setPremise($premise)
+    public function setAddressLine2($addressLine2)
     {
-        $this->premise = $premise;
+        $this->addressLine2 = $addressLine2;
     
         return $this;
     }
 
     /**
-     * Get premise
+     * Get address line 2
      *
      * @return string 
      */
-    public function getPremise()
+    public function getAddressLine2()
     {
-        return $this->premise;
+        return $this->addressLine2;
     }
 
     /**
@@ -414,14 +415,15 @@ class AddressBase
      */
     public function getFormattedAddress(){
         $address = array();
-        $street     = $this->getStreet();
-        $premise    = $this->getPremise();
-        if ($street && $street!=''){
-            if ($premise && $premise!=''){
-                $address[] = $street . ' ' . $premise;
-            } else {
-                $address[] = $street;
-            }
+        
+        $addressLine1 = $this->getAddressLine1();
+        if ($addressLine1 && $addressLine1!=''){
+            $address[] = $addressLine1;
+        }
+        
+        $addressLine2 = $this->getAddressLine2();
+        if ($addressLine2 && $addressLine2!=''){
+            $address[] = $addressLine2;
         }
         
         $postcode = $this->getPostcode();

@@ -119,8 +119,9 @@ class ReservationAgent {
     
     public function makeReservation(Boat $boat, BookBoat $bookBoat, $cost, User $guest, $flush=false)
     {
-        $from = $bookBoat->getReservationFrom();
-        $to   = $bookBoat->getReservationTo();        
+        $reservationRange = $bookBoat->getReservationRange();
+        $from = $reservationRange->getReservationFrom();
+        $to   = $reservationRange->getReservationTo();        
         return $this->makeReservationWithStatus($boat, $from, $to, $bookBoat->getNumGuests(), $cost, $guest, Reservation::STATUS_REQUESTED, $flush);
         
     }
@@ -242,6 +243,25 @@ class ReservationAgent {
         }
     }
     
+    public function hoursToRespond(Reservation $reservation)
+    {
+        $hoursToRespond = $reservation->getHoursToRespond();
+        if (!$hoursToRespond) return false;
+        
+        if ($reservation->getStatus()!=Reservation::STATUS_REQUESTED) return false;
+        
+        //$setHoursToRespond = $this->container->getParameter('zizoo_reservation.reservation_request_response_hours');
+        
+        $now = new \DateTime();
+        
+        $interval = $now->diff($reservation->getCreated());
+        
+        $hours = $interval->h;
+        $hours = $hours + ($interval->d*24);
+        
+        return $hours;
+    }
+    
     
     public function statusToString($status)
     {
@@ -261,10 +281,14 @@ class ReservationAgent {
             case Reservation::STATUS_SELF:
                 return 'Reserved';
                 break;
+            case Reservation::STATUS_HOLD:
+                return 'Hold';
+                break;
             default:
                 return 'Unkown status';
                 break;
         }
     }
+    
 }
 ?>

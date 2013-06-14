@@ -49,6 +49,7 @@ class ReservationController extends Controller
         $request    = $this->getRequest();
         $ajax       = $request->isXmlHttpRequest();
         $user       = $this->getUser();
+        $charter    = $user->getCharter();
         
         $em                 = $this->getDoctrine()->getManager();
         $reservation        = $em->getRepository('ZizooReservationBundle:Reservation')->findOneById($id);
@@ -63,7 +64,7 @@ class ReservationController extends Controller
         $thread             = $em->getRepository('ZizooMessageBundle:Thread')->findOneByReservation($reservation);
         
         $overlappingReservationRequests = $em->getRepository('ZizooReservationBundle:Reservation')
-                                                ->getReservations($user, $reservation->getBoat(), 
+                                                ->getReservations($charter, $user, $reservation->getBoat(), 
                                                                     $reservation->getCheckIn(), $reservation->getCheckOut(),
                                                                     array(Reservation::STATUS_REQUESTED), $reservation);
         
