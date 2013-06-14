@@ -85,7 +85,7 @@ class ReservationAgent {
         return $this->getReservation($boat, $from, $to)!=null;
     }
     
-    private function makeReservationWithStatus($boat, $from, $to, $numGuests, $cost, User $guest, $status, $flush=false)
+    private function makeReservationWithStatus($boat, $from, $to, $numGuests, $cost, User $guest, $status, $hoursToRespond=null, $flush=false)
     {
         $from->setTime(0,0,0);
         $to->setTime(23,59,59);
@@ -114,15 +114,16 @@ class ReservationAgent {
     
     public function makeReservationForSelf(Boat $boat, $from, $to, $flush=false)
     {
-        return $this->makeReservationWithStatus($boat, $from, $to, 0, 0, $boat->getCharter()->getAdminUser(), Reservation::STATUS_SELF, $flush);
+        return $this->makeReservationWithStatus($boat, $from, $to, 0, 0, $boat->getCharter()->getAdminUser(), Reservation::STATUS_SELF, null, $flush);
     }
     
     public function makeReservation(Boat $boat, BookBoat $bookBoat, $cost, User $guest, $flush=false)
     {
         $reservationRange = $bookBoat->getReservationRange();
         $from = $reservationRange->getReservationFrom();
-        $to   = $reservationRange->getReservationTo();        
-        return $this->makeReservationWithStatus($boat, $from, $to, $bookBoat->getNumGuests(), $cost, $guest, Reservation::STATUS_REQUESTED, $flush);
+        $to   = $reservationRange->getReservationTo();     
+        $setHoursToRespond = $this->container->getParameter('zizoo_reservation.reservation_request_response_hours');
+        return $this->makeReservationWithStatus($boat, $from, $to, $bookBoat->getNumGuests(), $cost, $guest, Reservation::STATUS_REQUESTED, $setHoursToRespond, $flush);
         
     }
     
