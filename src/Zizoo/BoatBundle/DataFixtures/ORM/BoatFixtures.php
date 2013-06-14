@@ -75,8 +75,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat1->setDefaultPrice(9.99);        
         
         $boat1Address = new BoatAddress();
-        $boat1Address->setStreet('Krk Marina');
-        $boat1Address->setPremise('48');
+        $boat1Address->setAddressLine1('Krk Marina 48');
         $boat1Address->setLocality('Krk');
         $boat1Address->setPostcode('54321');
         $boat1Address->setCountry($countryRepo->findOneByIso('HR'));
@@ -110,8 +109,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat2->setDefaultPrice(11.99);
         
         $boat2Address = new BoatAddress();
-        $boat2Address->setStreet('Alicante Marina');
-        $boat2Address->setPremise('84');
+        $boat2Address->setAddressLine1('Alicante Marina 84');
         $boat2Address->setLocality('Alicante');
         $boat2Address->setPostcode('12345');
         $boat2Address->setProvince('Some spanish province');
@@ -135,8 +133,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat3->setDefaultPrice(99.99);
         
         $boat3Address = new BoatAddress();
-        $boat3Address->setStreet('Brighton Marina');
-        $boat3Address->setPremise('48');
+        $boat3Address->setAddressLine1('Brighton Marina 48');
         $boat3Address->setLocality('Brighton');
         $boat3Address->setPostcode('BN1 1NB');
         $boat3Address->setCountry($countryRepo->findOneByIso('GB'));   
@@ -160,8 +157,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat4->setDefaultPrice(10000);
         
         $boat4Address = new BoatAddress();
-        $boat4Address->setStreet('Bristol Harbour');
-        $boat4Address->setPremise('48');
+        $boat4Address->setAddressLine1('Bristol Harbour 48');
         $boat4Address->setLocality('Bristol');
         $boat4Address->setPostcode('BS1 5QA');
         $boat4Address->setCountry($countryRepo->findOneByIso('GB'));
