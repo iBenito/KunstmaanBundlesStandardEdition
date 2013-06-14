@@ -457,8 +457,7 @@ class CharterController extends Controller
                         }
                     } else if ($fieldName=='guest_username'){
                         if ($booking){
-                            $hours = $reservationAgent->hoursToRespond($reservation);
-                            $val[] = $hours?$hours:'-';
+                            $val[] = $booking->getRenter()->getUsername();
                         } else {
                             $val[] = '-';
                         }
