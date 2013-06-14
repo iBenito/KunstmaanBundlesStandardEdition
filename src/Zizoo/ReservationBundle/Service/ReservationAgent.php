@@ -98,6 +98,7 @@ class ReservationAgent {
         $reservation->setGuest($guest);
         $reservation->setStatus($status);
         $reservation->setCost($cost);
+        $reservation->setHoursToRespond($hoursToRespond);
 
         $reservationAddress = new ReservationAddress($boat);
         $reservation->setAddress($reservationAddress);
