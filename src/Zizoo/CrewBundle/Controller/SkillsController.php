@@ -12,7 +12,7 @@ use Zizoo\CrewBundle\Form\SkillsType;
  * Skills controller.
  *
  */
-class CrewController extends Controller
+class SkillsController extends Controller
 {
     /**
      * Lists all Skills entities.
@@ -54,7 +54,7 @@ class CrewController extends Controller
      * Displays a form to create a new Skills entity.
      *
      */
-    public function newAction()
+    public function newAction($user_id)
     {
         $entity = new Skills();
         $form   = $this->createForm(new SkillsType(), $entity);

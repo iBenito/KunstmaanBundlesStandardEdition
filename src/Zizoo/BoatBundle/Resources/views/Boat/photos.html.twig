@@ -1,0 +1,43 @@
+{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
+    
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/jquery-1.8.3.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/jquery-ui-1.9.2.custom.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/underscore-min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/punkavefileuploader/js/jquery.fileupload.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/punkavefileuploader/js/FileUploader.js') }}" type="text/javascript"></script>
+{% endblock %}
+
+{% block dashboard_page_title %}Boats{% endblock %}
+
+{% block content %}
+    {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat }  %}
+
+    <h2>Boat Gallery</h2>
+    {% include "PunkAveFileUploaderBundle:Default:templates.html.twig" %}
+
+    <form action="{{ path('ZizooBaseBundle_Dashboard_BoatPhotosCreate', { 'boatId': boat.id, 'editId': editId, }) }}" method="post" {{ form_enctype(imagesForm) }}>
+        {{ form_widget(imagesForm) }}
+
+        {# Hydrated by javascript #}
+        <div class="file-uploader"></div>
+
+        <button type="submit">Upload</button>
+    </form>
+        
+    <script type="text/javascript">
+
+    // Enable the file uploader
+    $(function() {
+        new PunkAveFileUploader({ 
+            'uploadUrl': {{ path('ZizooBoatBundle_upload', { editId: editId }) | json_encode | raw }},
+            'viewUrl': "{{ '/uploads/tmp/attachments/' ~ editId | json_encode | raw }}",
+            'el': '.file-uploader',
+            'existingFiles': {{ existingFiles | json_encode | raw }},
+            'delaySubmitWhileUploading': '.edit-form'
+        });
+    });
+    </script>
+        
+{% endblock %}

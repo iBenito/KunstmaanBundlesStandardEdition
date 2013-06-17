@@ -21,7 +21,7 @@ class Boat extends BaseEntity
     protected $charter;
     
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=TRUE)
      */
     protected $title;
     
@@ -31,7 +31,7 @@ class Boat extends BaseEntity
     protected $name;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=TRUE)
      */
     protected $description;
 

@@ -63,27 +63,27 @@ ZizooBaseBundle_Dashboard_BoatNew:
     defaults: { _controller: ZizooBaseBundle:Dashboard:boatNew }
     requirements:
         _method:  GET
-        
+
 ZizooBaseBundle_Dashboard_BoatEdit:
     pattern:  /account/boat/{id}/edit
     defaults: { _controller: ZizooBaseBundle:Dashboard:boatEdit }
     requirements:
         _method:  GET
         id: \d+
-        
+
 ZizooBaseBundle_Dashboard_BoatPhotos:
     pattern:  /account/boat/{id}/photos
     defaults: { _controller: ZizooBaseBundle:Dashboard:boatPhotos }
     requirements:
         _method:  GET
         id: \d+
-        
+
 ZizooBaseBundle_Dashboard_BoatPhotosCreate:
     pattern:  /account/boat/photos
     defaults: { _controller: ZizooBaseBundle:Dashboard:boatPhotosCreate }
     requirements:
         _method:  POST
-          
+
 ZizooBaseBundle_Dashboard_Skills:
     pattern:  /account/skills
     defaults: { _controller: ZizooBaseBundle:Dashboard:skills }

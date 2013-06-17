@@ -30,14 +30,10 @@ class Skills extends BaseEntity
     protected $experience;
 
     /**
-     * Get id
-     *
-     * @return integer 
+     * @ORM\ManyToOne(targetEntity="Zizoo\CrewBundle\Entity\SkillType")
+     * @ORM\JoinColumn(name="skill_type", referencedColumnName="skill")
      */
-    public function getId()
-    {
-        return $this->id;
-    }
+    protected $skillType;
 
     /**
      * Set license
@@ -106,5 +102,28 @@ class Skills extends BaseEntity
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set skillType
+     *
+     * @param \Zizoo\CrewBundle\Entity\SkillType $skillType
+     * @return Skills
+     */
+    public function setSkillType(\Zizoo\CrewBundle\Entity\SkillType $skillType = null)
+    {
+        $this->skillType = $skillType;
+
+        return $this;
+    }
+
+    /**
+     * Get skillType
+     *
+     * @return \Zizoo\CrewBundle\Entity\SkillType 
+     */
+    public function getSkillType()
+    {
+        return $this->skillType;
     }
 }

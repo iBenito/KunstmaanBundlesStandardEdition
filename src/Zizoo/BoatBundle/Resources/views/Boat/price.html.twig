@@ -1,5 +1,5 @@
 {% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
-    
+
 {% block dashboard_page_title %}Boats{% endblock %}
 
 {% block javascripts %}
@@ -15,6 +15,8 @@
 {% endblock %}
 
 {% block content %}
+    {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat }  %}
+
     <h3>{{ boat.name }}</h3>
     <p>{{ boat.title }}</p>
     <div id="availability-calendar" class="">
@@ -25,7 +27,7 @@
         </div>
     {% endfor %}
     <div id="popup" style="display: none">
-        <form action="{{ path('ZizooBoatBundle_Boat_BoatPrice', {id: boat.id}) }}" method="post">
+        <form action="{{ path('ZizooBoatBundle_editPrice', {id: boat.id}) }}" method="post">
             <table>
                 <tr>
                     <td><label for="date_range_text">Date range:</label></td>

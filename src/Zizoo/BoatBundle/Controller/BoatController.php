@@ -2,6 +2,7 @@
 
 namespace Zizoo\BoatBundle\Controller;
 
+use Zizoo\BoatBundle\Form\Type\BoatDetailsType;
 use Zizoo\BoatBundle\Form\Type\BookBoatType;
 use Zizoo\BoatBundle\Form\Model\BookBoat;
 
@@ -13,7 +14,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 use Zizoo\BoatBundle\Entity\Boat;
+
 use Zizoo\BoatBundle\Entity\Image;
+use Zizoo\BoatBundle\Form\Type\ImageType;
 use Zizoo\BoatBundle\Form\Type\BoatType;
 
 /**
@@ -237,7 +240,7 @@ class BoatController extends Controller
 //            
 //            $map->addMarker($marker);
 //        }
-        
+
         return $this->render('ZizooBoatBundle:Boat:boat_form_widget.html.twig', array(
             'boat' => $boat,
             'form' => $form->createView(),
@@ -272,7 +275,8 @@ class BoatController extends Controller
 
         return $this->render('ZizooBoatBundle:Boat:new.html.twig', array(
             'boat' => $boat,
-            'formAction' => 'ZizooBoatBundle_create'
+            'formAction' => 'ZizooBoatBundle_create',
+            'formRedirect'  => 'ZizooBoatBundle_editDetails'
         ));
     }
 
@@ -321,6 +325,96 @@ class BoatController extends Controller
         $em     = $this->getDoctrine()->getManager();
         $user   = $this->getUser();
         
+        $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
+
+        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+            throw $this->createNotFoundException('Unable to find Boat entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+
+        return $this->render('ZizooBoatBundle:Boat:edit.html.twig', array(
+            'boat'          => $boat,
+            'delete_form'   => $deleteForm->createView(),
+            'formAction'    => 'ZizooBoatBundle_update',
+            'formRedirect'  => 'ZizooBoatBundle_edit'
+        ));
+    }
+
+    /**
+     * Displays a form to edit an existing Boat entity.
+     *
+     */
+    public function editDetailsAction($id)
+    {
+        $em     = $this->getDoctrine()->getManager();
+        $user   = $this->getUser();
+
+        $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
+
+        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+            throw $this->createNotFoundException('Unable to find Boat entity.');
+        }
+
+        $detailsForm = $this->createForm(new BoatDetailsType(), $boat);
+
+        return $this->render('ZizooBoatBundle:Boat:editDetails.html.twig', array(
+            'boat'          => $boat,
+            'form'          => $detailsForm->createView(),
+            'formAction'    => 'ZizooBoatBundle_update',
+            'formRedirect'  => 'ZizooBoatBundle_edit'
+        ));
+    }
+
+    /**
+     * Displays a form to edit an existing Boat entity.
+     *
+     */
+    public function editPhotosAction($id)
+    {
+        $user   = $this->getUser();
+        $boat   = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
+        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+            throw $this->createNotFoundException('Unable to find Boat entity.');
+        }
+
+        // The Punk Ave file uploader part of the Form for Uploading Images
+        $editId = $this->getRequest()->get('editId');
+        if (!preg_match('/^\d+$/', $editId))
+        {
+            $editId = sprintf('%09d', mt_rand(0, 1999999999));
+            if ($boat->getId())
+            {
+                $this->get('punk_ave.file_uploader')->syncFiles(
+                    array('from_folder' => '../images/boats/' . $boat->getId(),
+                        'to_folder' => 'tmp/attachments/' . $editId,
+                        'create_to_folder' => true));
+            }
+        }
+        $existingFiles = $this->get('punk_ave.file_uploader')->getFiles(array('folder' => 'tmp/attachments/' . $editId));
+
+        $imagesForm = $this->createForm(new ImageType());
+
+        return $this->render('ZizooBoatBundle:Boat:photos.html.twig', array(
+            'boat'  => $boat,
+            'imagesForm'  => $imagesForm->createView(),
+            'existingFiles' => $existingFiles,
+            'editId' => intval($editId),
+            'formAction' => 'ZizooBoatBundle_update',
+            'formRedirect' => 'ZizooBaseBundle_Dashboard_BoatEdit'
+        ));
+
+    }
+
+    /**
+     * Displays a form to edit an existing Boat entity.
+     *
+     */
+    public function editPriceAction($id)
+    {
+        $em     = $this->getDoctrine()->getManager();
+        $user   = $this->getUser();
+
         $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
 
         if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {

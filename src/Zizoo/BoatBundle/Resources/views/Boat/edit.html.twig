@@ -1,6 +1,8 @@
 {% extends 'ZizooBoatBundle::layout.html.twig' %}
 
 {% block body %}
+    {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat }  %}
+
     {% render controller('ZizooBoatBundle:Boat:boatFormWidget', { 'boat': boat, 'formAction': formAction, 'formRedirect': formRedirect }) %}
 {% endblock %}
 

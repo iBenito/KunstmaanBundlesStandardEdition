@@ -11,6 +11,27 @@ ZizooBoatBundle_edit:
     requirements:
         _method:  GET
         id: \d+
+
+ZizooBoatBundle_editDetails:
+    pattern:  /{id}/edit/details
+    defaults: { _controller: ZizooBoatBundle:Boat:editDetails }
+    requirements:
+        _method:  GET
+        id: \d+
+
+ZizooBoatBundle_editPhotos:
+    pattern:  /{id}/edit/photos
+    defaults: { _controller: ZizooBoatBundle:Boat:editPhotos }
+    requirements:
+        _method:  GET
+        id: \d+
+
+ZizooBoatBundle_editPrice:
+    pattern:  /{id}/edit/price
+    defaults: { _controller: ZizooBoatBundle:Boat:boatPrice }
+    requirements:
+        _method:  GET|POST
+        id: \d+
         
 ZizooBoatBundle_Boat_Active:
     pattern:  /active/{id}
@@ -52,13 +73,6 @@ ZizooBoatBundle_booking_widget:
         _method:  GET|POST
         id: \d+
         
-ZizooBoatBundle_Boat_BoatPrice:
-    pattern:  /account/boat/{id}/price
-    defaults: { _controller: ZizooBoatBundle:Boat:boatPrice }
-    requirements:
-        _method:  GET|POST
-        id: \d+
-
 ZizooBoatBundle_Boat_ConfirmBoatPrice:
     pattern:  /account/boat/{id}/confirm-price
     defaults: { _controller: ZizooBoatBundle:Boat:boatConfirmPrice }

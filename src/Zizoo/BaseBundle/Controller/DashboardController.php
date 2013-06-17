@@ -138,23 +138,23 @@ class DashboardController extends Controller {
 
     /**
      * Add new Boat. Rendering of page will be delegated to Boat bundle.
-     * 
+     *
      * @return Response
      */
     public function boatNewAction()
     {
         $boat = new Boat();
-        
+
         return $this->render('ZizooBaseBundle:Dashboard/Boat:new.html.twig', array(
             'boat' => $boat,
             'formAction' => 'ZizooBoatBundle_create',
             'formRedirect' => 'ZizooBaseBundle_Dashboard_BoatPhotos'
         ));
     }
-    
+
     /**
      * Edit existing Boat
-     * 
+     *
      * @param integer $id Boat Id
      * @return Response
      */
@@ -165,17 +165,17 @@ class DashboardController extends Controller {
         if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
-            
+
         return $this->render('ZizooBaseBundle:Dashboard/Boat:edit.html.twig', array(
             'boat'  => $boat,
             'formAction' => 'ZizooBoatBundle_update',
             'formRedirect' => 'ZizooBaseBundle_Dashboard_BoatEdit'
         ));
     }
-    
+
     /**
      * Add photos to existing Boat
-     * 
+     *
      * @param integer $id Boat Id
      * @return Response
      */
@@ -186,7 +186,7 @@ class DashboardController extends Controller {
         if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
-        
+
         // The Punk Ave file uploader part of the Form for Uploading Images
         $editId = $this->getRequest()->get('editId');
         if (!preg_match('/^\d+$/', $editId))
@@ -201,9 +201,9 @@ class DashboardController extends Controller {
             }
         }
         $existingFiles = $this->get('punk_ave.file_uploader')->getFiles(array('folder' => 'tmp/attachments/' . $editId));
-        
+
         $imagesForm = $this->createForm(new ImageType());
-        
+
         return $this->render('ZizooBaseBundle:Dashboard/Boat:photos.html.twig', array(
             'boat'  => $boat,
             'imagesForm'  => $imagesForm->createView(),
@@ -213,10 +213,10 @@ class DashboardController extends Controller {
             'formRedirect' => 'ZizooBaseBundle_Dashboard_BoatEdit'
         ));
     }
-    
+
     /**
      * Adds Images to Existing Boat
-     * 
+     *
      * @return Response
      */
     public function boatPhotosCreateAction()
@@ -228,18 +228,18 @@ class DashboardController extends Controller {
         if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
-        
+
         $editId = $this->getRequest()->get('editId');
         if (!preg_match('/^\d+$/', $editId))
         {
             throw new Exception("Bad edit id");
         }
-           
+
         $fileUploader = $this->get('punk_ave.file_uploader');
 
         /* Get a list of uploaded images to add to Boat */
         $files = $fileUploader->getFiles(array('folder' => '/tmp/attachments/' . $editId));
-       
+
         $images = array();
         foreach ($files as $file) {
             $image = new Image();
@@ -251,14 +251,14 @@ class DashboardController extends Controller {
         /* Boat creation is done by Boat Service class */
         $boatService = $this->get('boat_service');
         $boatService->addImages($boat, new ArrayCollection($images));
-        
+
         $fileUploader->syncFiles(
             array('from_folder' => '/tmp/attachments/' . $editId,
             'to_folder' => '../images/boats/' . $boatId,
             'remove_from_folder' => true,
             'create_to_folder' => true)
         );
-            
+
         return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_BoatEdit', array('id' => $boatId)));
     }
      

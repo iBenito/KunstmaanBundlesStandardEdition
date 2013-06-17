@@ -1,0 +1,12 @@
+{% extends 'ZizooBoatBundle::layout.html.twig' %}
+
+{% block body %}
+    {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat }  %}
+
+    <form action="{{ path(formAction, { 'id': boat.id, 'formRedirect': formRedirect }) }}" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+
+        <button type="submit">Save</button>
+    </form>
+{% endblock %}
+
