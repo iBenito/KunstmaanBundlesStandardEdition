@@ -15,6 +15,11 @@ class ProfileType extends AbstractType
             ->add('lastName')
             ->add('about')
             ->add('phone')
+            ->add('languages', 'entity', array(
+                'class' => 'ZizooAddressBundle:Language',
+                'multiple'  => true,
+                'attr'  => array('title'=>'select'),
+                'property' => 'name',))
             ->add('file', 'file',array('label' => 'Avatar','required' => false))
         ;
     }

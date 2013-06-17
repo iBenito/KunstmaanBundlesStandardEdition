@@ -7,8 +7,11 @@ skills_show:
     defaults: { _controller: "ZizooCrewBundle:Skills:show" }
 
 skills_new:
-    pattern:  /new
+    pattern:  /{user_id}/skill/new
     defaults: { _controller: "ZizooCrewBundle:Skills:new" }
+    requirements:
+      _method:  GET
+      user_id: \d+
 
 skills_create:
     pattern:  /create

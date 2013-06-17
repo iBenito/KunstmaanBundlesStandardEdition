@@ -59,7 +59,32 @@ class Profile extends BaseEntity
      * @ORM\OneToOne(targetEntity="Zizoo\ProfileBundle\Entity\Profile\NotificationSettings", cascade={"persist"})
      */    
     protected $notification_settings;
-        
+
+    /**
+     * @ORM\ManyToMany(targetEntity="\Zizoo\AddressBundle\Entity\Language", inversedBy="profile")
+     * @ORM\JoinTable(name="profile_languages",
+     *      joinColumns={@ORM\JoinColumn(name="profile_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="language_id", referencedColumnName="language_code")}
+     *      )
+     **/
+    protected $languages;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->addresses = new ArrayCollection();
+        $this->languages = new ArrayCollection();
+        $notificationSettings = new NotificationSettings();
+        $notificationSettings->setMessage(true);
+        $notificationSettings->setEnquiry(true);
+        $notificationSettings->setBooked(true);
+        $notificationSettings->setBooking(true);
+        $notificationSettings->setReview(true);
+        $this->setNotificationSettings($notificationSettings);
+    }
+
     /**
      * Get id
      *
@@ -292,22 +317,7 @@ class Profile extends BaseEntity
         // when displaying uploaded doc/image in the view.
         return 'images/profile/'.$this->id;
     }
-    
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->addresses = new ArrayCollection();
-        $notificationSettings = new NotificationSettings();
-        $notificationSettings->setMessage(true);
-        $notificationSettings->setEnquiry(true);
-        $notificationSettings->setBooked(true);
-        $notificationSettings->setBooking(true);
-        $notificationSettings->setReview(true);
-        $this->setNotificationSettings($notificationSettings);
-    }
-    
+
     /**
      * Add addresses
      *
@@ -379,5 +389,38 @@ class Profile extends BaseEntity
     public function getNotificationSettings()
     {
         return $this->notification_settings;
+    }
+
+    /**
+     * Add language
+     *
+     * @param \Zizoo\AddressBundle\Entity\Language $language
+     * @return Profile
+     */
+    public function addLanguage(\Zizoo\AddressBundle\Entity\Language $language)
+    {
+        $this->languages[] = $language;
+
+        return $this;
+    }
+
+    /**
+     * Remove language
+     *
+     * @param \Zizoo\AddressBundle\Entity\Language $language
+     */
+    public function removeLanguage(\Zizoo\AddressBundle\Entity\Language $language)
+    {
+        $this->languages->removeElement($language);
+    }
+
+    /**
+     * Get languages
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLanguages()
+    {
+        return $this->languages;
     }
 }

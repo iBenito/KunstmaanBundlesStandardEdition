@@ -16,9 +16,7 @@ class BoatType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title')
             ->add('name')
-            ->add('description')
             ->add('boat_type', 'entity', array(
                 'class' => 'ZizooBoatBundle:BoatType',
                 'property' => 'name',))

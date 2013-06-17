@@ -5,6 +5,7 @@ use Zizoo\UserBundle\Entity\User;
 use Zizoo\UserBundle\Entity\Group;
 use Zizoo\AddressBundle\Entity\Country;
 use Zizoo\AddressBundle\Entity\Marina;
+use Zizoo\AddressBundle\Entity\Language;
 use Zizoo\AddressBundle\Entity\ProfileAddress;
 use Zizoo\ProfileBundle\Entity\Profile;
 use Zizoo\ProfileBundle\Entity\Profile\NotificationSettings;
@@ -178,21 +179,39 @@ class LoadDataCommand extends ContainerAwareCommand
     private function loadMarinas()
     {
         $getMarinas = file_get_contents(dirname(__FILE__).'/Data/marinas.json');
-       
+
         $marinas = json_decode($getMarinas);
-        
+
         foreach ($marinas as $marina)
         {
             $marinaEntity = new Marina();
             $marinaEntity->setName($marina->name);
             $marinaEntity->setLat($marina->latitude);
             $marinaEntity->setLng($marina->longitude);
-            
+
             $this->marinas[] = $marinaEntity;
             $this->em->persist($marinaEntity);
         }
     }
-    
+
+    private function loadLanguages()
+    {
+        $getLanguages = file_get_contents(dirname(__FILE__).'/Data/languages.json');
+
+        $languages = json_decode($getLanguages);
+
+        foreach ($languages as $language)
+        {
+            $languageEntity = new Language();
+            $languageEntity->setLanguageCode($language->language_code);
+            $languageEntity->setName($language->name);
+            $languageEntity->setNativeName($language->native_name);
+
+            $this->em->persist($languageEntity);
+
+        }
+    }
+
     private function loadEquipment()
     {
         $getEquipment = file_get_contents(dirname(__FILE__).'/Data/boat_equipment.json');
@@ -302,6 +321,7 @@ class LoadDataCommand extends ContainerAwareCommand
         
         $this->loadCountries();
         $this->loadMarinas();
+        $this->loadLanguages();
         $this->loadEquipment();
         $this->loadIncludedExtras();
         $this->loadBoatTypes();
