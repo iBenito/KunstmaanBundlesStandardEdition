@@ -97,12 +97,4 @@ ZizooBaseBundle_Dashboard_Trips:
         _method:  GET
         
 
-        
-
-        
-ZizooBaseBundle_Dashboard_BoatPriceTest:
-    pattern:  /account/boat/{id}/price-test
-    defaults: { _controller: ZizooBaseBundle:Dashboard:boatPriceTest }
-    requirements:
-        _method:  GET|POST
-        id: \d+
+       

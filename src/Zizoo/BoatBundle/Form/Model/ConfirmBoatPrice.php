@@ -1,6 +1,6 @@
 <?php
 
-namespace Zizoo\BaseBundle\Form\Model;
+namespace Zizoo\BoatBundle\Form\Model;
 
 use Zizoo\ReservationBundle\Form\Model\DenyReservation;
 

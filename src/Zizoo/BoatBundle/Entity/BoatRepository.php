@@ -24,6 +24,7 @@ class BoatRepository extends EntityRepository
         $qb = $this->createQueryBuilder('b')
                    ->select('b')
                    ->where('b.active = true')
+                   ->andWhere('b.deleted IS NULL')
                    ->addOrderBy('b.created', 'DESC');
 
         if (false === is_null($limit))
@@ -39,6 +40,7 @@ class BoatRepository extends EntityRepository
                    ->leftJoin('boat.charter', 'charter')
                    ->select('boat, charter')
                    ->where('charter = :charter')
+                   ->andWhere('boat.deleted IS NULL')
                    ->setParameter('charter', $charter);
 
         return $qb->getQuery()
@@ -216,9 +218,11 @@ class BoatRepository extends EntityRepository
         
         if ($firstWhere){
             $qb->where('boat.active = true');
+            $qb->andWhere('boat.deleted IS NULL');
             $firstWhere = false;
         } else {
             $qb->andWhere('boat.active = true');
+            $qb->andWhere('boat.deleted IS NULL');
         }
         
         $qb->addOrderBy('reservation.id', 'asc');
@@ -239,6 +243,8 @@ class BoatRepository extends EntityRepository
                    ->select('MAX(boat.cabins) as max_cabins, MAX(boat.length) as max_length, MAX(boat.highestPrice) as max_highest_price, MIN(boat.lowestPrice) as min_lowest_price');
         if ($boat){
             $qb->where('boat = :boat');
+            $qb->andWhere('boat.active = TRUE');
+            $qb->andWhere('boat.deleted IS NULL');
             $qb->setParameter('boat', $boat);
         }
         
@@ -253,6 +259,8 @@ class BoatRepository extends EntityRepository
                    ->leftJoin('boat.charter', 'charter')
                    ->select('boat')
                    ->where('charter = :charter')
+                   ->andWhere('boat.active = TRUE')
+                   ->andWhere('boat.deleted IS NULL')
                    ->setParameter('charter', $charter)
                    ->setFirstResult($start)
                    ->setMaxResults($limit);
@@ -266,6 +274,8 @@ class BoatRepository extends EntityRepository
                    ->leftJoin('boat.charter', 'charter')
                    ->select('COUNT(boat.id) as num_boats')
                    ->where('charter = :charter')
+                   ->andWhere('boat.active = TRUE')
+                   ->andWhere('boat.deleted IS NULL')
                    ->setParameter('charter', $charter);
         
         return $qb->getQuery()->getSingleScalarResult();

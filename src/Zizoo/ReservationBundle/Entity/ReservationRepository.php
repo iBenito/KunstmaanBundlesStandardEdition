@@ -69,17 +69,31 @@ class ReservationRepository extends EntityRepository
          
          if ($from && $to){
              if ($firstWhere){
-                 $qb = $qb->where('reservation.check_in BETWEEN :check_in AND :check_out')
-                            ->orWhere('reservation.check_out BETWEEN :check_in AND :check_out')
-                            ->orWhere(':check_in BETWEEN reservation.check_in AND reservation.check_out')
+                 $qb = $qb->where('(reservation.check_in BETWEEN :check_in AND :check_out) OR (reservation.check_out BETWEEN :check_in AND :check_out) OR (:check_in BETWEEN reservation.check_in AND reservation.check_out)')
                             ->setParameter('check_in', $from)
                             ->setParameter('check_out', $to);
                  $firstWhere = false;
              } else {
-                 $qb = $qb->andWhere('reservation.check_in BETWEEN :check_in AND :check_out')
-                            ->orWhere('reservation.check_out BETWEEN :check_in AND :check_out')
-                            ->orWhere(':check_in BETWEEN reservation.check_in AND reservation.check_out')
+                 $qb = $qb->andWhere('(reservation.check_in BETWEEN :check_in AND :check_out) OR (reservation.check_out BETWEEN :check_in AND :check_out) OR (:check_in BETWEEN reservation.check_in AND reservation.check_out)')
                             ->setParameter('check_in', $from)
+                            ->setParameter('check_out', $to);
+             }
+         } else if ($from){
+             if ($firstWhere){
+                 $qb = $qb->where('reservation.check_in < :check_in')
+                            ->setParameter('check_in', $from);
+                 $firstWhere = false;
+             } else {
+                 $qb = $qb->andWhere('reservation.check_in < :check_in')
+                            ->setParameter('check_in', $from);
+             }
+         } else if ($to){
+             if ($firstWhere){
+                 $qb = $qb->where('reservation.check_out > :check_out')
+                            ->setParameter('check_out', $to);
+                 $firstWhere = false;
+             } else {
+                 $qb = $qb->andWhere('reservation.check_out > :check_out')
                             ->setParameter('check_out', $to);
              }
          }

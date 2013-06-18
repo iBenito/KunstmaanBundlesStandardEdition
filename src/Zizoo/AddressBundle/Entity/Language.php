@@ -15,7 +15,7 @@ class Language
     /**
      * @var string
      *
-     * @ORM\Column(name="language_code", type="string", length=2)
+     * @ORM\Column(name="language_code", type="string", length=3)
      * @ORM\Id
      */
     private $language_code;

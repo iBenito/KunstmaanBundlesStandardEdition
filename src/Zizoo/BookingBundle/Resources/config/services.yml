@@ -21,6 +21,13 @@ services:
         tags:
             - { name: twig.extension }
             
+    zizoo_booking.twig.payment_extension:
+        class: Zizoo\BookingBundle\Twig\PaymentExtension
+        arguments:
+            container:      "@service_container"
+        tags:
+            - { name: twig.extension }
+            
     zizoo_booking.booking_type:
         class:  Zizoo\BookingBundle\Form\Type\BookingType
         arguments: ["@service_container"]

@@ -11,7 +11,7 @@ class LanguageFixtures extends AbstractFixture implements OrderedFixtureInterfac
 {
     public function load(ObjectManager $manager)
     {
-        //return;
+        return;
         $getLanguages = file_get_contents(dirname(__FILE__).'/languages.json');
        
         $languages = json_decode($getLanguages);

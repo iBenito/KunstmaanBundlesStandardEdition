@@ -7,6 +7,7 @@ use Zizoo\BookingBundle\Entity\Booking;
 
 class BookingExtension extends \Twig_Extension
 {
+    
     public function getFilters()
     {
         return array(
@@ -14,11 +15,16 @@ class BookingExtension extends \Twig_Extension
             'Booking_amountPaid'        => new \Twig_Filter_Method($this, 'amountPaid'),
             'Booking_amountOutstanding' => new \Twig_Filter_Method($this, 'amountOutstanding'),
             'Booking_numberOfDays'      => new \Twig_Filter_Method($this, 'numberOfDays'),
+            'Booking_simplePrice'             => new \Twig_Filter_Method($this, 'displaySimplePrice'),
         );
     }
     
     public function displayPrice(Booking $booking){
         return number_format($booking->getCost(), 2);
+    }
+    
+    public function displaySimplePrice(Booking $booking, $price){
+        return number_format($price, 2);
     }
     
     private function getAmountPaid(Booking $booking){

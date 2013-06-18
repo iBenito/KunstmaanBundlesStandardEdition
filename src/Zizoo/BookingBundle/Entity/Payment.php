@@ -15,11 +15,15 @@ class Payment extends BaseEntity
 {
     
    const PROVIDER_BRAINTREE                             = 0;
+   const PROVIDER_BANK_TRANSFER                         = 1;
    
    const BRAINTREE_STATUS_INITIAL                       = 0;
    const BRAINTREE_STATUS_SUBMITTED_FOR_SETTLEMENT      = 1;
    const BRAINTREE_STATUS_SETTLED                       = 2;
    const BRAINTREE_STATUS_VOID                          = 3;
+   
+   const BANK_TRANSFER_INITIAL                          = 0;
+   const BANK_TRANSFER_SETTLED                          = 1;
     
     /**
      * @ORM\ManyToOne(targetEntity="Zizoo\BookingBundle\Entity\Booking", inversedBy="payment")

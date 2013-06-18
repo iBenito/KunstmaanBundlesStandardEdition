@@ -1,6 +1,6 @@
 {% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
     
-{% block dashboard_page_title %}My Bookings{% endblock %}
+{% block dashboard_page_title %}My Payments{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -71,7 +71,7 @@
         }
 
         function bookingDoubleClick(rowId, rowIndex, colIndex, e){
-            var bookingId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', rowId, 'grid_bookingsreservation_id');
+            var bookingId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', rowId, 'grid_paymentsreservation_id');
             openBooking(bookingId);
         }
 
@@ -96,13 +96,6 @@
             $(elem).hide().after(newSelect);
         }
         
-        function createStatusSearch(elem){
-            $(elem).attr('class', 'search');
-            var id = $(elem).attr('id');
-            var newSelect = $('<select id="'+id+'_search" class="zizoo_combobox">{% for status_id, status_val in grid.extraParams['statusOptions'] %}<option value="{{ status_id }}">{{ status_val }}</option>{% endfor %}</select>').hide();
-            $(elem).hide().after(newSelect);
-        }
-
         function resizeColumn(newWidth, index){
             var comboSpan = $('#gview_{{ grid.name }} tr.ui-search-toolbar th:eq('+index+') span.custom-combobox');
             $(comboSpan).width(newWidth);
@@ -115,12 +108,12 @@
                 bindings: {
                     'open': function(trigger) {
                         // trigger is the DOM element ("tr.jqgrow") which is triggered
-                        var bookingId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_bookingsreservation_id');
+                        var bookingId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_paymentsreservation_id');
                         openBooking(bookingId);
                     },
                     'view_guest_profile': function(trigger) {
                         // trigger is the DOM element ("tr.jqgrow") which is triggered
-                        var guestUsername = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_bookingsguest_username');
+                        var guestUsername = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_paymentsguest_username');
                         openGuestProfile(guestUsername);
                     }
                 },

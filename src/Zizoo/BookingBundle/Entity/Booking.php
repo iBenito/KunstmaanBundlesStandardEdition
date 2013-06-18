@@ -48,6 +48,13 @@ class Booking extends BaseEntity
      */
     private $initialPaymentMethod;
     
+    /**
+     * @var crew
+     *
+     * @ORM\Column(name="crew", type="boolean")
+     */
+    protected $crew;
+    
     
     public function __construct()
     {
@@ -212,4 +219,16 @@ class Booking extends BaseEntity
     {
         return $this->initialPaymentMethod;
     }
+    
+    public function setCrew($crew)
+    {
+        $this->crew = $crew;
+        return $this;
+    }
+    
+    public function getCrew()
+    {
+        return $this->crew;
+    }
+    
 }

@@ -26,6 +26,11 @@ abstract class BaseEntity
      */
     protected $updated;
     
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $deleted;
+    
     public function __construct()
     {
         $this->setCreated(new \DateTime());
@@ -94,5 +99,28 @@ abstract class BaseEntity
     public function getUpdated()
     {
         return $this->updated;
+    }
+    
+    /**
+     * Set deleted
+     *
+     * @param \DateTime $deleted
+     * @return Profile
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+    
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return \DateTime 
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
     }
 }
