@@ -90,7 +90,7 @@
                         <a href="{{ path('ZizooBoatBundle_show', {id: boat.id}) }}" target="_blank">View</a>
                         <a href="{{ path('ZizooBoatBundle_edit', {id: boat.id}) }}" target="_blank">Edit</a>
                         <a href="{{ path('ZizooBoatBundle_Boat_BoatPrice', {id: boat.id}) }}" target="_blank">Calendar</a>
-                        <a href="" target="_blank">Delete</a>
+                        <a href="{{ path('ZizooBoatBundle_delete', {id: boat.id}) }}" target="_blank">{% if boat.deleted is null %}Delete{% else %}Undelete{% endif %}</a>
                     </div>
                 </div>
             {% endfor %}
@@ -150,7 +150,7 @@
                 $('#page_size').val($(this).val());
                 $('#filter_form').submit();
             });
-            
+             $('#page_size').val($('#page_size_select').val());
             
             $('#filter_form').submit(function(){
                 doBlock(true);

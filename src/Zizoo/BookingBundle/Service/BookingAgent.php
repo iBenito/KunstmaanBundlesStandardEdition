@@ -29,7 +29,7 @@ class BookingAgent {
     
     public static function priceToPayNow($price)
     {
-        return $price/2;
+        return number_format($price/2, 2);
     }
      
     private function makePayment(Booking $booking, $amount, $providerId, $flush=true, $provider=Payment::PROVIDER_BRAINTREE, $status=Payment::BRAINTREE_STATUS_INITIAL)
@@ -54,13 +54,14 @@ class BookingAgent {
         return $payment;
     }
            
-    private function storeBooking(User $user, Reservation $reservation, $intendedPrice, PaymentMethod $initialPaymentMethod, $flush=true){        
+    private function storeBooking(User $user, Reservation $reservation, $intendedPrice, PaymentMethod $initialPaymentMethod, $crew, $flush=true){        
         $booking = new Booking();
         $booking->setCost($intendedPrice);
         $booking->setRenter($user);
         $booking->setReservation($reservation);
         $booking->setStatus('4');
         $booking->setInitialPaymentMethod($initialPaymentMethod);
+        $booking->setCrew($crew);
         
         $reservation->setBooking($booking);
         
@@ -173,7 +174,7 @@ class BookingAgent {
                     // Start transaction on Zizoo
                     $reservationAgent   = $this->container->get('zizoo_reservation_reservation_agent');
                     $reservation        = $reservationAgent->makeReservation($boat, $bookBoat, $price, $user, false);
-                    $booking            = $this->storeBooking($user, $reservation, $price, $initialPaymentMethod, false);
+                    $booking            = $this->storeBooking($user, $reservation, $price, $initialPaymentMethod, $bookBoat->getCrew(), false);
                     $payment            = $this->makePayment($booking, (float)$result->transaction->amount, $result->transaction->id, false);
                     
                     // End transaction
@@ -266,7 +267,7 @@ class BookingAgent {
         // Start transaction on Zizoo
         $reservationAgent   = $this->container->get('zizoo_reservation_reservation_agent');
         $reservation        = $reservationAgent->makeReservation($boat, $bookBoat, $price, $user, false);
-        $booking            = $this->storeBooking($user, $reservation, $price, $initialPaymentMethod, false);
+        $booking            = $this->storeBooking($user, $reservation, $price, $initialPaymentMethod, $bookBoat->getCrew(), false);
         //$payment            = $this->makePayment($booking, $booking->getCost(), $result->transaction->id, false);
         
         // End transaction
@@ -304,6 +305,50 @@ class BookingAgent {
         $sender->send($message);
         
         return $booking;
+    }
+    
+    public function PaymentStatusToString(Payment $payment)
+    {
+        switch ($payment->getProvider())
+        {
+            case Payment::PROVIDER_BRAINTREE:
+                switch ($payment->getProviderStatus())
+                {
+                    case Payment::BRAINTREE_STATUS_INITIAL:
+                        return 'Initial';
+                        break;
+                    case Payment::BRAINTREE_STATUS_SUBMITTED_FOR_SETTLEMENT:
+                        return 'Pending';
+                        break;
+                    case Payment::BRAINTREE_STATUS_SETTLED:
+                        return 'Completed';
+                        break;
+                    case Payment::BRAINTREE_STATUS_VOID:
+                        return 'Void';
+                        break;
+                    default:
+                        return $payment->getProvider().'-'.$payment->getProviderStatus();
+                    
+                }
+                break;
+            case Payment::PROVIDER_BANK_TRANSFER:
+                switch ($payment->getProviderStatus())
+                {
+                    case Payment::BANK_TRANSFER_INITIAL:
+                        return 'Pending';
+                        break;
+                    case Payment::BANK_TRANSFER_SETTLED:
+                        return 'Complete';
+                        break;
+                    default:
+                        return $payment->getProvider().'-'.$payment->getProviderStatus();
+                }
+                break;
+            default:
+                return $payment->getProvider();
+                break;
+        }
+        
     }
     
 }

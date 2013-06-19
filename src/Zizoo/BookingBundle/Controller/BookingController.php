@@ -96,8 +96,11 @@ class BookingController extends Controller
         $user           = $this->getUser();
         $session        = $request->getSession();
         $bookBoat       = $session->get('boat');
+        if (!$bookBoat){
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
+        }
         $intendedPrice  = $bookBoat->getTotal();
-        if (!$bookBoat || !$intendedPrice){
+        if (!$intendedPrice){
             return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
         }
         

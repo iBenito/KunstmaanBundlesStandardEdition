@@ -1,23 +1,19 @@
-ZizooReservationBundle_test:
-    pattern:  /test/{id}
-    defaults: { _controller: ZizooReservationBundle:Reservation:test }
-
 ZizooReservationBundle_view:
-    pattern:  /reservation/{id}
+    pattern:  /charter/account/reservation/{id}
     defaults: { _controller: ZizooReservationBundle:Reservation:viewReservation }
     requirements:
         _method:  GET|POST
         id: \d+
         
 ZizooReservationBundle_accept:
-    pattern:  /reservation/{id}/accept
+    pattern:  /charter/account/reservation/{id}/accept
     defaults: { _controller: ZizooReservationBundle:Reservation:acceptReservationRequest }
     requirements:
         _method:  GET|POST
         id: \d+
         
 ZizooReservationBundle_deny:
-    pattern:  /reservation/{id}/deny
+    pattern:  /charter/account/reservation/{id}/deny
     defaults: { _controller: ZizooReservationBundle:Reservation:denyReservationRequest }
     requirements:
         _method:  GET|POST

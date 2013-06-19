@@ -20,6 +20,7 @@
     {"language_code":"ee","name":"Ewe","native_name":"Ɛʋɛ"},
     {"language_code":"fi","name":"Finnish","native_name":"suomi"},
     {"language_code":"fr","name":"French","native_name":"français"},
+    {"language_code":"ff","name":"Fula/Fulah/Fulani","native_name":"Fulfulde, Pulaar, Pular"},
     {"language_code":"gl","name":"Galician","native_name":"Galego"},
     {"language_code":"ka","name":"Georgian","native_name":""},
     {"language_code":"de","name":"German","native_name":"Deutsch"},
@@ -71,4 +72,5 @@
     {"language_code":"xs","name":"Xhosa","native_name":"isiXhosa"},
     {"language_code":"yo","name":"Yoruba","native_name":"Yorùbá"},
     {"language_code":"zu","name":"Zulu","native_name":"isiZulu"}
+
 ]

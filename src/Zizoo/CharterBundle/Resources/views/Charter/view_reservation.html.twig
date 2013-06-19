@@ -1,0 +1,127 @@
+{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
+    
+{% block dashboard_page_title %}Booking {{ reservation.id }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/jquery.switchButton.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+    
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/jquery.switchButton.js') }}" type="text/javascript"></script>
+{% endblock %}
+
+{% block content %}
+
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+            {{ flashMessage}}
+        </div>
+    {% endfor %}
+
+    {% for flashMessage in app.session.flashbag.get('error') %}
+        <div class="flash-error">
+            {{ flashMessage}}
+        </div>
+    {% endfor %}
+
+    <div id="reservation">
+        <table>
+            <tbody id="reservcation_details">
+                <tr>
+                    <td>Reservation:</td>
+                    <td>{{ reservation.id }}</td>
+                </tr>
+                <tr>
+                    <td>Created:</td>
+                    <td>{{ reservation.created|date }}</td>
+                </tr>
+                <tr>
+                    <td>Status:</td>
+                    <td>{{ reservation|Reservation_statusToString }}</td>
+                </tr>
+                <tr>
+                    <td>Boat:</td>
+                    <td><a href="{{ path('ZizooBoatBundle_show', {id: reservation.boat.id}) }}">{{ reservation.boat.name }}</a></td>
+                </tr>
+                <tr>
+                    <td>Check In:</td>
+                    <td>{{ reservation.checkIn|date }}</td>
+                </tr>
+                <tr>
+                    <td>Check Out:</td>
+                    <td>{{ reservation.checkOut|date }}</td>
+                </tr>
+                <tr>
+                    <td>Nights:</td>
+                    <td>{{ reservation|Reservation_numberOfDays }}</td>
+                </tr>
+                <tr>
+                    <td>Guests:</td>
+                    <td>{{ reservation.nrGuests }} {% if reservation.status != constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_SELF') %}(<a href="{{ path('ZizooProfileBundle_show', {username: reservation.guest.username}) }}">{{ reservation.guest.username }}</a>){% endif %}</td>
+                </tr>
+            </tbody>
+            {% if reservation.booking is not null %}
+            <tbody id="booking_details">
+                <tr>
+                    <td>Crew:</td>
+                    <td>{{ reservation.booking.crew==true?'Yes':'No' }}</td>
+                </tr>
+                <tr>
+                    <td>Total:</td>
+                    <td>{{ reservation.booking|Booking_displayPrice }} &euro;</td>
+                </tr>
+                <tr>
+                    <td>Paid:</td>
+                    <td>{{ reservation.booking|Booking_amountPaid }} &euro;</td>
+                </tr>
+                <tr>
+                    <td>Outstanding:</td>
+                    <td>{{ reservation.booking|Booking_amountOutstanding }} &euro;</td>
+                </tr>
+            </tbody>
+            {% endif %}
+        </table>
+            
+        <div id="payments">
+            <h2>Payments</h2>
+            <table>
+                {% if reservation.booking is null or reservation.booking.payment|length == 0 %}
+                    <tr>
+                        <td colspan="3">There have not been any payments yet.</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td>Date</td>
+                        <td>Payment Method</td>
+                        <td>Status</td>
+                        <td>Amount</td>
+                    </tr>
+                    {% for payment in reservation.booking.payment %}
+                        <tr>
+                            <td>{{ payment.created|date }}</td>
+                            <td>{{ payment.paymentMethod.name }}</td>
+                            <td>{{ payment|Payment_status}}</td>
+                            <td>{{ reservation.booking|Booking_simplePrice(payment.amount)}} &euro;</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </table>
+        </div>
+    </div>
+
+    <style type="text/css">
+        
+    </style>
+        
+    <script type="text/javascript">
+        
+        
+        $(document).ready(function(){
+            
+        });
+        
+    </script>
+    
+{% endblock %}

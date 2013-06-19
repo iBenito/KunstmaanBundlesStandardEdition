@@ -1,6 +1,6 @@
 <?php
 
-namespace Zizoo\BaseBundle\Form\Type;
+namespace Zizoo\BoatBundle\Form\Type;
 
 use Zizoo\ReservationBundle\Form\EventListener\AddDenyReservationSubscriber;
 
@@ -24,7 +24,7 @@ class ConfirmBoatPriceType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'            => 'Zizoo\BaseBundle\Form\Model\ConfirmBoatPrice',
+            'data_class'            => 'Zizoo\BoatBundle\Form\Model\ConfirmBoatPrice',
             'cascade_validation'    => true,
         ));
     }

@@ -20,44 +20,7 @@ class PriceListener
     {
         $this->container = $container;
     }
-    
-//    private function handlePriceEntity(Price $price)
-//    {
-//        $boat               = $price->getBoat();
-//        $from               = $price->getAvailableFrom();
-//        $until              = $price->getAvailableUntil();
-//        $from->setTime(0,0,0);
-//        $until->setTime(23,59,59);
-//
-//        $reservationAgent   = $this->container->get('zizoo_reservation_reservation_agent');
-//        $prices             = $reservationAgent->getPrices($boat, $from, $until);
-//        $reservation        = $reservationAgent->getReservation($boat, $from, $until);
-//        $booking            = null;
-//        if ($reservation) $booking = $reservation->getBooking();
-//            
-//        if ($prices->count())
-//        {
-//            $priceStr = '';
-//            foreach ($prices as $p){
-//                $priceStr .= $p->getId() . ': ' . $p->getAvailableFrom()->format('d/m/Y') . ' - ' . $p->getAvailableUntil()->format('d/m/Y') . "\n";
-//            }
-//            throw new InvalidPriceException('Overlapping prices: ' . $priceStr);
-//        } else if ($reservation && $reservation->getStatus()==Reservation::STATUS_ACCEPTED){
-//            $reservationStr = $reservation->getId() . ': ' . $reservation->getCheckIn()->format('d/m/Y') . ' - ' . $reservation->getCheckOut()->format('d/m/Y') . "\n";
-//            throw new InvalidPriceException('Overlapping booking: ' . $reservationStr);
-//        }
-//    }
-    
-//    public function prePersist(LifecycleEventArgs $args)
-//    {
-//        $entity = $args->getEntity();
-//        
-//        if ($entity instanceof Price) {
-//            $this->handlePriceEntity($entity);
-//        }
-//    
-   
-   
+       
     
     public function onFlush(OnFlushEventArgs $args)
     {
@@ -114,8 +77,7 @@ class PriceListener
     
     public function getSubscribedEvents() {
         return array(
-            //Events::prePersist,
-            Events::onFlush,
+            Events::onFlush
         );
     }
 }

@@ -157,5 +157,18 @@ class BoatService {
         return $equipment;
     }
     
+    public function canDeleteBoat(Boat $boat)
+    {
+        
+    }
+    
+    public function deleteBoat(Boat $boat, $delete)
+    {
+        $now = new \DateTime();
+        $boat->setDeleted($delete==true?$now:null);
+        $this->em->persist($boat);
+        $this->em->flush();
+    }
+    
 }
 ?>

@@ -108,7 +108,7 @@
                     .find( ".ui-datepicker-buttonpane" );
                 var btn = $( '<button class="ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all" type="button">Clear</button>');
                 btn.unbind("click")  .bind("click", function () {  
-                    $.datepicker._clearDate( input ); 
+                    $.datepicker._clearDate( input );
                 });
                 btn.appendTo(buttonPane);
             }, 1 );
@@ -188,7 +188,7 @@
             onSelect: function (dates){
                 if (dates.length>0){
                     var d = dates[0];
-                    if (this.id == 'zizoo_boat_book_reservation_from') {
+                    if (this.id == 'zizoo_boat_book_reservation_range_reservation_from') {
                         d = $.datepick.add(d, 1, 'd');
                         $('#zizoo_boat_book_reservation_range_reservation_to').datepick('option', 'minDate', d || null); 
                     } 
@@ -216,7 +216,7 @@
             onSelect: function (dates){
                 if (dates.length>0){
                     var d = dates[0];
-                    if (this.id == 'zizoo_boat_book_reservation_from') {
+                    if (this.id == 'zizoo_boat_book_reservation_range_reservation_from') {
                         d = $.datepick.add(d, 1, 'd');
                         $('#zizoo_boat_book_reservation_range_reservation_to').datepick('option', 'minDate', d || null); 
                     } 

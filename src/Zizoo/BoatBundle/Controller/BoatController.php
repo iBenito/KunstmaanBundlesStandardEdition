@@ -4,8 +4,9 @@ namespace Zizoo\BoatBundle\Controller;
 
 use Zizoo\BoatBundle\Form\Type\BoatDetailsType;
 use Zizoo\BoatBundle\Form\Type\BookBoatType;
+use Zizoo\BoatBundle\Form\Type\ConfirmBoatPriceType;
 use Zizoo\BoatBundle\Form\Model\BookBoat;
-
+use Zizoo\BoatBundle\Form\Model\ConfirmBoatPrice;
 use Zizoo\ReservationBundle\Entity\Reservation;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -36,10 +37,9 @@ class BoatController extends Controller
 
         $boat = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
 
-        if (!$boat) {
-            throw $this->createNotFoundException('Unable to find boat post.');
-        }        
-        
+        if (!$boat || !$boat->getActive() || $boat->getDeleted()){
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
+        }
         
         $map = $this->get('ivory_google_map.map');
         $map->setAsync(true);
@@ -472,23 +472,71 @@ class BoatController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
+        $em                 = $this->getDoctrine()->getManager();
+        $boat               = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
+        $user               = $this->getUser();
+        $charter            = $user->getCharter();
+        $boatService        = $this->get('boat_service');
+        $reservationAgent   = $this->get('zizoo_reservation_reservation_agent');
+        $bookingAgent       = $this->get('zizoo_booking_booking_agent');
+        $trans              = $this->get('translator');
+        
+        if (!$boat || $charter->getAdminUser()!=$user) {
+            throw $this->createNotFoundException('Unable to find Boat entity.');
+        }
+        
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        
+        $reservationRequests    = $em->getRepository('ZizooReservationBundle:Reservation')
+                                        ->getReservations(  $charter, null, null, 
+                                                            null, null,
+                                                            array(Reservation::STATUS_REQUESTED), null);
+        
+        $now = new \DateTime();
+        
+        $futureReservations     = $em->getRepository('ZizooReservationBundle:Reservation')
+                                        ->getReservations(  $charter, null, null, 
+                                                            null, $now,
+                                                            array(Reservation::STATUS_ACCEPTED, Reservation::STATUS_HOLD), null);
+        
+        if ($request->isMethod('post')){
+            $form->bind($request);
 
-        if ($form->isValid()) {
-            $em     = $this->getDoctrine()->getManager();
-            $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
-            $user   = $this->getUser();
+            if ($form->isValid()) {
 
-            if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
-                throw $this->createNotFoundException('Unable to find Boat entity.');
+                try {
+                    
+                    $delete = $boat->getDeleted()==null;
+                    if ($delete){
+                        // Reject any outstanding reservation requests
+                        foreach ($reservationRequests as $reservationRequest){
+                            $reservationAgent->denyReservation($reservationRequest, false);
+                            $bookingAgent->void($reservationRequest->getBooking(), false);
+                            $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_reservation.request_denied_success'));
+                        }
+                    }
+                    
+                    $boatService->deleteBoat($boat, $delete);
+                    if ($delete){
+                        $this->container->get('session')->getFlashBag()->add('notice', $boat->getName() . ' was deleted successfully');
+                    } else {
+                        $this->container->get('session')->getFlashBag()->add('notice', $boat->getName() . ' was undeleted successfully');
+                    }
+                } catch (\Exception $e){
+                    $this->container->get('session')->getFlashBag()->add('error', $boat->getName() . ' was not deleted successfully, because' . $e->getMessage());
+                }
+                
+                return $this->redirect($this->generateUrl('ZizooCharterBundle_Charter_Boats'));
             }
-
-            $em->remove($boat);
-            $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_Boats'));
+        return $this->render('ZizooBoatBundle:Boat:delete.html.twig', array(
+            'boat'                              => $boat,
+            'reservation_requests'              => $reservationRequests,
+            'future_reservations'               => $futureReservations,
+            'form'                              => $form->createView(),
+        ));
+        
     }
 
     private function createDeleteForm($id)
@@ -678,6 +726,6 @@ class BoatController extends Controller
 
         return $this->redirect($this->generateUrl('ZizooCharterBundle_Charter_Boats'));
     }
-
+    
 
 }

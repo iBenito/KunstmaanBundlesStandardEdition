@@ -27,18 +27,43 @@ class ReservationListener
         $from->setTime(0,0,0);
         $until->setTime(23,59,59);
         $interval = $from->diff($until);
+        $now = new \DateTime();
+        $now->setTime(0,0,0);
+        $interval2 = $now->diff($from, false);
         
         $reservationAgent   = $this->container->get('zizoo_reservation_reservation_agent');
-
-        if ($reservationAgent->reservationExists($boat, $from, $until) || !$reservationAgent->available($boat, $from, $until))
-        {
+        $boat               = $reservation->getBoat();
+        
+        // Ensure that boat is active and not deleted
+        if (!$boat->getActive() || $boat->getDeleted()){
+            throw new InvalidReservationException('Boat not available');
+        } 
+        
+        // Ensure that the boat is available for desired dates
+        if ($reservationAgent->reservationExists($boat, $from, $until) || !$reservationAgent->available($boat, $from, $until)){
             throw new InvalidReservationException('Boat not available for '.$from->format('d/m/Y') . ' - ' . $until->format('d/m/Y'));
-        } else if ($reservation->getNrGuests() > $boat->getNrGuests())
-        {
-            throw new InvalidReservationException('Too many guests: '.$reservation->getNrGuests().'>'.$boat->getNrGuests());
-        } else if ($boat->getMinimumDays() && $interval->days < $boat->getMinimumDays() && $reservation->getStatus()!=Reservation::STATUS_SELF){
+        } 
+        
+        // Ensure that the boat is booked for the specified minimum number of days
+        if ($boat->getMinimumDays() && $interval->days < $boat->getMinimumDays() && $reservation->getStatus()!=Reservation::STATUS_SELF){
             throw new InvalidReservationException('Boat must be booked for a minimum of '.$boat->getMinimumDays().' days.');
         }
+        
+        // Ensure that the booking is in the future
+        if ($interval2->invert && $reservation->getStatus()!=Reservation::STATUS_SELF){
+            throw new InvalidReservationException('Boat cannot be booked in the past');
+        }
+        
+        // Ensure that the booking is at least N days in the future, where N is a parameter of ReservationBundle (only if reservation status is not self)
+        $minDaysInFuture = $this->container->getParameter('zizoo_reservation.min_reservation_days_in_advance');
+        if ($interval2->days < $minDaysInFuture && $reservation->getStatus()!=Reservation::STATUS_SELF){
+            throw new InvalidReservationException('Boat must be booked at least '.$minDaysInFuture.' days in adance.');
+        }
+        
+        // Ensure that the boat can handle the desired number of guests
+        if ($reservation->getNrGuests() > $boat->getNrGuests()){
+            throw new InvalidReservationException('Too many guests: '.$reservation->getNrGuests().'>'.$boat->getNrGuests());
+        } 
 
     }
     

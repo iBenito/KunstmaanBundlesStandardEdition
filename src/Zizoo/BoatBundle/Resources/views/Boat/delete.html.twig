@@ -1,0 +1,44 @@
+{% extends 'ZizooBoatBundle::layout.html.twig' %}
+
+{% block body %}
+    {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat }  %}
+
+    {% if boat.deleted is not null %}
+        <p>Are you sure you want to undelete this boat?</p>
+        <form action="{{ path('ZizooBoatBundle_delete', { 'id': boat.id }) }}" method="post">
+            {{ form_widget(form) }}
+            <button type="submit">Yes</button>
+        </form>
+    {% else %}
+        {% if future_reservations|length > 0 %}
+            <p>This boat cannot be deleted because the following future reservations exist:</p>
+            <ul>
+                {% for reservation in future_reservations %}
+                    <li>{{ reservation.checkIn|date }} - {{ reservation.checkOut|date }} ({{ reservation.id}})</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            {% if reservation_requests|length > 0 %}
+                <p>The following requested reservations will be denied:</p>
+                <ul>
+                    {% for reservation in reservation_requests %}
+                        <li>{{ reservation.checkIn|date }} - {{ reservation.checkOut|date }} ({{ reservation.id}})</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <p>Are you sure you want to delete this boat?</p>
+            <form action="{{ path('ZizooBoatBundle_delete', { 'id': boat.id }) }}" method="post">
+                {{ form_widget(form) }}
+                <button type="submit">Yes</button>
+            </form>
+        {% endif %}
+    {% endif %}
+
+    
+
+    <form action="{{ path('ZizooCharterBundle_Charter_Boats') }}" method="get">
+        <input type="submit" value="Cancel" />
+    </form>
+{% endblock %}
+

@@ -1,5 +1,6 @@
 parameters:
     zizoo_reservation.reservation_request_response_hours: 48
+    zizoo_reservation.min_reservation_days_in_advance: 7
 #    zizoo_reservation.example.class: Zizoo\ReservationBundle\Example
 
 services:

@@ -1,69 +1,62 @@
 ZizooBoatBundle_show:
-    pattern:  /{id}/show
+    pattern:  /boat/{id}/show
     defaults: { _controller: ZizooBoatBundle:Boat:show }
     requirements:
         _method:  GET|POST
         id: \d+
 
 ZizooBoatBundle_edit:
-    pattern:  /{id}/edit
+    pattern:  /charter/account/boat/{id}/edit
     defaults: { _controller: ZizooBoatBundle:Boat:edit }
     requirements:
         _method:  GET
         id: \d+
 
 ZizooBoatBundle_editDetails:
-    pattern:  /{id}/edit/details
+    pattern:  /charter/account/boat/{id}/edit/details
     defaults: { _controller: ZizooBoatBundle:Boat:editDetails }
     requirements:
         _method:  GET
         id: \d+
 
 ZizooBoatBundle_editPhotos:
-    pattern:  /{id}/edit/photos
+    pattern:  /charter/account/boat/{id}/edit/photos
     defaults: { _controller: ZizooBoatBundle:Boat:editPhotos }
     requirements:
         _method:  GET
         id: \d+
-
-ZizooBoatBundle_editPrice:
-    pattern:  /{id}/edit/price
-    defaults: { _controller: ZizooBoatBundle:Boat:boatPrice }
-    requirements:
-        _method:  GET|POST
-        id: \d+
         
 ZizooBoatBundle_Boat_Active:
-    pattern:  /active/{id}
+    pattern:  /charter/account/boat/active/{id}
     defaults: { _controller: ZizooBoatBundle:Boat:active, id: null }
     requirements:
         _method:  POST
 
 ZizooBoatBundle_new:
-    pattern:  /new
+    pattern:  /charter/account/boat/new
     defaults: { _controller: ZizooBoatBundle:Boat:new }
 
 ZizooBoatBundle_upload:
-    pattern:  /upload
+    pattern:  /charter/account/boat/upload
     defaults: { _controller: ZizooBoatBundle:Boat:upload }
     
 ZizooBoatBundle_create:
-    pattern:  /create
+    pattern:  /charter/account/boat/create
     defaults: { _controller: ZizooBoatBundle:Boat:create }
     requirements: { _method: POST }
     
 ZizooBoatBundle_update:
-    pattern:  /{id}/update
+    pattern:  /charter/account/boat/{id}/update
     defaults: { _controller: ZizooBoatBundle:Boat:update }
     requirements: 
         _method: POST 
         id: \d+
     
 ZizooBoatBundle_delete:
-    pattern:  /{id}/delete
+    pattern:  /charter/account/boat/{id}/delete
     defaults: { _controller: ZizooBoatBundle:Boat:delete }
     requirements: 
-        _method: POST 
+        _method: GET|POST 
         id: \d+
         
 ZizooBoatBundle_booking_widget:
@@ -73,8 +66,15 @@ ZizooBoatBundle_booking_widget:
         _method:  GET|POST
         id: \d+
         
+ZizooBoatBundle_Boat_BoatPrice:
+    pattern:  /charter/account/boat/{id}/edit/price
+    defaults: { _controller: ZizooBoatBundle:Boat:boatPrice }
+    requirements:
+        _method:  GET|POST
+        id: \d+
+        
 ZizooBoatBundle_Boat_ConfirmBoatPrice:
-    pattern:  /account/boat/{id}/confirm-price
+    pattern:  /charter/account/boat/{id}/confirm-price
     defaults: { _controller: ZizooBoatBundle:Boat:boatConfirmPrice }
     requirements:
         _method:  GET|POST
