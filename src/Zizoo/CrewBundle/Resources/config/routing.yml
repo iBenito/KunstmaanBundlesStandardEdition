@@ -19,8 +19,11 @@ skills_create:
     requirements: { _method: post }
 
 skills_edit:
-    pattern:  /{id}/edit
+    pattern:  /{user_id}/skill/edit
     defaults: { _controller: "ZizooCrewBundle:Skills:edit" }
+    requirements:
+      _method:  GET
+      user_id: \d+
 
 skills_update:
     pattern:  /{id}/update
