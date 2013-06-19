@@ -1,22 +1,22 @@
 ZizooProfileBundle_show:
-    pattern:  /{username}/show
+    pattern:  /profile/{username}/show
     defaults: { _controller: ZizooProfileBundle:Profile:show }
     requirements:
         _method:  GET
 
 ZizooProfileBundle_Profile_Edit:
-    pattern:  /account/edit
+    pattern:  /account/profile/edit
     defaults: { _controller: ZizooProfileBundle:Profile:edit }
     requirements:
         _method:  GET
         
 ZizooProfileBundle_edit_widget:
-    pattern:  /{id}/edit_widget
+    pattern:  /account/profile/{id}/edit_widget
     defaults: { _controller: ZizooProfileBundle:Profile:editWidget }
     requirements:
         _method:  GET
         
 ZizooProfileBundle_update:
-    pattern:  /{id}/{formPath}/update
+    pattern:  /account/profile/{id}/{formPath}/update
     defaults: { _controller: ZizooProfileBundle:Profile:update }
     requirements: { _method: post }

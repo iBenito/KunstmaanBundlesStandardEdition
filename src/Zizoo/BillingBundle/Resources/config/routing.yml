@@ -1,3 +1,0 @@
-zizoo_billing_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: ZizooBillingBundle:Billing:index }

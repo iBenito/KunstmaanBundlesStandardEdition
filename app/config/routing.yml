@@ -32,7 +32,7 @@ zizoo_address:
 
 zizoo_profile:
     resource: "@ZizooProfileBundle/Resources/config/routing.yml"
-    prefix:   /profile
+    prefix:   /
 
 zizoo_booking:
     resource: "@ZizooBookingBundle/Resources/config/routing.yml"
@@ -44,7 +44,7 @@ zizoo_user:
 
 zizoo_boat:
     resource: "@ZizooBoatBundle/Resources/config/routing.yml"
-    prefix:   /boat
+    prefix:   /
    
 zizoo_base:
     resource: "@ZizooBaseBundle/Resources/config/routing.yml"
@@ -52,7 +52,7 @@ zizoo_base:
     
 zizoo_message:
     resource: "@ZizooMessageBundle/Resources/config/routing.yml"
-    prefix:   /account/message
+    prefix:   /account/messages
 
 
 _imagine:

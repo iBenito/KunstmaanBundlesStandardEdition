@@ -1,3 +1,0 @@
-zizoo_notification_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: ZizooNotificationBundle:Default:index }
