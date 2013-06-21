@@ -64,6 +64,7 @@ class Profile extends BaseEntity
     
     /**
      * @ORM\OneToMany(targetEntity="Zizoo\ProfileBundle\Entity\ProfileAvatar", mappedBy="profile")
+     * @ORM\OrderBy({"order" = "ASC"})
      */
     protected $avatar;
     

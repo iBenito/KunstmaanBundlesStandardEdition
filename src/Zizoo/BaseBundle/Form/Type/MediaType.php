@@ -13,7 +13,7 @@ class MediaType extends AbstractType
     {
         $builder
             ->add('id', 'hidden', array( 'property_path'  => 'id' ))
-            ->add('order', 'text')
+            ->add('order', 'hidden', array('attr' => array('class' => 'order')))
             ->add('x1', 'hidden', array( 'required'       => false))
             ->add('y1', 'hidden', array( 'required'       => false))
             ->add('x2', 'hidden', array( 'required'       => false))

@@ -53,7 +53,7 @@ class ProfileController extends Controller
      * @return Response
      * @throws type
      */
-    public function editWidgetAction(Profile $profile, $formPath = 'ZizooProfileBundle_Profile_Edit')
+    public function editWidgetAction(Profile $profile, $formPath = 'ZizooProfileBundle_Profile_Edit', $viewTemplate = 'ZizooProfileBundle:Profile:edit.html.twig')
     {
         if (!$profile) {
             throw $this->createNotFoundException('Unable to find Profile entity.');
@@ -62,9 +62,10 @@ class ProfileController extends Controller
         $editForm = $this->createForm(new ProfileType(), $profile);
    
         return $this->render('ZizooProfileBundle:Profile:edit_widget.html.twig',array(
-            'profile' => $profile,
-            'edit_form' => $editForm->createView(),
-            'formPath' => $formPath
+            'profile'       => $profile,
+            'edit_form'     => $editForm->createView(),
+            'formPath'      => $formPath,
+            'viewTemplate'  => $viewTemplate
         ));
     }
     
@@ -77,7 +78,7 @@ class ProfileController extends Controller
      * @return Response
      * @throws type
      */
-    public function updateAction(Request $request, $id, $formPath)
+    public function updateAction(Request $request, $id, $formPath, $viewTemplate)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -132,9 +133,11 @@ class ProfileController extends Controller
             return $this->redirect($this->generateUrl($formPath, array('id' => $id)));
         }
 
-        return $this->render($formPath, array(
-            'profile'      => $profile,
-            'edit_form'   => $editForm->createView(),
+        return $this->render($viewTemplate, array(
+            'profile'       => $profile,
+            'edit_form'     => $editForm->createView(),
+            'formPath'      => $formPath,
+            'viewTemplate'  => $viewTemplate
         ));
     }
     

@@ -38,9 +38,16 @@ abstract class Media extends BaseEntity
     protected $h;
     
 
-    public function __construct() {
+    public function __construct() 
+    {
         parent::__construct();
         $this->order = 0;
+    }
+    
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
     }
         
     public function setPath($path)

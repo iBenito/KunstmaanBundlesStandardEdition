@@ -34,7 +34,9 @@ class MediaCollectionTypeExtension extends AbstractTypeExtension
     
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        
+        if (array_key_exists('aspect_ratio', $options)) {
+            $view->vars['aspect_ratio'] = $options['aspect_ratio'];
+        }
     }
     
     

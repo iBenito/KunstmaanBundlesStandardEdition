@@ -17,7 +17,7 @@ ZizooProfileBundle_edit_widget:
         _method:  GET
         
 ZizooProfileBundle_update:
-    pattern:  /account/profile/{id}/{formPath}/update
+    pattern:  /account/profile/{id}/{formPath}/{viewTemplate}/update
     defaults: { _controller: ZizooProfileBundle:Profile:update }
     requirements: { _method: post }
     

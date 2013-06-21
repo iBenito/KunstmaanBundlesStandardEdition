@@ -34,7 +34,9 @@ class ProfileType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Zizoo\ProfileBundle\Entity\Profile'
+            'data_class'            => 'Zizoo\ProfileBundle\Entity\Profile',
+            'cascade_validation'    => true,
+            'validation_groups'     => array('default')
         ));
     }
 

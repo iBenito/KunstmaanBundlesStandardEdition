@@ -11,24 +11,35 @@
 {% endspaceless %}
 {% endblock zizoo_single_image_widget %}
 
+
+{% block zizoo_media_row %}
+{% spaceless %}
+    <div id="{{ id }}_container">
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+            
+        {% if image_url is not null %}
+            <div class="image_div">
+                <img id="{{ id }}_image" src="{{ asset(image_url) }}?ver={{ version }}"/><br />
+                <button type="button" id="{{ id }}_crop_btn" class="">Crop</button>
+                {% if allow_delete == true %}
+                    <button type="button" id="{{ id }}_delete_btn" class="">Delete</button>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+{% endspaceless %}
+{% endblock zizoo_media_row %}
+
+
 {% block zizoo_media_widget %}
     {% spaceless %}
 
     {{ block('form_widget') }}
     
-    {% if image_url is not null %}
-        <div class="image_div">
-            <img id="{{ id }}_image" src="{{ asset(image_url) }}?ver={{ version }}"/><br />
-            <button type="button" id="{{ id }}_crop_btn" class="">Crop</button>
-            {% if allow_delete == true %}
-                <button type="button" id="{{ id }}_delete_btn" class="">Delete</button>
-            {% endif %}
-        </div>
-    {% endif %}
-
     {% endspaceless %}
         
-        
+    {% if part_of_collection == false %}
     <script type="text/javascript">
         var {{ id }}_jcrop_api = null;
         
@@ -80,5 +91,87 @@
         }
 
     </script>
-        
+    {% endif %}
+    
 {% endblock zizoo_media_widget %}
+    
+{% block zizoo_media_collection_widget %}
+    {% spaceless %}
+        <div id="{{ id }}_list">
+            {% for child in form %}
+                {{ form_row(child) }}
+                
+            {% endfor %}
+        </div>
+        {{ form_errors(form) }}
+    {% endspaceless %}
+    
+    <script type="text/javascript">
+        {% for child in form %}
+            var {{ id }}_{{ child.vars.name }}_jcrop_api = null;
+            
+            function {{ id }}_{{ child.vars.name }}_showCoords(c){
+                var prefix = '{{ id }}_{{ child.vars.name }}';
+                prefix = prefix.replace('_image', '');
+
+                $('#'+prefix + ' #'+prefix+'_x1').val(c.x);
+                $('#'+prefix + ' #'+prefix+'_y1').val(c.y);
+                $('#'+prefix + ' #'+prefix+'_x2').val(c.x2);
+                $('#'+prefix + ' #'+prefix+'_y2').val(c.y2);
+                $('#'+prefix + ' #'+prefix+'_w').val(c.w);
+                $('#'+prefix + ' #'+prefix+'_h').val(c.h);
+
+            }
+            
+        {% endfor %}
+        
+        
+        $(document).ready(function(){
+            
+            function resort(){
+                $('#{{ id }}_list > div').each(function(index, el){
+                    $(el).find('.order').val(index);
+                });
+            }
+            
+            $('#{{ id }}_list').sortable({
+                stop: function(e, ui){
+                    resort();
+                }
+            });
+            
+            {% for child in form %}
+               
+               $('#{{ id }}_{{ child.vars.name }}_delete_btn').click(function(){
+                    $(this).parent('.image_div').parent().remove();
+                });
+               
+               $('#{{ id }}_{{ child.vars.name }}_image').Jcrop({
+                    onChange: {{ id }}_{{ child.vars.name }}_showCoords,
+                    onSelect: {{ id }}_{{ child.vars.name }}_showCoords,
+                    aspectRatio: {{ aspect_ratio }}
+                }, function(){
+                    {{ id }}_{{ child.vars.name }}_jcrop_api = this;
+                    {{ id }}_{{ child.vars.name }}_jcrop_api.disable();
+                });
+                
+                $('#{{ id }}_{{ child.vars.name }}_crop_btn').click(function(){
+                    if ({{ id }}_{{ child.vars.name }}_jcrop_api == null) return;
+                    var active = $(this).hasClass('active');
+                    if (active){
+                        {{ id }}_{{ child.vars.name }}_jcrop_api.disable();
+                        $(this).html('Crop');
+                        $(this).removeClass('active');
+                    } else {
+                        {{ id }}_{{ child.vars.name }}_jcrop_api.enable();
+                        $(this).html('Done');
+                        $(this).addClass('active');
+                    }
+
+                });
+               
+            {% endfor %}
+        });
+        
+    </script>
+{% endblock zizoo_media_collection_widget %}

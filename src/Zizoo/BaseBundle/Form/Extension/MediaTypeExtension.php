@@ -2,6 +2,8 @@
 // src/Zizoo/BaseBundle/Form/Extension/MediaTypeExtension.php
 namespace Zizoo\BaseBundle\Form\Extension;
 
+use Zizoo\BaseBundle\Form\Type\MediaCollectionType;
+
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
@@ -42,7 +44,16 @@ class MediaTypeExtension extends AbstractTypeExtension
         
         $parent         = $form->getParent();
         $config         = $parent->getConfig();
+        
+        $parentInnerType = $config->getType()->getInnerType();
+        if ($parentInnerType instanceof MediaCollectionType){
+            $view->vars['part_of_collection'] = true;
+        } else {
+            $view->vars['part_of_collection'] = false;
+        }
+        
         $parentOptions = $config->getOptions();
+                
         if (array_key_exists('aspect_ratio', $parentOptions)) {
             $view->vars['aspect_ratio'] = $parentOptions['aspect_ratio'];
         } else {
