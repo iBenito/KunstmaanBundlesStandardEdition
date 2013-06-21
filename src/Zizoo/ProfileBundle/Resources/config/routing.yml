@@ -20,3 +20,13 @@ ZizooProfileBundle_update:
     pattern:  /account/profile/{id}/{formPath}/update
     defaults: { _controller: ZizooProfileBundle:Profile:update }
     requirements: { _method: post }
+    
+ZizooProfileBundle_single_media:
+    pattern:  /account/profile/test/single_media
+    defaults: { _controller: ZizooProfileBundle:Profile:singleMedia }
+    requirements: { _method: get }
+    
+ZizooProfileBundle_collection_media:
+    pattern:  /account/profile/test/collection_media
+    defaults: { _controller: ZizooProfileBundle:Profile:collectionMedia }
+    requirements: { _method: get }

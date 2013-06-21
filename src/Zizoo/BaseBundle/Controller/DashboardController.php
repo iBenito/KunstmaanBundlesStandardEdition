@@ -162,14 +162,15 @@ class DashboardController extends Controller {
     {
         $user   = $this->getUser();
         $boat   = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
-        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+        //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+        if (!$boat || !$boat->getCharter()->getUsers()->contains($user)){
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
 
         return $this->render('ZizooBaseBundle:Dashboard/Boat:edit.html.twig', array(
             'boat'  => $boat,
             'formAction' => 'ZizooBoatBundle_update',
-            'formRedirect' => 'ZizooBaseBundle_Dashboard_BoatEdit'
+            'formRedirect' => 'ZizooBoatBundle_edit'
         ));
     }
 
@@ -183,7 +184,8 @@ class DashboardController extends Controller {
     {
         $user   = $this->getUser();
         $boat   = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
-        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+        //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+        if (!$boat || !$boat->getCharter()->getUsers()->contains($user)){
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
 
@@ -210,7 +212,7 @@ class DashboardController extends Controller {
             'existingFiles' => $existingFiles,
             'editId' => intval($editId),
             'formAction' => 'ZizooBoatBundle_update',
-            'formRedirect' => 'ZizooBaseBundle_Dashboard_BoatEdit'
+            'formRedirect' => 'ZizooBoatBundle_edit'
         ));
     }
 
@@ -225,7 +227,8 @@ class DashboardController extends Controller {
         $boatId = $this->getRequest()->get('boatId');
 
         $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($boatId);
-        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+        //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+        if (!$boat || !$boat->getCharter()->getUsers()->contains($user)){
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
 
@@ -259,7 +262,7 @@ class DashboardController extends Controller {
             'create_to_folder' => true)
         );
 
-        return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_BoatEdit', array('id' => $boatId)));
+        return $this->redirect($this->generateUrl('ZizooBoatBundle_edit', array('id' => $boatId)));
     }
      
     /**

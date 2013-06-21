@@ -26,7 +26,9 @@ class ReservationController extends Controller
         
         $em                 = $this->getDoctrine()->getManager();
         $reservation        = $em->getRepository('ZizooReservationBundle:Reservation')->findOneById($id);
-        if (!$reservation || $reservation->getBoat()->getCharter()->getAdminUser()!=$user){
+        
+        //if (!$reservation || $reservation->getBoat()->getCharter()->getAdminUser()!=$user){
+        if (!$reservation || !$reservation->getBoat()->getCharter()->getUsers()->contains($user)){
             return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
         }
                 
@@ -53,7 +55,8 @@ class ReservationController extends Controller
         
         $em                 = $this->getDoctrine()->getManager();
         $reservation        = $em->getRepository('ZizooReservationBundle:Reservation')->findOneById($id);
-        if (!$reservation || $reservation->getBoat()->getCharter()->getAdminUser()!=$user){
+        //if (!$reservation || $reservation->getBoat()->getCharter()->getAdminUser()!=$user){
+        if (!$reservation || !$reservation->getBoat()->getCharter()->getUsers()->contains($user)){
             return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
         }
         
@@ -61,7 +64,7 @@ class ReservationController extends Controller
         $bookingAgent       = $this->get('zizoo_booking_booking_agent');
         $trans              = $this->get('translator');
         
-        $thread             = $em->getRepository('ZizooMessageBundle:Thread')->findOneByReservation($reservation);
+        $thread             = $em->getRepository('ZizooMessageBundle:Thread')->findOneByBooking($reservation->getBooking());
         
         $overlappingReservationRequests = $em->getRepository('ZizooReservationBundle:Reservation')
                                                 ->getReservations($charter, $user, $reservation->getBoat(), 
@@ -103,7 +106,9 @@ class ReservationController extends Controller
                             $thread = $composer->reply($thread)
                                                 ->setSender($user)
                                                 ->setBody($acceptReservation->getAcceptMessage());
-
+                            if ($user != $charter->getAdminUser()){
+                                //$thread->addRecipient($charter->getAdminUser());
+                            }
                             $message =  $thread->getMessage()
                                                 ->setMessageType($messageTypeRepo->findOneById('accepted'));
 
@@ -157,7 +162,8 @@ class ReservationController extends Controller
         
         $em                 = $this->getDoctrine()->getManager();
         $reservation        = $em->getRepository('ZizooReservationBundle:Reservation')->findOneById($id);
-        if (!$reservation || $reservation->getBoat()->getCharter()->getAdminUser()!=$user){
+        //if (!$reservation || $reservation->getBoat()->getCharter()->getAdminUser()!=$user){
+        if (!$reservation || !$reservation->getBoat()->getCharter()->getUsers()->contains($user)){
             return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
         }
         
@@ -165,7 +171,7 @@ class ReservationController extends Controller
         $bookingAgent       = $this->get('zizoo_booking_booking_agent');
         $trans              = $this->get('translator');
         
-        $thread             = $em->getRepository('ZizooMessageBundle:Thread')->findOneByReservation($reservation);
+        $thread             = $em->getRepository('ZizooMessageBundle:Thread')->findOneByBooking($reservation->getBooking());
         
         $form = $this->createForm(new DenyReservationType(), new DenyReservation());
         
@@ -189,7 +195,7 @@ class ReservationController extends Controller
                                                 ->setBody($denyReservation->getDenyMessage());
 
                             $message =  $thread->getMessage()
-                                                ->setMessageType($messageTypeRepo->findOneById('denied'));
+                                                ->setMessageType($messageTypeRepo->findOneById('declined'));
 
                             $sender->send($message);
                         }

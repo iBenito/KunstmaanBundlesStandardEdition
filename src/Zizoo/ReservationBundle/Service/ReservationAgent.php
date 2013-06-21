@@ -30,20 +30,20 @@ class ReservationAgent {
         $threadTypeRepo = $this->em->getRepository('ZizooMessageBundle:ThreadType');
         if (!$registerUser) return false;
         
-        $message = $composer->newThread()
+        $thread = $composer->newThread()
                             ->setSender($registerUser)
                             ->addRecipient($user)
                             ->setSubject('Your booking')
                             ->setBody('This is the booking message')
-                            ->setThreadType($threadTypeRepo->findOneByName('Booking'))
-                            ->getMessage();
+                            ->setThreadType($threadTypeRepo->findOneByName('Booking'));
+        $message = $thread->getMessage();
         
         $sender = $this->container->get('fos_message.sender');
         $sender->send($message);
         
         $this->messenger->sendNotificationBookingEmail($user, $reservation);
         
-        return $message;
+        return $thread;
     }
     
     public function getReservation($boat, $from, $to)
@@ -169,6 +169,10 @@ class ReservationAgent {
     
     public function expireReservation(Reservation $reservation, $flush)
     {
+        if ($reservation->getStatus()!=Reservation::STATUS_REQUESTED){
+            throw new InvalidReservationException('Unable to expire reservation');
+        }
+        
         $reservation->setStatus(Reservation::STATUS_EXPIRED);
         $this->em->persist($reservation);
         if ($flush) $this->em->flush();

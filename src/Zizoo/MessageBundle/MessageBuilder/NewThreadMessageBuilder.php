@@ -52,8 +52,8 @@ class NewThreadMessageBuilder extends AbstractMessageBuilder
         return $this;
     }
     
-    public function setReservation($reservation){
-        $this->thread->setReservation($reservation);
+    public function setBooking($reservation){
+        $this->thread->setBooking($reservation);
         return $this;
     }
 

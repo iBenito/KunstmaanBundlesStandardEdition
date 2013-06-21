@@ -5,3 +5,26 @@ services:
 #    zizoo_profile.example:
 #        class: %zizoo_profile.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]
+
+    zizoo_profile.single_test_type:
+        class:  Zizoo\ProfileBundle\Form\Type\SingleTestType
+        tags:
+            - { name: form.type, alias: zizoo_single_test }
+            
+            
+    zizoo_profile.profile_listener:
+        class: Zizoo\ProfileBundle\EventListener\ProfileListener
+        arguments:
+            container:      "@service_container"
+        tags:
+            - { name: doctrine.event_listener, event: postPersist }
+            - { name: doctrine.event_listener, event: postUpdate }
+            
+    zizoo_profile.avatar_listener:
+        class: Zizoo\ProfileBundle\EventListener\ProfileAvatarListener
+        arguments:
+            container:      "@service_container"
+        tags:
+            - { name: doctrine.event_listener, event: postPersist }
+            - { name: doctrine.event_listener, event: postUpdate }
+            - { name: doctrine.event_listener, event: preRemove }

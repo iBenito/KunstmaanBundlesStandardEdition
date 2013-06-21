@@ -2,6 +2,8 @@
 
 namespace Zizoo\ProfileBundle\Form;
 
+use Zizoo\BaseBundle\Form\Type\MediaType;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -20,7 +22,12 @@ class ProfileType extends AbstractType
                 'multiple'  => true,
                 'attr'  => array('title'=>'select'),
                 'property' => 'name',))
-            ->add('file', 'file',array('label' => 'Avatar','required' => false))
+            ->add('file', 'file', array( 'required' => false))
+            ->add('avatar', 'zizoo_media_collection', array(    'type'          => 'zizoo_media',
+                                                                'label'         => 'Avatar',
+                                                                'image_path'    => 'webPath',
+                                                                'allow_delete'  => true
+                                                                ));
         ;
     }
 

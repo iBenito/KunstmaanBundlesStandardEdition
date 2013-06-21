@@ -2,8 +2,8 @@
 
 <div id="dashboard_user">
     <div class="avatar">
-        {% if user.profile.picture is not null %}
-            <img src="{{ asset(user.profile|pictureWebPath) }}" alt="image not found" class="large" />
+        {% if user.profile.avatar|length > 0 %}
+            <img src="{{ asset(user.profile.avatar.first|pictureWebPath) }}" alt="image not found" class="large" />
         {% endif %}
     </div>
     <h3>{{ user.profile.firstName }} {{ user.profile.lastName }}</h3>

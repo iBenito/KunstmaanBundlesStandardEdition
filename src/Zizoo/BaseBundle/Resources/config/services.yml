@@ -19,3 +19,37 @@ services:
         class:  Zizoo\BaseBundle\Form\Type\NumberNullableType
         tags:
             - { name: form.type, alias: zizoo_number_nullable }
+
+    zizoo_base.single_image_type:
+        class:  Zizoo\BaseBundle\Form\Type\SingleImageType
+        tags:
+            - { name: form.type, alias: zizoo_single_image }
+            
+    zizoo_base.single_image_type_extension:
+        class: Zizoo\BaseBundle\Form\Extension\SingleImageTypeExtension
+        tags:
+            - { name: form.type_extension, alias: file }
+            
+            
+    zizoo_base.media_type:
+        class:  Zizoo\BaseBundle\Form\Type\MediaType
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { name: form.type, alias: zizoo_media }
+            
+    zizoo_base.media_collection_type:
+        class:  Zizoo\BaseBundle\Form\Type\MediaCollectionType
+        tags:
+            - { name: form.type, alias: zizoo_media_collection }
+            
+    zizoo_base.media_type_extension:
+        class:  Zizoo\BaseBundle\Form\Extension\MediaTypeExtension
+        tags:
+            - { name: form.type_extension, alias: zizoo_media }
+            
+    zizoo_base.media_collection_type_extension:
+        class:  Zizoo\BaseBundle\Form\Extension\MediaCollectionTypeExtension
+        tags:
+            - { name: form.type_extension, alias: zizoo_media_collection }
+            
+            

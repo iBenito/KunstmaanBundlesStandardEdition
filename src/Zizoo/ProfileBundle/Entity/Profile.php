@@ -1,11 +1,14 @@
 <?php
 namespace Zizoo\ProfileBundle\Entity;
 use Zizoo\BaseBundle\Entity\BaseEntity;
+use Zizoo\ProfileBundle\Entity\ProfileAvatar;
 
 use Zizoo\ProfileBundle\Entity\Profile\NotificationSettings;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Zizoo\ProfileBundle\Entity\ProfileRepository")
@@ -46,16 +49,6 @@ class Profile extends BaseEntity
     protected $phone;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $picture;
-    
-    /**
-     * @var File  - not a persisted field!
-     */
-    public $file;
-   
-    /**
      * @ORM\OneToOne(targetEntity="Zizoo\ProfileBundle\Entity\Profile\NotificationSettings", cascade={"persist"})
      */    
     protected $notification_settings;
@@ -68,6 +61,64 @@ class Profile extends BaseEntity
      *      )
      **/
     protected $languages;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Zizoo\ProfileBundle\Entity\ProfileAvatar", mappedBy="profile")
+     */
+    protected $avatar;
+    
+    /**
+     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
+     * @Assert\File(maxSize="2M")
+     */
+    public $file;
+    
+    /**
+     * Sets file.
+     *
+     * @param UploadedFile $file
+     */
+    public function setFile(UploadedFile $file = null)
+    {
+        $this->file = $file;
+        // check if we have an old image path
+        //if (is_file($this->getAbsolutePath())) {
+            // store the old name to delete after the update
+            //$this->temp = $this->getAbsolutePath();
+        //} else {
+            //$this->path = 'initial';
+        //}
+    }
+
+    /**
+     * Get file.
+     *
+     * @return UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+    
+    
+    public function addAvatar(ProfileAvatar $avatar)
+    {
+        $this->avatar[] = $avatar;
+        return $this;
+    }
+    
+    public function removeAvatar(ProfileAvatar $avatar)
+    {
+        return $this->avatar->removeElement($avatar);
+    }
+    
+    /*
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
 
     /**
      * Constructor
@@ -76,6 +127,7 @@ class Profile extends BaseEntity
     {
         $this->addresses = new ArrayCollection();
         $this->languages = new ArrayCollection();
+        $this->avatar    = new ArrayCollection();
         $notificationSettings = new NotificationSettings();
         $notificationSettings->setMessage(true);
         $notificationSettings->setEnquiry(true);
@@ -210,114 +262,7 @@ class Profile extends BaseEntity
         return $this->phone;
     }
 
-    /**
-     * Set picture
-     *
-     * @param string $picture
-     * @return Profile
-     */
-    public function setPicture($picture)
-    {
-        $this->picture = $picture;
-    
-        return $this;
-    }
-
-    /**
-     * Get picture
-     *
-     * @return string 
-     */
-    public function getPicture()
-    {
-        return $this->picture;
-    }
-    
-    /**
-     * File upload pre processing
-     * 
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     */
-    public function preUpload()
-    {
-        if (null !== $this->file) {
-            // do whatever you want to generate a unique name
-            $filename = sha1(uniqid(mt_rand(), true));
-            $this->picture = $filename.'.'.$this->file->guessExtension();
-        }
-
-    }
    
-    /**
-     * File upload
-     * 
-     * @ORM\PostPersist()
-     * @ORM\PostUpdate()
-     */
-    public function uploadPicture()
-    {
-        // the file property can be empty if the field is not required
-        if (null === $this->file) {
-            return;
-        }
-
-        // move takes the target directory and then the
-        // target filename to move to
-        // compute a random name and try to guess the extension (more secure)
-        $extension = $this->file->guessExtension();
-        if (!$extension) {
-            // extension cannot be guessed
-            $extension = 'bin';
-        }
-        
-        $this->file->move(
-            $this->getUploadRootDir(),
-            $this->picture
-        );
-
-        // clean up the file property as you won't need it anymore
-        $this->file = null;
-    }
-    
-    /**
-     * @ORM\PostRemove()
-     */
-    public function removeUpload()
-    {
-        if ($file = $this->getAbsolutePath()) {
-            unlink($file);
-        }
-    }
-    
-    public function getAbsolutePath()
-    {
-        return null === $this->picture
-            ? null
-            : $this->getUploadRootDir().'/'.$this->picture;
-    }
-
-    public function getWebPath()
-    {
-        return null === $this->picture
-            ? null
-            : $this->getUploadDir().'/'.$this->picture;
-    }
-
-    protected function getUploadRootDir()
-    {
-        // the absolute directory path where uploaded
-        // documents should be saved
-        return __DIR__.'/../../../../web/'.$this->getUploadDir();
-    }
-
-    protected function getUploadDir()
-    {
-        // get rid of the __DIR__ so it doesn't screw up
-        // when displaying uploaded doc/image in the view.
-        return 'images/profile/'.$this->id;
-    }
-
     /**
      * Add addresses
      *
@@ -423,4 +368,6 @@ class Profile extends BaseEntity
     {
         return $this->languages;
     }
+    
+    
 }

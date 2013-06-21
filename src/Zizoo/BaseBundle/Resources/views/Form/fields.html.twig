@@ -1,0 +1,84 @@
+{% block zizoo_single_image_widget %}
+{% spaceless %}
+    <div {{ block('widget_container_attributes') }}>
+        <h1>hello</h1>
+        {% spaceless %}
+            {% set type = type|default('text') %}
+            <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+        {% endspaceless %}
+        {{ dump(form.parent.vars.value) }}
+    </div>
+{% endspaceless %}
+{% endblock zizoo_single_image_widget %}
+
+{% block zizoo_media_widget %}
+    {% spaceless %}
+
+    {{ block('form_widget') }}
+    
+    {% if image_url is not null %}
+        <div class="image_div">
+            <img id="{{ id }}_image" src="{{ asset(image_url) }}?ver={{ version }}"/><br />
+            <button type="button" id="{{ id }}_crop_btn" class="">Crop</button>
+            {% if allow_delete == true %}
+                <button type="button" id="{{ id }}_delete_btn" class="">Delete</button>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% endspaceless %}
+        
+        
+    <script type="text/javascript">
+        var {{ id }}_jcrop_api = null;
+        
+        $(document).ready(function(){
+
+            $('#{{ id }}_delete_btn').click(function(){
+                $(this).parent('.image_div').parent().remove();
+            });
+
+            $('#{{ id }}_image').Jcrop({
+                onChange: {{ id }}_showCoords,
+                onSelect: {{ id }}_showCoords,
+                aspectRatio: {{ aspect_ratio }}
+            }, function(){
+                {{ id }}_jcrop_api = this;
+            });
+            
+            {{ id }}_jcrop_api.disable();
+
+            $('#{{ id }}_crop_btn').click(function(){
+                var active = $(this).hasClass('active');
+                if (active){
+                    {{ id }}_jcrop_api.disable();
+                    $(this).html('Crop');
+                    $(this).removeClass('active');
+                } else {
+                    
+                    {{ id }}_jcrop_api.enable();
+                    
+                    $(this).html('Done');
+                    $(this).addClass('active');
+                }
+                
+            });
+
+        });
+        
+        function {{ id }}_showCoords(c){
+            var prefix = '{{ id }}';
+            prefix = prefix.replace('_image', '');
+  
+            $('#'+prefix + ' #'+prefix+'_x1').val(c.x);
+            $('#'+prefix + ' #'+prefix+'_y1').val(c.y);
+            $('#'+prefix + ' #'+prefix+'_x2').val(c.x2);
+            $('#'+prefix + ' #'+prefix+'_y2').val(c.y2);
+            $('#'+prefix + ' #'+prefix+'_w').val(c.w);
+            $('#'+prefix + ' #'+prefix+'_h').val(c.h);
+
+        }
+
+    </script>
+        
+{% endblock zizoo_media_widget %}
