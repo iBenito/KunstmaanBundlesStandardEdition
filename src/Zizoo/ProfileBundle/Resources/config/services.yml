@@ -9,7 +9,9 @@ services:
     profile_service:
         class:        Zizoo\ProfileBundle\Service\ProfileService
         arguments:
-            entityManager:  "@doctrine.orm.entity_manager"    zizoo_profile.single_test_type:
+            entityManager:  "@doctrine.orm.entity_manager"    
+            
+    zizoo_profile.single_test_type:
         class:  Zizoo\ProfileBundle\Form\Type\SingleTestType
         tags:
             - { name: form.type, alias: zizoo_single_test }

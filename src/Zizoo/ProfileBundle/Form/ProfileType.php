@@ -32,6 +32,13 @@ class ProfileType extends AbstractType
                 'multiple'  => true,
                 'attr'  => array('title'=>'select'),
                 'property' => 'name',))
+            ->add('profile_address', 'zizoo_address', array('label' => 'zizoo_charter.label.profile_address',
+                    'property_path'     => 'address',
+                    'validation_groups' => 'registration',
+                    'data_class'        => 'Zizoo\AddressBundle\Entity\ProfileAddress',
+                    'map_show'          => $options['map_show'],
+                    'map_update'        => $options['map_update'],
+                    'map_drag'          => $options['map_drag']))
             ->add('avatar', 'zizoo_media_collection', array(    'type'          => 'zizoo_media',
                                                                 'property_path' => 'avatar',
                                                                 'label'         => 'Avatar',
@@ -47,15 +54,6 @@ class ProfileType extends AbstractType
         
         $profileSubscriber = $this->container->get('zizoo_profile.profile_subscriber');
         $builder->addEventSubscriber($profileSubscriber);
-            ->add('file', 'file',array('label' => 'Avatar','required' => false))
-            ->add('profile_address', 'zizoo_address', array('label' => 'zizoo_charter.label.profile_address',
-                    'property_path'     => 'address',
-                    'validation_groups' => 'registration',
-                    'data_class'        => 'Zizoo\AddressBundle\Entity\ProfileAddress',
-                    'map_show'          => $options['map_show'],
-                    'map_update'        => $options['map_update'],
-                    'map_drag'          => $options['map_drag']));
-        ;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -63,8 +61,8 @@ class ProfileType extends AbstractType
         $resolver->setDefaults(array(
             'data_class'            => 'Zizoo\ProfileBundle\Entity\Profile',
             'cascade_validation'    => true,
-            'validation_groups'     => array('default')
-            'data_class' => 'Zizoo\ProfileBundle\Entity\Profile',
+            'validation_groups'     => array('default'),
+            'data_class'            => 'Zizoo\ProfileBundle\Entity\Profile',
             'map_show'              => true,
             'map_update'            => false,
             'map_drag'              => false

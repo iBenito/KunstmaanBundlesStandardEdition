@@ -185,7 +185,7 @@ class ProfileController extends Controller
             'profile'       => $profile,
             'edit_form'     => $editForm->createView(),
             'formPath'      => $formPath,
-            'viewTemplate'  => $viewTemplate
+            'viewTemplate'  => $viewTemplate,
             'form_path'    => $formPath
         ));
     }
