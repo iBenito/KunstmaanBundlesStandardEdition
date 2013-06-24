@@ -22,7 +22,7 @@ class ProfileType extends AbstractType
                 'attr'  => array('title'=>'select'),
                 'property' => 'name',))
             ->add('file', 'file',array('label' => 'Avatar','required' => false))
-            ->add('profile_address', 'zizoo_address', array('label' => 'zizoo_charter.label.profile_address',
+            ->add('profile_address', 'zizoo_address', array('label' => 'zizoo_profile.label.profile_address',
                     'property_path'     => 'address',
                     'validation_groups' => 'registration',
                     'data_class'        => 'Zizoo\AddressBundle\Entity\ProfileAddress',
