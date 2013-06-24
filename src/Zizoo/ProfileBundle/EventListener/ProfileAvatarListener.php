@@ -34,33 +34,7 @@ class ProfileAvatarListener
             $image->crop(new Point($avatar->getX1(), $avatar->getY1()), new Box($avatar->getW(), $avatar->getH()))
                     ->save($path);
         }
-        
-        $profile = $avatar->getProfile();
-        if (null === $profile->getFile()) {
-            return;
-        }
-
-        // check if we have an old image
-//        if (isset($this->temp)) {
-//            // delete the old image
-//            unlink($this->temp);
-//            // clear the temp image path
-//            $this->temp = null;
-//        }
-
-        // you must throw an exception here if the file cannot be moved
-        // so that the entity is not persisted to the database
-        // which the UploadedFile move() method does
-        
-
-        $path = $avatar->getPath();
-        $profile->getFile()->move(
-            $avatar->getUploadRootDir(),
-            $avatar->getId().'.'.$path
-        );
-
-        $profile->setFile(null);
-        
+  
     }
     
 

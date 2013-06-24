@@ -68,39 +68,7 @@ class Profile extends BaseEntity
      */
     protected $avatar;
     
-    /**
-     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
-     * @Assert\File(maxSize="2M")
-     */
-    public $file;
-    
-    /**
-     * Sets file.
-     *
-     * @param UploadedFile $file
-     */
-    public function setFile(UploadedFile $file = null)
-    {
-        $this->file = $file;
-        // check if we have an old image path
-        //if (is_file($this->getAbsolutePath())) {
-            // store the old name to delete after the update
-            //$this->temp = $this->getAbsolutePath();
-        //} else {
-            //$this->path = 'initial';
-        //}
-    }
 
-    /**
-     * Get file.
-     *
-     * @return UploadedFile
-     */
-    public function getFile()
-    {
-        return $this->file;
-    }
-    
     
     public function addAvatar(ProfileAvatar $avatar)
     {
@@ -368,6 +336,62 @@ class Profile extends BaseEntity
     public function getLanguages()
     {
         return $this->languages;
+    }
+    
+    
+    
+    
+    
+    /**
+     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
+     * @Assert\File(maxSize="2M")
+     */
+    public $avatarFile;
+    
+    /**
+     * Sets file.
+     *
+     * @param UploadedFile $file
+     */
+    public function setAvatarFile(UploadedFile $file = null)
+    {
+        $this->avatarFile = $file;
+    }
+
+    /**
+     * Get file.
+     *
+     * @return UploadedFile
+     */
+    public function getAvatarFile()
+    {
+        return $this->avatarFile;
+    }
+    
+    /**
+     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
+     * @Assert\File(maxSize="2M")
+     */
+    public $documentFile;
+    
+    /**
+     * Sets file.
+     *
+     * @param UploadedFile $file
+     */
+    public function setDocumentFile(UploadedFile $file = null)
+    {
+        $this->documentFile = $file;
+    }
+
+    /**
+     * Get file.
+     *
+     * @return UploadedFile
+     */
+    public function getDocumentFile()
+    {
+        return $this->documentFile;
     }
     
     

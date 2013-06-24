@@ -1,36 +1,52 @@
-{% block zizoo_single_image_widget %}
-{% spaceless %}
-    <div {{ block('widget_container_attributes') }}>
-        <h1>hello</h1>
-        {% spaceless %}
-            {% set type = type|default('text') %}
-            <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
-        {% endspaceless %}
-        {{ dump(form.parent.vars.value) }}
-    </div>
-{% endspaceless %}
-{% endblock zizoo_single_image_widget %}
-
-
 {% block zizoo_media_row %}
 {% spaceless %}
     <div id="{{ id }}_container">
         {{ form_errors(form) }}
         {{ form_widget(form) }}
             
-        {% if image_url is not null %}
+        {% if file_url is not null %}
             <div class="image_div">
-                <img id="{{ id }}_image" src="{{ asset(image_url) }}?ver={{ version }}"/><br />
-                <button type="button" id="{{ id }}_crop_btn" class="">Crop</button>
-                {% if allow_delete == true %}
-                    <button type="button" id="{{ id }}_delete_btn" class="">Delete</button>
-                {% endif %}
+                <img id="{{ id }}_image" src="{{ asset(file_url|imagine_filter('thumb_120x80')) }}?ver={{ version }}"/><br />
+                <div class="overlay"></div>
+                <div class="controls">
+                    <a href="#" id="{{ id }}_crop_btn" class="">Crop</a>
+                    {% if allow_delete == true %}
+                        <a href="#" id="{{ id }}_delete_btn" class="">Delete</a>
+                    {% endif %}
+                    <input id="{{ id }}_full_url" type="hidden" value="{{ asset(file_url) }}" />
+                </div>
             </div>
         {% endif %}
     </div>
 {% endspaceless %}
 {% endblock zizoo_media_row %}
 
+{% block zizoo_media_css %}
+    <style type="text/css">
+        .image_div {
+            position: relative;
+        }
+        
+        .image_div .overlay {
+            position: absolute;
+            width: 120px;
+            height: 80px;
+            background-color: black;
+            opacity: 0.5;
+            display: none;
+            left: 0;
+            top: 0;
+        }
+        
+        .image_div .controls {
+            z-index: 2;
+            position: absolute;
+            display: none;
+            left: 10px;
+            top: 30px;
+        }
+    </style>
+{% endblock zizoo_media_css %}
 
 {% block zizoo_media_widget %}
     {% spaceless %}
@@ -55,9 +71,10 @@
                 aspectRatio: {{ aspect_ratio }}
             }, function(){
                 {{ id }}_jcrop_api = this;
+                {{ id }}_jcrop_api.disable();
             });
             
-            {{ id }}_jcrop_api.disable();
+            
 
             $('#{{ id }}_crop_btn').click(function(){
                 var active = $(this).hasClass('active');
@@ -91,19 +108,21 @@
         }
 
     </script>
+    {{ block('zizoo_media_css') }}
     {% endif %}
     
 {% endblock zizoo_media_widget %}
     
 {% block zizoo_media_collection_widget %}
     {% spaceless %}
+        <div id="{{ id }}_crop_container">
+            <img src="" id="{{ id }}_crop_image" />
+        </div>
         <div id="{{ id }}_list">
             {% for child in form %}
                 {{ form_row(child) }}
-                
             {% endfor %}
         </div>
-        {{ form_errors(form) }}
     {% endspaceless %}
     
     <script type="text/javascript">
@@ -125,14 +144,26 @@
             
         {% endfor %}
         
+        function resort(){
+            $('#{{ id }}_list > div').each(function(index, el){
+                $(el).find('.order').val(index);
+            });
+        }
         
         $(document).ready(function(){
             
-            function resort(){
-                $('#{{ id }}_list > div').each(function(index, el){
-                    $(el).find('.order').val(index);
-                });
-            }
+            resort();
+            
+            $('#{{ id }}_list').parents('form').submit(function(){
+                $('#{{ id }}_list > div.remove').remove();
+                return true;
+            });
+            
+            $('#{{ id }}_list .image_div').hover(function(){
+                $(this).children('.controls, .overlay').fadeIn();
+            }, function(){
+                $(this).children('.controls, .overlay').fadeOut();
+            });
             
             $('#{{ id }}_list').sortable({
                 stop: function(e, ui){
@@ -143,17 +174,19 @@
             {% for child in form %}
                
                $('#{{ id }}_{{ child.vars.name }}_delete_btn').click(function(){
-                    $(this).parent('.image_div').parent().remove();
+                    var listItem = $(this).parent('.image_div').parent();
+                    var remove = $(listItem).hasClass('remove');
+                    if (remove){
+                        $(listItem).removeClass('remove');
+                        $(this).html('Delete');
+                    } else {
+                        $(listItem).addClass('remove');
+                        $(this).html('Undelete');
+                    }
+                    
                 });
                
-               $('#{{ id }}_{{ child.vars.name }}_image').Jcrop({
-                    onChange: {{ id }}_{{ child.vars.name }}_showCoords,
-                    onSelect: {{ id }}_{{ child.vars.name }}_showCoords,
-                    aspectRatio: {{ aspect_ratio }}
-                }, function(){
-                    {{ id }}_{{ child.vars.name }}_jcrop_api = this;
-                    {{ id }}_{{ child.vars.name }}_jcrop_api.disable();
-                });
+               
                 
                 $('#{{ id }}_{{ child.vars.name }}_crop_btn').click(function(){
                     if ({{ id }}_{{ child.vars.name }}_jcrop_api == null) return;
@@ -167,11 +200,12 @@
                         $(this).html('Done');
                         $(this).addClass('active');
                     }
-
+                    return false;
                 });
                
             {% endfor %}
         });
         
     </script>
+    {{ block('zizoo_media_css') }}
 {% endblock zizoo_media_collection_widget %}

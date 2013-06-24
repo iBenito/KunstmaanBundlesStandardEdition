@@ -8,7 +8,7 @@ ZizooProfileBundle_Profile_Edit:
     pattern:  /account/profile/edit
     defaults: { _controller: ZizooProfileBundle:Profile:edit }
     requirements:
-        _method:  GET
+        _method:  GET|POST
         
 ZizooProfileBundle_edit_widget:
     pattern:  /account/profile/{id}/edit_widget

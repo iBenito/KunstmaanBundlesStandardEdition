@@ -35,13 +35,61 @@ class ProfileController extends Controller
      */
     public function editAction() 
     {
+        $request    = $this->getRequest();
         $user       = $this->getUser();
         $profile    = $user->getProfile();
 
-        $avatar = $profile->getAvatar();
-        $avatar->first();
-        return $this->render('ZizooProfileBundle:Profile:edit.html.twig', array(
-            'profile' => $profile
+        $originalAvatars = array();
+        // Create an array of the current ProfileAvatar objects in the database
+        foreach ($profile->getAvatar() as $avatar) {
+            $originalAvatars[] = $avatar;
+        }
+        
+        $profileType = $this->get('zizoo_profile.profile_type');
+        $editForm = $this->createForm($profileType, $profile);
+        
+        if ($request->isMethod('post')){
+            $editForm->bind($request);
+
+            if ($editForm->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $profile = $editForm->getData();
+                //setting the updated field manually for file upload DO NOT REMOVE
+                $profile->setUpdated(new \DateTime());
+
+                $avatars = $profile->getAvatar();
+
+                $i = $avatars->count();
+                $now = new \DateTime();
+                // filter $originalAvatars to contain avatars no longer present
+                foreach ($avatars as $avatar) {
+                    foreach ($originalAvatars as $key => $toDel) {
+                        if ($toDel->getId() === $avatar->getId()) {
+                            unset($originalAvatars[$key]);
+                        } 
+                    }
+                    $avatar->setUpdated($now);
+                    $em->persist($avatar);
+                }
+
+                // remove the relationship between the avatar and the profile
+                foreach ($originalAvatars as $avatar) {
+                    // remove the ProvileAvatar from the Profile
+                    $profile->removeAvatar($avatar);
+
+                    // remove the avatar completely
+                    $em->remove($avatar);
+                }
+
+                $em->persist($profile);
+
+                $em->flush();
+                return $this->redirect($this->generateUrl('ZizooProfileBundle_Profile_Edit'));
+            }
+        }
+   
+        return $this->render('ZizooProfileBundle:Profile:edit_test.html.twig',array(
+            'edit_form'     => $editForm->createView()
         ));
     }
     

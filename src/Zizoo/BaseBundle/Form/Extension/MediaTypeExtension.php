@@ -29,7 +29,7 @@ class MediaTypeExtension extends AbstractTypeExtension
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setOptional(array('image_path', 'aspect_ratio'));
+        $resolver->setOptional(array('file_path', 'aspect_ratio'));
     }
 
     /**
@@ -66,37 +66,37 @@ class MediaTypeExtension extends AbstractTypeExtension
             $view->vars['allow_delete'] = $options['allow_delete'];
         }
                 
-        if (array_key_exists('image_path', $options)) {
+        if (array_key_exists('file_path', $options)) {
             $media = $form->getData();
 
             if (null !== $media){
                 $accessor = PropertyAccess::getPropertyAccessor();
-                $imageUrl = $accessor->getValue($media, $options['image_path']);
-                $view->vars['image_url']    = $imageUrl;
-                $view->vars['version']      = $media->getUpdated()->format('Y_m_d_H_i_s');
+                $fileUrl = $accessor->getValue($media, $options['file_path']);
+                $view->vars['file_url'] = $fileUrl;
+                $view->vars['version']  = $media->getUpdated()->format('Y_m_d_H_i_s');
             } else {
-                $view->vars['image_url']    = null;
-                $view->vars['version']      = null;
+                $view->vars['file_url'] = null;
+                $view->vars['version']  = null;
             }
 
         } else {
             
-            if (array_key_exists('image_path', $parentOptions)) {
+            if (array_key_exists('file_path', $parentOptions)) {
                 $media = $form->getData();
 
                 if (null !== $media){
                     $accessor = PropertyAccess::getPropertyAccessor();
-                    $imageUrl = $accessor->getValue($media, $parentOptions['image_path']);
-                    $view->vars['image_url']    = $imageUrl;
-                    $view->vars['version']      = $media->getUpdated()->format('Y_m_d_H_i_s');
+                    $fileUrl = $accessor->getValue($media, $parentOptions['file_path']);
+                    $view->vars['file_url'] = $fileUrl;
+                    $view->vars['version']  = $media->getUpdated()->format('Y_m_d_H_i_s');
                 } else {
-                    $view->vars['image_url']    = null;
-                    $view->vars['version']      = null;
+                    $view->vars['file_url'] = null;
+                    $view->vars['version']  = null;
                 }
 
             } else {
-                $view->vars['image_url']    = null;
-                $view->vars['version']      = null;
+                $view->vars['file_url'] = null;
+                $view->vars['version']  = null;
             }
         }
     }

@@ -29,7 +29,7 @@ class MediaCollectionTypeExtension extends AbstractTypeExtension
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setOptional(array('image_path', 'max_media', 'aspect_ratio'));
+        $resolver->setOptional(array('file_path', 'max_media', 'aspect_ratio'));
     }
     
     public function buildView(FormView $view, FormInterface $form, array $options)

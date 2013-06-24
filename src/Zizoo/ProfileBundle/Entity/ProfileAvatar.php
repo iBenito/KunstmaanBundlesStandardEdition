@@ -42,6 +42,26 @@ class ProfileAvatar extends Media {
         return $this->profile;
     }
     
+    /**
+     * @ORM\Column(name="mime_type", type="text", nullable=false)
+     */
+    private $mimeType;
+    
+    public function setMimeType($mimeType)
+    {
+        $this->mimeType = $mimeType;
+        return $this;
+    }
+    
+    public function getMimeType()
+    {
+        return $this->mimeType;
+    }
+    
+    
+    
+    
+    
     public function getUploadRootDir()
     {
         // the absolute directory path where uploaded

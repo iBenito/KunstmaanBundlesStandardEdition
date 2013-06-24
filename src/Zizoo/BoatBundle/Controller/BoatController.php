@@ -323,9 +323,9 @@ class BoatController extends Controller
      */
     public function editAction($id)
     {
-        $em     = $this->getDoctrine()->getManager();
-        $user   = $this->getUser();
-        
+        $em         = $this->getDoctrine()->getManager();
+        $user       = $this->getUser();
+        $charter    = $user->getCharter();
         $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
 
         //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
@@ -375,8 +375,10 @@ class BoatController extends Controller
      */
     public function editPhotosAction($id)
     {
-        $user   = $this->getUser();
-        $boat   = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
+        $user       = $this->getUser();
+        $boat       = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
+        $charter    = $user->getCharter();
+        
         //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
         if (!$boat || !$charter->getUsers()->contains($user)){
             throw $this->createNotFoundException('Unable to find Boat entity.');

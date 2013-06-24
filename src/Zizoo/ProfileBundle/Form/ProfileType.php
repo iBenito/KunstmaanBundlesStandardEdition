@@ -3,13 +3,22 @@
 namespace Zizoo\ProfileBundle\Form;
 
 use Zizoo\BaseBundle\Form\Type\MediaType;
+use Zizoo\ProfileBundle\Form\EventListener\ProfileSubscriber;
 
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ProfileType extends AbstractType
 {
+    protected $container;
+    
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -22,13 +31,21 @@ class ProfileType extends AbstractType
                 'multiple'  => true,
                 'attr'  => array('title'=>'select'),
                 'property' => 'name',))
-            ->add('file', 'file', array( 'required' => false))
             ->add('avatar', 'zizoo_media_collection', array(    'type'          => 'zizoo_media',
+                                                                'property_path' => 'avatar',
                                                                 'label'         => 'Avatar',
-                                                                'image_path'    => 'webPath',
+                                                                'file_path'     => 'webPath',
                                                                 'allow_delete'  => true
-                                                                ));
-        ;
+                                                                ))
+            ->add('avatar_file', 'file', array(     'required'      => false, 
+                                                    'label'         => 'New',
+                                                    'property_path' => 'avatarFile'))
+            ->add('document_file', 'file', array(   'required'      => false, 
+                                                    'label'         => 'New',
+                                                    'property_path' => 'documentFile'));
+        
+        $profileSubscriber = $this->container->get('zizoo_profile.profile_subscriber');
+        $builder->addEventSubscriber($profileSubscriber);
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -42,6 +59,6 @@ class ProfileType extends AbstractType
 
     public function getName()
     {
-        return 'zizoo_profiletype';
+        return 'zizoo_profile';
     }
 }

@@ -70,5 +70,16 @@ ZizooBaseBundle_Dashboard_Trips:
     requirements:
         _method:  GET
         
+        
+test:
+    pattern:  /test1
+    defaults: { _controller: ZizooBaseBundle:Page:test1 }
+    requirements:
+        _method:  GET
 
+test2:
+    pattern:  /test2
+    defaults: { _controller: ZizooBaseBundle:Page:test2 }
+    requirements:
+        _method:  GET
        

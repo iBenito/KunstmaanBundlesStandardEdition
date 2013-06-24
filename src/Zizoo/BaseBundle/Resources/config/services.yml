@@ -25,12 +25,6 @@ services:
         tags:
             - { name: form.type, alias: zizoo_single_image }
             
-    zizoo_base.single_image_type_extension:
-        class: Zizoo\BaseBundle\Form\Extension\SingleImageTypeExtension
-        tags:
-            - { name: form.type_extension, alias: file }
-            
-            
     zizoo_base.media_type:
         class:  Zizoo\BaseBundle\Form\Type\MediaType
         arguments: ["@doctrine.orm.entity_manager"]
@@ -53,3 +47,4 @@ services:
             - { name: form.type_extension, alias: zizoo_media_collection }
             
             
+    

@@ -13,4 +13,13 @@ Zizoo\ProfileBundle\Entity\Profile:
                 minMessage: "You must upload at least 1 profile avatar"
                 maxMessage: "You cannot upload more than {{ limit }} avatars"
                 groups: [default]
-            
+                
+Zizoo\ProfileBundle\Entity\ProfileAvatar:
+    properties:
+        mimeType:
+            - Regex:
+                pattern: "/image\\/(png|jpeg)/"
+                match:   true
+                message: Only png and jpeg images are allowed
+                groups: [default]
+                 

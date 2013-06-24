@@ -29,26 +29,6 @@ class ProfileListener
 //            $em->persist($avatar);
 //        }
         
-        if (null === $profile->getFile()) {
-            $avatars = $profile->getAvatar();
-            foreach ($avatars as $avatar){
-                $em->persist($avatar);
-            }
-            $em->flush();
-            return;
-        } 
-
-        $avatar = new ProfileAvatar();
-        $avatar->setProfile($profile);
-        $profile->addAvatar($avatar);
-                
-        $em->persist($avatar);
-        
-        $path = $profile->getFile()->guessExtension();
-
-        $avatar->setPath($path);
-
-        $em->flush();
     }
     
     public function postPersist(LifecycleEventArgs $args)
@@ -68,7 +48,6 @@ class ProfileListener
             $this->upload($entity, $em);
         }
     }
-    
     
     
     public function getSubscribedEvents() {

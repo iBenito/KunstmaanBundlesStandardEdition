@@ -25,6 +25,7 @@ abstract class Media extends BaseEntity
      */
     private $path;
     
+    
     /**
      * @ORM\Column(name="order_num", type="integer", nullable=false)
      */
@@ -60,7 +61,7 @@ abstract class Media extends BaseEntity
     {
         return $this->path;
     }
-    
+        
     public function setOrder($order)
     {
         $this->order = $order;
