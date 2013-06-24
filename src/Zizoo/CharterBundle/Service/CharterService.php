@@ -16,10 +16,9 @@ class CharterService
     public function __construct(EntityManager $em, Container $container) {
         $this->em = $em;
         $this->container = $container;
-        
     }
     
-    public function setupCharter($charter, User $adminUser, User $billingUser, $flush){
+    public function setupCharter(Charter $charter, User $adminUser, User $billingUser, $flush){
 
         $charter->setAdminUser($adminUser);
         $charter->setBillingUser($billingUser);
@@ -41,8 +40,7 @@ class CharterService
         
         if ($flush) $this->em->flush();
     }
-    
-    
+
 }
 
 

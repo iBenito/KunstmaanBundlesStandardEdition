@@ -90,7 +90,7 @@ class User extends BaseEntity implements AdvancedUserInterface, \Serializable, P
     private $profile;
     
     /**
-     * @ORM\OneToOne(targetEntity="\Zizoo\CrewBundle\Entity\Skills", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="\Zizoo\CrewBundle\Entity\Skills", mappedBy="user", cascade={"persist"})
      **/
     private $skills;
     
@@ -139,6 +139,7 @@ class User extends BaseEntity implements AdvancedUserInterface, \Serializable, P
         $this->charter = new ArrayCollection();
         $this->reservations = new ArrayCollection();
         $this->bookings = new ArrayCollection();
+        $this->skills = new ArrayCollection();
     }
 
     /**
@@ -599,5 +600,40 @@ class User extends BaseEntity implements AdvancedUserInterface, \Serializable, P
     {
         return $this->bookings;
     }
-        
+
+    /**
+     * Add skill
+     *
+     * @param \Zizoo\CrewBundle\Entity\Skills $skill
+     * @return User
+     */
+    public function addSkill(\Zizoo\CrewBundle\Entity\Skills $skill)
+    {
+        $skill->setUser($this);
+
+        $this->skills->add($skill);
+
+        return $this;
+    }
+
+    /**
+     * Remove skill
+     *
+     * @param \Zizoo\CrewBundle\Entity\Skills $skill
+     */
+    public function removeSkill(\Zizoo\CrewBundle\Entity\Skills $skill)
+    {
+        $this->skills->removeElement($skill);
+    }
+
+    /**
+     * Get skills
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSkills()
+    {
+        return $this->skills;
+    }
+
 }

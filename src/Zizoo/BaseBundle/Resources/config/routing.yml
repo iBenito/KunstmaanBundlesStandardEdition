@@ -57,13 +57,19 @@ ZizooBaseBundle_Dashboard_Widget:
     defaults: { _controller: ZizooBaseBundle:Dashboard:widget }
     requirements:
         _method:  GET
-       
+
+ZizooBaseBundle_Dashboard_Profile:
+    pattern:  /account/profile
+    defaults: { _controller: ZizooBaseBundle:Dashboard:profile }
+    requirements:
+        _method:  GET
+
 ZizooBaseBundle_Dashboard_Skills:
     pattern:  /account/skills
     defaults: { _controller: ZizooBaseBundle:Dashboard:skills }
     requirements:
         _method:  GET
-        
+
 ZizooBaseBundle_Dashboard_Trips:
     pattern:  /account/trips
     defaults: { _controller: ZizooBaseBundle:Dashboard:trips }

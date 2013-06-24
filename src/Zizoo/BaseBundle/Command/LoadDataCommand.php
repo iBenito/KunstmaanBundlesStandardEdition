@@ -13,6 +13,7 @@ use Zizoo\MessageBundle\Entity\MessageType;
 use Zizoo\BoatBundle\Entity\Equipment;
 use Zizoo\BoatBundle\Entity\IncludedExtra;
 use Zizoo\BoatBundle\Entity\BoatType;
+use Zizoo\CrewBundle\Entity\SkillType;
 use Zizoo\BookingBundle\Entity\PaymentMethod;
 
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
@@ -141,7 +142,7 @@ class LoadDataCommand extends ContainerAwareCommand
             $profileAddress = new ProfileAddress();
             $profileAddress->setCountry($this->countries[$userObj->profile->country]);
             $profileAddress->setProfile($profile);
-            $profile->addAddresse($profileAddress);
+            $profile->setAddress($profileAddress);
 
             $user->addGroup($this->groups['ROLE_ZIZOO_SUPER_ADMIN']);
             
@@ -306,6 +307,21 @@ class LoadDataCommand extends ContainerAwareCommand
             $this->em->persist($boatType);
         }
     }
+    private function loadSkillTypes()
+    {
+        $getSkillTypes = file_get_contents(dirname(__FILE__).'/Data/skill_types.json');
+
+        $skillTypes = json_decode($getSkillTypes);
+
+        foreach ($skillTypes as $skill)
+        {
+            $skillType = new SkillType();
+            $skillType->setSkill($skill->skill);
+            $skillType->setName($skill->name);
+
+            $this->em->persist($skillType);
+        }
+    }
     
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -325,6 +341,7 @@ class LoadDataCommand extends ContainerAwareCommand
         $this->loadEquipment();
         $this->loadIncludedExtras();
         $this->loadBoatTypes();
+        $this->loadSkillTypes();
         $this->loadPaymentMethods();
         $this->loadGroups();
         $this->loadMessageTypes();

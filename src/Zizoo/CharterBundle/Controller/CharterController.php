@@ -56,7 +56,7 @@ class CharterController extends Controller
         ));
     }
     
-    public function boatsAction(Request $request)
+    public function boatsAction(Request $request, $listing_status)
     {
         $user       = $this->getUser();
         $charter    = $user->getCharter();
@@ -71,7 +71,7 @@ class CharterController extends Controller
         $showDeleted        = $request->query->get('show_deleted', false);
         $page               = $this->get('request')->query->get('page', 1);
         $pageSize           = $this->get('request')->query->get('page_size', 25);
-        
+
         $em    = $this->getDoctrine()->getManager();
         //$dql   = "SELECT b, c FROM ZizooBoatBundle:Boat b, ZizooCharterBundle:Charter c WHERE ";
         $dql = 'SELECT b, c FROM ZizooBoatBundle:Boat b JOIN b.charter c WHERE c.id = '.$charter->getId()
@@ -84,14 +84,24 @@ class CharterController extends Controller
         if ($searchBoatType){
             $dql .= " AND b.boatType = '" . $searchBoatType . "'";
         }
-        
+
+        switch ($listing_status) {
+            case "incomplete":
+                $dql .= " AND b.status = 0";
+                break;
+            case "hidden":
+                $dql .= " AND b.active = 0";
+                break;
+            case "active":
+                $dql .= " AND b.active = 1";
+                break;
+        }
+
         if ($sort && $dir){
             $dql .= " ORDER BY " . $sort . " " . $dir;
         }
         $query = $em->createQuery($dql);
 
-        
-        
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,

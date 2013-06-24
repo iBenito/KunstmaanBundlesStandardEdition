@@ -1,4 +1,4 @@
-ZizooProfileBundle_show:
+ZizooProfileBundle_Profile_Show:
     pattern:  /profile/{username}/show
     defaults: { _controller: ZizooProfileBundle:Profile:show }
     requirements:
@@ -10,13 +10,13 @@ ZizooProfileBundle_Profile_Edit:
     requirements:
         _method:  GET|POST
         
-ZizooProfileBundle_edit_widget:
+ZizooProfileBundle_Profile_Edit_Widget:
     pattern:  /account/profile/{id}/edit_widget
     defaults: { _controller: ZizooProfileBundle:Profile:editWidget }
     requirements:
         _method:  GET
         
-ZizooProfileBundle_update:
+ZizooProfileBundle_Profile_Update:
     pattern:  /account/profile/{id}/{formPath}/{viewTemplate}/update
     defaults: { _controller: ZizooProfileBundle:Profile:update }
     requirements: { _method: post }
@@ -30,3 +30,6 @@ ZizooProfileBundle_collection_media:
     pattern:  /account/profile/test/collection_media
     defaults: { _controller: ZizooProfileBundle:Profile:collectionMedia }
     requirements: { _method: get }
+    requirements:
+      _method: POST
+      id: \d+

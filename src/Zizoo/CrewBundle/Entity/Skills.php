@@ -14,7 +14,7 @@ class Skills extends BaseEntity
 {
         
     /**
-     * @ORM\OneToOne(targetEntity="Zizoo\UserBundle\Entity\User", inversedBy="skills")
+     * @ORM\ManyToOne(targetEntity="Zizoo\UserBundle\Entity\User", inversedBy="skills")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
@@ -34,6 +34,23 @@ class Skills extends BaseEntity
      * @ORM\JoinColumn(name="skill_type", referencedColumnName="skill")
      */
     protected $skillType;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="\Zizoo\BoatBundle\Entity\BoatType")
+     * @ORM\JoinTable(name="skill_boat_types",
+     *      joinColumns={@ORM\JoinColumn(name="skill_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="boat_type", referencedColumnName="id")}
+     *      )
+     **/
+    protected $boatTypes;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->boats = new ArrayCollection();
+    }
 
     /**
      * Set license
@@ -126,4 +143,38 @@ class Skills extends BaseEntity
     {
         return $this->skillType;
     }
+
+    /**
+     * Add boat type
+     *
+     * @param \Zizoo\BoatBundle\Entity\BoatType $boatType
+     * @return Skill
+     */
+    public function addBoatTypes(\Zizoo\BoatBundle\Entity\BoatType $boatType)
+    {
+        $this->boatTypes->add($boatType);
+
+        return $this;
+    }
+
+    /**
+     * Remove Boat Type
+     *
+     * @param \Zizoo\BoatBundle\Entity\BoatType $boatType
+     */
+    public function removeBoatTypes(\Zizoo\BoatBundle\Entity\BoatType $boatType)
+    {
+        $this->boatTypes->removeElement($boatType);
+    }
+
+    /**
+     * Get boat types
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLanguages()
+    {
+        return $this->boatTypes;
+    }
+
 }

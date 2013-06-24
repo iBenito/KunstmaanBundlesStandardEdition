@@ -178,7 +178,7 @@ class ProfileController extends Controller
             $em->persist($profile);
             
             $em->flush();
-            return $this->redirect($this->generateUrl($formPath, array('id' => $id)));
+            return $this->redirect($this->generateUrl($formPath));
         }
 
         return $this->render($viewTemplate, array(
@@ -186,6 +186,7 @@ class ProfileController extends Controller
             'edit_form'     => $editForm->createView(),
             'formPath'      => $formPath,
             'viewTemplate'  => $viewTemplate
+            'form_path'    => $formPath
         ));
     }
     

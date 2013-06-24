@@ -49,10 +49,11 @@ ZizooCharterBundle_Charter_Profile:
         _method:  GET
         
 ZizooCharterBundle_Charter_Boats:
-    pattern:  /account/boats
-    defaults: { _controller: ZizooCharterBundle:Charter:boats }
+    pattern:  /account/boats/{listing_status}
+    defaults: { _controller: ZizooCharterBundle:Charter:boats, listing_status: all }
     requirements:
         _method:  GET
+        listing_status:  active|incomplete|hidden|all
         
 ZizooCharterBundle_Charter_PayoutSettings:
     pattern:  /account/payout_settings

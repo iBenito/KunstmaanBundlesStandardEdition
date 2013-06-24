@@ -12,11 +12,16 @@ class SkillsType extends AbstractType
     {
         $builder
             ->add('user', 'hidden')
-            ->add('license')
-            ->add('experience')
             ->add('skill_type', 'entity', array(
                 'class' => 'ZizooCrewBundle:SkillType',
                 'property' => 'name'))
+            ->add('license')
+            ->add('experience')
+            ->add('boats', 'entity', array(
+                'class' => 'ZizooBoatBundle:BoatType',
+                'multiple'  => true,
+                'attr'  => array('title'=>'select'),
+                'property' => 'name',))
         ;
     }
 

@@ -54,12 +54,12 @@ class SkillsController extends Controller
      * Displays a form to create a new Skills entity.
      *
      */
-    public function newAction($user_id)
+    public function addAction()
     {
         $entity = new Skills();
         $form   = $this->createForm(new SkillsType(), $entity);
 
-        return $this->render('ZizooCrewBundle:Skills:new.html.twig', array(
+        return $this->render('ZizooCrewBundle:Skills:add.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
         ));
