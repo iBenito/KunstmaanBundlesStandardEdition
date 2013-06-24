@@ -1,8 +1,8 @@
 <?php
-// src/Zizoo/BaseBundle/Form/Extension/MediaTypeExtension.php
-namespace Zizoo\BaseBundle\Form\Extension;
+// src/Zizoo/MediaBundle/Form/Extension/MediaTypeExtension.php
+namespace Zizoo\MediaBundle\Form\Extension;
 
-use Zizoo\BaseBundle\Form\Type\MediaCollectionType;
+use Zizoo\MediaBundle\Form\Type\MediaCollectionType;
 
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormView;

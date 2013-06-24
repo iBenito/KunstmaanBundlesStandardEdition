@@ -9,6 +9,8 @@ use Imagine\Image\Box;
 use Imagine\Image\Point;
 use Imagine\Gd\Imagine;
 
+use Liip\ImagineBundle\Imagine\Cache\CacheClearer;
+
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\Container;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -26,13 +28,25 @@ class ProfileAvatarListener
     
     private function upload(ProfileAvatar $avatar, EntityManager $em)
     {
+        $x1 = $avatar->getX1();
+        $y1 = $avatar->getY1();
+        $x2 = $avatar->getX2();
+        $y2 = $avatar->getY2();
+        $w  = $avatar->getW();
+        $h  = $avatar->getH();
         
-        if ($avatar->getX1() && $avatar->getY1() && $avatar->getX2() && $avatar->getY1() && $avatar->getW() && $avatar->getH()){
+        if ($x1!==null && $y1!==null && $x2!==null && $y2!==null && $w!==null && $h!==null){
             $imagine = new Imagine();
             $path = $avatar->getAbsolutePath();
             $image = $imagine->open($path);
-            $image->crop(new Point($avatar->getX1(), $avatar->getY1()), new Box($avatar->getW(), $avatar->getH()))
+            $image->crop(new Point($x1, $y1), new Box($w, $h))
                     ->save($path);
+            
+            $liipImageCacheManager = $this->container->get('liip_imagine.cache.manager');
+            $liipImagineFilterSets = $this->container->getParameter('liip_imagine.filter_sets');
+            foreach ($liipImagineFilterSets as $filterSetName => $filterSetData){
+                $liipImageCacheManager->remove($avatar->getWebPath(), $filterSetName);
+            }
         }
   
     }

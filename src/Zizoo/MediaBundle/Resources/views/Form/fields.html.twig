@@ -13,7 +13,7 @@
                     {% if allow_delete == true %}
                         <a href="#" id="{{ id }}_delete_btn" class="delete_btn">Delete</a>
                     {% endif %}
-                    <input id="{{ id }}_full_url" type="hidden" value="{{ asset(file_url) }}" />
+                    <input id="{{ id }}_full_url" type="hidden" value="{{ asset(file_url) }}?ver={{ version }}" />
                 </div>
             </div>
         {% endif %}

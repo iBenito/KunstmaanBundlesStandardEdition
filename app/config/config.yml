@@ -27,7 +27,7 @@ twig:
             - ZizooUserBundle:Form:fields.html.twig
             - ZizooBoatBundle:Form:fields.html.twig
             - ZizooAddressBundle:Form:fields.html.twig
-            - ZizooBaseBundle:Form:fields.html.twig
+            - ZizooMediaBundle:Form:fields.html.twig
 
 # Assetic Configuration
 assetic:
@@ -82,6 +82,11 @@ liip_imagine:
             quality: 75
             filters:
                 thumbnail: { size: [120, 80], mode: outbound, allow_upscale: true }
+        zizoo_thumb_120x80:
+            quality: 90
+            filters:
+                crop_and_thumbnail: { size: [120, 80], mode: outbound, allow_upscale: true }
+                
                 
                 
 zizoo_jq_grid_custom: 

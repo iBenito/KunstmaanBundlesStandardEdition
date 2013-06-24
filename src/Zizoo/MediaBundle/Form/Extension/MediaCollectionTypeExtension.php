@@ -1,6 +1,6 @@
 <?php
-// src/Zizoo/BaseBundle/Form/Extension/MediaCollectionTypeExtension.php
-namespace Zizoo\BaseBundle\Form\Extension;
+// src/Zizoo/MediaBundle/Form/Extension/MediaCollectionTypeExtension.php
+namespace Zizoo\MediaBundle\Form\Extension;
 
 use Symfony\Component\Form\FormBuilderInterface;
 

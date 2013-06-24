@@ -41,6 +41,7 @@ class AppKernel extends Kernel
             new Zizoo\AdminBundle\ZizooAdminBundle(),
             new Zizoo\CharterBundle\ZizooCharterBundle(),
             new Zizoo\EventBundle\ZizooEventBundle(),
+            new Zizoo\MediaBundle\ZizooMediaBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

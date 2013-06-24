@@ -1,3 +1,7 @@
+zizoo_media:
+    resource: "@ZizooMediaBundle/Resources/config/routing.yml"
+    prefix:   /
+
 zizoo_event:
     resource: "@ZizooEventBundle/Resources/config/routing.yml"
     prefix:   /
