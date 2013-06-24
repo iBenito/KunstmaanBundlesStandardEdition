@@ -1,6 +1,6 @@
 <?php
 
-namespace Zizoo\BaseBundle\Form\Type;
+namespace Zizoo\MediaBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -29,7 +29,7 @@ class MediaType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(   'cascade_validation'    => true, 
-                                        'data_class'            => 'Zizoo\BaseBundle\Entity\Media',
+                                        'data_class'            => 'Zizoo\MediaBundle\Entity\Media',
                                         'aspect_ratio'          => 0,
                                         'allow_delete'          => false,
                                         'label'                 => null));

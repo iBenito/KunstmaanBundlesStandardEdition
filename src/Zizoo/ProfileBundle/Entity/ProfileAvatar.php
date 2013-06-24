@@ -3,7 +3,7 @@ namespace Zizoo\ProfileBundle\Entity;
 
 use Zizoo\ProfileBundle\Entity\Profile;
 
-use Zizoo\BaseBundle\Entity\Media;
+use Zizoo\MediaBundle\Entity\Media;
 
 use Doctrine\ORM\Mapping as ORM;
 

@@ -1,6 +1,6 @@
 <?php
-// src/Zizoo/BaseBundle/Entity/Media.php
-namespace Zizoo\BaseBundle\Entity;
+// src/Zizoo/MediaBundle/Entity/Media.php
+namespace Zizoo\MediaBundle\Entity;
 
 use Zizoo\BaseBundle\Entity\BaseEntity;
 
