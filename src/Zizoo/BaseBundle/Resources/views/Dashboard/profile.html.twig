@@ -1,0 +1,9 @@
+{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
+    
+{% block dashboard_page_title %}My Profile{% endblock %}
+
+{% block content %}
+    <a href="{{ path('ZizooProfileBundle_Profile_Show', {username: username}) }}">View Profile</a>
+
+    {% render controller('ZizooProfileBundle:Profile:edit') %}
+{% endblock %}

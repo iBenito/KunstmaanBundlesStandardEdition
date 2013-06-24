@@ -7,6 +7,9 @@ use Zizoo\ProfileBundle\Entity\Profile\NotificationSettings;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity(repositoryClass="Zizoo\ProfileBundle\Entity\ProfileRepository")
  * @ORM\Table(name="profile")
@@ -36,9 +39,9 @@ class Profile extends BaseEntity
     protected $about;
   
     /**
-     * @ORM\OneToMany(targetEntity="Zizoo\AddressBundle\Entity\ProfileAddress", mappedBy="profile")
+     * @ORM\OneToOne(targetEntity="Zizoo\AddressBundle\Entity\ProfileAddress", mappedBy="profile")
      */
-    protected $addresses;
+    protected $address;
     
     /**
      * @ORM\Column(type="string", length=60, unique=true, nullable=true)
@@ -68,6 +71,14 @@ class Profile extends BaseEntity
      *      )
      **/
     protected $languages;
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('phone', new Assert\Regex(array(
+            'pattern' => '/^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$/',
+            'message' => 'Please enter a valid Phone Number.'
+        )));
+    }
 
     /**
      * Constructor
@@ -319,46 +330,26 @@ class Profile extends BaseEntity
     }
 
     /**
-     * Add addresses
+     * Set address
      *
      * @param \Zizoo\AddressBundle\Entity\ProfileAddress $address
      * @return Profile
      */
-    public function addAddresse(\Zizoo\AddressBundle\Entity\ProfileAddress $address)
+    public function setAddress(\Zizoo\AddressBundle\Entity\ProfileAddress $address = null)
     {
-        $this->addresses[] = $address;
-    
+        $this->address = $address;
+
         return $this;
     }
 
     /**
-     * Remove addresses
+     * Get address
      *
-     * @param \Zizoo\AddressBundle\Entity\ProfileAddress $address
+     * @return \Zizoo\AddressBundle\Entity\ProfileAddress
      */
-    public function removeAddress(\Zizoo\AddressBundle\Entity\ProfileAddress $address)
+    public function getAddress()
     {
-        $this->addresses->removeElement($address);
-    }
-
-    /**
-     * Get addresses
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getAddresses()
-    {
-        return $this->addresses;
-    }
-
-    /**
-     * Remove addresses
-     *
-     * @param \Zizoo\AddressBundle\Entity\ProfileAddress $addresses
-     */
-    public function removeAddresse(\Zizoo\AddressBundle\Entity\ProfileAddress $addresses)
-    {
-        $this->addresses->removeElement($addresses);
+        return $this->address;
     }
 
     
@@ -399,7 +390,7 @@ class Profile extends BaseEntity
      */
     public function addLanguage(\Zizoo\AddressBundle\Entity\Language $language)
     {
-        $this->languages[] = $language;
+        $this->languages->add($language);
 
         return $this;
     }

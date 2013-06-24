@@ -4,9 +4,36 @@
 
 {% block content %}
 
-    <h3>Reservation Requests Received</h3>
-    {% for reservationRequest in reservationRequests %}    
-        <p>You Received a <a href="{{ path('ZizooReservationBundle_view', {id: reservationRequest.id}) }}">reservation request</a> from {{ reservationRequest.guest.profile.firstName }}</p>
-    {% endfor %}   
+    <div id="dashboard_alerts">
+        <h3>Alerts</h3>
+        unread messages
+        new booking reqests
+        payout setting incomplete
+    </div>
+
+    <div id="dashboard_boats">
+        <h3>My Boats</h3>
+        <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'active'}) }}">Active Listings</a></li>
+        <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'incomplete'}) }}">Incomplete Listings</a></li>
+        <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'hidden'}) }}">Hidden Listings</a></li>
+    </div>
+
+    <div id="dashboard_bookings">
+        <h3>My Bookings</h3>
+        pending requests
+        bookings next 7 days
+        total bookings
+    </div>
+
+    <div id="dashboard_payments">
+        <h3>My Payments</h3>
+        outstandingi payments
+        payments received
+    </div>
+
+    <div id="dashboard_total_payments">
+        <h3>Zizoo has made you</h3>
+        <p></p>
+    </div>
 
 {% endblock %}

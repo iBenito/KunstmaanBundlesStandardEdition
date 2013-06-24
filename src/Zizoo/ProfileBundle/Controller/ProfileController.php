@@ -49,7 +49,7 @@ class ProfileController extends Controller
      * @return Response
      * @throws type
      */
-    public function editWidgetAction(Profile $profile, $formPath = 'ZizooProfileBundle_edit')
+    public function editWidgetAction(Profile $profile, $formPath = 'ZizooProfileBundle_Profile_Edit')
     {
         if (!$profile) {
             throw $this->createNotFoundException('Unable to find Profile entity.');
@@ -94,12 +94,13 @@ class ProfileController extends Controller
             $em->persist($profile);
             $em->flush();
             
-            return $this->redirect($this->generateUrl($formPath, array('id' => $id)));
+            return $this->redirect($this->generateUrl($formPath));
         }
 
-        return $this->render($formPath, array(
+        return $this->render('ZizooProfileBundle:Profile:edit_widget.html.twig', array(
             'profile'      => $profile,
             'edit_form'   => $editForm->createView(),
+            'form_path'    => $formPath
         ));
     }
     

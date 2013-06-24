@@ -1,36 +1,36 @@
-skills:
+ZizooCrewBundle_Skills:
     pattern:  /skills
     defaults: { _controller: "ZizooCrewBundle:Skills:index" }
 
-skills_show:
+ZizooCrewBundle_Skills_Show:
     pattern:  /{id}/show
     defaults: { _controller: "ZizooCrewBundle:Skills:show" }
 
-skills_new:
-    pattern:  /{user_id}/skill/new
-    defaults: { _controller: "ZizooCrewBundle:Skills:new" }
+ZizooCrewBundle_Skills_Add:
+    pattern:  /account/skills/add
+    defaults: { _controller: "ZizooCrewBundle:Skills:add" }
     requirements:
       _method:  GET
       user_id: \d+
 
-skills_create:
-    pattern:  /create
+ZizooCrewBundle_Skills_Create:
+    pattern:  /account/create
     defaults: { _controller: "ZizooCrewBundle:Skills:create" }
-    requirements: { _method: post }
+    requirements: { _method: POST }
 
-skills_edit:
+ZizooCrewBundle_Skills_Edit:
     pattern:  /{user_id}/skill/edit
     defaults: { _controller: "ZizooCrewBundle:Skills:edit" }
     requirements:
       _method:  GET
       user_id: \d+
 
-skills_update:
+ZizooCrewBundle_Skills_Update:
     pattern:  /{id}/update
     defaults: { _controller: "ZizooCrewBundle:Skills:update" }
     requirements: { _method: post }
 
-skills_delete:
+ZizooCrewBundle_Skills_Delete:
     pattern:  /{id}/delete
     defaults: { _controller: "ZizooCrewBundle:Skills:delete" }
     requirements: { _method: post }

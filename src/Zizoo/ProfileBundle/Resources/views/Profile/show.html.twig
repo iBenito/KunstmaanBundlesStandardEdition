@@ -27,8 +27,14 @@
             <p>{{ user.profile.about }}</p>
             <section class="addresses" id="profile_addresses">
                 <h3>{% trans %}zizoo_profile.label.address{% endtrans %}</h3>
-                {% for address in user.profile.addresses %}
-                    <p>{{ address.locality }}</p>
+                {% if user.profile.address is not null %}
+                    <p>{{ user.profile.address.locality }}</p>
+                {% endif %}
+            </section>
+            <section class="languages" id="profile_languages">
+                <h3>{% trans %}zizoo_profile.label.languages{% endtrans %}</h3>
+                {% for language in user.profile.languages %}
+                    <p>{{ language.name }}</p>
                 {% endfor %}
             </section>
         </section>

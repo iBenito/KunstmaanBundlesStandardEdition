@@ -142,7 +142,7 @@ class LoadDataCommand extends ContainerAwareCommand
             $profileAddress = new ProfileAddress();
             $profileAddress->setCountry($this->countries[$userObj->profile->country]);
             $profileAddress->setProfile($profile);
-            $profile->addAddresse($profileAddress);
+            $profile->setAddress($profileAddress);
 
             $user->addGroup($this->groups['ROLE_ZIZOO_SUPER_ADMIN']);
             

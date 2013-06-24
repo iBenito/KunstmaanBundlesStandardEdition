@@ -8,11 +8,9 @@
     </div>
     <h3>{{ user.profile.firstName }} {{ user.profile.lastName }}</h3>
 
-    {% if crew is defined %}
-        <p>Sailor!</p>
-    {% endif %} 
-        
+    <div id="profile_completeness" class="{{ profile_completeness }}">Profile Completeness Level:{{ profile_completeness }}</div>
     <a id="add_skills" href="{{ path('ZizooBaseBundle_Dashboard_Skills') }}">Add Skills</a>
+
 </div>
 
 <hr />
@@ -21,8 +19,8 @@
     <ul class="nav">
       <li class="active"><a href="{{ path('ZizooBaseBundle_Dashboard', {show_user: show_user}) }}">Dashboard</a></li>
       <li><a href="{{ path('fos_message_inbox', {show_user: show_user}) }}">Inbox</a></li>
-      <li><a href="{{ path('ZizooProfileBundle_Profile_Edit', {show_user: show_user}) }}">Profile</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Trips', {show_user: show_user}) }}">Trips</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Profile', {show_user: show_user}) }}">Profile</a></li>
+      <li><a href="{{ path('ZizooBookingBundle_view_all_bookings', {show_user: show_user}) }}">Trips</a></li>
       <li><a href="{{ path('ZizooBaseBundle_Dashboard_Skills', {show_user: show_user}) }}">Skills</a></li>
       <li><a href="{{ path('ZizooUserBundle_User_AccountSettings', {show_user: show_user}) }}">Account Settings</a></li>
     </ul>

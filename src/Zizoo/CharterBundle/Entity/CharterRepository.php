@@ -12,4 +12,16 @@ use Doctrine\ORM\EntityRepository;
  */
 class CharterRepository extends EntityRepository
 {
+    public function getCharterEarnings(Charter $charter)
+    {
+        $qb = $this->createQueryBuilder('boat')
+            ->leftJoin('boat.charter', 'charter')
+            ->select('boat, charter')
+            ->where('charter = :charter')
+            ->andWhere('boat.deleted IS NULL')
+            ->setParameter('charter', $charter);
+
+        return $qb->getQuery()
+            ->getResult();
+    }
 }
