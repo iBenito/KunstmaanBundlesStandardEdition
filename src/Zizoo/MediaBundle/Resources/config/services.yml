@@ -1,0 +1,29 @@
+parameters:
+#    zizoo_media.example.class: Zizoo\MediaBundle\Example
+
+services:
+    zizoo_base.media_type:
+        class:  Zizoo\MediaBundle\Form\Type\MediaType
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { name: form.type, alias: zizoo_media }
+            
+    zizoo_base.media_collection_type:
+        class:  Zizoo\MediaBundle\Form\Type\MediaCollectionType
+        tags:
+            - { name: form.type, alias: zizoo_media_collection }
+            
+    zizoo_base.media_type_extension:
+        class:  Zizoo\MediaBundle\Form\Extension\MediaTypeExtension
+        tags:
+            - { name: form.type_extension, alias: zizoo_media }
+            
+    zizoo_base.media_collection_type_extension:
+        class:  Zizoo\MediaBundle\Form\Extension\MediaCollectionTypeExtension
+        tags:
+            - { name: form.type_extension, alias: zizoo_media_collection }
+
+    liip_imagine.filter.loader.zizoo.crop_thumbnail_filter:
+        class: Zizoo\MediaBundle\Imagine\Filter\CropThumbnailFilterLoader
+        tags:
+            - { name: liip_imagine.filter.loader, loader: crop_and_thumbnail }
