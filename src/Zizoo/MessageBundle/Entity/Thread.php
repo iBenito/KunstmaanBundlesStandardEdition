@@ -2,7 +2,7 @@
 
 namespace Zizoo\MessageBundle\Entity;
 
-use Zizoo\ReservationBundle\Entity\Reservation;
+use Zizoo\BookingBundle\Entity\Booking;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -41,10 +41,10 @@ class Thread extends BaseThread
     
     
     /**
-     * @ORM\ManyToOne(targetEntity="Zizoo\ReservationBundle\Entity\Reservation")
-     * @ORM\JoinColumn(name="reservation_id", referencedColumnName="id")
-     */
-    protected $reservation;
+     * @ORM\OneToOne(targetEntity="Zizoo\BookingBundle\Entity\Booking", inversedBy="thread")
+     * @ORM\JoinColumn(name="booking_id", referencedColumnName="id")
+     **/
+    protected $booking;
     
     
 
@@ -69,20 +69,29 @@ class Thread extends BaseThread
         parent::addMetadata($meta);
     }
     
-    public function setReservation(Reservation $reservation)
+    public function setBooking(Booking $booking)
     {
-        $this->reservation = $reservation;
+        $this->booking = $booking;
         return $this;
     }
     
-    public function getReservation()
+    public function getBooking()
     {
-        return $this->reservation;
+        return $this->booking;
     }
     
     public function getMessages()
     {
         return $this->messages->toArray();
+    }
+    
+    public function getLastMessageType()
+    {
+        $lastMessageType = null;
+        foreach ($this->messages as $message){
+            if ($message->getMessageType()) $lastMessageType = $message->getMessageType();
+        }
+        return $lastMessageType;
     }
 
 }

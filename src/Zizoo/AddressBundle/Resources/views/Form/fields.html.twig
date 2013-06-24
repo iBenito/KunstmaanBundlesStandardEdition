@@ -94,7 +94,7 @@
 {% endblock zizoo_address_widget_js %}
             
 {% block zizoo_address_widget %}
-{{ block('zizoo_address_widget_js') }}
+{{ block('zizoo_address_widget_js') }}            
 {% spaceless %}
     {% if compound %}
         {{ block('form_widget_compound') }}
@@ -102,6 +102,7 @@
         {{ block('form_widget_simple') }}
     {% endif %}
 {% endspaceless %}
+
 {% if map_show is not null and map_show == true %}
     <div id="{{id}}_map_div">Map loading...</div>
     <style type="text/css">

@@ -36,7 +36,7 @@ class Charter extends BaseEntity
      * @ORM\ManyToMany(targetEntity="\Zizoo\UserBundle\Entity\User", inversedBy="charter")
      * @ORM\JoinTable(name="charter_users",
      *      joinColumns={@ORM\JoinColumn(name="charter_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id", unique=true)}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
      *      )
      **/
     protected $users;
@@ -363,4 +363,8 @@ class Charter extends BaseEntity
     {
         return $this->address;
     }
+    
+    public function __toString() {
+        return $this->id;
+    }    
 }

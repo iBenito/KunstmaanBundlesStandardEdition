@@ -208,61 +208,17 @@ class BoatController extends Controller
     }
     
     /**
-     * Create input form for Boat
-     *
+     * Create input form for Boat, re-used by New and Edit Boat Actions
      */
-    public function boatFormWidgetAction(Boat $boat, $formAction, $formRedirect)
+    public function boatFormWidgetAction(Boat $boat, $formAction)
     {
         $form = $this->createForm(new BoatType(), $boat);
-
-        /** @var Ivory\GoogleMapBundle\Model\Map */
-        $map = $this->get('ivory_google_map.map');
-        $map->setAsync(true);
-        $map->setAutoZoom(false);
-        $map->setCenter(45, 15, true);
-        $map->setMapOption('zoom', 4);
-        $map->setMapOption('disableDefaultUI', true);
-        $map->setMapOption('zoomControl', true);
-        $map->setStylesheetOptions(array(
-            'width' => '100%',
-            'height' => '300px'
-        ));
-        
-        /* Build List of Marinas */
-        $em = $this->getDoctrine()->getManager();
-        //$marinas = $em->getRepository('ZizooAddressBundle:Marina')->getAllMarinas();
-//        foreach ($marinas as $marina){
-//            $marker = $this->get('ivory_google_map.marker');
-//            $marker->setPosition($marina->getLat(), $marina->getLng(), true);
-//            $marker->setOption('title', $marina->getName());
-//            $marker->setOption('clickable', true);
-//            $marker->setIcon('http://www.incrediblue.com/assets/map-pin.png');
-//            
-//            $map->addMarker($marker);
-//        }
 
         return $this->render('ZizooBoatBundle:Boat:boat_form_widget.html.twig', array(
             'boat' => $boat,
             'form' => $form->createView(),
             'formAction' => $formAction,
-            'formRedirect' => $formRedirect,
-            'map' => $map,
         ));
-    }
-    
-    /**
-     * Uploads Images.
-     *
-     */
-    public function uploadAction()
-    {
-        $editId = $this->getRequest()->get('editId');
-        if (!preg_match('/^\d+$/', $editId))
-        {
-            throw new Exception("Bad edit id");
-        }
-
-        $this->get('punk_ave.file_uploader')->handleFileUpload(array('folder' => 'tmp/attachments/' . $editId));
     }
     
     /**
@@ -273,10 +229,12 @@ class BoatController extends Controller
     {
         $boat = new Boat();
 
+        $session = $this->get('session');
+        $session->set('step', 'one');
+
         return $this->render('ZizooBoatBundle:Boat:new.html.twig', array(
             'boat' => $boat,
-            'formAction' => 'ZizooBoatBundle_create',
-            'formRedirect'  => 'ZizooBoatBundle_editDetails'
+            'formAction' => 'ZizooBoatBundle_Boat_Create'
         ));
     }
 
@@ -288,11 +246,7 @@ class BoatController extends Controller
     {
         $user       = $this->getUser();
         $charter    = $user->getCharter();
-        
-        if (!$charter || $charter->getAdminUser()!=$user){
-            throw $this->createNotFoundException('You must be the admin user of the charter to add boats.');
-        }
-        
+
         $boat = new Boat();
         $form = $this->createForm(new BoatType(), $boat);
         $form->bind($request);
@@ -304,15 +258,13 @@ class BoatController extends Controller
             $boatService = $this->get('boat_service');
             $boatCreated = $boatService->createBoat($boat, $boat->getAddress(), $boat->getBoatType(), $charter, null, true);
             
-            $redirect = $request->query->get('formRedirect');
-            return $this->redirect($this->generateUrl($redirect, array('id' => $boatCreated->getId())));
+            return $this->redirect($this->generateUrl('ZizooBoatBundle_Boat_EditDetails', array('id' => $boatCreated->getId())));
         }
 
         return $this->render('ZizooBoatBundle:Boat:new.html.twig', array(
             'boat' => $boat,
             'form' => $form->createView(),
-            'formAction' => 'ZizooBoatBundle_create',
-            'formRedirect'  => 'ZizooBoatBundle_edit'
+            'formAction' => 'ZizooBoatBundle_Boat_Create'
         ));
     }
 
@@ -322,22 +274,15 @@ class BoatController extends Controller
      */
     public function editAction($id)
     {
-        $em     = $this->getDoctrine()->getManager();
-        $user   = $this->getUser();
-        
-        $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
+        $em         = $this->getDoctrine()->getManager();
+        $boat       = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
 
-        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
-            throw $this->createNotFoundException('Unable to find Boat entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
+        $session = $this->get('session');
+        $session->set('step', NULL);
 
         return $this->render('ZizooBoatBundle:Boat:edit.html.twig', array(
             'boat'          => $boat,
-            'delete_form'   => $deleteForm->createView(),
-            'formAction'    => 'ZizooBoatBundle_update',
-            'formRedirect'  => 'ZizooBoatBundle_edit'
+            'formAction'    => 'ZizooBoatBundle_Boat_Update'
         ));
     }
 
@@ -348,21 +293,14 @@ class BoatController extends Controller
     public function editDetailsAction($id)
     {
         $em     = $this->getDoctrine()->getManager();
-        $user   = $this->getUser();
-
         $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
-
-        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
-            throw $this->createNotFoundException('Unable to find Boat entity.');
-        }
 
         $detailsForm = $this->createForm(new BoatDetailsType(), $boat);
 
         return $this->render('ZizooBoatBundle:Boat:editDetails.html.twig', array(
             'boat'          => $boat,
             'form'          => $detailsForm->createView(),
-            'formAction'    => 'ZizooBoatBundle_update',
-            'formRedirect'  => 'ZizooBoatBundle_edit'
+            'formAction'    => 'ZizooBoatBundle_Boat_Update',
         ));
     }
 
@@ -372,9 +310,12 @@ class BoatController extends Controller
      */
     public function editPhotosAction($id)
     {
-        $user   = $this->getUser();
-        $boat   = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
-        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+        $user       = $this->getUser();
+        $boat       = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
+        $charter    = $user->getCharter();
+        
+        //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+        if (!$boat || !$charter->getUsers()->contains($user)){
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
 
@@ -401,7 +342,7 @@ class BoatController extends Controller
             'existingFiles' => $existingFiles,
             'editId' => intval($editId),
             'formAction' => 'ZizooBoatBundle_update',
-            'formRedirect' => 'ZizooBaseBundle_Dashboard_BoatEdit'
+            'formRedirect' => 'ZizooBoatBundle_edit'
         ));
 
     }
@@ -417,7 +358,8 @@ class BoatController extends Controller
 
         $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
 
-        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+        //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+        if (!$boat || !$charter->getUsers()->contains($user)){
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
 
@@ -442,7 +384,8 @@ class BoatController extends Controller
         
         $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
 
-        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+        //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+        if (!$boat || !$charter->getUsers()->contains($user)){
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
 
@@ -481,7 +424,8 @@ class BoatController extends Controller
         $bookingAgent       = $this->get('zizoo_booking_booking_agent');
         $trans              = $this->get('translator');
         
-        if (!$boat || $charter->getAdminUser()!=$user) {
+        //if (!$boat || $charter->getAdminUser()!=$user) {
+        if (!$boat || !$charter->getUsers()->contains($user)){
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
         
@@ -555,7 +499,8 @@ class BoatController extends Controller
         $em                 = $this->getDoctrine()->getManager();
         
         $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
-        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+        //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+        if (!$boat || !$boat->getCharter()->getUsers()->contains($user)){
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
         
@@ -631,7 +576,8 @@ class BoatController extends Controller
         $charter            = $user->getCharter();
         
         $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
-        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+        //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+        if (!$boat || !$charter->getUsers()->contains($user)){
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
         
@@ -710,12 +656,14 @@ class BoatController extends Controller
         $request            = $this->getRequest();
         $boatService        = $this->container->get('boat_service');
         $user               = $this->getUser();
+        $charter            = $user->getCharter();
         
         if (!$id) $id       = $request->request->get('boat_id', null);
         $active             = $request->request->get('active_'.$id, false)=='on';
                 
         $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
-        if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+        //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
+        if (!$boat || !$charter->getUsers()->contains($user)){
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
         

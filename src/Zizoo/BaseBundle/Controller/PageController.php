@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Zizoo\BaseBundle\Entity\Feedback;
 use Zizoo\BaseBundle\Form\FeedbackType;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
 use Zizoo\AddressBundle\Form\Model\SearchBoat;
 use Zizoo\AddressBundle\Form\Type\SearchBoatType;
 
@@ -154,6 +156,45 @@ class PageController extends Controller {
                 'show_login_form'   => $showLoginForm
             ));
         }
+    }
+    
+    
+    public function test1Action()
+    {
+        $user       = $this->getUser();
+        $profile    = $user->getProfile();
+        $em         = $this->getDoctrine()->getEntityManager();
+        
+        $test = new \Zizoo\BaseBundle\Entity\Test();
+        
+
+        
+        
+        $em->persist($test);
+        
+        
+        sleep(10);
+        //$test->setTest('test1');
+        
+        
+        $em->flush();
+        return $this->render('ZizooBaseBundle:Test:test.html.twig', array(
+                
+        ));
+        
+    }
+    
+    
+    public function test2Action()
+    {
+        $em         = $this->getDoctrine()->getEntityManager();
+        $test = new \Zizoo\BaseBundle\Entity\Test();
+        $test->setTest('test2');
+        $em->persist($test);
+        $em->flush();
+        return $this->render('ZizooBaseBundle:Test:test.html.twig', array(
+                
+        ));
     }
     
 }

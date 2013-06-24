@@ -297,10 +297,14 @@ class BookingAgent {
                             ->addRecipient($boat->getCharter()->getAdminUser())
                             ->setSubject($bookingForm->getMessageToOwner()->getSubject())
                             ->setBody($bookingForm->getMessageToOwner()->getBody())
-                            ->setReservation($booking->getReservation());
+                            ->setBooking($booking);
+        
         
         $message = $thread->getMessage()
                             ->setMessageType($messageTypeRepo->findOneById('inquiry'));
+        
+        
+        $thread->setBooking($booking);
         
         $sender->send($message);
         

@@ -1,4 +1,10 @@
 services:
+    # TWIG EXTENSIONS
+    zizoo_user.twig.image_extension:
+        class: Zizoo\UserBundle\Twig\UserExtension
+        tags:
+            - { name: twig.extension }
+            
     facebook:
         class: Zizoo\UserBundle\Service\Facebook
         arguments: [{ appId: %zizoo_user.facebook.app_id%, secret: %zizoo_user.facebook.app_secret% }]

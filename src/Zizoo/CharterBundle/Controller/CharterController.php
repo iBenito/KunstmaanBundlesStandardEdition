@@ -713,7 +713,8 @@ class CharterController extends Controller
         }
         
         $boat   = $reservation->getBoat();
-        if ($boat->getCharter()->getAdminUser()!=$user) {
+        //if ($boat->getCharter()->getAdminUser()!=$user) {
+        if (!$boat || !$boat->getCharter()->getUsers()->contains($user)){
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
         

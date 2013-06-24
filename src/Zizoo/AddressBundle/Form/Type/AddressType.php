@@ -19,7 +19,7 @@ class AddressType extends AbstractType
                                                     'required'  => false))
             ->add('postcode', 'text')
             ->add('locality', 'text')
-            ->add('sub_locality', 'text')
+            ->add('sub_locality', 'text', array('required' => false))
             ->add('country', 'entity', array(
                                             'class' => 'ZizooAddressBundle:Country',
                                             'query_builder' => function(EntityRepository $er) {

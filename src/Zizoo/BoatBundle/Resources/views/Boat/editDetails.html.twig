@@ -3,10 +3,19 @@
 {% block body %}
     {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat }  %}
 
-    <form action="{{ path(formAction, { 'id': boat.id, 'formRedirect': formRedirect }) }}" method="post" {{ form_enctype(form) }}>
+    {% set step = app.session.get('step') %}
+
+    <h3>Step {{ step }}</h3>
+
+    <form action="{{ path(formAction, { 'id': boat.id }) }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
 
-        <button type="submit">Save</button>
+        {% if step != "" %}
+            <button type="submit">Continue</button>
+        {% else %}
+            <button type="submit">Save</button>
+        {% endif %}
+
     </form>
 {% endblock %}
 

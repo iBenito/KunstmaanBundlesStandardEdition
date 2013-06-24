@@ -2,6 +2,7 @@
 namespace Zizoo\ReservationBundle\Entity;
 
 use Zizoo\BaseBundle\Entity\BaseEntity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -78,7 +79,7 @@ class Reservation extends BaseEntity
      * @ORM\Column(type="smallint", nullable=true)
      */
     protected $hours_to_respond;
-    
+
     
     public function __construct()
     {
@@ -326,5 +327,5 @@ class Reservation extends BaseEntity
     {
         return $this->hours_to_respond;
     }
-    
+        
 }

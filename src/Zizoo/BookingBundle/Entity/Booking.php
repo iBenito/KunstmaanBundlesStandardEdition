@@ -2,6 +2,7 @@
 namespace Zizoo\BookingBundle\Entity;
 
 use Zizoo\BaseBundle\Entity\BaseEntity;
+use Zizoo\MessageBundle\Entity\Thread;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -55,6 +56,13 @@ class Booking extends BaseEntity
      */
     protected $crew;
     
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Zizoo\MessageBundle\Entity\Thread", mappedBy="booking")
+     **/
+    protected $thread;
+    
+   
     
     public function __construct()
     {
@@ -229,6 +237,17 @@ class Booking extends BaseEntity
     public function getCrew()
     {
         return $this->crew;
+    }
+    
+    public function setThread(Thread $thread)
+    {
+        $this->thread = $thread;
+        return $this;
+    }
+    
+    public function getThread()
+    {
+        return $this->thread;
     }
     
 }

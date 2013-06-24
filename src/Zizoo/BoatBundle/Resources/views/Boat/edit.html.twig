@@ -3,6 +3,6 @@
 {% block body %}
     {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat }  %}
 
-    {% render controller('ZizooBoatBundle:Boat:boatFormWidget', { 'boat': boat, 'formAction': formAction, 'formRedirect': formRedirect }) %}
+    {% render controller('ZizooBoatBundle:Boat:boatFormWidget', { 'boat': boat, 'formAction': formAction }) %}
 {% endblock %}
 

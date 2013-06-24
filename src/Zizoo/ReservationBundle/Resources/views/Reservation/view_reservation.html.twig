@@ -17,7 +17,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><a href="{{ path('ZizooBaseBundle_Dashboard_BoatEdit', {id: reservation.boat.id}) }}" target="_blank">{{ reservation.boat.name }}</a></td>
+                    <td><a href="{{ path('ZizooBoatBundle_edit', {id: reservation.boat.id}) }}" target="_blank">{{ reservation.boat.name }}</a></td>
                     <td><a href="{{ path('ZizooProfileBundle_show', {username: reservation.guest.username}) }}" target="_blank">{{ reservation.guest.profile.firstName }}</a></td>
                     <td>{{ reservation.checkIn|date }} &ndash; {{ reservation.checkOut|date }}</td>
                     <td>{% if reservation.booking %} {{ reservation.booking|Booking_displayPrice }} {% endif %}</td>

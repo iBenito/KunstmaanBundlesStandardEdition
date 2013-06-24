@@ -180,11 +180,13 @@ class MessageController extends BaseController
                             $val[] = $row->isReadByParticipant($user);
                         } else if ($fieldName=='Type'){
                             //$val[] = $row->getThreadType()->getName();
-                            $lastMessageType = $row->getLastMessage()->getMessageType();
+                            //$lastMessageType = $row->getLastMessage()->getMessageType();
+                            $lastMessageType = $row->getLastMessageType();
                             $val [] = $lastMessageType?$lastMessageType->getName():'General';
                         } else if ($fieldName=='TypeInt'){
                             //$val[] = $row->getThreadType()->getId();
-                            $lastMessageType = $row->getLastMessage()->getMessageType();
+                            //$lastMessageType = $row->getLastMessage()->getMessageType();
+                            $lastMessageType = $row->getLastMessageType();
                             $val [] = $val [] = $lastMessageType?$lastMessageType->getId():'';
                         } else if (method_exists($row, $methodName)){
                             $val[] = call_user_func(array( &$row, $methodName)); 

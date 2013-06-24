@@ -1,8 +1,11 @@
-<form action="{{ path('ZizooProfileBundle_Profile_Update', { 'id': profile.id, 'formPath': formPath }) }}" method="post" {{ form_enctype(edit_form) }}>
+<form action="{{ path('ZizooProfileBundle_update', { 'id': profile.id, 'formPath': formPath, 'viewTemplate': viewTemplate }) }}" method="post" {{ form_enctype(edit_form) }}>
+    
     {{ form_widget(edit_form) }}
 
     <button type="submit">Save</button>
 </form>
+
+
 
 
 
