@@ -6,29 +6,28 @@
 
     <div id="dashboard_alerts">
         <h3>Alerts</h3>
-        unread messages
-        new booking reqests
-        payout setting incomplete
+        <li><a href="{{ path('fos_message_inbox') }}">{{ unreadMessages }} Unread Messages</a></li>
+        <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}">{{ reservationRequests }} New Requests</a></li>
     </div>
 
     <div id="dashboard_boats">
         <h3>My Boats</h3>
-        <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'active'}) }}">Active Listings</a></li>
-        <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'incomplete'}) }}">Incomplete Listings</a></li>
-        <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'hidden'}) }}">Hidden Listings</a></li>
+        <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'active'}) }}">{{ activeListings }} Active Listings</a></li>
+        <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'incomplete'}) }}">{{ incompleteListings }} Incomplete Listings</a></li>
+        <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'hidden'}) }}">{{ hiddenListings }} Hidden Listings</a></li>
     </div>
 
     <div id="dashboard_bookings">
         <h3>My Bookings</h3>
-        pending requests
-        bookings next 7 days
-        total bookings
+        <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}">{{ reservationRequests }} New Requests</a></li>
+        <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}">{{ upcomingRequests }} Upcoming Bookings Next 7 Days</a></li>
+        <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}">{{ acceptedRequests }} Total Bookings</a></li>
     </div>
 
     <div id="dashboard_payments">
         <h3>My Payments</h3>
-        outstandingi payments
-        payments received
+        <li><a href="{{ path('ZizooCharterBundle_Charter_Payments') }}">{{ outstandingPayments }} Outstanding Payments</a></li>
+        <li><a href="{{ path('ZizooCharterBundle_Charter_Payments') }}">{{ receivedPayments }} Payments Received</a></li>
     </div>
 
     <div id="dashboard_total_payments">

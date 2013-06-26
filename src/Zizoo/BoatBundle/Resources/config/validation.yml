@@ -1,4 +1,21 @@
 Zizoo\BoatBundle\Form\Model\BookBoat:
     constraints:
         - Zizoo\BoatBundle\Validator\Constraints\BookBoat: ~
-       
+
+Zizoo\BoatBundle\Entity\Boat:
+    properties:
+        image:
+            - Count:
+                max: 3
+                minMessage: "You must upload at least 1 boat image"
+                maxMessage: "You cannot upload more than {{ limit }} images"
+                groups: [default]
+
+Zizoo\BoatBundle\Entity\BoatImage:
+    properties:
+        mimeType:
+            - Regex:
+                pattern: "/image\\/(png|jpeg)/"
+                match:   true
+                message: Only png and jpeg images are allowed
+                groups: [default]

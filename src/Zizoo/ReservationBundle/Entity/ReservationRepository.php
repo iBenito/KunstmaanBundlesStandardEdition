@@ -126,6 +126,16 @@ class ReservationRepository extends EntityRepository
     public function getReservationRequests(Charter $charter=null, Boat $boat=null) {
         return $this->getReservations($charter, null, $boat, null, null, array(Reservation::STATUS_REQUESTED));
     }
+
+    public function getUpcomingWeekReservations(Charter $charter=null) {
+        $from = new \DateTime();
+        $from->add(new \DateInterval('P10D'));
+        return $this->getReservations($charter, null, null, $from, null, array(Reservation::STATUS_ACCEPTED));
+    }
+
+    public function getAcceptedReservations(Charter $charter=null) {
+        return $this->getReservations($charter, null, null, null, null, array(Reservation::STATUS_ACCEPTED));
+    }
     
     public function findByIds($ids)
     {

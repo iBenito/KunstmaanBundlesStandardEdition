@@ -12,7 +12,7 @@
                 {% if bookable == false %}
                 <h2>{{ boat.title }}</h2>
                 {% else %}                
-                <h2><a class="boat_{{ boat.id }}" href="{{ path('ZizooBoatBundle_show', {id: boat.id}) }}?zizoo_boat_book[reservation_from]={{ form.vars.value.reservationFrom is empty ? "" : form.vars.value.reservationFrom|date }}&zizoo_boat_book[reservation_to]={{ form.vars.value.reservationTo is empty ? "" : form.vars.value.reservationTo|date }}&zizoo_boat_book[num_guests]={{ form.vars.value.numGuests }}">{{ boat.title }}</a></h2>
+                <h2><a class="boat_{{ boat.id }}" href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}?zizoo_boat_book[reservation_from]={{ form.vars.value.reservationFrom is empty ? "" : form.vars.value.reservationFrom|date }}&zizoo_boat_book[reservation_to]={{ form.vars.value.reservationTo is empty ? "" : form.vars.value.reservationTo|date }}&zizoo_boat_book[num_guests]={{ form.vars.value.numGuests }}">{{ boat.title }}</a></h2>
                 {% endif %}
             </header>
             <div class="boat_description">

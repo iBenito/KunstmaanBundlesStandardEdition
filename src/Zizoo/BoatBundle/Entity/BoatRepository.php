@@ -264,20 +264,24 @@ class BoatRepository extends EntityRepository
                    ->setParameter('charter', $charter)
                    ->setFirstResult($start)
                    ->setMaxResults($limit);
-        
+
         return $qb->getQuery()->getResult();
     }
     
-    public function getNumberOfCharterBoats(Charter $charter)
+    public function getNumberOfCharterBoats(Charter $charter, $active = FALSE, $complete = FALSE)
     {
         $qb = $this->createQueryBuilder('boat')
                    ->leftJoin('boat.charter', 'charter')
                    ->select('COUNT(boat.id) as num_boats')
                    ->where('charter = :charter')
-                   ->andWhere('boat.active = TRUE')
+                   ->andWhere('boat.active = :active')
+                        ->setParameter('active', $active)
+                   ->andWhere('boat.status = :status')
+                        ->setParameter('status', $complete)
                    ->andWhere('boat.deleted IS NULL')
-                   ->setParameter('charter', $charter);
-        
+                        ->setParameter('charter', $charter);
+
+
         return $qb->getQuery()->getSingleScalarResult();
     }
     

@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityRepository;
 class BookingRepository extends EntityRepository
 {
     
-    public function getCharterBookings($charter)
+    public function getCharterBookings($charter, $status = null)
     {
         $qb = $this->createQueryBuilder('booking')
                    ->leftJoin('booking.reservation', 'reservation')
@@ -22,9 +22,24 @@ class BookingRepository extends EntityRepository
                    ->leftJoin('boat.charter', 'charter')
                    ->select('booking')
                    ->where('charter = :charter')
-                   ->setParameter('charter', $charter);
+                        ->setParameter('charter', $charter);
+
+        if ($status){
+            $qb->andWhere('booking.status = :status')
+                ->setParameter('status', $status);
+        }
 
         return $qb->getQuery()
                   ->getResult();
+    }
+
+    public function getOutstandingBookings($charter)
+    {
+        return $this->getCharterBookings($charter, Booking::STATUS_OUTSTANDING);
+    }
+
+    public function getPaidBookings($charter)
+    {
+        return $this->getCharterBookings($charter, Booking::STATUS_PAID);
     }
 }

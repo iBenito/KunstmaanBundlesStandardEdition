@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="media")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"profile_avatar" = "Zizoo\ProfileBundle\Entity\ProfileAvatar"})
+ * @ORM\DiscriminatorMap({"profile_avatar" = "Zizoo\ProfileBundle\Entity\ProfileAvatar", "boat_image" = "Zizoo\BoatBundle\Entity\BoatImage"})
  */
 abstract class Media extends BaseEntity
 {

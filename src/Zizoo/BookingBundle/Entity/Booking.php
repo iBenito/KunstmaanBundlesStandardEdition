@@ -13,6 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 class Booking extends BaseEntity
 {
 
+    const STATUS_OUTSTANDING    = 5;
+    const STATUS_PAID           = 6;
+
     /**
      * @ORM\OneToOne(targetEntity="Zizoo\ReservationBundle\Entity\Reservation", inversedBy="booking")
      * @ORM\JoinColumn(name="reservation_id", referencedColumnName="id", nullable=false)

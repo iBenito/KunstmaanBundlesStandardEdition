@@ -62,7 +62,7 @@ ZizooBaseBundle_Dashboard_Profile:
     pattern:  /account/profile
     defaults: { _controller: ZizooBaseBundle:Dashboard:profile }
     requirements:
-        _method:  GET
+        _method:  GET|POST
 
 ZizooBaseBundle_Dashboard_Skills:
     pattern:  /account/skills

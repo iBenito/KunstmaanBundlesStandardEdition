@@ -65,7 +65,7 @@
         }
         
         function openGuestProfile(guestUsername){
-            var url = '{{ path('ZizooProfileBundle_show', {username: '_replaceme_'}) }}';
+            var url = '{{ path('ZizooProfileBundle_Profile_Show', {username: '_replaceme_'}) }}';
             url = url.replace('_replaceme_', guestUsername)
             window.location.href = url;
         }

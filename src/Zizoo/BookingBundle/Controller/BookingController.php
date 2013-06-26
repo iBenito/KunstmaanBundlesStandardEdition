@@ -117,7 +117,7 @@ class BookingController extends Controller
         $validator = $this->get('validator');
         $errors = $validator->validate($bookBoat);
         if ($errors && $errors->count()>0){
-            return $this->redirect($this->generateUrl('ZizooBoatBundle_show', array('id' => $boat->getId())));
+            return $this->redirect($this->generateUrl('ZizooBoatBundle_Boat_Show', array('id' => $boat->getId())));
         }
         
         // Calculate price

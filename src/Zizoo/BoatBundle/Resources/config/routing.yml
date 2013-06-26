@@ -32,7 +32,7 @@ ZizooBoatBundle_Boat_EditPhotos:
     pattern:  /charter/account/boat/{id}/edit/photos
     defaults: { _controller: ZizooBoatBundle:Boat:editPhotos }
     requirements:
-        _method:  GET
+        _method:  GET|POST
         id: \d+
 
 ZizooBoatBundle_Boat_EditPrice:

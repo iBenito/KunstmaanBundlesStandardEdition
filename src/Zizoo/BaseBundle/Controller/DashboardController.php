@@ -61,10 +61,33 @@ class DashboardController extends Controller {
      */
     private function indexCharterAction($charter)
     {
-        $reservationRequests = $this->getDoctrine()->getRepository('ZizooReservationBundle:Reservation')->getReservationRequests($charter);
-        
+        $messageProvider = $this->container->get('fos_message.provider');
+        $unreadMessages = $messageProvider->getNbUnreadMessages();
+
+        $reservationRepository = $this->getDoctrine()->getRepository('ZizooReservationBundle:Reservation');
+        $reservationRequests = $reservationRepository->getReservationRequests($charter);
+        $upcomingWeekRequests = $reservationRepository->getUpcomingWeekReservations($charter);
+        $acceptedRequests = $reservationRepository->getAcceptedReservations($charter);
+
+        $boatRepository = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat');
+        $activeListings = $boatRepository->getNumberOfCharterBoats($charter, TRUE);
+        $incompleteListings = $boatRepository->getNumberOfCharterBoats($charter, FALSE, FALSE);
+        $hiddenListings = $boatRepository->getNumberOfCharterBoats($charter, TRUE, FALSE);
+
+        $bookingRepository = $this->getDoctrine()->getRepository('ZizooBookingBundle:Booking');
+        $outstandingPayments = $bookingRepository->getOutstandingBookings($charter);
+        $receivedPayments = $bookingRepository->getPaidBookings($charter);
+
         return $this->render('ZizooBaseBundle:Dashboard:Charter/index.html.twig', array(
-            'reservationRequests' => $reservationRequests
+            'unreadMessages' => $unreadMessages,
+            'reservationRequests' => count($reservationRequests),
+            'upcomingRequests' => count($upcomingWeekRequests),
+            'acceptedRequests' => count($acceptedRequests),
+            'activeListings' => $activeListings,
+            'incompleteListings' => $incompleteListings,
+            'hiddenListings' => $hiddenListings,
+            'outstandingPayments' => count($outstandingPayments),
+            'receivedPayments' => count($receivedPayments)
         ));
     }
     

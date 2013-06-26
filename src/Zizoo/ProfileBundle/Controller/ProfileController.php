@@ -33,9 +33,8 @@ class ProfileController extends Controller
      * @param integer $id
      * @return Response
      */
-    public function editAction() 
+    public function editAction(Request $request)
     {
-        $request    = $this->getRequest();
         $user       = $this->getUser();
         $profile    = $user->getProfile();
 
@@ -59,7 +58,6 @@ class ProfileController extends Controller
 
                 $avatars = $profile->getAvatar();
 
-                $i = $avatars->count();
                 $now = new \DateTime();
                 // filter $originalAvatars to contain avatars no longer present
                 foreach ($avatars as $avatar) {
@@ -84,11 +82,11 @@ class ProfileController extends Controller
                 $em->persist($profile);
 
                 $em->flush();
-                return $this->redirect($this->generateUrl('ZizooProfileBundle_Profile_Edit'));
+                return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_Profile'));
             }
         }
    
-        return $this->render('ZizooProfileBundle:Profile:edit_test.html.twig',array(
+        return $this->render('ZizooProfileBundle:Profile:edit.html.twig',array(
             'edit_form'     => $editForm->createView()
         ));
     }

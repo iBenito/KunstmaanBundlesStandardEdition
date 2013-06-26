@@ -7,6 +7,9 @@ use Zizoo\BaseBundle\Entity\BaseEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 /**
  * @ORM\Entity(repositoryClass="Zizoo\BoatBundle\Entity\BoatRepository")
  * @ORM\Table(name="boat")
@@ -76,7 +79,8 @@ class Boat extends BaseEntity
     protected $status;
        
     /**
-     * @ORM\OneToMany(targetEntity="Image", mappedBy="boat")
+     * @ORM\OneToMany(targetEntity="BoatImage", mappedBy="boat")
+     * @ORM\OrderBy({"order" = "ASC"})
      */
     protected $image;
     
@@ -441,12 +445,12 @@ class Boat extends BaseEntity
     /**
      * Add image
      *
-     * @param \Zizoo\BoatBundle\Entity\Image $image
+     * @param \Zizoo\BoatBundle\Entity\BoatImage $image
      * @return Boat
      */
-    public function addImage(\Zizoo\BoatBundle\Entity\Image $image)
+    public function addImage(\Zizoo\BoatBundle\Entity\BoatImage $image)
     {
-        $this->image[] = $image;
+        $this->image->add($image);
     
         return $this;
     }
@@ -454,9 +458,9 @@ class Boat extends BaseEntity
     /**
      * Remove image
      *
-     * @param \Zizoo\BoatBundle\Entity\Image $image
+     * @param \Zizoo\BoatBundle\Entity\BoatImage $image
      */
-    public function removeImage(\Zizoo\BoatBundle\Entity\Image $image)
+    public function removeImage(\Zizoo\BoatBundle\Entity\BoatImage $image)
     {
         $this->image->removeElement($image);
     }
@@ -826,5 +830,58 @@ class Boat extends BaseEntity
     {
         $this->updateLowestAndHighestPrice();
     }
+
+    /**
+     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
+     * @Assert\File(maxSize="2M")
+     */
+    public $imageFile;
+
+    /**
+     * Sets file.
+     *
+     * @param UploadedFile $file
+     */
+    public function setImageFile(UploadedFile $file = null)
+    {
+        $this->imageFile = $file;
+    }
+
+    /**
+     * Get file.
+     *
+     * @return UploadedFile
+     */
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
+
+    /**
+     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
+     * @Assert\File(maxSize="2M")
+     */
+    public $documentFile;
+
+    /**
+     * Sets file.
+     *
+     * @param UploadedFile $file
+     */
+    public function setDocumentFile(UploadedFile $file = null)
+    {
+        $this->documentFile = $file;
+    }
+
+    /**
+     * Get file.
+     *
+     * @return UploadedFile
+     */
+    public function getDocumentFile()
+    {
+        return $this->documentFile;
+    }
+
     
 }
