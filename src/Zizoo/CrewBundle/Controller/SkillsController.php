@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Zizoo\CrewBundle\Entity\Skills;
+use Zizoo\CrewBundle\Form\SkillType;
 use Zizoo\CrewBundle\Form\SkillsType;
 
 /**
@@ -57,9 +58,10 @@ class SkillsController extends Controller
     public function addAction()
     {
         $entity = new Skills();
-        $form   = $this->createForm(new SkillsType(), $entity);
+        $user = $this->getUser();
+        $form   = $this->createForm(new SkillType(), $user);
 
-        return $this->render('ZizooCrewBundle:Skills:add.html.twig', array(
+        return $this->render('ZizooCrewBundle:Skills:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
         ));

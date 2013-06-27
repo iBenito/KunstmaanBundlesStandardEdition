@@ -129,7 +129,7 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
         $profile->setLastName('Bomba');
         $profile->setAbout('This and that');
         $profile->setPhone('004444444444');
-        $profile->setPicture('alex_1.png');
+//        $profile->setPicture('alex_1.png');
         $profile->setCreated(new \DateTime());
         $profile->setUpdated($profile->getCreated());
         $profile->setUser($manager->merge($this->getReference($ref)));

@@ -36,9 +36,8 @@ class ProfileController extends Controller
      * @param integer $id
      * @return Response
      */
-    public function editAction() 
+    public function editAction(Request $request)
     {
-        $request    = $this->getRequest();
         $user       = $this->getUser();
         $profile    = $user->getProfile();
 
@@ -86,7 +85,7 @@ class ProfileController extends Controller
                 $em->persist($profile);
 
                 $em->flush();
-                return $this->redirect($this->generateUrl('ZizooProfileBundle_Profile_Edit'));
+                return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_Profile'));
             }
         }
    

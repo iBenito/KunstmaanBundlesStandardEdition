@@ -53,6 +53,13 @@ services:
         arguments: ["@service_container"]
         tags:
             - { name: form.type, alias: zizoo_boat_book }
+
+    zizoo_boat.boat_image_type:
+            class:  Zizoo\BoatBundle\Form\Type\BoatImageType
+            arguments:
+                container:      "@service_container"
+            tags:
+                - { name: form.type, alias: zizoo_boat_image }
             
             
     # FORM EXTENSIONS
@@ -76,4 +83,20 @@ services:
             container:      "@service_container"
         tags:
             - { name: doctrine.event_listener, event: onFlush }
+
+    zizoo_boat.image_listener:
+        class: Zizoo\BoatBundle\EventListener\BoatImageListener
+        arguments:
+            container:      "@service_container"
+        tags:
+            - { name: doctrine.event_listener, event: postPersist }
+            - { name: doctrine.event_listener, event: postUpdate }
+            - { name: doctrine.event_listener, event: preRemove }
+
+    zizoo_boat.boat_subscriber:
+            class: Zizoo\BoatBundle\Form\EventListener\BoatSubscriber
+            arguments:
+                container:      "@doctrine.orm.entity_manager"
+            tags:
+                - { name: form.event_listener, alias: 'zizoo_boat_listener' }
            

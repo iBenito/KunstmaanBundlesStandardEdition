@@ -27,7 +27,7 @@
         </div>
     {% endfor %}
     <div id="popup" style="display: none">
-        <form action="{{ path('ZizooBoatBundle_Boat_BoatPrice', {id: boat.id}) }}" method="post">
+        <form action="{{ path('ZizooBoatBundle_Boat_EditPrice', {id: boat.id}) }}" method="post">
             <table>
                 <tr>
                     <td><label for="date_range_text">Date range:</label></td>

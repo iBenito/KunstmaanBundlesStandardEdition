@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Zizoo\BoatBundle\Entity\Boat;
 
 use Zizoo\BoatBundle\Entity\Image;
-use Zizoo\BoatBundle\Form\Type\ImageType;
+use Zizoo\BoatBundle\Form\Type\BoatImageType;
 use Zizoo\BoatBundle\Form\Type\BoatType;
 
 /**
@@ -102,7 +102,7 @@ class BoatController extends Controller
         $prices         = $boat->getPrice();
         
         $request = $this->getRequest();       
-        $request->query->set('url', $this->generateUrl('ZizooBoatBundle_show', array('id' => $id)));
+        $request->query->set('url', $this->generateUrl('ZizooBoatBundle_Boat_Show', array('id' => $id)));
         $request->query->set('ajax_url', $this->generateUrl('ZizooBoatBundle_booking_widget', array('id' => $id, 'request' => $request)));
         return $this->render('ZizooBoatBundle:Boat:show.html.twig', array(
             'boat'              => $boat,
@@ -208,61 +208,17 @@ class BoatController extends Controller
     }
     
     /**
-     * Create input form for Boat
-     *
+     * Create input form for Boat, re-used by New and Edit Boat Actions
      */
-    public function boatFormWidgetAction(Boat $boat, $formAction, $formRedirect)
+    public function boatFormWidgetAction(Boat $boat, $formAction)
     {
         $form = $this->createForm(new BoatType(), $boat);
-
-        /** @var Ivory\GoogleMapBundle\Model\Map */
-        $map = $this->get('ivory_google_map.map');
-        $map->setAsync(true);
-        $map->setAutoZoom(false);
-        $map->setCenter(45, 15, true);
-        $map->setMapOption('zoom', 4);
-        $map->setMapOption('disableDefaultUI', true);
-        $map->setMapOption('zoomControl', true);
-        $map->setStylesheetOptions(array(
-            'width' => '100%',
-            'height' => '300px'
-        ));
-        
-        /* Build List of Marinas */
-        $em = $this->getDoctrine()->getManager();
-        //$marinas = $em->getRepository('ZizooAddressBundle:Marina')->getAllMarinas();
-//        foreach ($marinas as $marina){
-//            $marker = $this->get('ivory_google_map.marker');
-//            $marker->setPosition($marina->getLat(), $marina->getLng(), true);
-//            $marker->setOption('title', $marina->getName());
-//            $marker->setOption('clickable', true);
-//            $marker->setIcon('http://www.incrediblue.com/assets/map-pin.png');
-//            
-//            $map->addMarker($marker);
-//        }
 
         return $this->render('ZizooBoatBundle:Boat:boat_form_widget.html.twig', array(
             'boat' => $boat,
             'form' => $form->createView(),
             'formAction' => $formAction,
-            'formRedirect' => $formRedirect,
-            'map' => $map,
         ));
-    }
-    
-    /**
-     * Uploads Images.
-     *
-     */
-    public function uploadAction()
-    {
-        $editId = $this->getRequest()->get('editId');
-        if (!preg_match('/^\d+$/', $editId))
-        {
-            throw new Exception("Bad edit id");
-        }
-
-        $this->get('punk_ave.file_uploader')->handleFileUpload(array('folder' => 'tmp/attachments/' . $editId));
     }
     
     /**
@@ -273,10 +229,12 @@ class BoatController extends Controller
     {
         $boat = new Boat();
 
+        $session = $this->get('session');
+        $session->set('step', 'one');
+
         return $this->render('ZizooBoatBundle:Boat:new.html.twig', array(
             'boat' => $boat,
-            'formAction' => 'ZizooBoatBundle_create',
-            'formRedirect'  => 'ZizooBoatBundle_editDetails'
+            'formAction' => 'ZizooBoatBundle_Boat_Create'
         ));
     }
 
@@ -288,12 +246,7 @@ class BoatController extends Controller
     {
         $user       = $this->getUser();
         $charter    = $user->getCharter();
-        
-        //if (!$charter || $charter->getAdminUser()!=$user){
-        if (!$boat || !$charter->getUsers()->contains($user)){
-            throw $this->createNotFoundException('You must be the admin user of the charter to add boats.');
-        }
-        
+
         $boat = new Boat();
         $form = $this->createForm(new BoatType(), $boat);
         $form->bind($request);
@@ -305,15 +258,13 @@ class BoatController extends Controller
             $boatService = $this->get('boat_service');
             $boatCreated = $boatService->createBoat($boat, $boat->getAddress(), $boat->getBoatType(), $charter, null, true);
             
-            $redirect = $request->query->get('formRedirect');
-            return $this->redirect($this->generateUrl($redirect, array('id' => $boatCreated->getId())));
+            return $this->redirect($this->generateUrl('ZizooBoatBundle_Boat_EditDetails', array('id' => $boatCreated->getId())));
         }
 
         return $this->render('ZizooBoatBundle:Boat:new.html.twig', array(
             'boat' => $boat,
             'form' => $form->createView(),
-            'formAction' => 'ZizooBoatBundle_create',
-            'formRedirect'  => 'ZizooBoatBundle_edit'
+            'formAction' => 'ZizooBoatBundle_Boat_Create'
         ));
     }
 
@@ -324,22 +275,14 @@ class BoatController extends Controller
     public function editAction($id)
     {
         $em         = $this->getDoctrine()->getManager();
-        $user       = $this->getUser();
-        $charter    = $user->getCharter();
-        $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
+        $boat       = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
 
-        //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
-        if (!$boat || !$charter->getUsers()->contains($user)){
-            throw $this->createNotFoundException('Unable to find Boat entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
+        $session = $this->get('session');
+        $session->set('step', NULL);
 
         return $this->render('ZizooBoatBundle:Boat:edit.html.twig', array(
             'boat'          => $boat,
-            'delete_form'   => $deleteForm->createView(),
-            'formAction'    => 'ZizooBoatBundle_update',
-            'formRedirect'  => 'ZizooBoatBundle_edit'
+            'formAction'    => 'ZizooBoatBundle_Boat_Update'
         ));
     }
 
@@ -350,22 +293,14 @@ class BoatController extends Controller
     public function editDetailsAction($id)
     {
         $em     = $this->getDoctrine()->getManager();
-        $user   = $this->getUser();
-
         $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
-
-        //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
-        if (!$boat || !$charter->getUsers()->contains($user)){
-            throw $this->createNotFoundException('Unable to find Boat entity.');
-        }
 
         $detailsForm = $this->createForm(new BoatDetailsType(), $boat);
 
         return $this->render('ZizooBoatBundle:Boat:editDetails.html.twig', array(
             'boat'          => $boat,
             'form'          => $detailsForm->createView(),
-            'formAction'    => 'ZizooBoatBundle_update',
-            'formRedirect'  => 'ZizooBoatBundle_edit'
+            'formAction'    => 'ZizooBoatBundle_Boat_Update',
         ));
     }
 
@@ -373,41 +308,64 @@ class BoatController extends Controller
      * Displays a form to edit an existing Boat entity.
      *
      */
-    public function editPhotosAction($id)
+    public function editPhotosAction(Request $request, $id)
     {
-        $user       = $this->getUser();
-        $boat       = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
-        $charter    = $user->getCharter();
-        
-        //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
-        if (!$boat || !$charter->getUsers()->contains($user)){
+        $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
+        if (!$boat){
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
 
-        // The Punk Ave file uploader part of the Form for Uploading Images
-        $editId = $this->getRequest()->get('editId');
-        if (!preg_match('/^\d+$/', $editId))
-        {
-            $editId = sprintf('%09d', mt_rand(0, 1999999999));
-            if ($boat->getId())
-            {
-                $this->get('punk_ave.file_uploader')->syncFiles(
-                    array('from_folder' => '../images/boats/' . $boat->getId(),
-                        'to_folder' => 'tmp/attachments/' . $editId,
-                        'create_to_folder' => true));
+        $originalPhotos = array();
+        // Create an array of the current Boat Photos objects in the database
+        foreach ($boat->getImage() as $photo) {
+            $originalPhotos[] = $photo;
+        }
+
+        $imagesForm = $this->createForm($this->get('zizoo_boat.boat_image_type'), $boat);
+
+        if ($request->isMethod('post')){
+            $imagesForm->bind($request);
+
+            if ($imagesForm->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $boat = $imagesForm->getData();
+
+                //setting the updated field manually for file upload DO NOT REMOVE
+                $boat->setUpdated(new \DateTime());
+
+                $images = $boat->getImage();
+
+                $now = new \DateTime();
+                // filter $originalAvatars to contain avatars no longer present
+                foreach ($images as $image) {
+                    foreach ($originalPhotos as $key => $toDel) {
+                        if ($toDel->getId() === $image->getId()) {
+                            unset($originalPhotos[$key]);
+                        }
+                    }
+                    $image->setUpdated($now);
+                    $em->persist($image);
+                }
+
+                // remove the relationship between the avatar and the profile
+                foreach ($originalPhotos as $photo) {
+                    // remove the ProvileAvatar from the Profile
+                    $boat->removeImage($photo);
+
+                    // remove the avatar completely
+                    $em->remove($photo);
+                }
+
+                $em->persist($boat);
+
+                $em->flush();
+                return $this->redirect($this->generateUrl('ZizooBoatBundle_Boat_EditPhotos', array('id' => $id)));
             }
         }
-        $existingFiles = $this->get('punk_ave.file_uploader')->getFiles(array('folder' => 'tmp/attachments/' . $editId));
-
-        $imagesForm = $this->createForm(new ImageType());
 
         return $this->render('ZizooBoatBundle:Boat:photos.html.twig', array(
             'boat'  => $boat,
-            'imagesForm'  => $imagesForm->createView(),
-            'existingFiles' => $existingFiles,
-            'editId' => intval($editId),
-            'formAction' => 'ZizooBoatBundle_update',
-            'formRedirect' => 'ZizooBoatBundle_edit'
+            'imagesForm'  => $imagesForm->createView()
         ));
 
     }
@@ -418,13 +376,8 @@ class BoatController extends Controller
      */
     public function editPriceAction($id)
     {
-        $em     = $this->getDoctrine()->getManager();
-        $user   = $this->getUser();
-
-        $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
-
-        //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
-        if (!$boat || !$charter->getUsers()->contains($user)){
+        $boat   = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
+        if (!$boat){
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
 
@@ -434,7 +387,7 @@ class BoatController extends Controller
             'boat'          => $boat,
             'delete_form'   => $deleteForm->createView(),
             'formAction'    => 'ZizooBoatBundle_update',
-            'formRedirect'  => 'ZizooBoatBundle_edit'
+            'formRedirect'  => 'ZizooBoatBundle_Boat_Edit'
         ));
     }
 
@@ -571,14 +524,14 @@ class BoatController extends Controller
         
         $overlap        = $session->get('overlap_'.$id);
         if (!$overlap){
-            return $this->redirect($this->generateUrl('ZizooBoatBundle_Boat_BoatPrice', array('id' => $id)));
+            return $this->redirect($this->generateUrl('ZizooBoatBundle_Boat_EditPrice', array('id' => $id)));
         }
         
         $requestedIds   = $overlap['requested_reservations'];
         $externalIds    = $overlap['external_reservations'];
         
         if (count($requestedIds)==0 && count($externalIds)==0){
-            return $this->redirect($this->generateUrl('ZizooBoatBundle_Boat_BoatPrice', array('id' => $id)));
+            return $this->redirect($this->generateUrl('ZizooBoatBundle_Boat_EditPrice', array('id' => $id)));
         }
         
         $overlapRequestedReservations = array();
@@ -690,14 +643,14 @@ class BoatController extends Controller
                 } catch (DBALException $e){
                     $this->container->get('session')->getFlashBag()->add('error', 'Something went wrong');
                 }
-                return $this->redirect($this->generateUrl('ZizooBoatBundle_Boat_BoatPrice', array('id' => $id)));
+                return $this->redirect($this->generateUrl('ZizooBoatBundle_Boat_EditPrice', array('id' => $id)));
             } else if ($type=='unavailability'){
                 try {
                     $reservationAgent->makeReservationForSelf($boat, $from, $to, true);
                 } catch (InvalidReservationException $e){
                     $this->container->get('session')->getFlashBag()->add('error', $e->getMessage());
                 }
-                return $this->redirect($this->generateUrl('ZizooBoatBundle_Boat_BoatPrice', array('id' => $id)));
+                return $this->redirect($this->generateUrl('ZizooBoatBundle_Boat_EditPrice', array('id' => $id)));
             }
         }
         

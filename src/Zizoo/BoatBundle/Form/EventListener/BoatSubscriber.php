@@ -1,18 +1,18 @@
 <?php
-// src/Zizoo/ProfileBundle/Form/EventListener/BoatSubscriber.php
-namespace Zizoo\ProfileBundle\Form\EventListener;
+// src/Zizoo/BoatBundle/Form/EventListener/BoatSubscriber.php
+namespace Zizoo\BoatBundle\Form\EventListener;
 
-use Zizoo\ProfileBundle\Entity\ProfileAvatar;
+use Zizoo\BoatBundle\Entity\BoatImage;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ProfileSubscriber implements EventSubscriberInterface
+class BoatSubscriber implements EventSubscriberInterface
 {
     protected $em;
-    protected $uploadAvatar;
+    protected $uploadImage;
     
     public function __construct(EntityManager $em)
     {
@@ -28,21 +28,21 @@ class ProfileSubscriber implements EventSubscriberInterface
 
     public function postBind(FormEvent $event)
     {
-        $profile = $event->getData();
+        $boat = $event->getData();
         $form = $event->getForm();
         
-        if (null !== $profile->getAvatarFile()){
+        if (null !== $boat->getImageFile()){
             if ($form->isValid()){
-                $avatar = $this->uploadAvatar;
+                $image = $this->uploadImage;
                 $this->em->flush();
-                $profile->getAvatarFile()->move(
-                    $avatar->getUploadRootDir(),
-                    $avatar->getId().'.'.$avatar->getPath()
+                $boat->getImageFile()->move(
+                    $image->getUploadRootDir(),
+                    $image->getId().'.'.$image->getPath()
                 );
 
             }
-            
-            $profile->setAvatarFile(null);
+
+            $boat->setImageFile(null);
         }
         
         if (!$form->isValid()){
@@ -54,22 +54,22 @@ class ProfileSubscriber implements EventSubscriberInterface
     
     public function bind(FormEvent $event)
     {
-        $profile = $event->getData();
+        $boat = $event->getData();
         $form = $event->getForm();
 
-        if (null !== $profile->getAvatarFile()){
+        if (null !== $boat->getImageFile()){
             
-            $avatar = new ProfileAvatar();
-            $avatar->setProfile($profile);
-            $profile->addAvatar($avatar);
+            $image = new BoatImage();
+            $image->setBoat($boat);
+            $boat->addImage($image);
 
-            $this->em->persist($avatar);
+            $this->em->persist($image);
             
-            $avatarFile = $profile->getAvatarFile();
-            $avatar->setPath($avatarFile->guessExtension());
-            $avatar->setMimeType($avatarFile->getMimeType());
+            $imageFile = $boat->getImageFile();
+            $image->setPath($imageFile->guessExtension());
+            $image->setMimeType($imageFile->getMimeType());
             
-            $this->uploadAvatar = $avatar;
+            $this->uploadImage = $image;
 
         }
         

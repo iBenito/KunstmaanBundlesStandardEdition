@@ -159,4 +159,5 @@ class MessageRepository extends EntityRepository
         }
         return $participantThread;
     }
+
 }

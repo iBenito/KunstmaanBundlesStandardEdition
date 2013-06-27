@@ -1,9 +1,17 @@
-<form action="{{ path(formAction, { 'id': boat.id, 'formRedirect': formRedirect }) }}" method="post" {{ form_enctype(form) }}>
+{% set step = app.session.get('step') %}
+
+{% if step != "" %}
+    <h3>Step {{ step }}</h3>
+{% endif %}
+
+<form action="{{ path(formAction, { 'id': boat.id }) }}" method="post" {{ form_enctype(form) }}>
+
     {{ form_widget(form) }}
-    {# Displays Marina Map #}
-    {{ google_map_container(map) }}
-        
-    <button type="submit">Save</button>
+
+    {% if step != "" %}
+        <button type="submit">Continue</button>
+    {% else %}
+        <button type="submit">Save</button>
+    {% endif %}
+
 </form>
-    
-{{ google_map_js(map) }} 

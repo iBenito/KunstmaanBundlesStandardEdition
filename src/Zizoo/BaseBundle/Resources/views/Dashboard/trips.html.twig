@@ -8,7 +8,7 @@
     {% for booking in bookings %}   
         <p>{{ booking.reservation.boat.title }}</p>
         
-        <a href="{{ path('ZizooBoatBundle_show', { 'id': booking.reservation.boat.id }) }}">
+        <a href="{{ path('ZizooBoatBundle_Boat_Show', { 'id': booking.reservation.boat.id }) }}">
             {% include 'ZizooBoatBundle:Image:index.html.twig' with { 'images': booking.reservation.boat.image, 'single': true, 'size': 'thumbnails' } %}
         </a>
         <p>Cost: {{ booking.cost }}</p>

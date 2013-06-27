@@ -18,10 +18,10 @@
         <h1>Boats!</h1>
         {% for boat in boats %}
             <div class="boat-carousel">
-                <h2><a href="{{ path('ZizooBoatBundle_show', { 'id': boat.id }) }}">{{ boat.name }}</a></h2>
+                <h2><a href="{{ path('ZizooBoatBundle_Boat_Show', { 'id': boat.id }) }}">{{ boat.name }}</a></h2>
                 <h3>{{ boat.title }}</h3>
                 <section class="images-carousel">
-                    <a href="{{ path('ZizooBoatBundle_show', { 'id': boat.id }) }}">{% include 'ZizooBoatBundle:Image:index.html.twig' with { 'images': boat.image, 'single': true } %}</a>
+                    <a href="{{ path('ZizooBoatBundle_Boat_Show', { 'id': boat.id }) }}">{% include 'ZizooBoatBundle:Image:index.html.twig' with { 'images': boat.image, 'single': true } %}</a>
                 </section>
                 <section class="user-carousel">
                     {% if boat.charter.logo is not null %}
