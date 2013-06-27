@@ -34,7 +34,7 @@
         }
         
         function avatarUploadSuccess(file, response){
-            uploadedFiles.push(file);
+            if (file!=null) uploadedFiles.push(file);
             var queuedFiles     = zizoo_profile_avatar_dropzone_api.getQueuedFiles();
             var uploadingFiles  = zizoo_profile_avatar_dropzone_api.getUploadingFiles();
             if (queuedFiles.length>0 || uploadingFiles.length>0) return;
