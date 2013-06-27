@@ -1,17 +1,23 @@
 [
-    {
-        "id":       "mainsail_furning",
-        "name":     "Mainsail Furning",
-        "order":    0
-    },
-    {
-        "id":       "battened_mainsail",
-        "name":     "Battened Mainsail",
-        "order":    1
-    },
-    {
-        "id":       "teak_deck",
-        "name":     "Teak Deck",
-        "order":    2
-    }
+    {"id":"mainsail_furning","name":"Mainsail Furning","order":0},
+    {"id":"battened_mainsail","name":"Battened Mainsail","order":1},
+    {"id":"anchor","name":"Anchor","order":2},
+    {"id":"refrigerator","name":"Refrigerator","order":3},
+    {"id":"grill","name":"Grill","order":4},
+    {"id":"bimi","name":"Bimi Top","order":5},
+    {"id":"tv","name":"TV","order":6},
+    {"id":"gps","name":"GPS","order":8},
+    {"id":"stereo","name":"Stereo","order":9},
+    {"id":"depthfind","name":"Depth Finder","order":10},
+    {"id":"dinghy","name":"Dinghy","order":13},
+    {"id":"fishing","name":"Fishing Equipment","order":14},
+    {"id":"kayak","name":"Kayak","order":15},
+    {"id":"aid","name":"First Aid Kit","order":16},
+    {"id":"echo","name":"Echo Sounder","order":18},
+    {"id":"inverter","name":"Inverter","order":20},
+    {"id":"mobile","name":"Mobile Phone","order":21},
+    {"id":"binoculars","name":"Binoculars","order":35},
+    {"id":"cooker","name":"Cooker with Oven","order":37},
+    {"id":"freezer","name":"Freezer","order":38},
+    {"id":"pots","name":"Pots and Pans","order":40}
 ]

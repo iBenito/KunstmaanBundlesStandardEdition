@@ -116,17 +116,23 @@ class Boat extends BaseEntity
     protected $boatType;
     
     /**
+     * @ORM\ManyToMany(targetEntity="Zizoo\BoatBundle\Entity\Amenities", inversedBy="boats")
+     * @ORM\JoinTable(name="boat_asset_amenities")
+     **/
+    protected $amenities;
+
+    /**
      * @ORM\ManyToMany(targetEntity="Zizoo\BoatBundle\Entity\Equipment", inversedBy="boats")
-     * @ORM\JoinTable(name="boat_equipment")
+     * @ORM\JoinTable(name="boat_asset_equipment")
      **/
     protected $equipment;
-    
+
     /**
-     * @ORM\ManyToMany(targetEntity="Zizoo\BoatBundle\Entity\IncludedExtra", inversedBy="boats")
-     * @ORM\JoinTable(name="boat_included_extras")
+     * @ORM\ManyToMany(targetEntity="Zizoo\BoatBundle\Entity\Extra", inversedBy="boats")
+     * @ORM\JoinTable(name="boat_asset_extra")
      **/
-    protected $includedExtra;
-    
+    protected $extra;
+
     /**
      * @ORM\Column(name="active", type="boolean")
      */
@@ -155,9 +161,11 @@ class Boat extends BaseEntity
     
     public function __construct()
     {
-        
         $this->image        = new ArrayCollection();
         $this->reservation  = new ArrayCollection();
+        $this->amenities    = new ArrayCollection();
+        $this->equipment    = new ArrayCollection();
+        $this->extra        = new ArrayCollection();
         $this->created      = new \DateTime();
         $this->updated      = new \DateTime();
         $this->status       = 0;
@@ -634,6 +642,39 @@ class Boat extends BaseEntity
     }
     
     /**
+     * Add amenities
+     *
+     * @param \Zizoo\BoatBundle\Entity\Amenities $amenities
+     * @return Boat
+     */
+    public function addAmenities(\Zizoo\BoatBundle\Entity\Amenities $amenities)
+    {
+        $this->amenities->add($amenities);
+    
+        return $this;
+    }
+
+    /**
+     * Remove amenities
+     *
+     * @param \Zizoo\BoatBundle\Entity\Amenities $amenities
+     */
+    public function removeAmenities(\Zizoo\BoatBundle\Entity\Amenities $amenities)
+    {
+        $this->amenities->removeElement($amenities);
+    }
+
+    /**
+     * Get amenities
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAmenities()
+    {
+        return $this->amenities;
+    }
+
+    /**
      * Add equipment
      *
      * @param \Zizoo\BoatBundle\Entity\Equipment $equipment
@@ -642,7 +683,7 @@ class Boat extends BaseEntity
     public function addEquipment(\Zizoo\BoatBundle\Entity\Equipment $equipment)
     {
         $this->equipment[] = $equipment;
-    
+
         return $this;
     }
 
@@ -659,7 +700,7 @@ class Boat extends BaseEntity
     /**
      * Get equipment
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getEquipment()
     {
@@ -667,36 +708,36 @@ class Boat extends BaseEntity
     }
     
     /**
-     * Add included extra
+     * Add extras
      *
-     * @param \Zizoo\BoatBundle\Entity\IncludedExtra $includedlExtra
+     * @param \Zizoo\BoatBundle\Entity\Extra $extra
      * @return Boat
      */
-    public function addIncludedExtra(\Zizoo\BoatBundle\Entity\IncludedExtra $includedlExtra)
+    public function addExtra(\Zizoo\BoatBundle\Entity\Extra $extra)
     {
-        $this->includedExtra[] = $includedlExtra;
+        $this->extra->add($extra);
     
         return $this;
     }
 
     /**
-     * Remove included extra
+     * Remove extra
      *
-     * @param \Zizoo\BoatBundle\Entity\IncludedExtra $equipment
+     * @param \Zizoo\BoatBundle\Entity\Extra $extra
      */
-    public function removeIncludedExtra(\Zizoo\BoatBundle\Entity\IncludedExtra $includedExtra)
+    public function removeExtra(\Zizoo\BoatBundle\Entity\Extra $extra)
     {
-        $this->includedExtra->removeElement($includedExtra);
+        $this->extra->removeElement($extra);
     }
 
     /**
-     * Get included extras
+     * Get extras
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getIncludedExtra()
+    public function getExtra()
     {
-        return $this->includedExtra;
+        return $this->extra;
     }
     
     public function setActive($active)
