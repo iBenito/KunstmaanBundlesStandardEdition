@@ -29,7 +29,7 @@ class MediaCollectionTypeExtension extends AbstractTypeExtension
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setOptional(array('file_path', 'max_media', 'aspect_ratio'));
+        $resolver->setOptional(array('file_path', 'max_media', 'aspect_ratio', 'dropzone', 'crop_js', 'delete_js'));
     }
     
     public function buildView(FormView $view, FormInterface $form, array $options)
@@ -37,6 +37,19 @@ class MediaCollectionTypeExtension extends AbstractTypeExtension
         if (array_key_exists('aspect_ratio', $options)) {
             $view->vars['aspect_ratio'] = $options['aspect_ratio'];
         }
+        
+        if (array_key_exists('dropzone', $options)) {
+            $view->vars['dropzone'] = $options['dropzone'];
+        }
+        
+        if (array_key_exists('crop_js', $options)) {
+            $view->vars['crop_js'] = $options['crop_js'];
+        }
+        
+        if (array_key_exists('delete_js', $options)) {
+            $view->vars['delete_js'] = $options['delete_js'];
+        }
+        
     }
     
     

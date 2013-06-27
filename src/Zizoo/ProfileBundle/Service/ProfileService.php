@@ -17,7 +17,8 @@ class ProfileService {
         if($profile->getFirstName()&&$profile->getLastName()&&$profile->getAddress()&&$profile->getPhone()){
             $completeness++;
         }
-        if($profile->getAvatar()&&$profile->getAbout()&&$profile->getLanguages()){
+        $profileAvatars = $profile->getAvatar();
+        if($profileAvatars->count()>0&&$profile->getAbout()&&$profile->getLanguages()){
             $completeness++;
         }
         //Verification

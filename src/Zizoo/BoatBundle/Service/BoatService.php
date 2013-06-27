@@ -125,7 +125,7 @@ class BoatService {
 
         $boat->setBoatType($boatType);
         $boat->setCharter($charter);
-        $address->fetchGeo();
+        //$address->fetchGeo();
         $address->setBoat($boat);
         $boat->setAddress($address);
         $charter->addBoat($boat);

@@ -10,38 +10,13 @@ services:
         class:        Zizoo\ProfileBundle\Service\ProfileService
         arguments:
             entityManager:  "@doctrine.orm.entity_manager"    
-            
-    zizoo_profile.single_test_type:
-        class:  Zizoo\ProfileBundle\Form\Type\SingleTestType
-        tags:
-            - { name: form.type, alias: zizoo_single_test }
-            
+  
     zizoo_profile.profile_type:
         class:  Zizoo\ProfileBundle\Form\ProfileType
         arguments:
             container:      "@service_container"
         tags:
             - { name: form.type, alias: zizoo_profile }
-            
-            
-    zizoo_profile.profile_listener:
-        class: Zizoo\ProfileBundle\EventListener\ProfileListener
-        arguments:
-            container:      "@service_container"
-        tags:
-            - { name: doctrine.event_listener, event: postPersist }
-            - { name: doctrine.event_listener, event: postUpdate }
-            
-    zizoo_profile.avatar_listener:
-        class: Zizoo\ProfileBundle\EventListener\ProfileAvatarListener
-        arguments:
-            container:      "@service_container"
-        tags:
-            - { name: doctrine.event_listener, event: postPersist }
-            - { name: doctrine.event_listener, event: postUpdate }
-            - { name: doctrine.event_listener, event: preRemove }
-
-    
 
     zizoo_profile.profile_subscriber:
         class: Zizoo\ProfileBundle\Form\EventListener\ProfileSubscriber

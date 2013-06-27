@@ -15,7 +15,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="media")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"profile_avatar" = "Zizoo\ProfileBundle\Entity\ProfileAvatar", "boat_image" = "Zizoo\BoatBundle\Entity\BoatImage"})
+ * @ORM\DiscriminatorMap({"profile_avatar" = "Zizoo\ProfileBundle\Entity\ProfileAvatar"})
+ * @ORM\DiscriminatorMap({"profile_avatar" = "Zizoo\ProfileBundle\Entity\ProfileAvatar", "boat_image" = "Zizoo\BoatBundle\Entity\BoatImage", "charter_logo" = "Zizoo\CharterBundle\Entity\CharterLogo"})
  */
 abstract class Media extends BaseEntity
 {
@@ -140,6 +141,25 @@ abstract class Media extends BaseEntity
     }
     
     
+    protected $temp;
     
+
+    /**
+     * @ORM\PreRemove()
+     */
+    public function storeFilenameForRemove()
+    {
+        $this->temp = $this->getAbsolutePath();
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeUpload()
+    {
+        if (isset($this->temp)) {
+            unlink($this->temp);
+        }
+    }
 }
 ?>

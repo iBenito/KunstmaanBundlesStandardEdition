@@ -1,17 +1,86 @@
-{% block javascripts %}
-    <script type="text/javascript" src="{{ asset('js/jcrop/jquery.Jcrop.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/jcrop/jquery.color.js') }}"></script>
-{% endblock %}
-
-
-{% block stylesheets %}
-    <link href="{{ asset('css/jcrop/jquery.Jcrop.css') }}" type="text/css" rel="stylesheet" />
-{% endblock %}
-
 {% block body %}
 
-    <form action="{{ path('ZizooProfileBundle_Profile_Edit') }}" method="post" {{ form_enctype(edit_form) }}>
+    <script type="text/javascript">
+        var uploadedFiles = new Array();
+        
+        function removeUploadedFiles(){
+            for (var i=0; i<uploadedFiles.length; i++){
+                zizoo_profile_avatar_dropzone_api.removeFile(uploadedFiles[i]);
+            }
+            uploadedFiles = new Array();
+        }
+        
+        function getAvatars(){
+            $.ajax({
+                url:        '{{ path('ZizooProfileBundle_Profile_GetAvatars') }}',
+                type:       'get',
+                success:    function(data, textStatus, XHR){
+                    var newAvatars = $(data).find('#zizoo_profile_avatar_list .zizoo_media_container');
+                    $('#zizoo_profile_avatar_list .zizoo_media_container').remove();
+                    for (var i=newAvatars.length-1; i>=0; i--){
+                        $('#zizoo_profile_avatar_list').prepend(newAvatars[i]);
+                    }
+                    removeUploadedFiles();
+                }
+            });
+        }
+        
+        function avatarUploadError(file, response){
+            var queuedFiles     = zizoo_profile_avatar_dropzone_api.getQueuedFiles();
+            var uploadingFiles  = zizoo_profile_avatar_dropzone_api.getUploadingFiles();
+            if (queuedFiles.length>0 || uploadingFiles.length>0 || uploadedFiles.length==0) return;
+           
+            getAvatars();
+        }
+        
+        function avatarUploadSuccess(file, response){
+            if (file!=null) uploadedFiles.push(file);
+            var queuedFiles     = zizoo_profile_avatar_dropzone_api.getQueuedFiles();
+            var uploadingFiles  = zizoo_profile_avatar_dropzone_api.getUploadingFiles();
+            if (queuedFiles.length>0 || uploadingFiles.length>0) return;
+           
+            getAvatars();
+        }
+        
+        function avatarCrop(id, x1, y1, x2, y2, w, h){
+            $.ajax({
+                url:            '{{ path('ZizooMediaBundle_Media_CropMedia') }}',
+                type:           'post',
+                data: {
+                    id:             id,
+                    entity_type:    'ZizooProfileBundle:ProfileAvatar',
+                    x1:             x1,
+                    y1:             y1,
+                    x2:             x2,
+                    y2:             y2,
+                    w:              w,
+                    h:              h
+                },
+                success: function(data){
+                    avatarUploadSuccess(null,{id: id});
+                }
+            });
+        }
+        
+        function avatarDelete(container){
+            var id  = $(container).find('input[name^="zizoo_profile[avatar]"][name$="[id]"]').val();
+            $(container).remove();
+            $.ajax({
+                url:            '{{ path('ZizooMediaBundle_Media_DeleteMedia') }}',
+                type:           'post',
+                data: {
+                    id:             id,
+                    entity_type:    'ZizooProfileBundle:ProfileAvatar'
+                },
+                success: function(data){
+                }
+            });
+        }
+        
+    </script>
 
+    <form action="{{ path('ZizooProfileBundle_Profile_Edit') }}" method="post" {{ form_enctype(edit_form) }}>
+    
         {{ form_widget(edit_form) }}
 
         <button type="submit">Save</button>

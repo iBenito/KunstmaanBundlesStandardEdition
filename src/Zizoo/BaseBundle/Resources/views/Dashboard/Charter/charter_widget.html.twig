@@ -2,8 +2,8 @@
 
 <div id="dashboard_charter">
     <div class="avatar">
-        {% if charter.picture is not null %}
-            <img src="{{ asset(charter|pictureWebPath) }}" alt="image not found" class="large" />
+        {% if charter.logo is not null %}
+            <img src="{{ asset(charter.logo|pictureWebPath) }}" alt="image not found" class="large" />
         {% endif %}
     </div>
     <h3>{{ charter.charterName }}</h3>

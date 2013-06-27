@@ -1,7 +1,7 @@
 <?php
-namespace Zizoo\ProfileBundle\Entity;
+namespace Zizoo\CharterBundle\Entity;
 
-use Zizoo\ProfileBundle\Entity\Profile;
+use Zizoo\CharterBundle\Entity\Charter;
 
 use Zizoo\MediaBundle\Entity\Media;
 
@@ -10,36 +10,36 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-class ProfileAvatar extends Media {
+class CharterLogo extends Media {
     
     /**
-     * @ORM\ManyToOne(targetEntity="\Zizoo\ProfileBundle\Entity\Profile", inversedBy="avatar")
-     * @ORM\JoinColumn(name="profile_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="Zizoo\CharterBundle\Entity\Charter", inversedBy="logo")
+     * @ORM\JoinColumn(name="charter_id", referencedColumnName="id")
      */
-    protected $profile;
+    protected $charter;
     
 
     /**
-     * Set profile
+     * Set charter
      *
-     * @param \Zizoo\ProfileBundle\Entity\Profile $profile
-     * @return ProfileAddress
+     * @param \Zizoo\CharterBundle\Entity\Charter $charter
+     * @return CharterLogo
      */
-    public function setProfile(Profile $profile = null)
+    public function setCharter(Charter $charter = null)
     {
-        $this->profile = $profile;
+        $this->charter = $charter;
     
         return $this;
     }
 
     /**
-     * Get profile
+     * Get charter 
      *
-     * @return \Zizoo\ProfileBundle\Entity\Profile 
+     * @return \Zizoo\CharterBundle\Entity\Charter 
      */
-    public function getProfile()
+    public function getCharter()
     {
-        return $this->profile;
+        return $this->charter;
     }
     
     /**
@@ -73,10 +73,32 @@ class ProfileAvatar extends Media {
     {
         // get rid of the __DIR__ so it doesn't screw up
         // when displaying uploaded doc/image in the view.
-        return 'images/profile/'.$this->profile->getId();
+        return 'images/charter/'.$this->charter->getId();
     }
     
     
+    
+    
+    
+
+    /**
+     * @ORM\PreRemove()
+     */
+    public function storeFilenameForRemove()
+    {
+        $this->temp = $this->getAbsolutePath();
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeUpload()
+    {
+        if (isset($this->temp)) {
+            unlink($this->temp);
+        }
+    }
+
     public function getAbsolutePath()
     {
         return null === $this->getPath()
@@ -97,6 +119,5 @@ class ProfileAvatar extends Media {
             ? null
             : $this->getUploadDir().'/'.$this->id.'.'.$this->getPath();
     }
-    
  
 }

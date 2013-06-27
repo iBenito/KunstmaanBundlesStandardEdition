@@ -1,6 +1,6 @@
 {% block zizoo_media_row %}
 {% spaceless %}
-    <div id="{{ id }}_container" class="zizoo_media_container">
+    <div id="{{ id }}_container" class="zizoo_media_container {% if part_of_collection == false %}single{% endif %}">
         {{ form_errors(form) }}
         {{ form_widget(form) }}
             
@@ -13,7 +13,8 @@
                     {% if allow_delete == true %}
                         <a href="#" id="{{ id }}_delete_btn" class="delete_btn">Delete</a>
                     {% endif %}
-                    <input id="{{ id }}_full_url" type="hidden" value="{{ asset(file_url) }}?ver={{ version }}" />
+                    <input id="{{ id }}_full_url" class="full_url" type="hidden" value="{{ asset(file_url) }}?ver={{ version }}" />
+                    <input id="{{ id }}_id" class="id" type="hidden" value="{{ id }}" />
                 </div>
             </div>
         {% endif %}
@@ -21,7 +22,16 @@
 {% endspaceless %}
 {% endblock zizoo_media_row %}
 
+{% block zizoo_media_js %}
+    <script type="text/javascript" src="{{ asset('bundles/zizoomedia/js/dropzone/dropzone.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/zizoomedia/js/jcrop/jquery.Jcrop.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/zizoomedia/js/jcrop/jquery.color.js') }}"></script>
+{% endblock zizoo_media_js %}
+
 {% block zizoo_media_css %}
+    <link href="{{ asset('bundles/zizoomedia/css/jcrop/jquery.Jcrop.css') }}" type="text/css" rel="stylesheet" />
+    
+    <link href="{{ asset('bundles/zizoomedia/css/dropzone/zizoo.css') }}" type="text/css" rel="stylesheet" />
     <style type="text/css">
         #{{ id }}_list {
             clear: both;
@@ -32,10 +42,26 @@
         }
         
         .zizoo_media_container {
-            display: inline;
-            float: left;
-            margin-right: 5px;
-            margin-bottom: 5px;
+            display: inline-block;
+            margin-right: 10px;
+            margin-bottom: 40px;
+            width: 122px;
+            height: 82px;
+            border: 1px solid #ACACAC;
+        }
+        
+        .dz-message {
+            display: inline-block;
+            margin-right: 10px;
+            margin-bottom: 40px;
+            width: 122px;
+            height: 82px;
+            border: 1px dotted black;
+            padding: 10px;
+        }
+        
+        .zizoo_media_container.single {
+            float: none;
         }
         
         .image_div {
@@ -69,90 +95,27 @@
 
 {% block zizoo_media_widget %}
     {% spaceless %}
-
+    {% if label %}
+        {{ form_label(form) }}
+    {% endif %}
+    {% if part_of_collection == false %}
+        {% if dropzone != false %}
+            <div id="{{ id }}_dropzone" class="dropzone_upload">
+                Drag & Drop a photo
+                <button>Upload Image</button>
+            </div>
+        {% endif %}
+        <div id="{{ id }}_crop_container">
+            <img src="" id="{{ id }}_crop_image" />
+            <button id="{{ id }}_save_btn" class="save_btn">Crop</button>
+            <button id="{{ id }}_cancel_btn" class="cancel_btn">Cancel</button>
+        </div>
+        {{ block('zizoo_media_js') }}
+    {% endif %}
     {{ block('form_widget') }}
-    
     {% endspaceless %}
         
     {% if part_of_collection == false %}
-    <script type="text/javascript">
-        var {{ id }}_jcrop_api = null;
-        
-        $(document).ready(function(){
-
-            $('#{{ id }}_delete_btn').click(function(){
-                $(this).parent('.image_div').parent().remove();
-            });
-
-            $('#{{ id }}_image').Jcrop({
-                onChange: {{ id }}_showCoords,
-                onSelect: {{ id }}_showCoords,
-                aspectRatio: {{ aspect_ratio }}
-            }, function(){
-                {{ id }}_jcrop_api = this;
-                {{ id }}_jcrop_api.disable();
-            });
-            
-            
-            $('#{{ id }}_crop_btn').click(function(){
-                var active = $(this).hasClass('active');
-                if (active){
-                    {{ id }}_jcrop_api.disable();
-                    $(this).html('Crop');
-                    $(this).removeClass('active');
-                } else {
-                    
-                    {{ id }}_jcrop_api.enable();
-                    
-                    $(this).html('Done');
-                    $(this).addClass('active');
-                }
-                
-            });
-
-        });
-        
-        function {{ id }}_showCoords(c){
-            var prefix = '{{ id }}';
-            prefix = prefix.replace('_image', '');
-  
-            $('#'+prefix + ' #'+prefix+'_x1').val(c.x);
-            $('#'+prefix + ' #'+prefix+'_y1').val(c.y);
-            $('#'+prefix + ' #'+prefix+'_x2').val(c.x2);
-            $('#'+prefix + ' #'+prefix+'_y2').val(c.y2);
-            $('#'+prefix + ' #'+prefix+'_w').val(c.w);
-            $('#'+prefix + ' #'+prefix+'_h').val(c.h);
-
-        }
-
-    </script>
-    {{ block('zizoo_media_css') }}
-    {% endif %}
-    
-{% endblock zizoo_media_widget %}
-    
-{% block zizoo_media_collection_widget %}
-    {% spaceless %}
-        <div id="{{ id }}_crop_container">
-            <img src="" id="{{ id }}_crop_image" />
-            <button id="{{ id }}_save_btn">Crop</button>
-            <button id="{{ id }}_cancel_btn">Cancel</button>
-            <input id="{{ id }}_x1" type="hidden" />
-            <input id="{{ id }}_y1" type="hidden" />
-            <input id="{{ id }}_x2" type="hidden" />
-            <input id="{{ id }}_y2" type="hidden" />
-            <input id="{{ id }}_w" type="hidden" />
-            <input id="{{ id }}_h" type="hidden" />
-            <input id="{{ id }}_id" type="hidden" />
-        </div>
-        <div id="{{ id }}_list">
-            {% for child in form %}
-                {{ form_row(child) }}
-            {% endfor %}
-        </div>
-        <div style="clear: both"></div>
-    {% endspaceless %}
-    
     <script type="text/javascript">
         {{ id }}_jcrop_api = null;
         
@@ -177,52 +140,26 @@
             $('#{{ id }}_w').val('');
             $('#{{ id }}_h').val('');
         }
-         
-        function {{ id }}_resort(){
-            $('#{{ id }}_list > div').each(function(index, el){
-                $(el).find('.order').val(index);
-            });
-        }
         
         function {{ id }}_cancelCrop(callback){
-            var id = $('#{{ id }}_id').val();
-            var prefix = '{{ id }}_'+id;
-            $('#'+prefix+'_x1').val('');
-            $('#'+prefix+'_y1').val('');
-            $('#'+prefix+'_x2').val('');
-            $('#'+prefix+'_y2').val('');
-            $('#'+prefix+'_w').val('');
-            $('#'+prefix+'_h').val('');
             {{ id }}_clearCrop();
             $('#{{ id }}_crop_container').slideUp();
             return false
         }
         
         function {{ id }}_saveCrop(){
-            var id = $('#{{ id }}_id').val();
-            var prefix = '{{ id }}_'+id;
-            $('#'+prefix+'_x1').val($('#{{ id }}_x1').val());
-            $('#'+prefix+'_y1').val($('#{{ id }}_y1').val());
-            $('#'+prefix+'_x2').val($('#{{ id }}_x2').val());
-            $('#'+prefix+'_y2').val($('#{{ id }}_y2').val());
-            $('#'+prefix+'_w').val($('#{{ id }}_w').val());
-            $('#'+prefix+'_h').val($('#{{ id }}_h').val());
-            {{ id }}_clearCrop();
             $('#{{ id }}_crop_container').slideUp();
             return false;
         }
         
         function {{ id }}_enableCrop(url, id){
-            if ({{ id }}_jcrop_api!=null) {
-                {{ id }}_clearCrop();
-                $('#{{ id }}_crop_container').slideUp(100, function(){
-                    {{ id }}_enableCrop(url, id);
-                });
-                return;
+            if ({{ id }}_jcrop_api != null){
+                {{ id }}_jcrop_api.destroy();
+                {{ id }}_jcrop_api = null;
             }
             
+            
             $('#{{ id }}_crop_image').attr('src', url);
-            $('#{{ id }}_id').val(id);
             $('#{{ id }}_crop_image').Jcrop({
                 onChange: {{ id }}_showCoords,
                 onSelect: {{ id }}_showCoords,
@@ -230,7 +167,7 @@
             }, function(){
                 {{ id }}_jcrop_api = this;
                     
-                var prefix = '{{ id }}_'+id;
+                var prefix = '{{ id }}';
                 var x1 = $('#'+prefix+'_x1').val();
                 var y1 = $('#'+prefix+'_y1').val();
                 var x2 = $('#'+prefix+'_x2').val();
@@ -248,52 +185,228 @@
         }
         
         $(document).ready(function(){
+
+            {% if dropzone != false %}
+                $('#{{ id }}_dropzone').dropzone({ 
+                    url:        '{{ path(dropzone['upload_url']) }}',
+                    paramName:  '{{ dropzone['upload_param_name'] }}',
+                    error:      function(file, error){
+                        eval('{{ dropzone['upload_error']|raw }}');
+                    }
+                });
+            {% endif %}
+            
+            $('#{{ id }}_save_btn').click({{ id }}_saveCrop);
+            $('#{{ id }}_cancel_btn').click({{ id }}_cancelCrop);
+            
+            $('#{{ id }}').parents('form').submit(function(){
+                $('#{{ id }} > div.remove').remove();
+                return true;
+            });
+            
+            $('#{{ id }}_container .image_div').hover(function(){
+                $(this).children('.controls, .overlay').stop().fadeIn();
+            }, function(){
+                $(this).children('.controls, .overlay').stop().fadeOut();
+            });
+            
+        
+            $('#{{ id }}_delete_btn').click(function(){
+                var listItem = $(this).parent('.controls').parent('.image_div').parent();
+                var remove = $(listItem).hasClass('remove');
+                if (remove){
+                    $(listItem).removeClass('remove');
+                    $(this).html('Delete');
+                } else {
+                    $(listItem).addClass('remove');
+                    $(this).html('Undelete');
+                }
+                return false;
+            });
+
+            $('#{{ id }}_crop_btn').click(function(){
+                var fullUrl = $('#{{ id }}_full_url').val();
+                {{ id }}_enableCrop(fullUrl, '{{ id }}');
+                return false;
+                
+            });
+
+        });
+
+    </script>
+    {{ block('zizoo_media_css') }}
+    {% endif %}
+    
+{% endblock zizoo_media_widget %}
+    
+{% block zizoo_media_collection_widget %}
+    {% spaceless %}
+        {% if dropzone != false %}
+            <div id="{{ id }}_dropzone">
+                
+            </div>
+        {% endif %}
+        <div id="{{ id }}_crop_container">
+            <img src="" id="{{ id }}_crop_image" />
+            <button id="{{ id }}_save_btn" class="save_btn">Crop</button>
+            <button id="{{ id }}_cancel_btn" class="cancel_btn">Cancel</button>
+            <input id="{{ id }}_x1" type="hidden" />
+            <input id="{{ id }}_y1" type="hidden" />
+            <input id="{{ id }}_x2" type="hidden" />
+            <input id="{{ id }}_y2" type="hidden" />
+            <input id="{{ id }}_w" type="hidden" />
+            <input id="{{ id }}_h" type="hidden" />
+            <input id="{{ id }}_id" type="hidden" />
+        </div>
+        <div id="{{ id }}_list" class="dropzone">
+            {% for child in form %}
+                {{ form_row(child) }}
+            {% endfor %}
+        </div>
+        
+    {% endspaceless %}
+    {{ block('zizoo_media_js') }}
+    <script type="text/javascript">
+        Dropzone.autoDiscover = false;
+        {{ id }}_jcrop_api      = null;
+        {{ id }}_dropzone_api   = null;
+        
+        function {{ id }}_showCoords(c){
+            $('#{{ id }}_x1').val(c.x);
+            $('#{{ id }}_y1').val(c.y);
+            $('#{{ id }}_x2').val(c.x2);
+            $('#{{ id }}_y2').val(c.y2);
+            $('#{{ id }}_w').val(c.w);
+            $('#{{ id }}_h').val(c.h);
+        }
+                 
+        function {{ id }}_clearCrop(){
+            if ({{ id }}_jcrop_api != null){
+                {{ id }}_jcrop_api.destroy();
+                {{ id }}_jcrop_api = null;
+            }
+            $('#{{ id }}_crop_image').attr('src', null);
+            $('#{{ id }}_id').val('');
+            $('#{{ id }}_x1').val('');
+            $('#{{ id }}_y1').val('');
+            $('#{{ id }}_y2').val('');
+            $('#{{ id }}_x2').val('');
+            $('#{{ id }}_w').val('');
+            $('#{{ id }}_h').val('');
+        }
+         
+        function {{ id }}_resort(){
+            $('#{{ id }}_list > div').each(function(index, el){
+                $(el).find('.order').val(index);
+            });
+        }
+        
+        function {{ id }}_cancelCrop(){
+            {{ id }}_clearCrop();
+            $('#{{ id }}_crop_container').slideUp();
+            return false
+        }
+        
+        function {{ id }}_saveCrop(){
+            
+            var id = $('#{{ id }}_id').val();
+            var x1 = $('#{{ id }}_x1').val();
+            var y1 = $('#{{ id }}_y1').val();
+            var x2 = $('#{{ id }}_x2').val();
+            var y2 = $('#{{ id }}_y2').val();
+            var w = $('#{{ id }}_w').val();
+            var h = $('#{{ id }}_h').val();
+            
+            {% if crop_js != false %}
+                eval('{{ crop_js|raw }}(id, x1,y1,x2,y2,w,h)');
+            {% endif %}
+                        
+            {{ id }}_clearCrop();
+            $('#{{ id }}_crop_container').slideUp();
+            return false;
+        }
+                
+        function {{ id }}_enableCrop(container){
+            if ({{ id }}_jcrop_api!=null) {
+                {{ id }}_clearCrop();
+                $('#{{ id }}_crop_container').slideUp(100, function(){
+                    {{ id }}_enableCrop(container);
+                });
+                return;
+            }
+            
+            var url = $(container).find('.full_url').val();
+            var id  = $(container).find('input[name^="zizoo_profile[avatar]"][name$="[id]"]').val();
+
+            $('#{{ id }}_crop_image').attr('src', url);
+            $('#{{ id }}_id').val(id);
+            $('#{{ id }}_crop_image').Jcrop({
+                onChange: {{ id }}_showCoords,
+                onSelect:  {{ id }}_showCoords,
+                aspectRatio: {{ aspect_ratio }}
+            }, function(){
+                {{ id }}_jcrop_api = this;
+                
+                $('#{{ id }}_crop_container').slideDown(1000, function(){
+                    
+                });
+            });
+        }
+        
+        $(document).ready(function(){
+            {% if dropzone != false %}
+            {{ id }}_dropzone_api = new Dropzone('#{{ id }}_list', { 
+                url:        '{{ path(dropzone['upload_url']) }}',
+                paramName:  '{{ dropzone['upload_param_name'] }}',
+                success: function(file, response){
+                    eval('{{ dropzone['upload_success_js']|raw }}(file, response)');
+                },
+                error: function(file, response){
+                    eval('{{ dropzone['upload_error_js']|raw }}(file, response)');
+                    file.previewElement.classList.add("dz-error");
+                    return file.previewElement.querySelector("[data-dz-errormessage]").textContent = response;
+                },
+                enqueueForUpload: true,
+                previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-success-mark\"><span>✔</span></div>\n  <div class=\"dz-error-mark\"><span>✘</span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
+            });
+            {% endif %}
             
             $('#{{ id }}_save_btn').click({{ id }}_saveCrop);
             $('#{{ id }}_cancel_btn').click({{ id }}_cancelCrop);
             
             {{ id }}_resort();
             
-            $('#{{ id }}_list').parents('form').submit(function(){
-                $('#{{ id }}_list > div.remove').remove();
-                return true;
-            });
             
-            $('#{{ id }}_list .image_div').hover(function(){
-                $(this).children('.controls, .overlay').stop().fadeIn();
-            }, function(){
-                $(this).children('.controls, .overlay').stop().fadeOut();
+            $('#{{ id }}_list').delegate('.image_div', 'mouseenter mouseleave', function(event){
+                if (event.type === 'mouseenter'){
+                    $(this).children('.controls, .overlay').stop().fadeIn();
+                } else {
+                    $(this).children('.controls, .overlay').stop().fadeOut();
+                }
             });
             
             $('#{{ id }}_list').sortable({
+                items: '.zizoo_media_container',
                 stop: function(e, ui){
                     {{ id }}_resort();
                 }
             });
             
-            {% for child in form %}
-               
-               $('#{{ id }}_{{ child.vars.name }}_crop_btn').click(function(){
-                    var fullUrl = $('#{{ id }}_{{ child.vars.name }}_full_url').val();
-                    {{ id }}_enableCrop(fullUrl, {{ child.vars.name }});
-                    return false;
-                });
-               
-               $('#{{ id }}_{{ child.vars.name }}_delete_btn').click(function(){
-                    var listItem = $(this).parent('.controls').parent('.image_div').parent();
-                    var remove = $(listItem).hasClass('remove');
-                    if (remove){
-                        $(listItem).removeClass('remove');
-                        $(this).html('Delete');
-                    } else {
-                        $(listItem).addClass('remove');
-                        $(this).html('Undelete');
-                    }
-                    return false;
-                });
-               
-               
-            {% endfor %}
+            $('#{{ id }}_list').delegate('.crop_btn', 'click', function(){
+                {{ id }}_enableCrop($(this).parents('.zizoo_media_container'));
+                return false;
+            });
+            
+            $('#{{ id }}_list').delegate('.delete_btn', 'click', function(){
+                {% if delete_js != false %}
+                {{ id }}_cancelCrop();
+                var container = $(this).parents('.zizoo_media_container');
+                eval('{{ delete_js|raw }}(container);');
+                {% endif %}
+                return false;
+            });
+            
+            
         });
         
     </script>
