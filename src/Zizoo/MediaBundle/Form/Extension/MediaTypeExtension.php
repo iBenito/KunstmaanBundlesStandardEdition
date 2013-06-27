@@ -29,7 +29,7 @@ class MediaTypeExtension extends AbstractTypeExtension
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setOptional(array('file_path', 'aspect_ratio'));
+        $resolver->setOptional(array('file_path', 'aspect_ratio', 'dropzone', 'crop_js', 'delete_js'));
     }
 
     /**
@@ -65,7 +65,26 @@ class MediaTypeExtension extends AbstractTypeExtension
         } else {
             $view->vars['allow_delete'] = $options['allow_delete'];
         }
-                
+        
+        if (array_key_exists('dropzone', $parentOptions)){
+            $view->vars['dropzone'] = $parentOptions['dropzone'];
+        } else {
+            $view->vars['dropzone'] = $options['dropzone'];
+        }
+        
+        if (array_key_exists('crop_js', $parentOptions)){
+            $view->vars['crop_js'] = $parentOptions['crop_js'];
+        } else {
+            $view->vars['crop_js'] = $options['crop_js'];
+        }
+        
+        if (array_key_exists('delete_js', $parentOptions)){
+            $view->vars['delete_js'] = $parentOptions['delete_js'];
+        } else {
+            $view->vars['delete_js'] = $options['delete_js'];
+        }
+        
+        
         if (array_key_exists('file_path', $options)) {
             $media = $form->getData();
 

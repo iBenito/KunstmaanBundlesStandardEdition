@@ -1,0 +1,11 @@
+ZizooMediaBundle_Media_CropMedia:
+  pattern:    /crop-media
+  defaults:   {_controller: ZizooMediaBundle:Media:cropMedia }
+  requirements:
+        _method:  POST
+        
+ZizooMediaBundle_Media_DeleteMedia:
+  pattern:    /delete-media
+  defaults:   {_controller: ZizooMediaBundle:Media:deleteMedia }
+  requirements:
+        _method:  POST

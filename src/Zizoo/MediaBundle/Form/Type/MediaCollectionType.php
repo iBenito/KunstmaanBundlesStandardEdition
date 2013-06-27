@@ -13,7 +13,8 @@ class MediaCollectionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(   'cascade_validation'    => true,
-                                        'aspect_ratio'          => 0));
+                                        'aspect_ratio'          => 0,
+                                        'dropzone'              => false));
     }
 
     

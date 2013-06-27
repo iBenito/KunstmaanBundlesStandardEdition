@@ -9,27 +9,15 @@ ZizooProfileBundle_Profile_Edit:
     defaults: { _controller: ZizooProfileBundle:Profile:edit }
     requirements:
         _method:  GET|POST
+
+ZizooProfileBundle_Profile_AddAvatar:
+    pattern:  /account/profile/add_avatar
+    defaults: { _controller: ZizooProfileBundle:Profile:addAvatar }
+    requirements:
+        _method:  POST
         
-ZizooProfileBundle_Profile_Edit_Widget:
-    pattern:  /account/profile/{id}/edit_widget
-    defaults: { _controller: ZizooProfileBundle:Profile:editWidget }
+ZizooProfileBundle_Profile_GetAvatars:
+    pattern:  /account/profile/avatars
+    defaults: { _controller: ZizooProfileBundle:Profile:getAvatars }
     requirements:
         _method:  GET
-        
-ZizooProfileBundle_Profile_Update:
-    pattern:  /account/profile/{id}/{formPath}/{viewTemplate}/update
-    defaults: { _controller: ZizooProfileBundle:Profile:update }
-    requirements: { _method: post }
-    
-ZizooProfileBundle_single_media:
-    pattern:  /account/profile/test/single_media
-    defaults: { _controller: ZizooProfileBundle:Profile:singleMedia }
-    requirements: { _method: get }
-    
-ZizooProfileBundle_collection_media:
-    pattern:  /account/profile/test/collection_media
-    defaults: { _controller: ZizooProfileBundle:Profile:collectionMedia }
-    requirements: { _method: get }
-    requirements:
-      _method: POST
-      id: \d+

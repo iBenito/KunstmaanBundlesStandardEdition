@@ -2,21 +2,37 @@
 Zizoo\CharterBundle\Entity\Charter:
     properties:
         charterName:
-            - NotBlank: { message: zizoo_charter.error.charter_name_not_blank, groups: [registration] }
+            - NotBlank: { message: zizoo_charter.error.charter_name_not_blank, groups: [registration, default] }
             
         phone:
-            - NotBlank: { message: zizoo_charter.error.charter_phone_not_blank, groups: [registration] }
+            - NotBlank: { message: zizoo_charter.error.charter_phone_not_blank, groups: [registration, default] }
+            
+        about:
+            - NotBlank: { message: zizoo_charter.error.charter_about_not_blank, groups: [default] }
+            
+        logo:
+            - NotNull: { message: zizoo_charter.error.charter_logo_not_null, groups: [default] }            
             
 Zizoo\AddressBundle\Entity\CharterAddress:
     properties:
         addressLine1:
-            - NotBlank: { message: zizoo_charter.error.charter_address_street_not_blank, groups: [registration] }
+            - NotBlank: { message: zizoo_charter.error.charter_address_street_not_blank, groups: [registration, default] }
 
         postcode:
-            - NotBlank: { message: zizoo_charter.error.charter_address_postcode_not_blank, groups: [registration] }
+            - NotBlank: { message: zizoo_charter.error.charter_address_postcode_not_blank, groups: [registration, default] }
             
         locality:
-            - NotBlank: { message: zizoo_charter.error.charter_address_locality_not_blank, groups: [registration] }
+            - NotBlank: { message: zizoo_charter.error.charter_address_locality_not_blank, groups: [registration, default] }
             
         country:
-            - NotNull: { message: zizoo_charter.error.charter_address_country_not_null, groups: [registration] }
+            - NotNull: { message: zizoo_charter.error.charter_address_country_not_null, groups: [registration, default] }
+            
+Zizoo\CharterBundle\Entity\CharterLogo:
+    properties:
+        mimeType:
+            - Regex:
+                pattern: "/image\\/(png|jpeg)/"
+                match:   true
+                message: Only png and jpeg images are allowed
+                groups: [default]
+                 

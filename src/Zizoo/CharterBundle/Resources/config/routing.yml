@@ -46,7 +46,7 @@ ZizooCharterBundle_Charter_Profile:
     pattern:  /account/profile
     defaults: { _controller: ZizooCharterBundle:Charter:profile }
     requirements:
-        _method:  GET
+        _method:  GET|POST
         
 ZizooCharterBundle_Charter_Boats:
     pattern:  /account/boats/{listing_status}

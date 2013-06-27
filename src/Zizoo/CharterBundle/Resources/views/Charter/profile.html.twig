@@ -1,9 +1,12 @@
 {% extends 'ZizooCharterBundle::layout.html.twig' %}
 
-{% trans_default_domain "labels" %}
-
-
-
 {% block body %}
-    {% render controller('ZizooCharterBundle:Profile:editWidget', { 'profile': profile, 'formPath': formPath }) %}
-{% endblock body %}
+
+    <form action="{{ path('ZizooCharterBundle_Charter_Profile') }}" method="post" {{ form_enctype(form) }}>
+    
+        {{ form_widget(form) }}
+
+        <button type="submit">Save</button>
+    </form>
+
+{% endblock %}

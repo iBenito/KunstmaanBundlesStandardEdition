@@ -28,9 +28,9 @@ class AddressType extends AbstractType
                                             },
                                         ))
             ->add('lat', 'hidden', array(   'required'  => false,
-                                            'read_only'  => true, 'data' => '-25.363882'))
+                                            'read_only'  => true))
             ->add('lng', 'hidden', array(   'required'  => false,
-                                            'read_only'  => true, 'data' => '131.044922'));
+                                            'read_only'  => true));
                      
     }
 

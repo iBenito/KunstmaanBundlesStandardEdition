@@ -2,12 +2,20 @@
 // src/Zizoo/CharterBundle/Form/Type/CharterType.php
 namespace Zizoo\CharterBundle\Form\Type;
 
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class CharterType extends AbstractType
 {
+    
+    protected $container;
+    
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -21,6 +29,9 @@ class CharterType extends AbstractType
                                                                 'map_update'        => $options['map_update'],
                                                                 'map_drag'          => $options['map_drag']));
         $builder->add('charter_phone', 'text', array('label' => 'zizoo_charter.label.charter_phone', 'property_path' => 'phone'));
+        
+        $charterSubscriber = $this->container->get('zizoo_charter.charter_subscriber');
+        $builder->addEventSubscriber($charterSubscriber);
     }
 
 
@@ -30,13 +41,13 @@ class CharterType extends AbstractType
                                         'cascade_validation'    => true,
                                         'validation_groups'     => 'registration',
                                         'map_show'              => true,
-                                        'map_update'            => false,
-                                        'map_drag'              => false));
+                                        'map_update'            => true,
+                                        'map_drag'              => true));
     }
 
     public function getName()
     {
-        return 'charter';
+        return 'zizoo_charter';
     }
 }
 ?>

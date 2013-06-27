@@ -22,7 +22,6 @@ class MediaType extends AbstractType
             ->add('h', 'hidden', array( 'required'       => false))
         ;
         
-        
     }
     
 
@@ -32,6 +31,8 @@ class MediaType extends AbstractType
                                         'data_class'            => 'Zizoo\MediaBundle\Entity\Media',
                                         'aspect_ratio'          => 0,
                                         'allow_delete'          => false,
+                                        'dropzone'              => false,
+                                        'crop_js'               => false,
                                         'label'                 => null));
     }
 

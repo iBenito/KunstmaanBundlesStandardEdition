@@ -129,16 +129,45 @@ class CharterController extends Controller
      */
     public function profileAction()
     {
+        $request    = $this->getRequest();
         $user       = $this->getUser();
         $charter    = $user->getCharter();
         
         if (!$charter) {
             return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
         }
-      
+        
+        
+        $charterType = $this->container->get('zizoo_charter.charter_type');
+        $form = $this->createForm($charterType, $charter, array('map_drag'          => true, 
+                                                                'map_update'        => true,
+                                                                'validation_groups' => array('default')));
+        
+        if ($request->isMethod('post')){
+            $form->bind($request);
+            $charter = $form->getData();
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                
+                
+                //setting the updated field manually for file upload DO NOT REMOVE
+                $charter->setUpdated(new \DateTime());
+                
+                $address    = $charter->getAddress();
+                $logo       = $charter->getLogo();
+                
+
+                $em->persist($charter);
+                $em->persist($address);
+                
+                $em->flush();
+                return $this->redirect($this->generateUrl('ZizooCharterBundle_Charter_Profile'));
+            }
+            
+        }
+        
         return $this->render('ZizooCharterBundle:Charter:profile.html.twig',array(
-            'charter'   => $charter,
-            'formPath'  => $this->getRequest()->get('_route')
+            'form'   => $form->createView()
         ));
 
     }

@@ -18,7 +18,7 @@ class ProfileType extends AbstractType
     {
         $this->container = $container;
     }
-    
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -32,16 +32,21 @@ class ProfileType extends AbstractType
                 'multiple'  => true,
                 'attr'  => array('title'=>'select'),
                 'property' => 'name',))
-            ->add('avatar', 'zizoo_media_collection', array(    'type'          => 'zizoo_media',
-                                                                'property_path' => 'avatar',
-                                                                'label'         => 'Avatar',
-                                                                'file_path'     => 'webPath',
-                                                                'aspect_ratio'  => 1.48,
-                                                                'allow_delete'  => true
+            ->add('avatar', 'zizoo_media_collection', array(    'type'              => 'zizoo_media',
+                                                                'property_path'     => 'avatar',
+                                                                'label'             => 'Avatar',
+                                                                'file_path'         => 'webPath',
+                                                                'aspect_ratio'      => 1.48,
+                                                                'crop_js'           => 'avatarCrop',
+                                                                'delete_js'         => 'avatarDelete',
+                                                                'dropzone'          => array(
+                                                                    'upload_url'        => 'ZizooProfileBundle_Profile_AddAvatar',
+                                                                    'upload_param_name' => 'avatarFile',
+                                                                    'upload_error_js'   => 'avatarUploadError',
+                                                                    'upload_success_js' => 'avatarUploadSuccess',
+                                                                ),
+                                                                'allow_delete'      => true
                                                                 ))
-            ->add('avatar_file', 'file', array(     'required'      => false, 
-                                                    'label'         => 'New',
-                                                    'property_path' => 'avatarFile'))
             ->add('profile_address', 'zizoo_address', array('label' => 'zizoo_charter.label.profile_address',
                     'property_path'     => 'address',
                     'validation_groups' => 'registration',
@@ -49,9 +54,7 @@ class ProfileType extends AbstractType
                     'map_show'          => $options['map_show'],
                     'map_update'        => $options['map_update'],
                     'map_drag'          => $options['map_drag']))
-            ->add('document_file', 'file', array(   'required'      => false, 
-                                                    'label'         => 'New',
-                                                    'property_path' => 'documentFile'));
+            ;
         
         $profileSubscriber = $this->container->get('zizoo_profile.profile_subscriber');
         $builder->addEventSubscriber($profileSubscriber);

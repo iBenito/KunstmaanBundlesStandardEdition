@@ -114,6 +114,7 @@
         max-width: none;
     }
     </style>
+   
     <script type="text/javascript">
     var {{id}}_map = null;
     var {{id}}_marker = null;
@@ -153,7 +154,7 @@
             
             
         {% if map_update is not null and map_update == true %}
-            $('#charter_registration_charter_charter_address input, #charter_registration_charter_charter_address select').change(function(){
+            $('#{{ id }} input, #{{ id }} select').change(function(){
                 getAddress();
             });
         {% endif %}
@@ -161,7 +162,7 @@
 
     function getAddress(){
         var {{id}}address = new Array();
-        $('#charter_registration_charter_charter_address input:not(#{{form.lat.vars.id}}):not(#{{form.lng.vars.id}})').each(function(index, el){
+        $('#{{ id }} input:not(#{{form.lat.vars.id}}):not(#{{form.lng.vars.id}})').each(function(index, el){
             {{id}}address.push($(el).val());
         });
         {{id}}address.push($('#{{form.country.vars.id}} option:selected').html());

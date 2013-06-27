@@ -4,6 +4,8 @@ namespace Zizoo\CharterBundle\Entity;
 
 use Zizoo\BaseBundle\Entity\BaseEntity;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -73,21 +75,19 @@ class Charter extends BaseEntity
      */
     protected $phone;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $picture;
     
-    /**
-     * @var File  - not a persisted field!
-     */
-    protected $file;
     
     /**
      * @ORM\OneToOne(targetEntity="Zizoo\AddressBundle\Entity\CharterAddress", mappedBy="charter")
      */
     protected $address;
     
+    /**
+     * @ORM\OneToOne(targetEntity="Zizoo\CharterBundle\Entity\CharterLogo", mappedBy="charter")
+     */
+    protected $logo;
+    
+            
     /**
      * Get id
      *
@@ -270,29 +270,7 @@ class Charter extends BaseEntity
         return $this->phone;
     }
 
-    /**
-     * Set picture
-     *
-     * @param string $picture
-     * @return Charter
-     */
-    public function setPicture($picture)
-    {
-        $this->picture = $picture;
-    
-        return $this;
-    }
-
-    /**
-     * Get picture
-     *
-     * @return string 
-     */
-    public function getPicture()
-    {
-        return $this->picture;
-    }
-
+   
 
     /**
      * Set charter name
@@ -364,7 +342,47 @@ class Charter extends BaseEntity
         return $this->address;
     }
     
+    public function setLogo(CharterLogo $logo=null)
+    {
+        $this->logo = $logo;
+        return $this;
+    }
+    
+    public function getLogo()
+    {
+        return $this->logo;
+    }
+    
     public function __toString() {
         return $this->id;
     }    
+    
+    
+    
+    /**
+     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
+     * @Assert\File(maxSize="2M")
+     */
+    public $logoFile;
+    
+    /**
+     * Sets file.
+     *
+     * @param UploadedFile $file
+     */
+    public function setLogoFile(UploadedFile $file = null)
+    {
+        $this->logoFile = $file;
+    }
+
+    /**
+     * Get file.
+     *
+     * @return UploadedFile
+     */
+    public function getLogoFile()
+    {
+        return $this->logoFile;
+    }
+    
 }
