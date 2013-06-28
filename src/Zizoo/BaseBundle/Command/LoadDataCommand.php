@@ -10,8 +10,9 @@ use Zizoo\AddressBundle\Entity\ProfileAddress;
 use Zizoo\ProfileBundle\Entity\Profile;
 use Zizoo\ProfileBundle\Entity\Profile\NotificationSettings;
 use Zizoo\MessageBundle\Entity\MessageType;
+use Zizoo\BoatBundle\Entity\Amenities;
 use Zizoo\BoatBundle\Entity\Equipment;
-use Zizoo\BoatBundle\Entity\IncludedExtra;
+use Zizoo\BoatBundle\Entity\Extra;
 use Zizoo\BoatBundle\Entity\BoatType;
 use Zizoo\CrewBundle\Entity\SkillType;
 use Zizoo\BookingBundle\Entity\PaymentMethod;
@@ -213,23 +214,40 @@ class LoadDataCommand extends ContainerAwareCommand
         }
     }
 
+    private function loadAmenities()
+    {
+        $getAmenities = file_get_contents(dirname(__FILE__).'/Data/boat_amenities.json');
+       
+        $amenities = json_decode($getAmenities);
+        
+        foreach ($amenities as $e)
+        {
+            $amenitiesEntity = new Amenities();
+            $amenitiesEntity->setId($e->id);
+            $amenitiesEntity->setName($e->name);
+            $amenitiesEntity->setOrder($e->order);
+            
+            $this->em->persist($amenitiesEntity);
+        }
+    }
+
     private function loadEquipment()
     {
         $getEquipment = file_get_contents(dirname(__FILE__).'/Data/boat_equipment.json');
-       
+
         $equipment = json_decode($getEquipment);
-        
+
         foreach ($equipment as $e)
         {
             $equipmentEntity = new Equipment();
             $equipmentEntity->setId($e->id);
             $equipmentEntity->setName($e->name);
             $equipmentEntity->setOrder($e->order);
-            
+
             $this->em->persist($equipmentEntity);
         }
     }
-    
+
     private function loadPaymentMethods()
     {
         $getPaymentMethods = file_get_contents(dirname(__FILE__).'/Data/payment_methods.json');
@@ -248,20 +266,20 @@ class LoadDataCommand extends ContainerAwareCommand
         }
     }
     
-    private function loadIncludedExtras()
+    private function loadExtras()
     {
-        $getIncludedExtras = file_get_contents(dirname(__FILE__).'/Data/included_extras.json');
+        $getExtras = file_get_contents(dirname(__FILE__).'/Data/included_extras.json');
        
-        $includedExtras = json_decode($getIncludedExtras);
+        $extras = json_decode($getExtras);
         
-        foreach ($includedExtras as $e)
+        foreach ($extras as $e)
         {
-            $includedExtra = new IncludedExtra();
-            $includedExtra->setId($e->id);
-            $includedExtra->setName($e->name);
-            $includedExtra->setOrder($e->order);
+            $extra = new Extra();
+            $extra->setId($e->id);
+            $extra->setName($e->name);
+            $extra->setOrder($e->order);
             
-            $this->em->persist($includedExtra);
+            $this->em->persist($extra);
         }
     }
     
@@ -338,8 +356,9 @@ class LoadDataCommand extends ContainerAwareCommand
         $this->loadCountries();
         $this->loadMarinas();
         $this->loadLanguages();
+        $this->loadAmenities();
         $this->loadEquipment();
-        $this->loadIncludedExtras();
+        $this->loadExtras();
         $this->loadBoatTypes();
         $this->loadSkillTypes();
         $this->loadPaymentMethods();

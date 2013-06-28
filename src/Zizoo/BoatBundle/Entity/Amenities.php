@@ -5,12 +5,12 @@ namespace Zizoo\BoatBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * BoatType
+ * Boat Amenities
  *
- * @ORM\Table(name="boat_asset_equipment")
+ * @ORM\Table(name="boat_asset_amenities")
  * @ORM\Entity
  */
-class Equipment extends BoatAssetBase
+class Amenities extends BoatAssetBase
 {
 
 }

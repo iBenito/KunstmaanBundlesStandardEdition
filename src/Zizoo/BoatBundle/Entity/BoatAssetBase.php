@@ -5,11 +5,15 @@ namespace Zizoo\BoatBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Extras
  *
- * @ORM\Entity(repositoryClass="Zizoo\BoatBundle\Entity\IncludedExtraRepository")
- * @ORM\Table(name="boatincluded_extra", uniqueConstraints={@ORM\UniqueConstraint(name="id", columns={"name"})})
+ * @ORM\Entity
+ * @ORM\Table(name="boat_assets", uniqueConstraints={@ORM\UniqueConstraint(name="id", columns={"name"})})
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({"amenities" = "Amenities", "equipment" = "Equipment", "extra" = "Extra"})
  */
-class IncludedExtra
+class BoatAssetBase
 {
 
     /**
@@ -26,19 +30,19 @@ class IncludedExtra
      * @ORM\Column(name="name", type="string", length=255)
      */
     protected $name;
-    
+
     /**
      * @var integer
      *
      * @ORM\Column(name="display_order", type="integer")
      */
     private $order;
-    
+
     /**
-     * @ORM\ManyToMany(targetEntity="Zizoo\BoatBundle\Entity\Boat", mappedBy="includedExtra")
+     * @ORM\ManyToMany(targetEntity="Zizoo\BoatBundle\Entity\Boat", mappedBy="equipment")
      */
     protected $boats;
-    
+
 
     public function __construct($id=null, $name=null, $order=null) {
         $this->id       = $id;
@@ -49,14 +53,14 @@ class IncludedExtra
     public function setId($id)
     {
         $this->id = $id;
-        
+
         return $this;
     }
-    
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -72,14 +76,14 @@ class IncludedExtra
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -95,14 +99,14 @@ class IncludedExtra
     public function setOrder($order)
     {
         $this->order = $order;
-    
+
         return $this;
     }
 
     /**
      * Get order
      *
-     * @return integer 
+     * @return integer
      */
     public function getOrder()
     {
@@ -118,7 +122,7 @@ class IncludedExtra
     public function addBoat(\Zizoo\BoatBundle\Entity\Boat $boats)
     {
         $this->boats[] = $boats;
-    
+
         return $this;
     }
 
@@ -135,7 +139,7 @@ class IncludedExtra
     /**
      * Get boats
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getBoats()
     {

@@ -95,8 +95,8 @@ class BoatController extends Controller
            $map->addMarker($marker);
         }
         
-        $equipment         = $em->getRepository('ZizooBoatBundle:Equipment')->findAll();
-        $allIncludedExtras = $em->getRepository('ZizooBoatBundle:IncludedExtra')->findAll();
+        $equipment = $em->getRepository('ZizooBoatBundle:Equipment')->findAll();
+        $amenities = $em->getRepository('ZizooBoatBundle:Amenities')->findAll();
 
         $reservations   = $boat->getReservation();
         $prices         = $boat->getPrice();
@@ -110,7 +110,7 @@ class BoatController extends Controller
             'reservations'      => $reservations,
             'prices'            => $prices,
             'equipment'         => $equipment,
-            'included_extras'   => $allIncludedExtras,
+            'amenities'   => $amenities,
             'request'           => $request
         ));
     }

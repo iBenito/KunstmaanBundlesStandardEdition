@@ -39,7 +39,17 @@ class BoatType extends AbstractType
                                                 'required'  => false))
             ->add('crew_price', 'number', array('label'     => 'Total price of crew per day',
                                                 'required'  => false))
-            ->add('address',new BoatAddressType());
+            ->add('address',new BoatAddressType())
+            ->add('amenities', 'entity', array(
+                'class' => 'ZizooBoatBundle:Amenities',
+                'multiple'  => true,
+                'expanded' => true,
+                'property' => 'name',))
+            ->add('equipment', 'entity', array(
+                'class' => 'ZizooBoatBundle:Equipment',
+                'multiple'  => true,
+                'expanded' => true,
+                'property' => 'name',));
         
     }
 

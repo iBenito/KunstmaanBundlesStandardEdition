@@ -3,7 +3,6 @@
 namespace Zizoo\BoatBundle\Entity;
 
 use Zizoo\BoatBundle\Entity\Boat;
-use Zizoo\BoatBundle\Entity\OptionalExtra;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -11,10 +10,10 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\ResultSetMapping;
 
 /**
- * IncludedExtraRepository
+ * ExtraRepository
  *
  */
-class IncludedExtraRepository extends EntityRepository
+class ExtraRepository extends EntityRepository
 {
     public function getIncludedExtrasForBoat(Boat $boat)
     {
