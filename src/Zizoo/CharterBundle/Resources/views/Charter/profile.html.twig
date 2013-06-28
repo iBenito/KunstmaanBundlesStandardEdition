@@ -1,8 +1,94 @@
-{% extends 'ZizooCharterBundle::layout.html.twig' %}
 
 {% block body %}
 
-    <form action="{{ path('ZizooCharterBundle_Charter_Profile') }}" method="post" {{ form_enctype(form) }}>
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+            {{ flashMessage}}
+        </div>
+    {% endfor %}
+    
+    <script type="text/javascript">
+        var uploadedFiles = new Array();
+        
+        function removeUploadedFiles(){
+            for (var i=0; i<uploadedFiles.length; i++){
+                zizoo_charter_logo_dropzone_api.removeFile(uploadedFiles[i]);
+            }
+            uploadedFiles = new Array();
+        }
+        
+        function getLogo(){
+            $.ajax({
+                url:        '{{ path('ZizooCharterBundle_Charter_GetLogo') }}',
+                type:       'get',
+                success:    function(data, textStatus, XHR){
+                    var newImageDiv     = $(data).find('.image_div');
+                    var newCharterLogo  = $(data).find('#zizoo_charter_logo');
+                    $('#zizoo_charter_logo_container .image_div').html($(newImageDiv).html());
+                    $('#zizoo_charter_logo_container #zizoo_charter_logo').html($(newCharterLogo).html());
+                    removeUploadedFiles();
+                    
+                    var src = $(newImageDiv).find('.controls .full_url').val();
+                    $('#dashboard_charter .avatar img').attr('src', src);
+                }
+            });
+        }
+        
+        function logoUploadError(file, response){
+            var queuedFiles     = zizoo_charter_logo_dropzone_api.getQueuedFiles();
+            var uploadingFiles  = zizoo_charter_logo_dropzone_api.getUploadingFiles();
+            if (queuedFiles.length>0 || uploadingFiles.length>0 || uploadedFiles.length==0) return;
+           
+            getLogo();
+        }
+        
+        function logoUploadSuccess(file, response){
+            if (file!=null) uploadedFiles.push(file);
+            var queuedFiles     = zizoo_charter_logo_dropzone_api.getQueuedFiles();
+            var uploadingFiles  = zizoo_charter_logo_dropzone_api.getUploadingFiles();
+            if (queuedFiles.length>0 || uploadingFiles.length>0) return;
+           
+            getLogo();
+        }
+        
+        function logoCrop(id, x1, y1, x2, y2, w, h){
+            $.ajax({
+                url:            '{{ path('ZizooMediaBundle_Media_CropMedia') }}',
+                type:           'post',
+                data: {
+                    id:             id,
+                    entity_type:    'ZizooCharterBundle:CharterLogo',
+                    x1:             x1,
+                    y1:             y1,
+                    x2:             x2,
+                    y2:             y2,
+                    w:              w,
+                    h:              h
+                },
+                success: function(data){
+                    logoUploadSuccess(null,{id: id});
+                }
+            });
+        }
+        
+        function logoDelete(container){
+            var id  = $(container).find('.media_id').val();
+            $(container).find('.image_div').html('');
+            $.ajax({
+                url:            '{{ path('ZizooMediaBundle_Media_DeleteMedia') }}',
+                type:           'post',
+                data: {
+                    id:             id,
+                    entity_type:    'ZizooCharterBundle:CharterLogo'
+                },
+                success: function(data){
+                }
+            });
+        }
+        
+    </script>
+
+    <form method="post" {{ form_enctype(form) }}>
     
         {{ form_widget(form) }}
 

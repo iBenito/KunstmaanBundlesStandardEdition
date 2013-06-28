@@ -104,12 +104,22 @@ class MessageController extends BaseController
         $grid->addColumn('Is Read', array('name' => 'IsRead', 'jsonmap' => 'cell.7', 'hidden' => true, 'sortable' => false, 'search' => false));
         $grid->addColumn('TypeInt', array('name' => 'TypeInt', 'jsonmap' => 'cell.8', 'hidden' => true, 'sortable' => false, 'search' => false));
         
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        if ($user->getCharter()!=null){
+            $inboxUrl   = 'ZizooBaseBundle_Dashboard_CharterInbox';
+            $sentUrl    = 'ZizooBaseBundle_Dashboard_CharterSent';
+        } else {
+            $inboxUrl   = 'ZizooBaseBundle_Dashboard_UserInbox';
+            $sentUrl    = 'ZizooBaseBundle_Dashboard_UserSent';
+        }
         
         $grid->setExtraParams(array( 'show_threads'         => (true?'checked="checked"':''),
                                         'loadComplete'      => 'loadComplete',
                                         'url_threads'       => $this->container->get('router')->generate('fos_message_inbox', array('show_threads' => true)),
                                         'url_no_threads'    => $this->container->get('router')->generate('fos_message_inbox', array('show_threads' => false)),
-                                        'extraJS'           => $extraJS));
+                                        'extraJS'           => $extraJS,
+                                        'inbox_url'         => $inboxUrl,
+                                        'sent_url'          => $sentUrl));
         
         
         return $grid->render();

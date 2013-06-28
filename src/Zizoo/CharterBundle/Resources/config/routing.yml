@@ -42,8 +42,8 @@ ZizooCharterBundle_Charter_ShowBoats:
         _method:  GET
 
 # Charter (edit)
-ZizooCharterBundle_Charter_Profile:
-    pattern:  /account/profile
+ZizooCharterBundle_Charter_Edit:
+    pattern:  /account/profile/edit
     defaults: { _controller: ZizooCharterBundle:Charter:profile }
     requirements:
         _method:  GET|POST
@@ -84,3 +84,15 @@ ZizooCharterBundle_Charter_Payments:
     defaults: { _controller: ZizooCharterBundle:Charter:payments }
     requirements:
         _method:  GET|POST
+        
+ZizooCharterBundle_Charter_SetLogo:
+    pattern:  /account/profile/set_logo
+    defaults: { _controller: ZizooCharterBundle:Charter:setLogo }
+    requirements:
+        _method:  POST
+        
+ZizooCharterBundle_Charter_GetLogo:
+    pattern:  /account/profile/logo
+    defaults: { _controller: ZizooCharterBundle:Charter:getLogo }
+    requirements:
+        _method:  GET

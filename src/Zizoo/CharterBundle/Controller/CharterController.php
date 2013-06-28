@@ -4,6 +4,7 @@ namespace Zizoo\CharterBundle\Controller;
 
 use Zizoo\CharterBundle\Form\Type\CharterRegistrationType;
 use Zizoo\CharterBundle\Entity\CharterRepository;
+use Zizoo\CharterBundle\Entity\CharterLogo;
 
 use Zizoo\BillingBundle\Form\Type\PayoutSettingsType;
 use Zizoo\BillingBundle\Form\Model\PayoutSettings;
@@ -15,6 +16,10 @@ use Zizoo\BillingBundle\Form\Model\PayPal;
 use Zizoo\ReservationBundle\Entity\Reservation;
 
 use Doctrine\ORM\Query;
+
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,7 +66,7 @@ class CharterController extends Controller
         $user       = $this->getUser();
         $charter    = $user->getCharter();
         if (!$charter){
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_CharterDashboard'));
         }
         
         $sort               = $request->query->get('sort', 'b.id');
@@ -134,7 +139,7 @@ class CharterController extends Controller
         $charter    = $user->getCharter();
         
         if (!$charter) {
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_CharterDashboard'));
         }
         
         
@@ -154,14 +159,14 @@ class CharterController extends Controller
                 $charter->setUpdated(new \DateTime());
                 
                 $address    = $charter->getAddress();
-                $logo       = $charter->getLogo();
-                
+                $charter->setLogo(null);
 
                 $em->persist($charter);
                 $em->persist($address);
                 
                 $em->flush();
-                return $this->redirect($this->generateUrl('ZizooCharterBundle_Charter_Profile'));
+                $this->get('session')->setFlash('notice', 'Your charter profile was updated!');
+                return $this->redirect($this->generateUrl('ZizooCharterBundle_Charter_Edit'));
             }
             
         }
@@ -198,7 +203,7 @@ class CharterController extends Controller
         $charter            = $user->getCharter();
         
         if (!$charter) {
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_CharterDashboard'));
         }
         
         $braintreeCustomer  = $userService->getPaymentUser($user);
@@ -302,7 +307,7 @@ class CharterController extends Controller
         $charter    = $user->getCharter();
         
         if (!$charter) {
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_CharterDashboard'));
         }
         
         
@@ -318,7 +323,7 @@ class CharterController extends Controller
         $charter    = $user->getCharter();
         
         if (!$charter) {
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_CharterDashboard'));
         }
         
         $router     = $this->container->get('router');
@@ -538,7 +543,7 @@ class CharterController extends Controller
         $charter    = $user->getCharter();
         
         if (!$charter) {
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_CharterDashboard'));
         }
         
         $router     = $this->container->get('router');
@@ -752,5 +757,88 @@ class CharterController extends Controller
         ));
     }
     
+    public function setLogoAction()
+    {
+        try {
+            $request    = $this->getRequest();
+            $user       = $this->getUser();
+            $charter    = $user->getCharter();
+            
+            $em = $this->getDoctrine()->getManager();
+            $logoFile = $request->files->get('logoFile');
+            if (!$logoFile instanceof UploadedFile){
+                return new Response('Unable to upload', 400);
+            }
+
+            $oldLogo = $charter->getLogo();
+            
+            $logo = new CharterLogo();
+            $logo->setPath($logoFile->guessExtension());
+            $logo->setMimeType($logoFile->getMimeType());
+
+            $logo->setCharter($charter);
+            $charter->setLogo($logo);
+
+            $em->persist($logo);
+
+            $validator          = $this->get('validator');
+            $charterErrors      = $validator->validate($charter, 'default');
+            $logoErrors       = $validator->validate($logo, 'default');
+            $numCharterErrors   = $charterErrors->count();
+            $numLogoErrors      = $logoErrors->count();
+
+            if ($numCharterErrors==0 && $numLogoErrors==0){
+                if ($oldLogo) $em->remove($oldLogo);
+                $em->flush();
+
+                $logoFile->move(
+                    $logo->getUploadRootDir(),
+                    $logo->getId().'.'.$logo->getPath()
+                );
+
+                return new JSONResponse(array('message' => 'Your logo has been uploaded successfully', 'id' => $logo->getId()));
+            } else {
+                $errorArr = array();
+                for ($i=0; $i<$numCharterErrors; $i++){
+                    $error = $charterErrors->get($i);
+                    $msgTemplate = $error->getMessage();
+                    $errorArr[] = $msgTemplate;
+                }
+                for ($i=0; $i<$numLogoErrors; $i++){
+                    $error = $logoErrors->get($i);
+                    $msgTemplate = $error->getMessage();
+                    $errorArr[] = $msgTemplate;
+                }
+                return new Response(join(',', $errorArr), 400);
+            }
+        } catch (\Exception $e){
+            return new Response('Unable to upload', 400);
+        }
+    }
+    
+    public function getLogoAction()
+    {
+        $request    = $this->getRequest();
+        $user       = $this->getUser();
+        $profile    = $user->getProfile();
+                
+        $request    = $this->getRequest();
+        $user       = $this->getUser();
+        $charter    = $user->getCharter();
+        
+        if (!$charter) {
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_CharterDashboard'));
+        }
+        
+        
+        $charterType = $this->container->get('zizoo_charter.charter_type');
+        $form = $this->createForm($charterType, $charter, array('map_drag'          => true, 
+                                                                'map_update'        => true,
+                                                                'validation_groups' => array('default')));
+        
+        return $this->render('ZizooCharterBundle:Charter:logo.html.twig',array(
+            'form'     => $form->createView()
+        ));
+    }
     
 }

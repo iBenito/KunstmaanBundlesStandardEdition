@@ -315,12 +315,6 @@ class BoatController extends Controller
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
 
-        $originalPhotos = array();
-        // Create an array of the current Boat Photos objects in the database
-        foreach ($boat->getImage() as $photo) {
-            $originalPhotos[] = $photo;
-        }
-
         $imagesForm = $this->createForm($this->get('zizoo_boat.boat_image_type'), $boat);
 
         if ($request->isMethod('post')){
@@ -332,29 +326,6 @@ class BoatController extends Controller
 
                 //setting the updated field manually for file upload DO NOT REMOVE
                 $boat->setUpdated(new \DateTime());
-
-                $images = $boat->getImage();
-
-                $now = new \DateTime();
-                // filter $originalAvatars to contain avatars no longer present
-                foreach ($images as $image) {
-                    foreach ($originalPhotos as $key => $toDel) {
-                        if ($toDel->getId() === $image->getId()) {
-                            unset($originalPhotos[$key]);
-                        }
-                    }
-                    $image->setUpdated($now);
-                    $em->persist($image);
-                }
-
-                // remove the relationship between the avatar and the profile
-                foreach ($originalPhotos as $photo) {
-                    // remove the ProvileAvatar from the Profile
-                    $boat->removeImage($photo);
-
-                    // remove the avatar completely
-                    $em->remove($photo);
-                }
 
                 $em->persist($boat);
 
@@ -368,6 +339,84 @@ class BoatController extends Controller
             'imagesForm'  => $imagesForm->createView()
         ));
 
+    }
+    
+    public function addImageAction(Request $request, $id)
+    {
+        try {
+            $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
+            if (!$boat){
+                throw $this->createNotFoundException('Unable to find Boat entity.');
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $imageFile = $request->files->get('avatarFile');
+            if (!$imageFile instanceof UploadedFile){
+                return new Response('Unable to upload', 400);
+            }
+
+            $image = new BoatImage();
+            $image->setPath($imageFile->guessExtension());
+            $image->setMimeType($imageFile->getMimeType());
+
+            $image->setBoat($boat);
+            $boat->addImage($image);
+
+            $em->persist($image);
+
+            $validator          = $this->get('validator');
+            $boatErrors         = $validator->validate($boat, 'default');
+            $imageErrors        = $validator->validate($image, 'default');
+            $numBoatErrors      = $boatErrors->count();
+            $numImageErrors     = $imageErrors->count();
+
+            if ($numBoatErrors==0 && $numImageErrors==0){
+                $em->flush();
+
+                $imageFile->move(
+                    $image->getUploadRootDir(),
+                    $image->getId().'.'.$image->getPath()
+                );
+
+                return new JSONResponse(array('message' => 'Your image has been uploaded successfully', 'id' => $image->getId()));
+            } else {
+                $errorArr = array();
+                for ($i=0; $i<$numBoatErrors; $i++){
+                    $error = $boatErrors->get($i);
+                    $msgTemplate = $error->getMessage();
+                    $errorArr[] = $msgTemplate;
+                }
+                for ($i=0; $i<$numImageErrors; $i++){
+                    $error = $imageErrors->get($i);
+                    $msgTemplate = $error->getMessage();
+                    $errorArr[] = $msgTemplate;
+                }
+                return new Response(join(',', $errorArr), 400);
+            }
+        } catch (\Exception $e){
+            return new Response('Unable to upload', 400);
+        }
+        
+    }
+    
+    public function getImagesAction(Request $request, $id)
+    {
+        try {
+        
+            $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
+            if (!$boat){
+                throw $this->createNotFoundException('Unable to find Boat entity.');
+            }
+
+            $imagesForm = $this->createForm($this->get('zizoo_boat.boat_image_type'), $boat);
+
+            return $this->render('ZizooBoatBundle:Boat:photos.html.twig', array(
+                'boat'  => $boat,
+                'imagesForm'  => $imagesForm->createView()
+            ));
+        } catch (\Exception $e){
+            return new Response('Unable get images because: ' . $e->getMessage(), 400);
+        }
     }
 
     /**

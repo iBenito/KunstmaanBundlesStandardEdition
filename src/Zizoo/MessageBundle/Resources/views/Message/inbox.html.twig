@@ -34,8 +34,8 @@
     </div>
 
     <select id="box_select" style="display: none">
-        <option value="{{ path('fos_message_inbox') }}" selected="selected">Inbox</option>
-        <option value="{{ path('fos_message_sent') }}">Sent Messages</option>
+        <option value="{{ path(grid.extraParams['inbox_url']) }}" selected="selected">Inbox</option>
+        <option value="{{ path(grid.extraParams['sent_url']) }}">Sent Messages</option>
     </select>
     <noscript>
         <a href="{{ url('fos_message_sent' )}}">Sent Messages</a>

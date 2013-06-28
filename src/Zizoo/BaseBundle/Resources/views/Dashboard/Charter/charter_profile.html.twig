@@ -1,0 +1,9 @@
+{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
+    
+{% block dashboard_page_title %}My Charter Profile{% endblock %}
+
+{% block content %}
+    <a href="{{ path('ZizooCharterBundle_Charter_Show', {id: id}) }}">View Profile</a>
+
+    {{ response|raw }}
+{% endblock %}

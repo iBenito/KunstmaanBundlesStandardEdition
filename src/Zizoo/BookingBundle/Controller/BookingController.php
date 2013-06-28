@@ -34,7 +34,7 @@ class BookingController extends Controller
         $em     = $this->getDoctrine()->getManager();
         $booking = $em->getRepository('ZizooBookingBundle:Booking')->findOneById($id);
         if (!$booking || $booking->getRenter()!=$user){
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_UserDashboard'));
         }
         
         return $this->render('ZizooBookingBundle:Booking:view_booking.html.twig', array('booking'       => $booking));

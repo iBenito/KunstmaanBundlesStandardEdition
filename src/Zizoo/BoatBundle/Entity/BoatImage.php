@@ -109,9 +109,4 @@ class BoatImage extends Media {
             : $this->getUploadDir().'/'.$this->id.'.'.$this->getPath();
     }
     
-    public function delete()
-    {
-        unlink($this->getAbsolutePath());
-    }
- 
 }

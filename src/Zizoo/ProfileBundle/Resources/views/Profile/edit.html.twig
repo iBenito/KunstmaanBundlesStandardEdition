@@ -1,5 +1,11 @@
 {% block body %}
 
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+            {{ flashMessage}}
+        </div>
+    {% endfor %}
+
     <script type="text/javascript">
         var uploadedFiles = new Array();
         
@@ -63,7 +69,7 @@
         }
         
         function avatarDelete(container){
-            var id  = $(container).find('input[name^="zizoo_profile[avatar]"][name$="[id]"]').val();
+            var id  = $(container).find('.media_id').val();
             $(container).remove();
             $.ajax({
                 url:            '{{ path('ZizooMediaBundle_Media_DeleteMedia') }}',
@@ -79,7 +85,7 @@
         
     </script>
 
-    <form action="{{ path('ZizooProfileBundle_Profile_Edit') }}" method="post" {{ form_enctype(edit_form) }}>
+    <form method="post" {{ form_enctype(edit_form) }}>
     
         {{ form_widget(edit_form) }}
 

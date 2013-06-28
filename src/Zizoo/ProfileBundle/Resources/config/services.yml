@@ -12,7 +12,7 @@ services:
             entityManager:  "@doctrine.orm.entity_manager"    
   
     zizoo_profile.profile_type:
-        class:  Zizoo\ProfileBundle\Form\ProfileType
+        class:  Zizoo\ProfileBundle\Form\Type\ProfileType
         arguments:
             container:      "@service_container"
         tags:

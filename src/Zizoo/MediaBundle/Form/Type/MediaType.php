@@ -12,7 +12,7 @@ class MediaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id', 'hidden', array( 'property_path'  => 'id' ))
+            ->add('id', 'hidden', array( 'property_path'  => 'id', 'attr' => array('class' => 'media_id') ))
             ->add('order', 'hidden', array('attr' => array('class' => 'order')))
             ->add('x1', 'hidden', array( 'required'       => false))
             ->add('y1', 'hidden', array( 'required'       => false))
@@ -33,6 +33,7 @@ class MediaType extends AbstractType
                                         'allow_delete'          => false,
                                         'dropzone'              => false,
                                         'crop_js'               => false,
+                                        'delete_js'             => false,
                                         'label'                 => null));
     }
 

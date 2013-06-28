@@ -17,8 +17,8 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome {{ user.username | default("none") }}<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ path('ZizooBaseBundle_Dashboard') }}">Dashboard</a></li>
-                            <li><a href="{{ path('ZizooCharterBundle_Charter_Profile') }}">My Profile</a></li>
+                            <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterDashboard') }}">Dashboard</a></li>
+                            <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterProfile') }}">My Profile</a></li>
                             <li class="divider"></li>
                             <li class="nav-header">Account</li>
                             <li><a href="{{ path('ZizooUserBundle_User_AccountSettings') }}">Account Settings</a></li>

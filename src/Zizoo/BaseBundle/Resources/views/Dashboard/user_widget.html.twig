@@ -17,15 +17,15 @@
 
 <div class="dashboard_navigation">
     <ul class="nav">
-      <li class="active"><a href="{{ path('ZizooBaseBundle_Dashboard', {show_user: show_user}) }}">Dashboard</a></li>
-      <li><a href="{{ path('fos_message_inbox', {show_user: show_user}) }}">Inbox</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Profile', {show_user: show_user}) }}">Profile</a></li>
-      <li><a href="{{ path('ZizooBookingBundle_view_all_bookings', {show_user: show_user}) }}">Trips</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Skills', {show_user: show_user}) }}">Skills</a></li>
-      <li><a href="{{ path('ZizooUserBundle_User_AccountSettings', {show_user: show_user}) }}">Account Settings</a></li>
+      <li class="active"><a href="{{ path('ZizooBaseBundle_Dashboard_UserDashboard', {show_user: 'true'}) }}">Dashboard</a></li>
+      <li><a href="{{ path('fos_message_inbox') }}">Inbox</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Profile') }}">Profile</a></li>
+      <li><a href="{{ path('ZizooBookingBundle_view_all_bookings') }}">Trips</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Skills') }}">Skills</a></li>
+      <li><a href="{{ path('ZizooUserBundle_User_AccountSettings') }}">Account Settings</a></li>
     </ul>
     
     {% if user.charter %}
-        <a href="{{ path('ZizooBaseBundle_Dashboard') }}">Switch to charter view</a>
+        <a href="{{ path('ZizooBaseBundle_Dashboard_CharterDashboard') }}">Switch to charter view</a>
     {% endif %}
 </div>

@@ -5,5 +5,5 @@
 {% block content %}
     <a href="{{ path('ZizooProfileBundle_Profile_Show', {username: username}) }}">View Profile</a>
 
-    {% render controller('ZizooProfileBundle:Profile:edit') %}
+    {{ response|raw }}
 {% endblock %}

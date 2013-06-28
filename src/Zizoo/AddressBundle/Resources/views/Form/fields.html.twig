@@ -128,6 +128,21 @@
     {% endif %}
     var {{id}}_zoom = 9;
 
+    function createMarker(position){
+        {{id}}_marker = new google.maps.Marker({
+            position: position,
+            map: {{id}}_map,
+            draggable: {% if map_drag is not null and map_drag == true %}true{% else %}false{% endif %},
+            title: ''
+        });
+        {% if map_drag is not null and map_drag == true %}
+        google.maps.event.addListener({{id}}_marker, 'dragend', function(evt){
+            $('#{{form.lat.vars.id}}').val(evt.latLng.lat());
+            $('#{{form.lng.vars.id}}').val(evt.latLng.lng());
+        });
+        {% endif %}
+    }
+
     $('#{{id}}').ready(function(){
         {{id}}_geocoder = new google.maps.Geocoder();
         {{id}}_map = new google.maps.Map(document.getElementById('{{id}}_map_div'), {
@@ -137,19 +152,7 @@
         });
         
         {% if form.lat.vars.value and form.lng.vars.value %}
-            {{id}}_marker = new google.maps.Marker({
-                position: new google.maps.LatLng({{form.lat.vars.value}}, {{form.lng.vars.value}}),
-                map: {{id}}_map,
-                draggable: {% if map_drag is not null and map_drag == true %}true{% else %}false{% endif %},
-                title: ''
-            });
-            {% if map_drag is not null and map_drag == true %}
-            google.maps.event.addListener({{id}}_marker, 'dragend', function(evt){
-                $('#{{form.lat.vars.id}}').val(evt.latLng.lat());
-                $('#{{form.lng.vars.id}}').val(evt.latLng.lng());
-            });
-            {% endif %}
-            
+            createMarker(new google.maps.LatLng({{form.lat.vars.value}}, {{form.lng.vars.value}}));
         {% endif %}
             
             
@@ -172,7 +175,11 @@
     function codeAddress(address) {
         {{id}}_geocoder.geocode( { 'address': address}, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
-                {{id}}_marker.setPosition(results[0].geometry.location);
+                if ({{id}}_marker == null){
+                    createMarker(results[0].geometry.location);
+                } else {
+                    {{id}}_marker.setPosition(results[0].geometry.location);
+                }
                 {{id}}_map.setCenter(results[0].geometry.location);
             } else {
                 //alert('Geocode was not successful for the following reason: ' + status);

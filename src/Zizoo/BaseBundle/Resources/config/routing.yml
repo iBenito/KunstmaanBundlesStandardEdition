@@ -47,6 +47,18 @@ ZizooBaseBundle_login_widget:
         _method:  GET
         
 ZizooBaseBundle_Dashboard:
+    pattern:  /charter/account/dashboard
+    defaults: { _controller: ZizooBaseBundle:Dashboard:index }
+    requirements:
+        _method:  GET
+        
+ZizooBaseBundle_Dashboard_CharterDashboard:
+    pattern:  /charter/account/dashboard
+    defaults: { _controller: ZizooBaseBundle:Dashboard:index }
+    requirements:
+        _method:  GET
+        
+ZizooBaseBundle_Dashboard_UserDashboard:
     pattern:  /account/dashboard
     defaults: { _controller: ZizooBaseBundle:Dashboard:index }
     requirements:
@@ -76,16 +88,44 @@ ZizooBaseBundle_Dashboard_Trips:
     requirements:
         _method:  GET
         
+ZizooBaseBundle_Dashboard_CharterProfile:
+    pattern:  /charter/account/profile
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterProfile }
+    requirements:
+        _method:  GET|POST    
         
-test:
-    pattern:  /test1
-    defaults: { _controller: ZizooBaseBundle:Page:test1 }
+ZizooBaseBundle_Dashboard_CharterInbox:
+    pattern:  /charter/account/inbox
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterInbox }
     requirements:
         _method:  GET
-
-test2:
-    pattern:  /test2
-    defaults: { _controller: ZizooBaseBundle:Page:test2 }
+        
+ZizooBaseBundle_Dashboard_CharterSent:
+    pattern:  /charter/account/sent
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterSent }
     requirements:
         _method:  GET
-       
+        
+ZizooBaseBundle_Dashboard_CharterBookings:
+    pattern:  /charter/account/bookings
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBookings }
+    requirements:
+        _method:  GET
+        
+ZizooBaseBundle_Dashboard_CharterBoats:
+    pattern:  /charter/account/boats
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBoats }
+    requirements:
+        _method:  GET
+                
+ZizooBaseBundle_Dashboard_CharterPayments:
+    pattern:  /charter/account/payments
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterPayments }
+    requirements:
+        _method:  GET
+        
+ZizooBaseBundle_Dashboard_CharterPayoutSettings:
+    pattern:  /charter/account/payout-settings
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterPayoutSettings }
+    requirements:
+        _method:  GET|POST

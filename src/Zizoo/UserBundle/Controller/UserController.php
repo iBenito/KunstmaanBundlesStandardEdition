@@ -112,7 +112,7 @@ class UserController extends Controller
         if ($user){
             $request        = $this->getRequest();
             $forward        =  $request->query->get('forward', null);
-            if (!$forward) $forward = 'ZizooBaseBundle_Dashboard';
+            if (!$forward) $forward = 'ZizooBaseBundle_Dashboard_UserDashboard';
             $this->doLogin($user);
             return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => $forward,
                                                                                           'ajax'    => $ajax  ));

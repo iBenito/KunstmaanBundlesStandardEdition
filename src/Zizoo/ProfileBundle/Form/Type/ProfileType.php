@@ -1,6 +1,6 @@
 <?php
 
-namespace Zizoo\ProfileBundle\Form;
+namespace Zizoo\ProfileBundle\Form\Type;
 
 use Zizoo\BaseBundle\Form\Type\MediaType;
 use Zizoo\ProfileBundle\Form\EventListener\ProfileSubscriber;

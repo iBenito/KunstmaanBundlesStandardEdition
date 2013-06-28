@@ -29,7 +29,7 @@ class ReservationController extends Controller
         
         //if (!$reservation || $reservation->getBoat()->getCharter()->getAdminUser()!=$user){
         if (!$reservation || !$reservation->getBoat()->getCharter()->getUsers()->contains($user)){
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_CharterDashboard'));
         }
                 
         $reservationStatus  = $reservation->getStatus();
@@ -57,7 +57,7 @@ class ReservationController extends Controller
         $reservation        = $em->getRepository('ZizooReservationBundle:Reservation')->findOneById($id);
         //if (!$reservation || $reservation->getBoat()->getCharter()->getAdminUser()!=$user){
         if (!$reservation || !$reservation->getBoat()->getCharter()->getUsers()->contains($user)){
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_CharterDashboard'));
         }
         
         $reservationAgent   = $this->get('zizoo_reservation_reservation_agent');
@@ -164,7 +164,7 @@ class ReservationController extends Controller
         $reservation        = $em->getRepository('ZizooReservationBundle:Reservation')->findOneById($id);
         //if (!$reservation || $reservation->getBoat()->getCharter()->getAdminUser()!=$user){
         if (!$reservation || !$reservation->getBoat()->getCharter()->getUsers()->contains($user)){
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard'));
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_CharterDashboard'));
         }
         
         $reservationAgent   = $this->get('zizoo_reservation_reservation_agent');

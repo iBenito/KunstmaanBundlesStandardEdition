@@ -28,50 +28,13 @@ class ProfileSubscriber implements EventSubscriberInterface
 
     public function postBind(FormEvent $event)
     {
-        $profile = $event->getData();
-        $form = $event->getForm();
         
-        if (null !== $profile->getAvatarFile()){
-            if ($form->isValid()){
-                $avatar = $this->uploadAvatar;
-                $this->em->flush();
-                $profile->getAvatarFile()->move(
-                    $avatar->getUploadRootDir(),
-                    $avatar->getId().'.'.$avatar->getPath()
-                );
-
-            }
-            
-            $profile->setAvatarFile(null);
-        }
-        
-        if (!$form->isValid()){
-            $errors = $form->getErrors();
-            
-        }
 
     }
     
     public function bind(FormEvent $event)
     {
-        $profile = $event->getData();
-        $form = $event->getForm();
-
-        if (null !== $profile->getAvatarFile()){
-            
-            $avatar = new ProfileAvatar();
-            $avatar->setProfile($profile);
-            $profile->addAvatar($avatar);
-
-            $this->em->persist($avatar);
-            
-            $avatarFile = $profile->getAvatarFile();
-            $avatar->setPath($avatarFile->guessExtension());
-            $avatar->setMimeType($avatarFile->getMimeType());
-            
-            $this->uploadAvatar = $avatar;
-
-        }
+        
         
     }
 }

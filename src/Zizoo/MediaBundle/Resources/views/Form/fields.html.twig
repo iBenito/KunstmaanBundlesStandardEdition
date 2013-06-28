@@ -18,6 +18,9 @@
                 </div>
             </div>
         {% endif %}
+         {% if part_of_collection == false %}
+            <div id="{{ id }}_dropzone" class="{% if dropzone != false %}dropzone{% endif %}"></div>
+        {% endif %}
     </div>
 {% endspaceless %}
 {% endblock zizoo_media_row %}
@@ -38,7 +41,8 @@
         }
         
         #{{ id }}_crop_container {
-                display: none;
+            display: none;
+            
         }
         
         .zizoo_media_container {
@@ -50,6 +54,11 @@
             border: 1px solid #ACACAC;
         }
         
+        .zizoo_media_container.single {
+            height: auto;
+            width: auto;
+        }
+        
         .dz-message {
             display: inline-block;
             margin-right: 10px;
@@ -59,11 +68,7 @@
             border: 1px dotted black;
             padding: 10px;
         }
-        
-        .zizoo_media_container.single {
-            float: none;
-        }
-        
+                
         .image_div {
             position: relative;
         }
@@ -87,9 +92,6 @@
             top: 30px;
         }
         
-        .zizoo_media_container.remove .image_div .controls .crop_btn {
-            display: none;
-        }
     </style>
 {% endblock zizoo_media_css %}
 
@@ -99,14 +101,8 @@
         {{ form_label(form) }}
     {% endif %}
     {% if part_of_collection == false %}
-        {% if dropzone != false %}
-            <div id="{{ id }}_dropzone" class="dropzone_upload">
-                Drag & Drop a photo
-                <button>Upload Image</button>
-            </div>
-        {% endif %}
         <div id="{{ id }}_crop_container">
-            <img src="" id="{{ id }}_crop_image" />
+            <img src="" id="{{ id }}_crop_image" style="max-width: 100%"/>
             <button id="{{ id }}_save_btn" class="save_btn">Crop</button>
             <button id="{{ id }}_cancel_btn" class="cancel_btn">Cancel</button>
         </div>
@@ -117,7 +113,9 @@
         
     {% if part_of_collection == false %}
     <script type="text/javascript">
-        {{ id }}_jcrop_api = null;
+        Dropzone.autoDiscover = false;
+        {{ id }}_jcrop_api      = null;
+        {{ id }}_dropzone_api   = null;
         
         function {{ id }}_showCoords(c){
             $('#{{ id }}_x1').val(c.x);
@@ -127,12 +125,14 @@
             $('#{{ id }}_w').val(c.w);
             $('#{{ id }}_h').val(c.h);
         }
-         
+                 
         function {{ id }}_clearCrop(){
-            {{ id }}_jcrop_api.destroy();
-            {{ id }}_jcrop_api = null;
+            if ({{ id }}_jcrop_api != null){
+                {{ id }}_jcrop_api.destroy();
+                {{ id }}_jcrop_api = null;
+            }
             $('#{{ id }}_crop_image').attr('src', null);
-            $('#{{ id }}_id').val('');
+          
             $('#{{ id }}_x1').val('');
             $('#{{ id }}_y1').val('');
             $('#{{ id }}_y2').val('');
@@ -140,46 +140,64 @@
             $('#{{ id }}_w').val('');
             $('#{{ id }}_h').val('');
         }
+         
+        function {{ id }}_resort(){
+            $('#{{ id }}_list > div').each(function(index, el){
+                $(el).find('.order').val(index);
+            });
+        }
         
-        function {{ id }}_cancelCrop(callback){
+        function {{ id }}_cancelCrop(){
             {{ id }}_clearCrop();
             $('#{{ id }}_crop_container').slideUp();
             return false
         }
         
         function {{ id }}_saveCrop(){
+            
+            var id = $('#{{ id }}_id').val();
+            
+            var x1 = $('#{{ id }}_x1').val();
+            var y1 = $('#{{ id }}_y1').val();
+            var x2 = $('#{{ id }}_x2').val();
+            var y2 = $('#{{ id }}_y2').val();
+            var w = $('#{{ id }}_w').val();
+            var h = $('#{{ id }}_h').val();
+            
+            {% if crop_js != false %}
+                eval('{{ crop_js|raw }}(id, x1,y1,x2,y2,w,h)');
+            {% endif %}
+                        
+            {{ id }}_clearCrop();
             $('#{{ id }}_crop_container').slideUp();
             return false;
         }
-        
-        function {{ id }}_enableCrop(url, id){
-            if ({{ id }}_jcrop_api != null){
-                {{ id }}_jcrop_api.destroy();
-                {{ id }}_jcrop_api = null;
+                
+        function {{ id }}_enableCrop(container){
+            if ({{ id }}_jcrop_api!=null) {
+                {{ id }}_clearCrop();
+                $('#{{ id }}_crop_container').slideUp(100, function(){
+                    {{ id }}_enableCrop(container);
+                });
+                return;
             }
+            var parentContainer = $(container).parent();
             
-            
+            var url = $(container).find('.full_url').val();
+            var id  = $(container).find('.media_id').val();
+
             $('#{{ id }}_crop_image').attr('src', url);
+            
             $('#{{ id }}_crop_image').Jcrop({
                 onChange: {{ id }}_showCoords,
-                onSelect: {{ id }}_showCoords,
-                aspectRatio: {{ aspect_ratio }}
+                onSelect:  {{ id }}_showCoords,
+                aspectRatio: {{ aspect_ratio }},
+                boxWidth: $(parentContainer).width()
             }, function(){
                 {{ id }}_jcrop_api = this;
-                    
-                var prefix = '{{ id }}';
-                var x1 = $('#'+prefix+'_x1').val();
-                var y1 = $('#'+prefix+'_y1').val();
-                var x2 = $('#'+prefix+'_x2').val();
-                var y2 = $('#'+prefix+'_y2').val();
-                var w  = $('#'+prefix+'_w').val();
-                var h  = $('#'+prefix+'_h').val();
                 
                 $('#{{ id }}_crop_container').slideDown(1000, function(){
-                    if (x1!='' && y1!='' && x2!='' && y2!='' && w!='' && h!=''){
-                        var points = [x1,y1,x2,y2];
-                        {{ id }}_jcrop_api.setSelect(points);
-                    }
+                    
                 });
             });
         }
@@ -187,12 +205,19 @@
         $(document).ready(function(){
 
             {% if dropzone != false %}
-                $('#{{ id }}_dropzone').dropzone({ 
+                {{ id }}_dropzone_api = new Dropzone('#{{ id }}_dropzone', { 
                     url:        '{{ path(dropzone['upload_url']) }}',
                     paramName:  '{{ dropzone['upload_param_name'] }}',
-                    error:      function(file, error){
-                        eval('{{ dropzone['upload_error']|raw }}');
-                    }
+                    success: function(file, response){
+                        eval('{{ dropzone['upload_success_js']|raw }}(file, response)');
+                    },
+                    error: function(file, response){
+                        eval('{{ dropzone['upload_error_js']|raw }}(file, response)');
+                        file.previewElement.classList.add("dz-error");
+                        return file.previewElement.querySelector("[data-dz-errormessage]").textContent = response;
+                    },
+                    enqueueForUpload: true,
+                    previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-success-mark\"><span>✔</span></div>\n  <div class=\"dz-error-mark\"><span>✘</span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
                 });
             {% endif %}
             
@@ -210,27 +235,20 @@
                 $(this).children('.controls, .overlay').stop().fadeOut();
             });
             
-        
-            $('#{{ id }}_delete_btn').click(function(){
-                var listItem = $(this).parent('.controls').parent('.image_div').parent();
-                var remove = $(listItem).hasClass('remove');
-                if (remove){
-                    $(listItem).removeClass('remove');
-                    $(this).html('Delete');
-                } else {
-                    $(listItem).addClass('remove');
-                    $(this).html('Undelete');
-                }
+            $('#{{ id }}_container').delegate('.crop_btn', 'click', function(){
+                {{ id }}_enableCrop($(this).parents('.zizoo_media_container'));
                 return false;
             });
-
-            $('#{{ id }}_crop_btn').click(function(){
-                var fullUrl = $('#{{ id }}_full_url').val();
-                {{ id }}_enableCrop(fullUrl, '{{ id }}');
+            
+            $('#{{ id }}_container').delegate('.delete_btn', 'click', function(){
+                {% if delete_js != false %}
+                {{ id }}_cancelCrop();
+                var container = $(this).parents('.zizoo_media_container');
+                eval('{{ delete_js|raw }}(container);');
+                {% endif %}
                 return false;
-                
             });
-
+            
         });
 
     </script>
@@ -241,11 +259,6 @@
     
 {% block zizoo_media_collection_widget %}
     {% spaceless %}
-        {% if dropzone != false %}
-            <div id="{{ id }}_dropzone">
-                
-            </div>
-        {% endif %}
         <div id="{{ id }}_crop_container">
             <img src="" id="{{ id }}_crop_image" />
             <button id="{{ id }}_save_btn" class="save_btn">Crop</button>
@@ -258,7 +271,7 @@
             <input id="{{ id }}_h" type="hidden" />
             <input id="{{ id }}_id" type="hidden" />
         </div>
-        <div id="{{ id }}_list" class="dropzone">
+        <div id="{{ id }}_list" class="{% if dropzone != false %}dropzone{% endif %}">
             {% for child in form %}
                 {{ form_row(child) }}
             {% endfor %}
@@ -336,7 +349,7 @@
             }
             
             var url = $(container).find('.full_url').val();
-            var id  = $(container).find('input[name^="zizoo_profile[avatar]"][name$="[id]"]').val();
+            var id  = $(container).find('.media_id').val();
 
             $('#{{ id }}_crop_image').attr('src', url);
             $('#{{ id }}_id').val(id);
@@ -355,20 +368,20 @@
         
         $(document).ready(function(){
             {% if dropzone != false %}
-            {{ id }}_dropzone_api = new Dropzone('#{{ id }}_list', { 
-                url:        '{{ path(dropzone['upload_url']) }}',
-                paramName:  '{{ dropzone['upload_param_name'] }}',
-                success: function(file, response){
-                    eval('{{ dropzone['upload_success_js']|raw }}(file, response)');
-                },
-                error: function(file, response){
-                    eval('{{ dropzone['upload_error_js']|raw }}(file, response)');
-                    file.previewElement.classList.add("dz-error");
-                    return file.previewElement.querySelector("[data-dz-errormessage]").textContent = response;
-                },
-                enqueueForUpload: true,
-                previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-success-mark\"><span>✔</span></div>\n  <div class=\"dz-error-mark\"><span>✘</span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
-            });
+                {{ id }}_dropzone_api = new Dropzone('#{{ id }}_list', { 
+                    url:        '{{ path(dropzone['upload_url']) }}',
+                    paramName:  '{{ dropzone['upload_param_name'] }}',
+                    success: function(file, response){
+                        eval('{{ dropzone['upload_success_js']|raw }}(file, response)');
+                    },
+                    error: function(file, response){
+                        eval('{{ dropzone['upload_error_js']|raw }}(file, response)');
+                        file.previewElement.classList.add("dz-error");
+                        return file.previewElement.querySelector("[data-dz-errormessage]").textContent = response;
+                    },
+                    enqueueForUpload: true,
+                    previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-success-mark\"><span>✔</span></div>\n  <div class=\"dz-error-mark\"><span>✘</span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
+                });
             {% endif %}
             
             $('#{{ id }}_save_btn').click({{ id }}_saveCrop);

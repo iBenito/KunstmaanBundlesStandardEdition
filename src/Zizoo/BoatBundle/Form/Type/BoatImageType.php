@@ -20,20 +20,23 @@ class BoatImageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('image', 'zizoo_media_collection', array('type' => 'zizoo_media',
-                'property_path' => 'image',
-                'label'         => 'Image',
-                'file_path'     => 'webPath',
-                'aspect_ratio'  => 1.48,
-                'allow_delete'  => true
+            ->add('image', 'zizoo_media_collection', array( 'type' => 'zizoo_media',
+                                                            'property_path' => 'image',
+                                                            'label'         => 'Image',
+                                                            'file_path'     => 'webPath',
+                                                            'aspect_ratio'  => 1.48,
+                                                            'crop_js'           => 'avatarCrop',
+                                                            'delete_js'         => 'avatarDelete',
+                                                            'dropzone'          => array(
+                                                                'upload_url'        => 'ZizooBoatBundle_Boat_AddImage',
+                                                                'upload_param_name' => 'boatFile',
+                                                                'upload_error_js'   => 'boatUploadError',
+                                                                'upload_success_js' => 'boatUploadSuccess',
+                                                            ),
+                                                            'allow_delete'      => true
             ))
-            ->add('image_file', 'file', array('required' => false,
-                'label'         => 'New',
-                'property_path' => 'imageFile'))
         ;
 
-        $boatSubscriber = $this->container->get('zizoo_boat.boat_subscriber');
-        $builder->addEventSubscriber($boatSubscriber);
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

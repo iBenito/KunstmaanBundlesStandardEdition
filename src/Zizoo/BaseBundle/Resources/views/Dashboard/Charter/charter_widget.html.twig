@@ -18,11 +18,14 @@
 
 <div class="dashboard_navigation">
     <ul class="nav">
-      <li class="active"><a href="{{ path('ZizooBaseBundle_Dashboard') }}">Dashboard</a></li>
-      <li><a href="{{ path('fos_message_inbox') }}">Inbox</a></li>
-      <li><a href="{{ path('fos_message_sent') }}">Sent Messages</a></li>
-      <li><a href="{{ path('ZizooCharterBundle_Charter_Boats') }}">Boats</a></li>
-      <li><a href="{{ path('ZizooCharterBundle_Charter_PayoutSettings') }}">Payout Settings</a></li>
+      <li class="active"><a href="{{ path('ZizooBaseBundle_Dashboard_CharterDashboard') }}">Dashboard</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterInbox') }}">Inbox</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterSent') }}">Sent Messages</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterProfile') }}">Profile</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterBookings') }}">My Bookings</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterBoats') }}">My Boats</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterPayments') }}">My Payments</a></li>
+      <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterPayoutSettings') }}">Payout Settings</a></li>
     </ul>
-    <a href="{{ path('ZizooBaseBundle_Dashboard', {show_user: 'true'}) }}">Switch to user view</a>
+    <a href="{{ path('ZizooBaseBundle_Dashboard_UserDashboard', {show_user: 'true'}) }}">Switch to user view</a>
 </div>
