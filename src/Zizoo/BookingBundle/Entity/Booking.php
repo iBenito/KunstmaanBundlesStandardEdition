@@ -41,10 +41,23 @@ class Booking extends BaseEntity
     protected $cost;
     
     /**
+     * @var float
+     *
+     * @ORM\Column(name="payout_amount", type="decimal", precision=19, scale=4)
+     */
+    protected $payout_amount;
+    
+    /**
      * @ORM\OneToMany(targetEntity="Zizoo\BookingBundle\Entity\Payment", mappedBy="booking")
      */
     protected $payment;
     
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Zizoo\BillingBundle\Entity\Payout", inversedBy="booking")
+     * @ORM\JoinColumn(name="payout_id", referencedColumnName="id")
+     */
+    protected $payout;
     
     /**
      * @ORM\ManyToOne(targetEntity="Zizoo\BookingBundle\Entity\PaymentMethod")
@@ -129,7 +142,42 @@ class Booking extends BaseEntity
     {
         return $this->cost;
     }
+    
+    /**
+     * Set cost
+     *
+     * @param float $cost
+     * @return Booking
+     */
+    public function setPayoutAmount($payoutAmount)
+    {
+        $this->payout_amount = $payoutAmount;
+    
+        return $this;
+    }
 
+    /**
+     * Get cost
+     *
+     * @return float 
+     */
+    public function getPayoutAmount()
+    {
+        return $this->payout_amount;
+    }
+
+    
+    public function setPayout(\Zizoo\BillingBundle\Entity\Payout $payout=null)
+    {
+        $this->payout = $payout;
+        return $this;
+    }
+    
+    public function getPayout()
+    {
+        return $this->payout;
+    }
+    
     /**
      * Set renter
      *

@@ -2,11 +2,9 @@ parameters:
 #    zizoo_billing.example.class: Zizoo\BillingBundle\Example
 
 services:
-#    zizoo_billing.bank_account_type:
-#        class:  Zizoo\BillingBundle\Form\Type\BankAccountType
-#        arguments: ["@doctrine.orm.entity_manager"]
-#        tags:
-#            - { name: form.type, alias: zizoo_billing_bank_account }
+    zizoo_billing.billing_service:
+        class:  Zizoo\BillingBundle\Service\BillingService
+        arguments: ["@service_container"]
 #    zizoo_billing.example:
 #        class: %zizoo_billing.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]

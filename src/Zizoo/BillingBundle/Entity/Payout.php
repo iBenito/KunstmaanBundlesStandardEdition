@@ -1,6 +1,6 @@
 <?php
 
-namespace Zizoo\BookingBundle\Entity;
+namespace Zizoo\BillingBundle\Entity;
 
 use Zizoo\BaseBundle\Entity\BaseEntity;
 use Doctrine\ORM\Mapping as ORM;
@@ -8,26 +8,23 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Payment
  *
- * @ORM\Table(name="booking_payment")
+ * @ORM\Table(name="billing_payout")
  * @ORM\Entity
  */
-class Payment extends BaseEntity
+class Payout extends BaseEntity
 {
     
-   const PROVIDER_BRAINTREE                             = 0;
-   const PROVIDER_BANK_TRANSFER                         = 1;
-   
-   const BRAINTREE_STATUS_INITIAL                       = 0;
-   const BRAINTREE_STATUS_SUBMITTED_FOR_SETTLEMENT      = 1;
-   const BRAINTREE_STATUS_SETTLED                       = 2;
-   const BRAINTREE_STATUS_VOID                          = 3;
+   const PROVIDER_BANK_TRANSFER                         = 0;
+   const PROVIDER_PAYPAL                                = 1;
    
    const BANK_TRANSFER_INITIAL                          = 0;
    const BANK_TRANSFER_SETTLED                          = 1;
+   
+   const PAYPAL_INITIAL                                 = 0;
+   const PAYPAL_SETTLED                                 = 1;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Zizoo\BookingBundle\Entity\Booking", inversedBy="payment")
-     * @ORM\JoinColumn(name="booking_id", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="Zizoo\BookingBundle\Entity\Booking", mappedBy="payout")
      */
     private $booking;
 
@@ -55,13 +52,13 @@ class Payment extends BaseEntity
     /**
      * @var string
      *
-     * @ORM\Column(name="provider_id", type="text")
+     * @ORM\Column(name="provider_id", type="text", nullable=true)
      */
     private $providerId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Zizoo\BookingBundle\Entity\PaymentMethod")
-     * @ORM\JoinColumn(name="payment_method_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Zizoo\BillingBundle\Entity\PayoutMethod")
+     * @ORM\JoinColumn(name="payout_method_id", referencedColumnName="id", nullable=false)
      */
     private $paymentMethod;
     
@@ -77,6 +74,7 @@ class Payment extends BaseEntity
         $now = new \DateTime();
         $this->setCreated($now);
         $this->setUpdated($now);
+        $this->booking = new \Doctrine\Common\Collections\ArrayCollection();
         $this->settled = false;
     }
     
@@ -161,22 +159,28 @@ class Payment extends BaseEntity
     }
 
     /**
-     * Set booking
+     * Add booking
      *
      * @param \Zizoo\BookingBundle\Entity\Booking $booking
      * @return Payment
      */
-    public function setBooking(\Zizoo\BookingBundle\Entity\Booking $booking = null)
+    public function addBooking(\Zizoo\BookingBundle\Entity\Booking $booking = null)
     {
-        $this->booking = $booking;
+        $this->booking[] = $booking;
     
         return $this;
     }
 
+    public function removeBooking(\Zizoo\BookingBundle\Entity\Booking $booking = null)
+    {
+        $this->booking->remove($booking);
+    
+        return $this;
+    }
     /**
      * Get booking
      *
-     * @return \Zizoo\BookingBundle\Entity\Booking 
+     * @return \Doctrine\Common\Collections\Collection  
      */
     public function getBooking()
     {

@@ -1,0 +1,3 @@
+ZizooBillingBundle_Billing_test:
+  pattern:    /
+  defaults:   {_controller: ZizooBillingBundle:Billing:index }  

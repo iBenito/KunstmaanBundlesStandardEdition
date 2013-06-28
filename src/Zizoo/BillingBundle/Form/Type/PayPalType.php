@@ -29,7 +29,8 @@ class PayPalType extends AbstractType
         $resolver->setDefaults(array(   'data_class'   => 'Zizoo\BillingBundle\Form\Model\PayPal',
                                         'validation_groups' => function(FormInterface $form) {
                                             $data = $form->getParent()->getData();
-                                            if ($data->getPayoutMethod()=='bank_account') {
+                                            $payoutMethod = $data->getPayoutMethod();
+                                            if ($payoutMethod->getId()=='bank_transfer') {
                                                 return array('payout_settings.bank_account');
                                             } else {
                                                 return array('payout_settings.paypal');

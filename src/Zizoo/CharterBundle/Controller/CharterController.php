@@ -206,7 +206,8 @@ class CharterController extends Controller
             return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_CharterDashboard'));
         }
         
-        $braintreeCustomer  = $userService->getPaymentUser($user);
+        $billingUser = $charter->getBillingUser();
+        $braintreeCustomer  = $userService->getPaymentUser($billingUser);
 
         if ($request->isMethod('POST')){
             
@@ -218,11 +219,11 @@ class CharterController extends Controller
                     $bankAccount    = $payoutSettings->getBankAccount();
                     $paypal         = $payoutSettings->getPayPal();
                     
-                    if ($payoutSettings->getPayoutMethod()=='bank_account'){
+                    if ($payoutSettings->getPayoutMethod()->getId()=='bank_transfer'){
                         $updateResult = \Braintree_Customer::update(
                             $braintreeCustomer->id,
                             array(
-                              'customFields' => array(  'payout_method' => $payoutSettings->getPayoutMethod(),
+                              'customFields' => array(  'payout_method' => $payoutSettings->getPayoutMethod()->getId(),
                                                         'account_owner' => $bankAccount->getAccountOwner(),
                                                         'bank_name'     => $bankAccount->getBankName(),
                                                         'bank_country'  => $bankAccount->getCountry()->getIso(),
@@ -230,11 +231,11 @@ class CharterController extends Controller
                                                         'bic'           => $bankAccount->getBIC())
                           )
                         );
-                    } else if ($payoutSettings->getPayoutMethod()=='paypal'){
+                    } else if ($payoutSettings->getPayoutMethod()->getId()=='paypal'){
                         $updateResult = \Braintree_Customer::update(
                             $braintreeCustomer->id,
                             array(
-                              'customFields' => array(  'payout_method' => $payoutSettings->getPayoutMethod(),
+                              'customFields' => array(  'payout_method' => $payoutSettings->getPayoutMethod()->getId(),
                                                         'paypal'        => $paypal->getUsername())
                           )
                         );

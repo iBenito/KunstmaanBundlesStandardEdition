@@ -1,4 +1,5 @@
 parameters:
+    zizoo_booking.cut_amount: 0.1
 #    zizoo_booking.example.class: Zizoo\BookingBundle\Example
 
 services:

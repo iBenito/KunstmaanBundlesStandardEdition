@@ -55,8 +55,10 @@ class BookingAgent {
     }
            
     private function storeBooking(User $user, Reservation $reservation, $intendedPrice, PaymentMethod $initialPaymentMethod, $crew, $flush=true){        
+        $cut = $this->container->getParameter('zizoo_booking.cut_amount');
         $booking = new Booking();
         $booking->setCost($intendedPrice);
+        $booking->setPayoutAmount($intendedPrice-($intendedPrice*$cut));
         $booking->setRenter($user);
         $booking->setReservation($reservation);
         $booking->setStatus('4');
@@ -353,6 +355,24 @@ class BookingAgent {
                 break;
         }
         
+    }
+    
+    public function bookingPaidInFull(Booking $booking)
+    {
+        $payments = $booking->getPayment();
+        $amountPaid = 0;
+        foreach ($payments as $payment){
+            switch ($payment->getProvider()){
+                case Payment::PROVIDER_BRAINTREE:
+                    if ($payment->getProviderStatus()!=Payment::BRAINTREE_STATUS_SETTLED) continue;
+                    break;
+                case Payment::PROVIDER_BANK_TRANSFER:
+                    if ($payment->getProviderStatus()!=Payment::BANK_TRANSFER_SETTLED) continue;
+                    break;
+            }
+            $amountPaid += $payment->getAmount();
+        }
+        return $amountPaid >= $booking->getCost();
     }
     
 }
