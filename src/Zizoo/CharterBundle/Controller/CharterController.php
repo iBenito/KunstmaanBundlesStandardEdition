@@ -783,8 +783,8 @@ class CharterController extends Controller
             $em->persist($logo);
 
             $validator          = $this->get('validator');
-            $charterErrors      = $validator->validate($charter, 'default');
-            $logoErrors       = $validator->validate($logo, 'default');
+            $charterErrors      = $validator->validate($charter, 'logo');
+            $logoErrors       = $validator->validate($logo, 'logo');
             $numCharterErrors   = $charterErrors->count();
             $numLogoErrors      = $logoErrors->count();
 

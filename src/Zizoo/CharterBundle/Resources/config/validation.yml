@@ -11,7 +11,7 @@ Zizoo\CharterBundle\Entity\Charter:
             - NotBlank: { message: zizoo_charter.error.charter_about_not_blank, groups: [default] }
             
         logo:
-            - NotNull: { message: zizoo_charter.error.charter_logo_not_null, groups: [default] }            
+            - NotNull: { message: zizoo_charter.error.charter_logo_not_null, groups: [logo, default] }            
             
 Zizoo\AddressBundle\Entity\CharterAddress:
     properties:
@@ -34,5 +34,5 @@ Zizoo\CharterBundle\Entity\CharterLogo:
                 pattern: "/image\\/(png|jpeg)/"
                 match:   true
                 message: Only png and jpeg images are allowed
-                groups: [default]
+                groups: [logo]
                  
