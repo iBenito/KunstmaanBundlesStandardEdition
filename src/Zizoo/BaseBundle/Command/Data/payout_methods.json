@@ -1,0 +1,12 @@
+[
+    {
+        "id":       "paypal",
+        "name":     "PayPal",
+        "order":    1
+    },
+    {
+        "id":       "bank_transfer",
+        "name":     "Bank Transfer",
+        "order":    0
+    }
+]

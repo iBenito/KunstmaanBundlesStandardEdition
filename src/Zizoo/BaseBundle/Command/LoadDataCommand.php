@@ -266,6 +266,24 @@ class LoadDataCommand extends ContainerAwareCommand
         }
     }
     
+    private function loadPayoutMethods()
+    {
+        $getPayoutMethods = file_get_contents(dirname(__FILE__).'/Data/payout_methods.json');
+       
+        $payoutMethods = json_decode($getPayoutMethods);
+        
+        foreach ($payoutMethods as $p)
+        {
+            $payoutMethod = new PayoutMethod();
+            $payoutMethod->setId($p->id);
+            $payoutMethod->setName($p->name);
+            $payoutMethod->setOrder($p->order);
+            $payoutMethod->setEnabled(true);
+            
+            $this->em->persist($payoutMethod);
+        }
+    }
+    
     private function loadExtras()
     {
         $getExtras = file_get_contents(dirname(__FILE__).'/Data/included_extras.json');
@@ -362,6 +380,7 @@ class LoadDataCommand extends ContainerAwareCommand
         $this->loadBoatTypes();
         $this->loadSkillTypes();
         $this->loadPaymentMethods();
+        $this->loadPayoutMethods();
         $this->loadGroups();
         $this->loadMessageTypes();
         $this->loadSuperAdminUsers();
