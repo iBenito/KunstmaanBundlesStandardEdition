@@ -206,7 +206,7 @@
 
             {% if dropzone != false %}
                 {{ id }}_dropzone_api = new Dropzone('#{{ id }}_dropzone', { 
-                    url:        '{{ path(dropzone['upload_url']) }}',
+                    url:        '{{ path(dropzone['upload_url'], dropzone['upload_params']) }}',
                     paramName:  '{{ dropzone['upload_param_name'] }}',
                     success: function(file, response){
                         eval('{{ dropzone['upload_success_js']|raw }}(file, response)');
@@ -347,6 +347,7 @@
                 });
                 return;
             }
+            var parentContainer = $(container).parent();
             
             var url = $(container).find('.full_url').val();
             var id  = $(container).find('.media_id').val();
@@ -356,7 +357,8 @@
             $('#{{ id }}_crop_image').Jcrop({
                 onChange: {{ id }}_showCoords,
                 onSelect:  {{ id }}_showCoords,
-                aspectRatio: {{ aspect_ratio }}
+                aspectRatio: {{ aspect_ratio }},
+                boxWidth: $(parentContainer).width()
             }, function(){
                 {{ id }}_jcrop_api = this;
                 
@@ -369,7 +371,7 @@
         $(document).ready(function(){
             {% if dropzone != false %}
                 {{ id }}_dropzone_api = new Dropzone('#{{ id }}_list', { 
-                    url:        '{{ path(dropzone['upload_url']) }}',
+                    url:        '{{ path(dropzone['upload_url'], dropzone['upload_params']) }}',
                     paramName:  '{{ dropzone['upload_param_name'] }}',
                     success: function(file, response){
                         eval('{{ dropzone['upload_success_js']|raw }}(file, response)');

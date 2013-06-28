@@ -1,22 +1,13 @@
 <?php
 
 namespace Zizoo\BoatBundle\Form\Type;
-use Zizoo\BoatBundle\Form\EventListener\BoatSubscriber;
 
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class BoatImageType extends AbstractType
 {
-    protected $container;
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -25,13 +16,14 @@ class BoatImageType extends AbstractType
                                                             'label'         => 'Image',
                                                             'file_path'     => 'webPath',
                                                             'aspect_ratio'  => 1.48,
-                                                            'crop_js'           => 'avatarCrop',
-                                                            'delete_js'         => 'avatarDelete',
+                                                            'crop_js'           => 'photoCrop',
+                                                            'delete_js'         => 'photoDelete',
                                                             'dropzone'          => array(
-                                                                'upload_url'        => 'ZizooBoatBundle_Boat_AddImage',
+                                                                'upload_url'        => 'ZizooBoatBundle_Boat_AddPhoto',
+                                                                'upload_params'     => array('id' => $options['boat_id']),
                                                                 'upload_param_name' => 'boatFile',
-                                                                'upload_error_js'   => 'boatUploadError',
-                                                                'upload_success_js' => 'boatUploadSuccess',
+                                                                'upload_error_js'   => 'photoUploadError',
+                                                                'upload_success_js' => 'photoUploadSuccess',
                                                             ),
                                                             'allow_delete'      => true
             ))
@@ -44,12 +36,13 @@ class BoatImageType extends AbstractType
         $resolver->setDefaults(array(
             'data_class'            => 'Zizoo\BoatBundle\Entity\Boat',
             'validation_groups'     => array('default'),
-            'cascade_validation'    => true
+            'cascade_validation'    => true,
+            'boat_id'               => 0
         ));
     }
 
     public function getName()
     {
-        return 'zizoo_boatbundle_imagetype';
+        return 'zizoo_boat_image';
     }
 }

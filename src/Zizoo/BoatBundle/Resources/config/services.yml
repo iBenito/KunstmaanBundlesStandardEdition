@@ -56,8 +56,6 @@ services:
 
     zizoo_boat.boat_image_type:
             class:  Zizoo\BoatBundle\Form\Type\BoatImageType
-            arguments:
-                container:      "@service_container"
             tags:
                 - { name: form.type, alias: zizoo_boat_image }
             
@@ -67,6 +65,11 @@ services:
         class:  Zizoo\BoatBundle\Form\Extension\BookBoatTypeExtension
         tags:
             - { name: form.type_extension, alias: zizoo_boat_book }
+            
+    zizoo_boat.boat_image_type_extension:
+            class:  Zizoo\BoatBundle\Form\Extension\BoatImageType
+            tags:
+                - { name: form.type_extension, alias: zizoo_boat_image }
             
             
     # VALIDATORS

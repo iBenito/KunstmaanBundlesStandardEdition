@@ -11,7 +11,7 @@ ZizooProfileBundle_Profile_Edit:
         _method:  GET|POST
 
 ZizooProfileBundle_Profile_AddAvatar:
-    pattern:  /account/profile/add_avatar
+    pattern:  /account/profile/add-avatar
     defaults: { _controller: ZizooProfileBundle:Profile:addAvatar }
     requirements:
         _method:  POST

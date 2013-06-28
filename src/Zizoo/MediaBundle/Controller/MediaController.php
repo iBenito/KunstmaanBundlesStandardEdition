@@ -20,6 +20,9 @@ use Zizoo\ProfileBundle\Entity\ProfileAvatar;
 use Zizoo\CharterBundle\Entity\Charter;
 use Zizoo\CharterBundle\Entity\CharterLogo;
 
+use Zizoo\BoatBundle\Entity\Boat;
+use Zizoo\BoatBundle\Entity\BoatImage;
+
 class MediaController extends Controller
 {
     
@@ -29,7 +32,7 @@ class MediaController extends Controller
         $user       = $this->getUser();
         $profile    = $user->getProfile();
         $charter    = $user->getCharter();
-        
+               
         $id         = $request->request->get('id');
         $entityType = $request->request->get('entity_type');
         
@@ -49,6 +52,11 @@ class MediaController extends Controller
             }
         } else if ($mediaEntity instanceof CharterLogo){
             if (!$charter || $charter->getLogo()!=$mediaEntity){
+                return new JsonResponse(array('error' => 'Not allowed'), 400);
+            }
+        } else if ($mediaEntity instanceof BoatImage){
+            $boat = $mediaEntity->getBoat();
+            if (!$charter || !$charter->getBoats()->contains($boat)){
                 return new JsonResponse(array('error' => 'Not allowed'), 400);
             }
         }
@@ -75,6 +83,10 @@ class MediaController extends Controller
             $charter = $mediaEntity->getCharter();
             $charter->setLogo(null);
             $em->persist($charter);
+        } else if ($mediaEntity instanceof BoatImage){
+            $boat = $mediaEntity->getBoat();
+            $boat->removeImage($mediaEntity);
+            $em->persist($boat);
         } else {
             return new JsonResponse(array('error' => 'Not allowed'), 400);
         }

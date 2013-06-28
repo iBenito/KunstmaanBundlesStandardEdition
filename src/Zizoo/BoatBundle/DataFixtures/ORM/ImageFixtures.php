@@ -42,7 +42,7 @@ class ImageFixtures implements OrderedFixtureInterface, SharedFixtureInterface, 
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
-        $this->imgPath = $this->container->getParameter('kernel.root_dir').'/../web/images/boats';
+        $this->imgPath = $this->container->getParameter('kernel.root_dir').'/../web/images/boat';
     }
     
     private function rrmdir($dir) { 
@@ -75,6 +75,7 @@ class ImageFixtures implements OrderedFixtureInterface, SharedFixtureInterface, 
     
     public function load(ObjectManager $manager)
     {
+        return;
         if (file_exists($this->imgPath)){
             if (is_dir($this->imgPath)){
                 $this->rrmdir($this->imgPath);

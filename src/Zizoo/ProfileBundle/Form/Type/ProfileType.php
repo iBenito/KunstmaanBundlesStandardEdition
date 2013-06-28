@@ -41,6 +41,7 @@ class ProfileType extends AbstractType
                                                                 'delete_js'         => 'avatarDelete',
                                                                 'dropzone'          => array(
                                                                     'upload_url'        => 'ZizooProfileBundle_Profile_AddAvatar',
+                                                                    'upload_params'     => array(),
                                                                     'upload_param_name' => 'avatarFile',
                                                                     'upload_error_js'   => 'avatarUploadError',
                                                                     'upload_success_js' => 'avatarUploadSuccess',

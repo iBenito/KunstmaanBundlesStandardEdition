@@ -22,4 +22,3 @@ Zizoo\ProfileBundle\Entity\ProfileAvatar:
                 match:   true
                 message: Only png and jpeg images are allowed
                 groups: [default]
-                 

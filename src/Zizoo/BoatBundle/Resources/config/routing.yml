@@ -34,6 +34,20 @@ ZizooBoatBundle_Boat_EditPhotos:
     requirements:
         _method:  GET|POST
         id: \d+
+        
+ZizooBoatBundle_Boat_AddPhoto:
+    pattern:  /charter/account/boat/{id}/add-photo
+    defaults: { _controller: ZizooBoatBundle:Boat:addPhoto }
+    requirements:
+        _method:  GET|POST
+        id: \d+
+        
+ZizooBoatBundle_Boat_GetPhotos:
+    pattern:  /charter/account/boat/{id}/photos
+    defaults: { _controller: ZizooBoatBundle:Boat:getPhotos }
+    requirements:
+        _method:  GET|POST
+        id: \d+
 
 ZizooBoatBundle_Boat_EditPrice:
     pattern:  /charter/account/boat/{id}/edit/price

@@ -12,11 +12,13 @@ use Zizoo\ReservationBundle\Entity\Reservation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Zizoo\BoatBundle\Entity\Boat;
 
-use Zizoo\BoatBundle\Entity\Image;
+use Zizoo\BoatBundle\Entity\BoatImage;
 use Zizoo\BoatBundle\Form\Type\BoatImageType;
 use Zizoo\BoatBundle\Form\Type\BoatType;
 
@@ -315,7 +317,7 @@ class BoatController extends Controller
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
 
-        $imagesForm = $this->createForm($this->get('zizoo_boat.boat_image_type'), $boat);
+        $imagesForm = $this->createForm($this->get('zizoo_boat.boat_image_type'), $boat, array('boat_id' => $boat->getId()));
 
         if ($request->isMethod('post')){
             $imagesForm->bind($request);
@@ -341,7 +343,7 @@ class BoatController extends Controller
 
     }
     
-    public function addImageAction(Request $request, $id)
+    public function addPhotoAction(Request $request, $id)
     {
         try {
             $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
@@ -350,7 +352,7 @@ class BoatController extends Controller
             }
 
             $em = $this->getDoctrine()->getManager();
-            $imageFile = $request->files->get('avatarFile');
+            $imageFile = $request->files->get('boatFile');
             if (!$imageFile instanceof UploadedFile){
                 return new Response('Unable to upload', 400);
             }
@@ -399,7 +401,7 @@ class BoatController extends Controller
         
     }
     
-    public function getImagesAction(Request $request, $id)
+    public function getPhotosAction(Request $request, $id)
     {
         try {
         
@@ -415,7 +417,7 @@ class BoatController extends Controller
                 'imagesForm'  => $imagesForm->createView()
             ));
         } catch (\Exception $e){
-            return new Response('Unable get images because: ' . $e->getMessage(), 400);
+            return new Response('Unable to get photos because: ' . $e->getMessage(), 400);
         }
     }
 
