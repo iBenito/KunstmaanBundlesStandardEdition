@@ -16,6 +16,7 @@ use Zizoo\BoatBundle\Entity\Extra;
 use Zizoo\BoatBundle\Entity\BoatType;
 use Zizoo\CrewBundle\Entity\SkillType;
 use Zizoo\BookingBundle\Entity\PaymentMethod;
+use Zizoo\BillingBundle\Entity\PayoutMethod;
 
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
