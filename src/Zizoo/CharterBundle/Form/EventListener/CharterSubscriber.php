@@ -45,6 +45,7 @@ class CharterSubscriber implements EventSubscriberInterface
                                                         'delete_js'         => 'logoDelete',
                                                         'dropzone'          => array(
                                                             'upload_url'        => 'ZizooCharterBundle_Charter_SetLogo',
+                                                            'upload_params'     => array(),
                                                             'upload_param_name' => 'logoFile',
                                                             'upload_error_js'   => 'logoUploadError',
                                                             'upload_success_js' => 'logoUploadSuccess',
