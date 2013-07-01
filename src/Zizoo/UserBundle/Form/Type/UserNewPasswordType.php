@@ -28,7 +28,7 @@ class UserNewPasswordType extends AbstractType
                                             if ($data->getPassword()!='' && $form->getData()->getPassword()!='') {
                                                 return array('change_password');
                                             } else {
-                                                return array('default');
+                                                return array('Default');
                                             }
                                         }));
     }

@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Payment
  *
  * @ORM\Table(name="billing_payout")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Zizoo\BillingBundle\Entity\PayoutRepository")
  */
 class Payout extends BaseEntity
 {
@@ -22,7 +22,7 @@ class Payout extends BaseEntity
    
    const PAYPAL_INITIAL                                 = 0;
    const PAYPAL_SETTLED                                 = 1;
-    
+       
     /**
      * @ORM\OneToMany(targetEntity="Zizoo\BookingBundle\Entity\Booking", mappedBy="payout")
      */

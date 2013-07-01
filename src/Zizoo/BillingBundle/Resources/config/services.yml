@@ -5,6 +5,11 @@ services:
     zizoo_billing.billing_service:
         class:  Zizoo\BillingBundle\Service\BillingService
         arguments: ["@service_container"]
+        
+    zizoo_billing.twig.billing_extension:
+        class: Zizoo\BillingBundle\Twig\BillingExtension
+        tags:
+            - { name: twig.extension }
 #    zizoo_billing.example:
 #        class: %zizoo_billing.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]

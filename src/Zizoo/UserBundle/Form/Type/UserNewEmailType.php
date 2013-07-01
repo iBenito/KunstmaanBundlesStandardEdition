@@ -22,7 +22,7 @@ class UserNewEmailType extends AbstractType
                                             if ($data->getPassword()!='' && $data->getNewEmail()!='') {
                                                 return array('change_email');
                                             } else {
-                                                return array('default');
+                                                return array('Default');
                                             }
                                         }));
     }

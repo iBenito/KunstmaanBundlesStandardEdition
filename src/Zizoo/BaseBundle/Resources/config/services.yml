@@ -15,6 +15,11 @@ services:
         tags:
             - { name: twig.extension }
             
+    zizoo_base.twig.base_extension:
+        class: Zizoo\BaseBundle\Twig\BaseExtension
+        tags:
+            - { name: twig.extension }
+            
     zizoo_base.number_nullable_type:
         class:  Zizoo\BaseBundle\Form\Type\NumberNullableType
         tags:

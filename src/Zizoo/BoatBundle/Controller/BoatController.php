@@ -367,8 +367,8 @@ class BoatController extends Controller
             $em->persist($image);
 
             $validator          = $this->get('validator');
-            $boatErrors         = $validator->validate($boat, 'default');
-            $imageErrors        = $validator->validate($image, 'default');
+            $boatErrors         = $validator->validate($boat, 'Default');
+            $imageErrors        = $validator->validate($image, 'Default');
             $numBoatErrors      = $boatErrors->count();
             $numImageErrors     = $imageErrors->count();
 
@@ -448,9 +448,9 @@ class BoatController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
-        $em     = $this->getDoctrine()->getManager();
-        $user   = $this->getUser();
-        
+        $em         = $this->getDoctrine()->getManager();
+        $user       = $this->getUser();
+        $charter    = $user->getCharter();
         $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
 
         //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
@@ -464,7 +464,7 @@ class BoatController extends Controller
 
         if ($editForm->isValid()) {
             //$boat->getAddress()->fetchGeo();
-            //$boat = $editForm->getData();
+            $boat = $editForm->getData();
             $em->persist($boat);
             $em->flush();
 
