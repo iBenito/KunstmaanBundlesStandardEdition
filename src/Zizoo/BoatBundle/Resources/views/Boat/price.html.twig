@@ -17,6 +17,12 @@
 {% block content %}
     {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat }  %}
 
+    {% set step = app.session.get('step') %}
+
+    {% if step != "" %}
+        <h3>Step {{ step }}</h3>
+    {% endif %}
+
     <h3>{{ boat.name }}</h3>
     <p>{{ boat.title }}</p>
     <div id="availability-calendar" class="">
@@ -60,7 +66,13 @@
             <input type="submit" id="submit_btn" value="OK" />
             <input type="button" id="cancel_btn" value="Cancel" />
         </form>
+
     </div>
+
+    {% if step != "" %}
+        <a href="{{ path('ZizooBaseBundle_Dashboard_CharterBoats') }}">Complete</a>
+    {% endif %}
+
     <script type="text/javascript">
         var lastSelectedDates;
         var numClicks = 0;

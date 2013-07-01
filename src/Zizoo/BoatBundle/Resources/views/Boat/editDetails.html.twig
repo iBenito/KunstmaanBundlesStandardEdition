@@ -5,9 +5,11 @@
 
     {% set step = app.session.get('step') %}
 
-    <h3>Step {{ step }}</h3>
+    {% if step != "" %}
+        <h3>Step {{ step }}</h3>
+    {% endif %}
 
-    <form action="{{ path(formAction, { 'id': boat.id }) }}" method="post" {{ form_enctype(form) }}>
+    <form action="{{ path("ZizooBoatBundle_Boat_UpdateDetails", { 'id': boat.id }) }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
 
         {% if step != "" %}

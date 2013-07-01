@@ -280,11 +280,38 @@ class BoatController extends Controller
         $boat       = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
 
         $session = $this->get('session');
-        $session->set('step', NULL);
+        $session->set('step', null);
 
         return $this->render('ZizooBoatBundle:Boat:edit.html.twig', array(
             'boat'          => $boat,
             'formAction'    => 'ZizooBoatBundle_Boat_Update'
+        ));
+    }
+
+    /**
+     * Edits an existing Boat entity.
+     *
+     */
+    public function updateAction(Request $request, $id)
+    {
+        $em     = $this->getDoctrine()->getManager();
+        $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
+
+        if (!$boat){
+            throw $this->createNotFoundException('Unable to find Boat entity.');
+        }
+
+        $editForm = $this->createForm(new BoatType(), $boat);
+        $editForm->bind($request);
+        if ($editForm->isValid()) {
+            $em->persist($boat);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl($request->get('_route'), array('id' => $id)));
+        }
+
+        return $this->render('ZizooBoatBundle:Boat:edit.html.twig', array(
+            'boat'      => $boat,
         ));
     }
 
@@ -297,12 +324,51 @@ class BoatController extends Controller
         $em     = $this->getDoctrine()->getManager();
         $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
 
+        $session = $this->get('session');
+        if ($session->get('step')){
+            $session->set('step', 'two');
+        }
         $detailsForm = $this->createForm(new BoatDetailsType(), $boat);
 
         return $this->render('ZizooBoatBundle:Boat:editDetails.html.twig', array(
             'boat'          => $boat,
             'form'          => $detailsForm->createView(),
-            'formAction'    => 'ZizooBoatBundle_Boat_Update',
+        ));
+    }
+
+    /**
+     * Edits an existing Boat entity.
+     *
+     */
+    public function updateDetailsAction(Request $request, $id)
+    {
+        $em     = $this->getDoctrine()->getManager();
+        $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
+
+        if (!$boat){
+            throw $this->createNotFoundException('Unable to find Boat entity.');
+        }
+
+        $editForm = $this->createForm(new BoatDetailsType(), $boat);
+        $editForm->bind($request);
+        if ($editForm->isValid()) {
+            $em->persist($boat);
+            $em->flush();
+
+            $session = $this->get('session');
+            if ($session->get('step')){
+                $route = 'ZizooBoatBundle_Boat_EditPhotos';
+            }
+            else{
+                $route = 'ZizooBoatBundle_Boat_EditDetails';
+            }
+
+            return $this->redirect($this->generateUrl($route, array('id' => $id)));
+        }
+
+        return $this->render('ZizooBoatBundle:Boat:editDetails.html.twig', array(
+            'boat'      => $boat,
+            'form'      => $editForm->createView(),
         ));
     }
 
@@ -315,6 +381,11 @@ class BoatController extends Controller
         $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
         if (!$boat){
             throw $this->createNotFoundException('Unable to find Boat entity.');
+        }
+
+        $session = $this->get('session');
+        if ($session->get('step')){
+            $session->set('step', 'three');
         }
 
         $imagesForm = $this->createForm($this->get('zizoo_boat.boat_image_type'), $boat, array('boat_id' => $boat->getId()));
@@ -342,7 +413,7 @@ class BoatController extends Controller
         ));
 
     }
-    
+
     public function addPhotoAction(Request $request, $id)
     {
         try {
@@ -432,6 +503,7 @@ class BoatController extends Controller
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
 
+
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('ZizooBoatBundle:Boat:edit.html.twig', array(
@@ -439,42 +511,6 @@ class BoatController extends Controller
             'delete_form'   => $deleteForm->createView(),
             'formAction'    => 'ZizooBoatBundle_update',
             'formRedirect'  => 'ZizooBoatBundle_Boat_Edit'
-        ));
-    }
-
-    /**
-     * Edits an existing Boat entity.
-     *
-     */
-    public function updateAction(Request $request, $id)
-    {
-        $em         = $this->getDoctrine()->getManager();
-        $user       = $this->getUser();
-        $charter    = $user->getCharter();
-        $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
-
-        //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
-        if (!$boat || !$charter->getUsers()->contains($user)){
-            throw $this->createNotFoundException('Unable to find Boat entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new BoatType(), $boat);
-        $editForm->bind($request);
-
-        if ($editForm->isValid()) {
-            //$boat->getAddress()->fetchGeo();
-            $boat = $editForm->getData();
-            $em->persist($boat);
-            $em->flush();
-
-            $redirect = $request->query->get('formRedirect');
-            return $this->redirect($this->generateUrl($redirect, array('id' => $id)));
-        }
-
-        return $this->render('ZizooBoatBundle:Boat:edit.html.twig', array(
-            'boat'      => $boat,
-            'delete_form' => $deleteForm->createView(),
         ));
     }
 
@@ -649,7 +685,11 @@ class BoatController extends Controller
         if (!$boat || !$charter->getUsers()->contains($user)){
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
-        
+
+        if ($session->get('step')){
+            $session->set('step', 'four');
+        }
+
         $reservations   = $boat->getReservation();
         $prices         = $boat->getPrice();
     
