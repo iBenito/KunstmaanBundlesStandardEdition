@@ -11,6 +11,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Zizoo\AddressBundle\Form\Model\SearchBoat;
 use Zizoo\AddressBundle\Form\Type\SearchBoatType;
 
+use Zizoo\UserBundle\Form\Type\RegistrationType;
+use Zizoo\UserBundle\Form\Model\Registration;
+
 /**
  * Default controller. For single actions for project
  *
@@ -39,9 +42,12 @@ class PageController extends Controller {
     public function howAction()
     {
         $user = $this->getUser();
+
+        $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat());
         
         return $this->render('ZizooBaseBundle:Page:how.html.twig',array(
-            'user' => $user
+            'user' => $user,
+            'form' => $form->createView()
         ));
     }
     
@@ -140,6 +146,11 @@ class PageController extends Controller {
         }
         
         $user = $this->getUser();
+        $routeName = $request->get('_route');
+        $facebook = $this->get('facebook');
+
+        $registration   = new Registration();
+        $form = $this->createForm(new RegistrationType(), $registration);
        
         if ($user && $user->getCharter()){
             return $this->render('ZizooBaseBundle:Page:login_charter_widget.html.twig', array(
@@ -153,7 +164,11 @@ class PageController extends Controller {
                 // last username entered by the user
                 'user'              => $user,
                 'logged_in'         => $isLoggedIn,
-                'show_login_form'   => $showLoginForm
+                'show_login_form'   => $showLoginForm,
+                'current_route'     => $routeName,
+                'facebook'          => $facebook,
+                'ajax'              => $request->isXmlHttpRequest(),
+                'registerForm'      => $form->createView()
             ));
         }
     }

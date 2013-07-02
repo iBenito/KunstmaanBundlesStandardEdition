@@ -1,16 +1,21 @@
 {% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
     
-{% block dashboard_page_title %}Account Settings{% endblock %}
+{% block tabs %}
+{% include 'ZizooBaseBundle:Dashboard:user_tabs.html.twig' with {'current':'account'} %}
+{% endblock %}
 
 {% block content %}
-    {% for flashMessage in app.session.flashbag.get('notice') %}
-        <div class="flash-notice">
-            {{ flashMessage}}
-        </div>
-    {% endfor %}
+	<div class="content">
+        <h1>Dashboard</h1>
+	    {% for flashMessage in app.session.flashbag.get('notice') %}
+	        <div class="flash-notice">
+	            {{ flashMessage}}
+	        </div>
+	    {% endfor %}
 
-    <form novalidate="novalidate" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-        <input type="submit" value="Save" />
-    </form>
+	    <form class="form" novalidate="novalidate" method="post" {{ form_enctype(form) }}>
+	        {{ form_widget(form) }}
+	        <input type="submit" value="Save" />
+	    </form>
+	</div>
 {% endblock %}

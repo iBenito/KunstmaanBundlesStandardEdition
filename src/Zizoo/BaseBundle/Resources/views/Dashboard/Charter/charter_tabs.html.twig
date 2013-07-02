@@ -1,0 +1,36 @@
+<ul class="tabs charter clearfix">
+    <li {% if current=="index" %} class="current" {% endif %}>
+        <a href="{{ path('ZizooBaseBundle_Dashboard_CharterDashboard') }}" title="Dashboard"><span class="icon dashboard"></span> Dashboard
+        </a>
+    </li>
+    <li {% if current=="inbox" %} class="current" {% endif %}>
+        <a href="{{ path('ZizooBaseBundle_Dashboard_CharterInbox') }}" title="Inbox"><span class="icon message">
+        <span class="circle red">?</span></span> Inbox
+        </a>
+    </li>
+    <li {% if current=="profile" %} class="current" {% endif %}>
+        <a href="{{ path('ZizooBaseBundle_Dashboard_CharterProfile') }}" title="Profile">
+        <span class="icon profile"></span> Profile
+        </a>
+    </li>
+    <li {% if current=="bookings" %} class="current" {% endif %}>
+        <a href="{{ path('ZizooBaseBundle_Dashboard_CharterBookings') }}" title="My Bookings">
+        <span class="icon bookings"></span> My Bookings
+        </a>
+    </li>
+    <li {% if current=="boats" %} class="current" {% endif %}>
+        <a href="{{ path('ZizooBaseBundle_Dashboard_CharterBoats') }}" title="My Boats">
+        <span class="icon boats"></span> My Boats
+        </a>
+    </li>
+    <li {% if current=="payments" %} class="current" {% endif %}>
+        <a href="{{ path('ZizooBaseBundle_Dashboard_CharterPayments') }}" title="My Payments">
+        <span class="icon payments"></span> My Payments
+        </a>
+    </li>
+    <li {% if current=="settings" %} class="current" {% endif %}>
+        <a href="{{ path('ZizooBaseBundle_Dashboard_CharterPayoutSettings') }}" title="Account">
+        <span class="icon account"></span> Account
+        </a>
+    </li>
+</ul>

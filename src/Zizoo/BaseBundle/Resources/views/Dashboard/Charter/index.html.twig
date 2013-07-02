@@ -1,38 +1,95 @@
 {% extends 'ZizooBaseBundle:Dashboard/Charter:base.html.twig' %}
 
-{% block dashboard_page_title %}Notifications{% endblock %}
+{% block tabs %}
+{% include 'ZizooBaseBundle:Dashboard:Charter/charter_tabs.html.twig' with {'current':'index'} %}
+{% endblock %}
 
 {% block content %}
+    <div class="content">
+        <h1>Dashboard</h1>
 
-    <div id="dashboard_alerts">
-        <h3>Alerts</h3>
-        <li><a href="{{ path('fos_message_inbox') }}">{{ unreadMessages }} Unread Messages</a></li>
-        <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}">{{ reservationRequests }} New Requests</a></li>
+        <!-- start:links -->
+        <section class="links">
+            <h2>Alerts</h2>
+
+            <ul>
+                <li><a href="{{ path('fos_message_inbox') }}"><span class="circle red">{{ unreadMessages }}</span>Unread messages</a></li>
+                <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}"><span class="circle red">{{ reservationRequests }}</span>New Requests</a></li>
+                <li><a href=""><span class="circle red">24</span>Payments received</a></li>
+            </ul>
+        </section>
+        <!-- end:links -->
+
     </div>
+{% endblock %}
+{% block sub_content %}
+    <!-- start:section -->
+    <section class="section">
+        <div class="content">
 
-    <div id="dashboard_boats">
-        <h3>My Boats</h3>
-        <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'active'}) }}">{{ activeListings }} Active Listings</a></li>
-        <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'incomplete'}) }}">{{ incompleteListings }} Incomplete Listings</a></li>
-        <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'hidden'}) }}">{{ hiddenListings }} Hidden Listings</a></li>
+            <!-- start:links -->
+            <section class="links">
+                <h2>My Boats</h2>
+
+                <ul>
+                    <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'active'}) }}">{{ activeListings }} Active Listings</a></li>
+                    <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'incomplete'}) }}">{{ incompleteListings }} Incomplete Listings</a></li>
+                    <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'hidden'}) }}">{{ hiddenListings }} Hidden Listings</a></li>
+                </ul>
+            </section>
+            <!-- end:links -->
+
+        </div>
+    </section>
+    <!-- end:section -->
+
+    <!-- start:section -->
+    <section class="section">
+        <div class="content">
+
+            <!-- start:links -->
+            <section class="links">
+                <h2>My Bookings</h2>
+
+                <ul>
+                    <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}">{{ reservationRequests }} Pending Requests</a></li>
+                    <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}">{{ upcomingRequests }} Bookings Next 7 Days</a></li>
+                    <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}">{{ acceptedRequests }} Total Bookings</a></li>
+                </ul>
+            </section>
+            <!-- end:links -->
+
+        </div>
+    </section>
+    <!-- end:section -->
+
+    <!-- start:section -->
+    <section class="section">
+        <div class="content">
+
+            <!-- start:links -->
+            <section class="links">
+                <h2>My Payments</h2>
+
+                <ul>
+                    <li><a href="{{ path('ZizooCharterBundle_Charter_Payments') }}">{{ outstandingPayments }} Outstanding Payments</a></li>
+                    <li><a href="{{ path('ZizooCharterBundle_Charter_Payments') }}">{{ receivedPayments }} Payments Received</a></li>
+                </ul>
+            </section>
+            <!-- end:links -->
+
+        </div>
+    </section>
+    <!-- end:section -->
+
+    <!-- start:earned -->
+    <div class="earned clearfix">
+        <div class="left">
+            Zizoo has made you:
+        </div>
+        <div class="right">
+            20,500 &euro;
+        </div>
     </div>
-
-    <div id="dashboard_bookings">
-        <h3>My Bookings</h3>
-        <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}">{{ reservationRequests }} New Requests</a></li>
-        <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}">{{ upcomingRequests }} Upcoming Bookings Next 7 Days</a></li>
-        <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}">{{ acceptedRequests }} Total Bookings</a></li>
-    </div>
-
-    <div id="dashboard_payments">
-        <h3>My Payments</h3>
-        <li><a href="{{ path('ZizooCharterBundle_Charter_Payments') }}">{{ outstandingPayments }} Outstanding Payments</a></li>
-        <li><a href="{{ path('ZizooCharterBundle_Charter_Payments') }}">{{ receivedPayments }} Payments Received</a></li>
-    </div>
-
-    <div id="dashboard_total_payments">
-        <h3>Zizoo has made you</h3>
-        <p></p>
-    </div>
-
+    <!-- end:earned -->
 {% endblock %}

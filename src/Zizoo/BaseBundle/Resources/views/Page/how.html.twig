@@ -3,35 +3,58 @@
 {% block title %}How It Works{% endblock%}
 
 {% block body %}
-    <div id="how-menu">
-        <h1>How it works</h1>
-        <ul id="tab-links">
-            <li><a href="#tabs-1">Rent</a></li>
-            <li><a href="#tabs-2">Host</a></li>
-            <li><a href="#tabs-3">Crew</a></li>
-        </ul>
-    </div>
-{% endblock %}
 
-{% block row %}
-    <div class="row">
-        <div class="span12">
-            <div id="tabs">
-                <div id="tabs-1" class="tab current">
-                    <h2>Ride The Waves</h2>
-                    <p>Renting a boat is your way to a unique vacation. Renting a boat is your way to a unique vacation.Renting a boat is your way to a unique vacation. Renting a boat is your way to a unique vacation. Renting a boat is your way to a unique vacation.</p>
-                </div>
+    {% form_theme form 'ZizooAddressBundle:Form:search_bar.html.twig' %}
+    {{ form_widget(form) }}
 
-                <div id="tabs-2" class="tab">
-                    <h2>Host Your Boat</h2>
-                    <p>Find out how and why to add your boat.</p>
-                </div>
+    <!-- start:content -->
+    <div id="content">
+        <div class="container clearfix">
 
-                <div id="tabs-3" class="tab">
-                    <h2>Be a Skipper</h2>
-                    <p>Find out how and why to be a skipper.</p>
+            <!-- start:subnavigation -->
+            <ul class="subnavigation clearfix">
+                <li class="current"><a href="" title="Book Trip"><span class="icon suitcase"></span> Book Trip</a></li>
+                <li><a href="" title="Rent Boat"><span class="icon boat"></span> Rent Boat</a></li>
+                <li><a href="" title="Join Crew"><span class="icon sailor"></span> Join Crew</a></li>
+            </ul>
+            <!-- end:subnavigation -->
+
+            <!-- start:how it works -->
+            <section id="how-it-works" class="section">
+                <header>
+                    <h1>How it Works</h1>
+                </header>
+
+                <div class="content">
+                    <h2>Book your Trip</h2>
+                    <ol class="steps book">
+                        <li>
+                            <img src="{{ asset('bundles/zizoobase/images/how-it-works-book-step1.png') }}" alt="">
+                            <h3>Step 1</h3>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            </p>
+                        </li>
+                        <li>
+                            <img src="{{ asset('bundles/zizoobase/images/how-it-works-book-step2.png') }}" alt="">
+                            <h3>Step 2</h3>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            </p>
+                        </li>
+                        <li>
+                            <img src="{{ asset('bundles/zizoobase/images/how-it-works-book-step3.png') }}" alt="">
+                            <h3>Step 3</h3>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            </p>
+                        </li>
+                    </ol>
                 </div>
-            </div>
+            </section>
+            <!-- end:how it works -->
+
         </div>
     </div>
+    <!-- end:content -->
 {% endblock %}

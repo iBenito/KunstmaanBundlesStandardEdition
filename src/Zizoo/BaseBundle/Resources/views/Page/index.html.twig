@@ -1,6 +1,4 @@
 {% extends 'ZizooBaseBundle::layout.html.twig' %}
-{% form_theme form 'ZizooAddressBundle:Form:fields.html.twig' %}
-
 
 {% block javascripts %}
     {{ parent() }}
@@ -13,113 +11,246 @@
 {% endblock %}
 
 {% block body %}
-    <!-- Main hero unit for a primary marketing message or call to action -->
-    <div class="span8 hero-unit">
-        <h1>Boats!</h1>
-        {% for boat in boats %}
-            <div class="boat-carousel">
-                <h2><a href="{{ path('ZizooBoatBundle_Boat_Show', { 'id': boat.id }) }}">{{ boat.name }}</a></h2>
-                <h3>{{ boat.title }}</h3>
-                <section class="images-carousel">
-                    <a href="{{ path('ZizooBoatBundle_Boat_Show', { 'id': boat.id }) }}">{% include 'ZizooBoatBundle:Image:index.html.twig' with { 'images': boat.image, 'single': true } %}</a>
-                </section>
-                <section class="user-carousel">
-                    {% if boat.charter.logo is not null %}
-                        <img src="{{ asset(boat.charter.logo|pictureWebPath) }}" alt="image not found" class="large" />
-                    {% endif %}
-                    <a href="{{ path('ZizooCharterBundle_Charter_Show', { 'id': boat.charter.id }) }}"> <p>{{ boat.charter.charterName }}</p></a>
-                </section>
-            </div>
-        {% else %}
-            <p>There are no boats available</p>
-        {% endfor %}
-    </div>
-    <div class="span4 hero-unit">
-        <form id="search_form" action="{{ path('ZizooAddressBundle_locations') }}" method="get">
-            {{ form_widget(form) }}
-            <input type="submit" value="Search" />
-        </form>
-        <script type="text/javascript">
-            $(document).ready(function(){
-                $('#zizoo_boat_search_location').chosen();
-                
-                var clearBtnFnc1 = function(input) {
-                        setTimeout(function() {
-                            var buttonPane = $( input )
-                                .datepicker( "widget" )
-                                .find( ".ui-datepicker-buttonpane" );
-                            var btn = $( '<button class="ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all" type="button">Clear</button>');
-                            btn.unbind("click")  .bind("click", function () {  
-                                $.datepicker._clearDate( input ); 
-                            });
-                            btn.appendTo(buttonPane);
-                        }, 1 );
-                    };
-
-                var clearBtnFnc2 = function(yes, month, inst) {
-                        setTimeout(function() {
-                            var buttonPane = $( this )
-                                .datepicker( "widget" )
-                                .find( ".ui-datepicker-buttonpane" );
-                            var btn = $( '<button class="ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all" type="button">Clear</button>');
-                            btn.unbind("click")  .bind("click", function () {  
-                               $.datepicker._clearDate( inst.input ); 
-                            });
-                            btn.appendTo(buttonPane);
-                        }, 1 );
-                    };
-
-                $( "#zizoo_boat_search_reservation_from" ).datepicker({
-                    defaultDate: "+1d",
-                    changeMonth: true,
-                    numberOfMonths: 1,
-                    showAnim: 'slideDown',
-                    dateFormat: 'dd/mm/yy',
-                    showButtonPanel: true,
-                    beforeShow: clearBtnFnc1,
-                    onChangeMonthYear: clearBtnFnc2,
-                    onClose: function( selectedDate ) {
-                        $( "#reservation_to" ).datepicker( "option", "minDate", selectedDate );
-                    }
-                });
-                $( "#zizoo_boat_search_reservation_to" ).datepicker({
-                    defaultDate: "+1d",
-                    changeMonth: true,
-                    numberOfMonths: 1,
-                    showAnim: 'slideDown',
-                    dateFormat: 'dd/mm/yy',
-                    showButtonPanel: true,
-                    beforeShow: clearBtnFnc1,
-                    onChangeMonthYear: clearBtnFnc2,
-                    onClose: function( selectedDate ) {
-                        $( "#zizoo_boat_search_reservation_from" ).datepicker( "option", "maxDate", selectedDate );
-                    }
-                });
-            });
-        </script>
-        
-        <h1><a href="{{ path('ZizooAddressBundle_locations') }}">Browse!</a></h1>
-    </div>
-{% endblock %}
     
-{% block row %}
-    {% if main is defined and main %}
-        <div class="row">
-            <div class="span4">
-                <h2>Ride The Waves</h2>
-                <p>Renting a boat is your way to a unique vacation.</p>
-                <p><a class="btn" href="{{ path('ZizooBaseBundle_how') }}">View details &raquo;</a></p>
-            </div>
-            <div class="span4">
-                <h2>Rent Your Boat</h2>
-                <p>Find out how and why to add your boat.</p>
-                <p><a class="btn" href="{{ path('ZizooBaseBundle_how') }}">View details &raquo;</a></p>
-            </div>
-            <div class="span4">
-                <h2>Be a Skipper</h2>
-                <p>Find out how and why to be a skipper.</p>
-                <p><a class="btn" href="{{ path('ZizooBaseBundle_how') }}">View details &raquo;</a></p>
+    <!-- start:slideshow -->
+    <div id="slideshow">
+
+        <!-- start:rotators -->
+        <ul class="rotators">
+            <li style="background-image: url({{ asset('bundles/zizoobase/images/slideshow/slide1.jpg') }});"></li>
+            <li style="background-image: url({{ asset('bundles/zizoobase/images/slideshow/slide2.jpg') }});"></li>
+        </ul>
+        <!-- end:rotators -->
+
+        <!-- start:container -->
+        <div class="container">
+
+            <a href="#" class="arrow prev"></a>
+
+            <!-- start:search -->
+            
+            {% form_theme form 'ZizooAddressBundle:Form:search_index.html.twig' %}
+            <form id="search_form" action="{{ path('ZizooAddressBundle_locations') }}" method="get">
+                
+            </form>
+            <!-- end:search -->
+
+            <a href="#" class="arrow next"></a>
+
+        </div>
+        <!-- end:container -->
+
+        <!-- start:bottom -->
+        <div class="bottom">
+            <ol class="links clearfix" data-rotator="slideshow">
+                <li><a href="#"></a></li>
+                <li><a href="#"></a></li>
+            </ol>
+
+            <div class="container clearfix">
+                <ul class="clearfix">
+                    <li><a href="" title="Lagoon">Lagoon</a></li>
+                    <li><a href="" title="Abigail sailing club"><strong>Abigail sailing club</strong></a></li>
+                    <li><span class="icon location white"></span> <a href="" title="Barcelona, Span">Barcelona, Span</a></li>
+                    <li class="price">6,600 &euro; <small>(per week)</small></li>
+                </ul>
             </div>
         </div>
-    {% endif %}
+        <!-- end:bottom -->
+
+    </div>
+    <!-- end:slideshow -->
+    
+    <!-- start:how it works short -->
+    <section id="how-it-works-short" class="container">
+        <h2>How it Works</h2>
+        <div class="columns clearfix">
+            <section class="book">
+                <h3>Book<br> your Trip</h3>
+                <a href="{{ path('ZizooBaseBundle_how') }}" class="button blue" title="Search">Search</a>
+            </section>
+
+            <section class="add">
+                <h3>Add<br> your Boat</h3>
+                <a href="{{ path('ZizooBaseBundle_how') }}" class="button blue" title="Add">Add</a>
+            </section>
+
+            <section class="join">
+                <h3>Join Skipper<br> Community</h3>
+                <a href="{{ path('ZizooBaseBundle_how') }}" class="button blue" title="Join">Join</a>
+            </section>
+        </div>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea.
+        </p>
+    </section>
+    <!-- end:how it works short -->
+
+    <!-- start:inspire me -->
+    <section id="inspire-me">
+        <h3><span class="container">Inspire Me</span></h3>
+
+        <!-- start:locations -->
+        <div class="container">
+            <div class="locations clearfix">
+                <article>
+                    <img src="{{ asset('bundles/zizoobase/images/temp/hvar.jpg') }}" class="location" alt="">
+                    <div class="content">
+                        <h4>Hvar</h4>
+                        August / 7 Guests
+                        <span class="seal hot"></span>
+                    </div>
+                    <div class="details clearfix">
+                        <div class="top">
+                            Hvar | Aug | 7 Guests
+                        </div>
+                        <figure>
+                            <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg') }}" alt="">
+                            <figcaption class="clearfix">
+                                Galeon 550 Fly <span class="icon minus"></span>
+                                <span class="seal hot"></span>
+                            </figcaption>
+                        </figure>
+                        <div class="book">
+                            <h5>7 Incredible Nights! <span class="price">110,000 &euro;</span></h5>
+                            <a href="" class="button orange" title="Book It">Book It</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article>
+                    <img src="{{ asset('bundles/zizoobase/images/temp/capri.jpg') }}" class="location" alt="">
+                    <div class="content">
+                        <h4>Capri</h4>
+                        August / 4 Guests
+                        <span class="seal hot"></span>
+                    </div>
+                    <div class="details clearfix">
+                        <div class="top">
+                            Capri | Aug | 4 Guests
+                        </div>
+                        <figure>
+                            <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg') }}" alt="">
+                            <figcaption class="clearfix">
+                                Galeon 550 Fly <span class="icon minus"></span>
+                                <span class="seal hot"></span>
+                            </figcaption>
+                        </figure>
+                        <div class="book">
+                            <h5>4 Incredible Nights! <span class="price">9,000 &euro;</span></h5>
+                            <a href="" class="button orange" title="Book It">Book It</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article>
+                    <img src="{{ asset('bundles/zizoobase/images/temp/crete.jpg') }}" class="location" alt="">
+                    <div class="content">
+                        <h4>Crete</h4>
+                        July / 3 Guests
+                        <span class="seal hot"></span>
+                    </div>
+                    <div class="details clearfix">
+                        <div class="top">
+                            Crete | Jul | 3 Guests
+                        </div>
+                        <figure>
+                            <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg') }}" alt="">
+                            <figcaption class="clearfix">
+                                Galeon 550 Fly <span class="icon minus"></span>
+                                <span class="seal hot"></span>
+                            </figcaption>
+                        </figure>
+                        <div class="book">
+                            <h5>4 Incredible Nights! <span class="price">90,000 &euro;</span></h5>
+                            <a href="" class="button orange" title="Book It">Book It</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article>
+                    <img src="{{ asset('bundles/zizoobase/images/temp/hvar.jpg') }}" class="location" alt="">
+                    <div class="content">
+                        <h4>Mallorca</h4>
+                        June / 3 Guests
+                        <span class="seal hot"></span>
+                    </div>
+                    <div class="details clearfix">
+                        <div class="top">
+                            Mallorca | Jun | 3 Guests
+                        </div>
+                        <figure>
+                            <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg') }}" alt="">
+                            <figcaption class="clearfix">
+                                Galeon 550 Fly <span class="icon minus"></span>
+                                <span class="seal hot"></span>
+                            </figcaption>
+                        </figure>
+                        <div class="book">
+                            <h5>5 Incredible Nights! <span class="price">230,500 &euro;</span></h5>
+                            <a href="" class="button orange" title="Book It">Book It</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article>
+                    <img src="{{ asset('bundles/zizoobase/images/temp/brijuni.jpg') }}" class="location" alt="">
+                    <div class="content">
+                        <h4>Crete</h4>
+                        April / 5 Guests
+                        <span class="seal hot"></span>
+                    </div>
+                    <div class="details clearfix">
+                        <div class="top">
+                            Brijuni | Apr | 5 Guests
+                        </div>
+                        <figure>
+                            <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg') }}" alt="">
+                            <figcaption class="clearfix">
+                                Galeon 550 Fly <span class="icon minus"></span>
+                                <span class="seal hot"></span>
+                            </figcaption>
+                        </figure>
+                        <div class="book">
+                            <h5>10 Incredible Nights! <span class="price">75,000 &euro;</span></h5>
+                            <a href="" class="button orange" title="Book It">Book It</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article>
+                    <img src="{{ asset('bundles/zizoobase/images/temp/zakynthos.jpg') }}" class="location" alt="">
+                    <div class="content">
+                        <h4>Zakynthos</h4>
+                        March / 4 Guests
+                        <span class="seal hot"></span>
+                    </div>
+                    <div class="details clearfix">
+                        <div class="top">
+                            Zakynthos | Mar | 4 Guests
+                        </div>
+                        <figure>
+                            <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg') }}" alt="">
+                            <figcaption class="clearfix">
+                                Galeon 550 Fly <span class="icon minus"></span>
+                                <span class="seal hot"></span>
+                            </figcaption>
+                        </figure>
+                        <div class="book">
+                            <h5>25 Incredible Nights! <span class="price">800,000 &euro;</span></h5>
+                            <a href="" class="button orange" title="Book It">Book It</a>
+                        </div>
+                    </div>
+                </article>
+
+                <div class="more">
+                    <a href="" title="Show more">Show more</a>
+                </div>
+            </div>
+        </div>
+        <!-- end:locations -->
+
+    </section>
+    <!-- end:inspire me -->
+
 {% endblock %}

@@ -1,9 +1,20 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html" charset=utf-8" />
-        <title>{% block title %}Bootstrap{% endblock %} - zizoo</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+
+        <!-- start:page title -->
+        <title>ZIZOO The Sea Awaits - Boat Rentals made Easy</title>
+        <!-- end:page title -->
+
+        <!-- start:responsive web design -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
+        <!-- end:responsive web design -->
+
+        <!-- start:favicon -->
+        <link rel="shortcut icon" href="{{ asset('bundles/zizoobase/images/favicon.ico') }}">
+        <!-- end:favicon -->
+
         <meta name="description" content="">
         <meta name="author" content="">
         
@@ -13,19 +24,16 @@
         
         <!-- Le styles -->
         {% block stylesheets %}
+        
+        <link href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext" rel="stylesheet" >
         <link href='http://fonts.googleapis.com/css?family=Irish+Grover' rel='stylesheet' type='text/css'>
         <link href='http://fonts.googleapis.com/css?family=La+Belle+Aurore' rel='stylesheet' type='text/css'>
-        
+        <!--
         <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
-        <style type="text/css">
-          body {
-            padding-top: 60px;
-            padding-bottom: 40px;
-          }
-        </style>
         <link href="{{ asset('css/bootstrap-responsive.css') }}" rel="stylesheet">
         <link href="{{ asset('css/jquery-ui-1.9.2.custom.css') }}" rel="stylesheet">
         <link href="{{ asset('css/jquery.asmselect.css') }}" rel="stylesheet">
+        -->
         {% endblock %}
         
         <!-- Le javascript -->
@@ -45,31 +53,10 @@
         <!-- Main Top Navigation -->
         {% block navigation %}{% endblock %}   
 
-        <!-- Fluid Container -->
-        <div class="container">
+        {% block body %}{% endblock %}
 
-            <div class="row-fluid">
-                {% block body %}{% endblock %}
-            </div>  
-
-            {% block row %}{% endblock %}
-
-            <hr>
-
-            <div id="footer">
-                {% block footer %}
-                    <ul class="nav">
-                        <li><a href="{{ path('ZizooBaseBundle_about') }}">About</a></li>
-                        <li><a href="{{ path('ZizooBaseBundle_terms') }}">Terms &amp; Conditions</a></li>
-                        <li><a href="{{ path('ZizooBaseBundle_policies') }}">Policies</a></li>
-                        <li><a href="{{ path('ZizooBaseBundle_feedback') }}">Feedback</a></li>
-                        <li><a href="{{ path('ZizooBaseBundle_faq') }}">FAQ</a></li>
-                      </ul>
-                    <p>&copy; Zizoo 2012</p>
-                {% endblock %}
-            </div>
-
-        </div> <!-- /container -->
-    
+        {% block row %}{% endblock %}
+        
+        {% include 'footer.html.twig' %}
     </body>
 </html>

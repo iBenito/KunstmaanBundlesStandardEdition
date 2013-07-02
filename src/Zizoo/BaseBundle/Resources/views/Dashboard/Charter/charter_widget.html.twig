@@ -1,31 +1,38 @@
 {% trans_default_domain "labels" %}
 
-<div id="dashboard_charter">
-    <div class="avatar">
-        {% if charter.logo is not null %}
-            <img src="{{ asset(charter.logo|pictureWebPath) }}" alt="image not found" class="large" />
-        {% endif %}
-    </div>
-    <h3>{{ charter.charterName }}</h3>
-  
-    <p>Captain!</p>
-           
-        
-    <a id="add_boat" href="{{ path('ZizooBoatBundle_Boat_New') }}">Add Boat</a>
+<!-- start:avatar -->
+<div class="avatar">
+    <figure>
+        <img src="images/temp/boats-and-hos-crew.jpg" alt="{{ charter.charterName }}">
+        <!-- asset(charter.logo|pictureWebPath) -->
+        <figcaption>
+            {{ charter.charterName }}
+        </figcaption>
+    </figure>
+    <section class="completeness">
+        <h4>Profile Completeness <span class="icon cross"></span></h4>
+        <ul class="clearfix">
+            <li class="complete"><span>1</span></li>
+            <li><span>2</span></li>
+            <li><span>3</span></li>
+        </ul>
+    </section>
+    <a href="{{ path('ZizooBoatBundle_Boat_New') }}" class="button orange big" title="List Boats">List Boats</a>
 </div>
+<!-- end:avatar -->
 
-<hr />
+<!-- start:verifications -->
+<section class="verifications">
+    <h4>Verifications</h4>
+    <ul>
+        <li class="phone verificated"><span></span>Phone <span class="icon check black"></span></li>
+        <li class="facebook verificated"><span></span>Facebook <span class="icon check white"></span></li>
+        <li class="twitter verificated"><span></span>Twitter <span class="icon check white"></span></li>
+    </ul>
+</section>
+<!-- end:verifications -->
+
 
 <div class="dashboard_navigation">
-    <ul class="nav">
-      <li class="active"><a href="{{ path('ZizooBaseBundle_Dashboard_CharterDashboard') }}">Dashboard</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterInbox') }}">Inbox</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterSent') }}">Sent Messages</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterProfile') }}">Profile</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterBookings') }}">My Bookings</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterBoats') }}">My Boats</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterPayments') }}">My Payments</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterPayoutSettings') }}">Payout Settings</a></li>
-    </ul>
     <a href="{{ path('ZizooBaseBundle_Dashboard_UserDashboard', {show_user: 'true'}) }}">Switch to user view</a>
 </div>

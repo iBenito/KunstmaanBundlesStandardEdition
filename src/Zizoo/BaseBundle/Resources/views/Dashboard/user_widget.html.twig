@@ -1,30 +1,38 @@
 {% trans_default_domain "labels" %}
 
-<div id="dashboard_user">
-    <div class="avatar">
-        {% if user.profile.avatar|length > 0 %}
-            <img src="{{ asset(user.profile.avatar.first|pictureWebPath) }}" alt="image not found" class="large" />
-        {% endif %}
-    </div>
-    <h3>{{ user.profile.firstName }} {{ user.profile.lastName }}</h3>
-
-    <div id="profile_completeness" class="{{ profile_completeness }}">Profile Completeness Level:{{ profile_completeness }}</div>
-    <a id="add_skills" href="{{ path('ZizooBaseBundle_Dashboard_Skills') }}">Add Skills</a>
-
+<!-- start:avatar -->
+<div class="avatar">
+    <figure>
+        <img src="images/temp/dalibor-hemingway.jpg" alt="{{ user.profile.firstName }} {{ user.profile.lastName }}">
+        <!-- asset(user.profile.avatar.first|pictureWebPath) -->
+        <figcaption>
+            {{ user.profile.firstName }} {{ user.profile.lastName }}
+        </figcaption>
+    </figure>
+    <section class="completeness">
+        <h4>Profile Completeness {% if profile_completeness < 3 %}<span class="icon cross"></span>{% endif %}</h4>
+        <ul class="clearfix">
+            <li {% if profile_completeness >=1 %}class="complete"{% endif %}><span>1</span></li>
+            <li {% if profile_completeness >=2 %}class="complete"{% endif %}><span>2</span></li>
+            <li {% if profile_completeness >=3 %}class="complete"{% endif %}><span>3</span></li>
+        </ul>
+    </section>
+    <a href="{{ path('ZizooBaseBundle_Dashboard_Skills') }}" class="button blue big" title="Add Skills">Add Skills</a>
 </div>
+<!-- end:avatar -->
 
-<hr />
+<!-- start:verifications -->
+<section class="verifications">
+    <h4>Verifications</h4>
+    <ul>
+        <li class="phone verificated"><span></span>Phone <span class="icon check black"></span></li>
+        <li class="facebook verificated"><span></span>Facebook <span class="icon check white"></span></li>
+        <li class="twitter"><span></span>Twitter <span class="icon cross"></span></li>
+    </ul>
+</section>
+<!-- end:verifications -->
 
 <div class="dashboard_navigation">
-    <ul class="nav">
-      <li class="active"><a href="{{ path('ZizooBaseBundle_Dashboard_UserDashboard', {show_user: 'true'}) }}">Dashboard</a></li>
-      <li><a href="{{ path('fos_message_inbox') }}">Inbox</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Profile') }}">Profile</a></li>
-      <li><a href="{{ path('ZizooBookingBundle_view_all_bookings') }}">Trips</a></li>
-      <li><a href="{{ path('ZizooBaseBundle_Dashboard_Skills') }}">Skills</a></li>
-      <li><a href="{{ path('ZizooUserBundle_User_AccountSettings') }}">Account Settings</a></li>
-    </ul>
-    
     {% if user.charter %}
         <a href="{{ path('ZizooBaseBundle_Dashboard_CharterDashboard') }}">Switch to charter view</a>
     {% endif %}

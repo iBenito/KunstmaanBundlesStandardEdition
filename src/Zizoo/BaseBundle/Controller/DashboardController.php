@@ -7,7 +7,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\DBAL\DBALException;
 
 use Zizoo\ReservationBundle\Entity\Reservation;
-
+use Zizoo\AddressBundle\Form\Model\SearchBoat;
+use Zizoo\AddressBundle\Form\Type\SearchBoatType;
 
 /**
  * Dashboard Controller for managing everything related to User account.
@@ -80,6 +81,8 @@ class DashboardController extends Controller {
         $outstandingPayments = $bookingRepository->getOutstandingBookings($charter);
         $receivedPayments = $bookingRepository->getPaidBookings($charter);
 
+        $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat());
+
         return $this->render('ZizooBaseBundle:Dashboard:Charter/index.html.twig', array(
             'unreadMessages' => $unreadMessages,
             'reservationRequests' => count($reservationRequests),
@@ -89,7 +92,8 @@ class DashboardController extends Controller {
             'incompleteListings' => $incompleteListings,
             'hiddenListings' => $hiddenListings,
             'outstandingPayments' => count($outstandingPayments),
-            'receivedPayments' => count($receivedPayments)
+            'receivedPayments' => count($receivedPayments),
+            'searchForm' => $form->createView()
         ));
     }
     
@@ -103,9 +107,11 @@ class DashboardController extends Controller {
         $reservationsMade = $user->getReservations();
         $bookingsMade = $user->getBookings();
 
+        $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat());
         return $this->render('ZizooBaseBundle:Dashboard:index.html.twig', array(
             'reservations' => $reservationsMade,
-            'bookings' => $bookingsMade
+            'bookings' => $bookingsMade,
+            'searchForm' => $form->createView()
         ));
     }
     
