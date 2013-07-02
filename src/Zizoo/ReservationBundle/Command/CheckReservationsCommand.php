@@ -1,5 +1,5 @@
 <?php
-namespace Zizoo\EventBundle\Command;
+namespace Zizoo\ReservationBundle\Command;
 
 use Zizoo\ReservationBundle\Entity\Reservation;
 use Zizoo\ReservationBundle\Exception\InvalidReservationException;

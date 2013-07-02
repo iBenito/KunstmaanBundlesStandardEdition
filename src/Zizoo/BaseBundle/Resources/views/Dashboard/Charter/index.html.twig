@@ -30,7 +30,6 @@
             <!-- start:links -->
             <section class="links">
                 <h2>My Boats</h2>
-
                 <ul>
                     <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'active'}) }}">{{ activeListings }} Active Listings</a></li>
                     <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'incomplete'}) }}">{{ incompleteListings }} Incomplete Listings</a></li>
@@ -50,7 +49,6 @@
             <!-- start:links -->
             <section class="links">
                 <h2>My Bookings</h2>
-
                 <ul>
                     <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}">{{ reservationRequests }} Pending Requests</a></li>
                     <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}">{{ upcomingRequests }} Bookings Next 7 Days</a></li>
@@ -88,7 +86,7 @@
             Zizoo has made you:
         </div>
         <div class="right">
-            20,500 &euro;
+            {{ settledPayouts|displayTotalAmount }} &euro;
         </div>
     </div>
     <!-- end:earned -->

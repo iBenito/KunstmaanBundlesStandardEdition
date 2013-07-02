@@ -120,8 +120,8 @@ class ProfileController extends Controller
             $em->persist($avatar);
 
             $validator          = $this->get('validator');
-            $profileErrors      = $validator->validate($profile, 'default');
-            $avatarErrors       = $validator->validate($avatar, 'default');
+            $profileErrors      = $validator->validate($profile, 'Default');
+            $avatarErrors       = $validator->validate($avatar, 'Default');
             $numProfileErrors   = $profileErrors->count();
             $numAvatarErrors    = $avatarErrors->count();
 

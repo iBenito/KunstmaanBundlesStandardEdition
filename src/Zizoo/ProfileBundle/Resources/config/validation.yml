@@ -2,17 +2,17 @@
 Zizoo\ProfileBundle\Entity\Profile:
     properties:
         firstName:
-            - NotBlank: { message: zizoo_user.error.first_name_not_blank, groups: [registration, default] }
+            - NotBlank: { message: zizoo_user.error.first_name_not_blank, groups: [registration, Default] }
             
         lastName:
-            - NotBlank: { message: zizoo_user.error.last_name_not_blank, groups: [registration, default] }
+            - NotBlank: { message: zizoo_user.error.last_name_not_blank, groups: [registration, Default] }
             
         avatar:
             - Count:
                 max: 2
                 minMessage: "You must upload at least 1 profile avatar"
                 maxMessage: "You cannot upload more than {{ limit }} avatars"
-                groups: [default]
+                groups: [Default]
                 
 Zizoo\ProfileBundle\Entity\ProfileAvatar:
     properties:
@@ -21,4 +21,4 @@ Zizoo\ProfileBundle\Entity\ProfileAvatar:
                 pattern: "/image\\/(png|jpeg)/"
                 match:   true
                 message: Only png and jpeg images are allowed
-                groups: [default]
+                groups: [Default]

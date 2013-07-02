@@ -35,7 +35,7 @@ class BoatImageType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class'            => 'Zizoo\BoatBundle\Entity\Boat',
-            'validation_groups'     => array('default'),
+            'validation_groups'     => array('Default'),
             'cascade_validation'    => true,
             'boat_id'               => 0
         ));

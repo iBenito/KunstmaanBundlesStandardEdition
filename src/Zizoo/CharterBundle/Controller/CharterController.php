@@ -146,7 +146,7 @@ class CharterController extends Controller
         $charterType = $this->container->get('zizoo_charter.charter_type');
         $form = $this->createForm($charterType, $charter, array('map_drag'          => true, 
                                                                 'map_update'        => true,
-                                                                'validation_groups' => array('default')));
+                                                                'validation_groups' => array('Default')));
         
         if ($request->isMethod('post')){
             $form->bind($request);
@@ -835,7 +835,7 @@ class CharterController extends Controller
         $charterType = $this->container->get('zizoo_charter.charter_type');
         $form = $this->createForm($charterType, $charter, array('map_drag'          => true, 
                                                                 'map_update'        => true,
-                                                                'validation_groups' => array('default')));
+                                                                'validation_groups' => array('Default')));
         
         return $this->render('ZizooCharterBundle:Charter:logo.html.twig',array(
             'form'     => $form->createView()

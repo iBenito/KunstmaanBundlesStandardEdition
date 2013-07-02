@@ -101,12 +101,21 @@
     {% block content %}
         {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat }  %}
 
+        {% set step = app.session.get('step') %}
+
+        {% if step != "" %}
+            <h3>Step {{ step }}</h3>
+        {% endif %}
+
         <h2>Boat Gallery</h2>
 
         <form action="{{ path('ZizooBoatBundle_Boat_EditPhotos', { 'id': boat.id }) }}" method="post" {{ form_enctype(imagesForm) }}>
             {{ form_widget(imagesForm) }}
             <br />
-            <button type="submit">Save</button>
+
+            {% if step != "" %}
+                <a href="{{ path('ZizooBoatBundle_Boat_EditPrice', { 'id': boat.id }) }}">Continue</a>
+            {% endif %}
         </form>
 
     {% endblock %}

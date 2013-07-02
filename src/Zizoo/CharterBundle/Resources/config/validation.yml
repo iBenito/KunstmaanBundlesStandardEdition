@@ -2,30 +2,30 @@
 Zizoo\CharterBundle\Entity\Charter:
     properties:
         charterName:
-            - NotBlank: { message: zizoo_charter.error.charter_name_not_blank, groups: [registration, default] }
+            - NotBlank: { message: zizoo_charter.error.charter_name_not_blank, groups: [registration, Default] }
             
         phone:
-            - NotBlank: { message: zizoo_charter.error.charter_phone_not_blank, groups: [registration, default] }
+            - NotBlank: { message: zizoo_charter.error.charter_phone_not_blank, groups: [registration, Default] }
             
         about:
-            - NotBlank: { message: zizoo_charter.error.charter_about_not_blank, groups: [default] }
+            - NotBlank: { message: zizoo_charter.error.charter_about_not_blank, groups: [Default] }
             
         logo:
-            - NotNull: { message: zizoo_charter.error.charter_logo_not_null, groups: [logo, default] }            
+            - NotNull: { message: zizoo_charter.error.charter_logo_not_null, groups: [logo, Default] }            
             
 Zizoo\AddressBundle\Entity\CharterAddress:
     properties:
         addressLine1:
-            - NotBlank: { message: zizoo_charter.error.charter_address_street_not_blank, groups: [registration, default] }
+            - NotBlank: { message: zizoo_charter.error.charter_address_street_not_blank, groups: [registration, Default] }
 
         postcode:
-            - NotBlank: { message: zizoo_charter.error.charter_address_postcode_not_blank, groups: [registration, default] }
+            - NotBlank: { message: zizoo_charter.error.charter_address_postcode_not_blank, groups: [registration, Default] }
             
         locality:
-            - NotBlank: { message: zizoo_charter.error.charter_address_locality_not_blank, groups: [registration, default] }
+            - NotBlank: { message: zizoo_charter.error.charter_address_locality_not_blank, groups: [registration, Default] }
             
         country:
-            - NotNull: { message: zizoo_charter.error.charter_address_country_not_null, groups: [registration, default] }
+            - NotNull: { message: zizoo_charter.error.charter_address_country_not_null, groups: [registration, Default] }
             
 Zizoo\CharterBundle\Entity\CharterLogo:
     properties:

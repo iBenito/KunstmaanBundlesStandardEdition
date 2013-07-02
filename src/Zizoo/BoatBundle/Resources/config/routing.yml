@@ -80,7 +80,14 @@ ZizooBoatBundle_Boat_Update:
     requirements: 
         _method: POST 
         id: \d+
-    
+
+ZizooBoatBundle_Boat_UpdateDetails:
+    pattern:  /charter/account/boat/{id}/update/details
+    defaults: { _controller: ZizooBoatBundle:Boat:updateDetails }
+    requirements:
+        _method: POST
+        id: \d+
+
 ZizooBoatBundle_Boat_Delete:
     pattern:  /charter/account/boat/{id}/delete
     defaults: { _controller: ZizooBoatBundle:Boat:delete }

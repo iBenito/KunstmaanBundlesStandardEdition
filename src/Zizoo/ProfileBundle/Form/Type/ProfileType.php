@@ -66,7 +66,7 @@ class ProfileType extends AbstractType
         $resolver->setDefaults(array(
             'data_class'            => 'Zizoo\ProfileBundle\Entity\Profile',
             'cascade_validation'    => true,
-            'validation_groups'     => array('default'),
+            'validation_groups'     => array('Default'),
             'data_class'            => 'Zizoo\ProfileBundle\Entity\Profile',
             'map_show'              => true,
             'map_update'            => false,

@@ -4,6 +4,7 @@ namespace Zizoo\BillingBundle\Service;
 use Zizoo\BillingBundle\Entity\Payout;
 use Zizoo\CharterBundle\Entity\Charter;
 use Zizoo\ReservationBundle\Entity\Reservation;
+use Zizoo\BookingBundle\Entity\Booking;
 
 use Symfony\Component\DependencyInjection\Container;
 
@@ -16,7 +17,7 @@ class BillingService {
         $this->container = $container;
     }
     
-    public function createPayout(Charter $charter)
+    public function createPayout(Charter $charter, $flush=false)
     {
         try {
             $em = $this->container->get('doctrine.orm.entity_manager');
@@ -29,17 +30,19 @@ class BillingService {
                                             ->select('booking')
                                             ->where('charter = :charter')
                                             ->andWhere('reservation.status = :reservation_status')
+                                            ->andWhere('booking.status = :booking_status')
                                             ->andWhere('booking.payout IS NULL')
                                             ->setParameter('charter', $charter)
-                                            ->setParameter('reservation_status', Reservation::STATUS_ACCEPTED);
+                                            ->setParameter('reservation_status', Reservation::STATUS_ACCEPTED)
+                                            ->setParameter('booking_status', Booking::STATUS_PAID);
 
             $bookings = $qb->getQuery()->getResult();
-
+           
             if (count($bookings)>0){
                 $payout = new Payout();
 
                 $userService    = $this->container->get('zizoo_user_user_service');
-                $bookingAgent   = $this->container->get('zizoo_booking_booking_agent');
+                //$bookingAgent   = $this->container->get('zizoo_booking_booking_agent');
                 
                 // Get braintree customer of charter billing user
                 $billingUser = $charter->getBillingUser();
@@ -47,6 +50,9 @@ class BillingService {
 
                 if (!$braintreeCustomer){
                     throw new \Exception('Could not connect to Braintree to get charter payout information');
+                }
+                if (!is_array($braintreeCustomer->customFields)){
+                    throw new \Exception('Charter payout information from Braintree does not contain payout method');
                 }
                 if (!array_key_exists('payout_method', $braintreeCustomer->customFields)){
                     throw new \Exception('Charter payout information from Braintree does not contain payout method');
@@ -72,10 +78,12 @@ class BillingService {
                 }
 
 
-                // Only accept bookings which have been paid in full
+                
                 $payoutAmount = 0;
                 foreach ($bookings as $booking){
-                    if (!$bookingAgent->bookingPaidInFull($booking)) continue;
+                    // Only accept bookings which have been paid in full
+                    // Actually the query already implies this (booking.status = Booking::STATUS_PAID)
+                    //if (!$bookingAgent->bookingPaidInFull($booking)) continue;
                     
                     $payout->addBooking($booking);
                     $booking->setPayout($payout);
@@ -89,7 +97,7 @@ class BillingService {
                     
                     $em->persist($payout);
                 
-                    $em->flush();
+                    if ($flush) $em->flush();
                     
                     return $payout;
                 }
@@ -104,6 +112,5 @@ class BillingService {
         
     }
 
-    
 }
 ?>

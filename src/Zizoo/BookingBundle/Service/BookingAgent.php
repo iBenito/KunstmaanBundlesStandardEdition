@@ -61,9 +61,15 @@ class BookingAgent {
         $booking->setPayoutAmount($intendedPrice-($intendedPrice*$cut));
         $booking->setRenter($user);
         $booking->setReservation($reservation);
-        $booking->setStatus('4');
+        
         $booking->setInitialPaymentMethod($initialPaymentMethod);
         $booking->setCrew($crew);
+        
+        if ($this->bookingPaidInFull($booking)){
+            $booking->setStatus(Booking::STATUS_PAID);
+        } else {
+            $booking->setStatus(Booking::STATUS_OUTSTANDING);
+        }
         
         $reservation->setBooking($booking);
         
@@ -357,7 +363,7 @@ class BookingAgent {
         
     }
     
-    public function bookingPaidInFull(Booking $booking)
+    private function bookingPaidInFull(Booking $booking)
     {
         $payments = $booking->getPayment();
         $amountPaid = 0;

@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\DBAL\DBALException;
 
+use Zizoo\BillingBundle\Entity\Payout;
 use Zizoo\ReservationBundle\Entity\Reservation;
 use Zizoo\AddressBundle\Form\Model\SearchBoat;
 use Zizoo\AddressBundle\Form\Type\SearchBoatType;
@@ -64,36 +65,39 @@ class DashboardController extends Controller {
      */
     private function indexCharterAction($charter)
     {
-        $messageProvider = $this->container->get('fos_message.provider');
-        $unreadMessages = $messageProvider->getNbUnreadMessages();
+        $messageProvider    = $this->container->get('fos_message.provider');
+        $unreadMessages     = $messageProvider->getNbUnreadMessages();
 
-        $reservationRepository = $this->getDoctrine()->getRepository('ZizooReservationBundle:Reservation');
-        $reservationRequests = $reservationRepository->getReservationRequests($charter);
-        $upcomingWeekRequests = $reservationRepository->getUpcomingWeekReservations($charter);
-        $acceptedRequests = $reservationRepository->getAcceptedReservations($charter);
+        $reservationRepository  = $this->getDoctrine()->getRepository('ZizooReservationBundle:Reservation');
+        $reservationRequests    = $reservationRepository->getReservationRequests($charter);
+        $upcomingWeekRequests   = $reservationRepository->getUpcomingWeekReservations($charter);
+        $acceptedRequests       = $reservationRepository->getAcceptedReservations($charter);
 
-        $boatRepository = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat');
-        $activeListings = $boatRepository->getNumberOfCharterBoats($charter, TRUE);
+        $boatRepository     = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat');
+        $activeListings     = $boatRepository->getNumberOfCharterBoats($charter, TRUE);
         $incompleteListings = $boatRepository->getNumberOfCharterBoats($charter, FALSE);
-        $hiddenListings = $boatRepository->getNumberOfCharterBoats($charter, FALSE, TRUE);
+        $hiddenListings     = $boatRepository->getNumberOfCharterBoats($charter, FALSE, TRUE);
 
-        $bookingRepository = $this->getDoctrine()->getRepository('ZizooBookingBundle:Booking');
-        $outstandingPayments = $bookingRepository->getOutstandingBookings($charter);
-        $receivedPayments = $bookingRepository->getPaidBookings($charter);
+        $bookingRepository      = $this->getDoctrine()->getRepository('ZizooBookingBundle:Booking');
+        $outstandingPayments    = $bookingRepository->getOutstandingBookings($charter);
+        $receivedPayments       = $bookingRepository->getPaidBookings($charter);
 
+        $payoutRepository   = $this->getDoctrine()->getRepository('ZizooBillingBundle:Payout');
+        $settledPayouts     = $payoutRepository->getSettledPayouts($charter);
         $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat());
-
+        
         return $this->render('ZizooBaseBundle:Dashboard:Charter/index.html.twig', array(
-            'unreadMessages' => $unreadMessages,
-            'reservationRequests' => count($reservationRequests),
-            'upcomingRequests' => count($upcomingWeekRequests),
-            'acceptedRequests' => count($acceptedRequests),
-            'activeListings' => $activeListings,
-            'incompleteListings' => $incompleteListings,
-            'hiddenListings' => $hiddenListings,
-            'outstandingPayments' => count($outstandingPayments),
-            'receivedPayments' => count($receivedPayments),
-            'searchForm' => $form->createView()
+            'unreadMessages'        => $unreadMessages,
+            'reservationRequests'   => count($reservationRequests),
+            'upcomingRequests'      => count($upcomingWeekRequests),
+            'acceptedRequests'      => count($acceptedRequests),
+            'activeListings'        => $activeListings,
+            'incompleteListings'    => $incompleteListings,
+            'hiddenListings'        => $hiddenListings,
+            'outstandingPayments'   => count($outstandingPayments),
+            'receivedPayments'      => count($receivedPayments),
+            'settledPayouts'        => $settledPayouts,
+            'searchForm'            => $form->createView()
         ));
     }
     

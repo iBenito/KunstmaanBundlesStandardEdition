@@ -25,9 +25,24 @@ class CharterSubscriber implements EventSubscriberInterface
     {
         // Tells the dispatcher that you want to listen on the form.pre_set_data
         // event and that the preSetData method should be called.
-        return array(   FormEvents::PRE_SET_DATA    => 'preSetData');
+        return array(   FormEvents::PRE_SET_DATA    => 'preSetData',
+                        FormEvents::BIND            => 'bindData');
     }
 
+    public function bindData(FormEvent $event)
+    {
+        $charter    = $event->getData();
+        $form       = $event->getForm();
+        
+        if ($charter === null) return;
+        
+        $logo = $charter->getLogo();
+        
+        if (!$logo->getId()){
+            $charter->setLogo(null);
+        }
+    }
+    
     public function preSetData(FormEvent $event)
     {
         $charter    = $event->getData();
