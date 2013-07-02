@@ -66,6 +66,7 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
     }
     
     private function initialisePaymentCustomers(){        
+        /*
         $userService = $this->container->get('zizoo_user_user_service');
         
         $customers = \Braintree_Customer::all();
@@ -76,6 +77,7 @@ class ProfileFixtures extends AbstractFixture implements OrderedFixtureInterface
         $userService->getPaymentUser($this->getReference('user-1'));
         $userService->getPaymentUser($this->getReference('user-2'));
         $userService->getPaymentUser($this->getReference('user-3'));
+        */
     }
     
     public function load(ObjectManager $manager)

@@ -1,0 +1,1212 @@
+/* ==========================================================================
+   Custom
+   ========================================================================== */
+
+@media only screen and (max-width: 1000px) {
+
+    /* =================================
+       General
+       ================================= */
+
+    /**
+     * Slideshow
+     */
+
+    #slideshow .arrow.prev {
+        left: 5px;
+    }
+
+    #slideshow .arrow {
+        right: 5px;
+    }
+
+}
+
+
+/* ==========================================================================
+   Portrait tablet
+   ========================================================================== */
+
+@media only screen and (max-width: 980px) {
+
+    /* =================================
+       Reusable
+       ================================= */
+
+    /**
+     * Conainer
+     */
+
+    .container {
+        width: 748px;
+    }
+
+    /**
+     * Form block
+     */
+
+    .form .block {
+        padding-right: 0;
+    }
+
+    /**
+     * Tabs
+     */
+
+    .tabs {
+        padding: 0 0 7px 0;
+    }
+
+    .tabs.user li,
+    .tabs.charter li {
+        width: 33.33%;
+        padding-bottom: 5px;
+    }
+
+    .tabs li a {
+        border-radius: 5px;
+    }
+
+    /**
+     * Overall
+     */
+
+    .overall {
+        padding-bottom: 20px;
+    }
+
+    .overall .column {
+        padding: 0 20px 10px 0;
+    }
+
+    .overall .column:first-child {
+        float: none;
+        padding: 0 0 10px 0;
+    }
+
+    /**
+     * Messages
+     */
+
+    .inbox.excerpt .messages {
+        width: auto;
+    }
+
+    .thread .messages .messages {
+        padding-top: 20px;
+        margin-bottom: -20px;
+    }
+
+    /**
+     * Messages message
+     */
+
+    .thread .messages .message {
+        padding-bottom: 20px;
+    }
+
+    /**
+     * Messages message article
+     */
+
+    .inbox .messages .message .article {
+        padding-right: 50px;
+    }
+
+    /**
+     * Messages message delete
+     */
+
+    .messages .message .icon.delete {
+        right: 20px;
+    }
+
+
+    /* =================================
+       General
+       ================================= */
+
+    /**
+     * Header
+     */
+
+    #header {
+        text-align: center;
+    }
+
+    #header .logo {
+        float: none;
+    }
+
+    #header br {
+        display: block
+    }
+
+    #header nav {
+        display: inline-block;
+        float: none;
+        height: 31px;
+        vertical-align: top;
+        padding: 22px 0;
+    }
+
+    /**
+     * Search
+     */
+
+    #search .column {
+        padding-right: 10px;
+    }
+
+    #search .column.search {
+        padding-right: 20px;
+    }
+
+    #search .search input[type='text'] {
+        width: 200px;
+    }
+
+    /**
+     * Name
+     */
+
+    #name .flag {
+        left: 10px;
+    }
+
+    #name h1 {
+        padding-left: 90px;
+    }
+
+    /**
+     * Slideshow
+     */
+
+    #slideshow .arrow.prev {
+        left: 5px;
+    }
+
+    #slideshow .arrow {
+        right: 5px;
+    }
+
+    /**
+     * How it works
+     */
+
+    #how-it-works-short {
+        padding: 50px 10px 40px 10px;
+    }
+
+    #how-it-works-short h2 {
+        padding-bottom: 30px;
+    }
+
+    #how-it-works-short .columns {
+        margin-right: -20px;
+    }
+
+    #how-it-works-short .columns section {
+        width: 236px;
+        margin-right: 20px;
+        padding-left: 120px;
+    }
+
+    #how-it-works-short .columns .book {
+        background-position: 20px center;
+    }
+
+    #how-it-works-short .columns .add {
+        background-position: 10px center;
+    }
+
+    #how-it-works-short .columns .join {
+        background-position: 10px center;
+    }
+
+    #how-it-works-short .columns section .button {
+        width: 100px;
+    }
+
+    /**
+     * Inspire me
+     */
+
+    #inspire-me .locations {
+        padding: 20px 0 20px 20px;
+    }
+
+    #inspire-me .locations article {
+        width: 344px;
+        margin: 0 20px 20px 0;
+    }
+
+    #inspire-me .locations article .details {
+        padding: 55px 15px 0 15px;
+    }
+
+    #inspire-me .locations article .details figure {
+        width: 140px;
+        height: 97px;
+        border-width: 4px;
+        overflow: hidden;
+    }
+
+    #inspire-me .locations article .details figure img {
+        width: auto;
+        height: 100%;
+        margin: 0 0 0 -25px;
+    }
+
+    #inspire-me .locations article .details figure figcaption .icon {
+        display: none;
+    }
+
+    #inspire-me .locations article .details figure figcaption .seal.hot {
+        display: none;
+    }
+
+    #inspire-me .locations .more {
+        margin-right: 20px;
+    }
+
+    /**
+     * Content
+     */
+
+    #content {
+        padding: 30px 0 0 0;
+    }
+
+    /**
+     * How it works
+     */
+
+    #how-it-works {
+        width: 648px;
+    }
+
+    #how-it-works .steps li {
+        padding-left: 200px;
+    }
+
+    #how-it-works .steps.book li img {
+        left: 45px;
+    }
+
+    #how-it-works .steps.book li:first-child img {
+        left: 20px;
+    }
+
+    /**
+     * Registration
+     */
+
+    #registration .main {
+        width: 400px;
+    }
+
+    #registration aside {
+        width: 250px;
+    }
+
+    /**
+     * Overview
+     */
+
+    #overview {
+        width: 430px;
+    }
+
+    #overview .media .thumbs {
+        margin: 0 44px;
+    }
+
+    #overview .columns ul {
+        float: none;
+        width: 100%;
+        padding-right: 0;
+    }
+
+    /**
+     * Dashboard
+     */
+
+    #dashboard {
+        width: 530px;
+    }
+
+    #dashboard .section .tabs + .content {
+        border-radius: 5px;
+    }
+
+    /**
+     * Dashboard upcoming
+     */
+
+    #dashboard .upcoming {
+        width: auto;
+    }
+
+    /**
+     * Dashboard more
+     */
+
+    #dashboard .more {
+        width: auto;
+    }
+
+    /*
+     * Dashboard reply
+     */
+
+    #dashboard .reply {
+        padding-top: 20px;
+    }
+
+}
+
+
+/* ==========================================================================
+   Landscape mobile iPhone5 and Galaxy SIII
+   ========================================================================== */
+
+@media only screen and (max-width: 767px) {
+
+    /* =================================
+       Reusable
+       ================================= */
+
+    /**
+     * Conainer
+     */
+    .container {
+        width: auto;
+    }
+
+    /**
+     * Form block
+     */
+
+    .form .block {
+        padding-bottom: 0;
+        margin-bottom: 15px;
+    }
+
+    /**
+     * Subnavigation
+     */
+
+    .subnavigation {
+        float: none;
+        width: auto;
+        padding: 0 0 5px 0;
+        overflow: visible;
+    }
+
+    .subnavigation li {
+        float: left;
+        padding: 0 5px 5px 0;
+    }
+
+    .subnavigation li a {
+        display: block;
+        position: relative;
+        top: 0;
+        right: 0;
+        width: auto;
+        height: 27px;
+        line-height: 27px;
+        padding: 0 20px 0 38px;
+        background: -moz-linear-gradient(top, #47c2d2 50%, #45bccb 50%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#47c2d2), color-stop(50%,#45bccb));
+        background: -webkit-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
+        background: -o-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
+        background: -ms-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
+        background: linear-gradient(to bottom, #47c2d2 50%,#45bccb 50%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#47c2d2', endColorstr='#45bccb',GradientType=0);
+        -webkit-box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4), 1px 1px 1px rgba(0,0,0,0.3);
+        -moz-box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4), 1px 1px 1px rgba(0,0,0,0.3);
+        box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4), 1px 1px 1px rgba(0,0,0,0.3);
+        border-radius: 5px;
+        -webkit-transition: background-color 200ms ease, color 200ms ease, box-shadow 200ms ease, text-shadow 200ms ease;
+        transition: background-color 200ms ease, color 200ms ease, box-shadow 200ms ease, text-shadow 200ms ease;
+    }
+
+    .subnavigation .current a,
+    .subnavigation li:hover a {
+        background: -moz-linear-gradient(top, #005a69 50%, #005260 50%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#005a69), color-stop(50%,#005260));
+        background: -webkit-linear-gradient(top, #005a69 50%,#005260 50%);
+        background: -o-linear-gradient(top, #005a69 50%,#005260 50%);
+        background: -ms-linear-gradient(top, #005a69 50%,#005260 50%);
+        background: linear-gradient(to bottom, #005a69 50%,#005260 50%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#005a69', endColorstr='#005260',GradientType=0);
+        -webkit-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+        -moz-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+        box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+    }
+
+
+    /* =================================
+       General
+       ================================= */
+
+    /**
+     * Search
+     */
+
+    #search .column.search {
+        clear: both;
+        float: none;
+        padding: 0 0 10px 0;
+    }
+
+    #search .search input[type='text'] {
+        width: 100%;
+    }
+
+    /**
+     * Name
+     */
+
+    #name h1 span {
+        display: block;
+        padding: 0;
+    }
+
+    #name .social {
+        padding-top: 13px;
+    }
+
+    /**
+     * How it works
+     */
+
+    #how-it-works-short .columns {
+        margin-right: -3%;
+    }
+
+    #how-it-works-short .columns section {
+        width: 30.33%;
+        text-align: center;
+        padding: 90px 20px 20px 20px;
+        margin-right: 3%;
+    }
+
+    #how-it-works-short .columns .book {
+        background-position: center 20px;
+    }
+
+    #how-it-works-short .columns .add {
+        background-position: center 30px;
+    }
+
+    #how-it-works-short .columns .join {
+        background-position: center 20px;
+    }
+
+    #how-it-works-short .columns section .button {
+        width: 100%;
+    }
+
+    /**
+     * Inspire me
+     */
+
+    #inspire-me {
+        padding-bottom: 30px;
+    }
+
+    #inspire-me h3 {
+        margin-bottom: 30px;
+    }
+
+    #inspire-me .locations {
+        padding: 20px;
+    }
+
+    #inspire-me .locations article {
+        width: 100%;
+        margin: 0 0 20px 0;
+    }
+
+    #inspire-me .locations article .details {
+        padding: 20% 10% 0 10%;
+    }
+
+    #inspire-me .locations article .details figure {
+        width: 178px;
+        height: auto;
+        border-width: 6px;
+        overflow: visible;
+    }
+
+    #inspire-me .locations article .details figure img {
+        width: 100%;
+        height: auto;
+        margin-left: 0;
+    }
+
+    #inspire-me .locations article .details figure figcaption .icon {
+        display: inline-block;
+    }
+
+    #inspire-me .locations article .details figure figcaption .seal.hot {
+        display: block;
+    }
+
+    /**
+     * Content section
+     */
+
+    #content .section .content h1 {
+        font-size: 28px;
+        line-height: 34px;
+        padding: 10px 0 15px 0;
+        margin-bottom: 15px;
+    }
+
+    /**
+     * How it works
+     */
+
+    #how-it-works {
+        float: none;
+        width: auto;
+    }
+
+    #how-it-works h2 {
+        font-size: 28px;
+        line-height: 34px;
+        padding: 10px 0 15px 0;
+    }
+
+    /**
+     * Registration
+     */
+
+    #registration h2 {
+        padding-bottom: 20px;
+    }
+
+    #registration .main {
+        float: none;
+        width: auto;
+    }
+
+    #registration .main section:first-child {
+        padding: 10px 0;
+        margin-bottom: 20px;
+    }
+
+    #registration aside {
+        float: none;
+        width: auto;
+        padding: 20px 0 0 0;
+    }
+
+    /**
+     * Overview
+     */
+
+    #overview {
+        float: none;
+        width: auto;
+    }
+
+    #overview .media .thumbs {
+        margin: 0 20px;
+    }
+
+    #overview .columns ul {
+        float: left;
+        width: 33%;
+        padding-right: 10px;
+    }
+
+    /**
+     * Dashboard
+     */
+
+    #dashboard {
+        float: none;
+        width: auto;
+    }
+
+    #dashboard h2 {
+        padding-bottom: 10px;
+    }
+
+    /**
+     * Dashboard inbox
+     */
+
+    #dashboard .inbox.excerpt {
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+    }
+
+    /*
+     * Dashboard reply
+     */
+
+    #dashboard .reply {
+        padding-left: 0;
+    }
+
+    /**
+     * Sidebar
+     */
+
+    #sidebar {
+        width: auto;
+    }
+
+    #sidebar.left {
+        float: none;
+    }
+
+    #sidebar.right {
+        float: none;
+    }
+
+    /**
+     * Sidebar summary
+     */
+
+    #sidebar .summary ul li {
+        float: left;
+        padding-right: 10px;
+    }
+
+    /**
+     * Sidebar similiar
+     */
+
+    #sidebar .similiar {
+        margin: 0 -15px 0 0;
+    }
+
+    #sidebar .similiar .box {
+        float: left;
+        width: 33.33%;
+        padding-right: 15px;
+    }
+
+    /**
+     * Sidebar summary
+     */
+
+     #sidebar .summary {
+         margin: 0;
+         background: none;
+     }
+
+    /**
+     * Sidebar avatar
+     */
+
+     #sidebar .avatar figure {
+         display: none;
+     }
+
+}
+
+
+/* ==========================================================================
+   Landscape mobile
+   ========================================================================== */
+
+@media only screen and (max-width: 568px) {
+
+    /* =================================
+       Reusable
+       ================================= */
+
+    /**
+     * Content
+     */
+
+    .modal .content,
+    .section .content {
+        padding: 20px;
+    }
+
+    .section.alert .content p {
+        font: 14px/22px 'Asap', Arial;
+    }
+
+    /**
+     * Modal
+     */
+
+    .modal {
+        top: 30px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+        margin-left: 0;
+    }
+
+    /**
+     * Messages message footer
+     */
+
+    .messages .message footer .left {
+        float: none;
+        padding-bottom: 10px;
+    }
+
+    .inbox .messages .message footer .left {
+        padding-bottom: 5px;
+    }
+
+    .thread .messages .message footer .left {
+        padding: 0;
+    }
+
+    .messages .message footer .right {
+        float: none;
+    }
+
+
+    /* =================================
+       General
+       ================================= */
+
+    /**
+     * Search
+     */
+
+    #search .column {
+        padding: 0 10px 10px 0;
+    }
+
+    #search .column.submit {
+        clear: none;
+        float: left;
+        padding: 0;
+    }
+
+    /**
+     * Name
+     */
+
+    #name h1 {
+        float: none;
+        font: italic 400 28px/34px 'Asap', Arial;
+        padding-left: 75px;
+    }
+
+    #name .social {
+        float: none;
+        padding: 0 0 0 75px;
+    }
+
+    #name .social li {
+        padding: 6px 10px 5px 0;
+    }
+
+    /**
+     * Slideshow
+     */
+
+    #slideshow .arrow {
+        display: none;
+    }
+
+    #slideshow .search {
+        display: block;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    #slideshow .search h1 {
+        padding-bottom: 20px;
+    }
+
+    #slideshow .search .button.white {
+        width: 100%;
+        text-align: center;
+        padding: 0;
+    }
+
+    #slideshow .search .icon {
+        display: none;
+    }
+
+    /**
+     * Inspire me
+     */
+
+    #inspire-me .locations article .details {
+        padding-top: 18%;
+    }
+
+    #inspire-me .locations article .details .top {
+        font-size: 16px;
+    }
+
+    #inspire-me .locations article .details figure {
+        display: none;
+    }
+
+    #inspire-me .locations article .details .book {
+        float: none;
+        max-width: 100%;
+        text-align: center;
+    }
+
+    /**
+     * How it works
+     */
+
+    #how-it-works .steps li {
+        padding: 20px 0 20px 120px;
+    }
+
+    #how-it-works .steps.book li img {
+        top: 35px;
+        height: 80px;
+    }
+
+    #how-it-works .steps.book li img {
+        left: 15px;
+        margin: 0;
+    }
+
+    #how-it-works .steps.book li:first-child img {
+        left: 5px;
+        margin: 0;
+    }
+
+    /**
+     * Registration
+     */
+
+    #registration aside .steps li {
+        padding: 20px 0 20px 120px;
+    }
+
+    /**
+     * Overview
+     */
+
+    #overview .columns ul {
+        float: none;
+        width: 100%;
+        padding-right: 0;
+    }
+
+    /**
+     * Dashboard earned
+     */
+
+    #dashboard .earned {
+        padding: 20px;
+    }
+
+    /**
+     * Sidebar similiar
+     */
+
+    #sidebar .similiar .box {
+        width: 50%;
+    }
+
+    /**
+     * Footer
+     */
+
+    #footer .columns {
+        padding-bottom: 20px;
+    }
+
+    #footer .columns ul {
+        width: 50%;
+        padding-bottom: 20px;
+    }
+
+}
+
+
+/* ==========================================================================
+   Portrait mobile
+   ========================================================================== */
+
+@media only screen and (max-width: 479px) {
+
+    /* =================================
+       Reusable
+       ================================= */
+
+    /**
+     * Content
+     */
+
+    .modal .content,
+    .section .content {
+        padding: 10px;
+    }
+
+    /**
+     * Tabs
+     */
+
+    .tabs.user li {
+        width: 50%;
+    }
+
+    /**
+     * Subnavigation
+     */
+
+    .subnavigation li a {
+        padding-left: 20px;
+    }
+
+    .subnavigation li a span {
+        display: none;
+    }
+
+    /**
+     * Overall
+     */
+
+    .overall {
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    /**
+     * Messages message article
+     */
+
+    .inbox .messages .message .article {
+        padding-right: 40px;
+    }
+
+    /**
+     * Messages message trip
+     */
+
+    .messages .message .trip img {
+        float: none;
+        width: 100%;
+        margin: 0 0 10px 0;
+    }
+
+    /**
+     * Messages message delete
+     */
+
+    .messages .message .icon.delete {
+        right: 15px;
+    }
+
+    /**
+     * Pagination
+     */
+
+    .pagination {
+        text-align: center;
+    }
+
+    .pagination ol {
+        padding: 0 10px;
+    }
+
+    .pagination ol li {
+        padding: 0 3px;
+    }
+
+
+    /* =================================
+       General
+       ================================= */
+
+    /**
+     * Header
+     */
+
+    #header .logo {
+        width: 192px;
+        height: 45px;
+        font: 0/0 a;
+        padding: 0;
+    }
+
+    #header .logo small {
+        font: 0/0 a;
+    }
+
+    #header nav {
+        height: auto;
+        padding: 8px 0;
+    }
+
+    #header nav ul {
+        float: none;
+    }
+
+    #header nav .button {
+        float: none;
+        margin: 1px 0 0 0;
+    }
+
+    /**
+     * Slideshow
+     */
+
+    #slideshow {
+        height: 400px;
+    }
+
+    #slideshow > .container {
+        padding-top: 20px;
+    }
+
+    /**
+     * How it works
+     */
+
+    #how-it-works-short {
+        padding: 30px 10px;
+    }
+
+    #how-it-works-short h2 {
+        padding-bottom: 20px;
+    }
+
+    #how-it-works-short .columns {
+        margin: 0;
+    }
+
+    #how-it-works-short .columns section {
+        float: none;
+        width: 100%;
+        text-align: left;
+        padding: 15px 15px 15px 150px;
+        margin: 0 0 20px 0;
+    }
+
+    #how-it-works-short .columns .book {
+        background-position: 35px center;
+    }
+
+    #how-it-works-short .columns .add {
+        background-position: 25px center;
+    }
+
+    #how-it-works-short .columns .join {
+        background-position: 25px center;
+    }
+
+    #how-it-works-short .columns section .button {
+        width: 110px;
+    }
+
+    #how-it-works-short p {
+        width: 100%;
+        padding: 20px 0 0 0;
+    }
+
+    /**
+     * Inspire me
+     */
+
+    #inspire-me .locations {
+        padding: 10px;
+    }
+
+    #inspire-me .locations article {
+        margin-bottom: 10px;
+    }
+
+    #inspire-me .locations article .details {
+        padding-top: 22%;
+    }
+
+    #inspire-me .locations article .details .top {
+        font-size: 14px;
+    }
+
+    #inspire-me .locations article .details .book h5 {
+        display: none;
+    }
+
+    #inspire-me .locations .more {
+        padding-top: 10px;
+        margin-right: 10px;
+    }
+
+    /**
+     * Dashboard upcoming
+     */
+
+    #dashboard .upcoming .background img {
+        float: none;
+        width: 100%;
+        margin: 0 0 10px 0;
+    }
+
+    /**
+     * Dashboard
+     */
+
+    #dashboard .earned {
+        text-align: center;
+    }
+
+    #dashboard .earned .left {
+        float: none;
+        padding-bottom: 5px;
+    }
+
+    #dashboard .earned .right {
+        float: none;
+        display: inline-block;
+        margin-top: 5px;
+    }
+
+    /**
+     * Dashboard earned
+     */
+
+    #dashboard .earned {
+        padding: 10px;
+    }
+
+    /**
+     * Sidebar similiar
+     */
+
+    #sidebar .similiar {
+        margin-right: 0;
+    }
+
+    #sidebar .similiar .box {
+        float: none;
+        width: 100%;
+        padding-right: 0;
+    }
+
+    /**
+     * Footer
+     */
+
+    #footer .columns {
+        padding-bottom: 10px;
+    }
+
+    #footer .columns ul {
+        width: 100%;
+        padding-bottom: 10px;
+    }
+
+    #footer .columns ul li:first-child {
+        padding-top: 10px;
+    }
+
+}

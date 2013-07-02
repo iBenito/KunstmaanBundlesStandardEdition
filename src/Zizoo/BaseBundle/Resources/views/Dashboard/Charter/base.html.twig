@@ -2,18 +2,30 @@
 
 {% block body %}
 
-    <div class="span4 hero-unit">
-        {% render controller('ZizooBaseBundle:Dashboard:widget', {route: app.request.attributes.get('_route'), showUser: app.request.query.get('show_user')}) %}
-    </div>
+    <!-- start:content -->
+    <div id="content">
+        <div class="container clearfix">
 
-    <div class="span8 hero-unit">
-        <section class="dashboard_page_title">
-            <header>
-                <h2>{% block dashboard_page_title %}Main Dashboard{% endblock %}</h2>
-            </header>
-        </section>
-            
-        {% block content %}{% endblock %}
+            <!-- start:sidebar -->
+            <aside id="sidebar" class="left clearfix">
+                {% render controller('ZizooBaseBundle:Dashboard:widget', {route: app.request.attributes.get('_route'), showUser: app.request.query.get('show_user')}) %}
+            </aside>
+            <!-- end:sidebar -->
+
+            <!-- start:dashboard -->
+            <div id="dashboard">
+
+                <!-- start:section -->
+                <section class="section">
+                    {% block tabs %}{% endblock %}
+                    {% block content %}{% endblock %}
+                    {% block sub_content %}{% endblock %}
+                </section>
+                <!-- end:section -->
+            </div>
+            <!-- end:dashboard -->
+        </div>
     </div>
+    <!-- end:content -->
 
 {% endblock %}

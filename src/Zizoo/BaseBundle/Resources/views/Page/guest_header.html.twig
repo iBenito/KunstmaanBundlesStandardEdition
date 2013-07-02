@@ -1,0 +1,54 @@
+<!-- start:header -->
+<header id="header">
+
+    <!-- start:container -->
+    <div class="container clearfix">
+
+        <a href="{{ path('ZizooBaseBundle_homepage') }}" class="logo" title="Back to Homepage">The Sea Awaits <small>Boat Rentals made Easy</small></a><br>
+        <nav class="clearfix">
+            <ul class="menu clearfix">
+                <li><a href="{{ path('ZizooBaseBundle_how') }}" title="How it Works">How it Works</a></li>
+                <li><a href="#" class="trigger" data-modal="register" title="Register">Register</a></li>
+                <li><a href="#" class="trigger" data-modal="login" title="Login">Login</a></li>
+            </ul>
+            <a href="" class="button orange add" title="List Your Boats"><span></span> List Your Boats</a>
+        </nav>
+
+    </div>
+    <!-- end:container -->
+
+</header>
+<!-- end:header -->
+
+<!-- start:login -->
+<section id="login" class="modal">
+    <header>
+        <h6>Login</h6>
+        <a href="#" class="close ir" title="Close">Close</a>
+    </header>
+
+    <div class="content">
+        <a href="{{ facebook.loginUrl({ scope: 'email', redirect_uri: url('ZizooUserBundle_login_facebook', {forward: current_route, ajax: ajax}), display: 'popup' }) }}" class="button facebook big"><span></span> Login with Facebook</a>
+        <span class="or">or</span>
+        <form action="{{ path('ZizooUserBundle_login_check') }}" method="post" class="form">
+            <div class="row">
+                <label class="label"><span class="email"></span>E-mail</label>
+                <input type="email" id="username" name="_username" />
+            </div>
+            <div class="row">
+                <label class="label"><span class="password"></span>Password</label>
+                <input type="password" id="password" name="_password" />
+            </div>
+            <div class="row">
+                <label><input type="checkbox" id="remember_me" name="_remember_me" checked="checked" /> Remember me</label>
+            </div>
+            <div class="row">
+                <button type="submit" class="button blue big">Login</button>
+            </div>
+            <a href="{{ path('ZizooUserBundle_invite') }}" class="invite"><span class="icon add"></span> Invite Friends to Join Zizoo</a>
+        </form>
+    </div>
+</section>
+<!-- end:login -->
+
+{% render controller('ZizooUserBundle:Registration:register') %}

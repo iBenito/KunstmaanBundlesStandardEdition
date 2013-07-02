@@ -1,7 +1,13 @@
 {% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
-    
-{% block dashboard_page_title %}My Skills{% endblock %}
+
+{% block tabs %}
+{% include 'ZizooBaseBundle:Dashboard:user_tabs.html.twig' with {'current':'skills'} %}
+{% endblock %}
 
 {% block content %}
-    {% render controller('ZizooCrewBundle:Skills:add') %}
+	<div class="content">
+        <h1>My Skills</h1>
+
+	    {% render controller('ZizooCrewBundle:Skills:add') %}
+	</div>
 {% endblock %}

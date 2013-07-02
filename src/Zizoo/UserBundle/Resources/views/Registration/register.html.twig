@@ -1,17 +1,65 @@
 {# src/Zizoo/UserBundle/Resources/views/Registration/register.html.twig #}
-{% extends 'ZizooUserBundle::layout.html.twig' %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript" src="{{ asset('bundles/zizoouser/js/register.js') }}"></script>
-{% endblock %}
+<script type="text/javascript" src="{{ asset('bundles/zizoouser/js/register.js') }}"></script>
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link href="{{ asset('bundles/zizoouser/css/register.css') }}" type="text/css" rel="stylesheet" />
-{% endblock %}
+<script>
+    $(document).ready(function() {
+        {% if relogin %}
+            $('.register_facebook_btn:first-child').click();
+        {% endif %}
+    });
+</script>
 
-{% block body %}
+
+<!-- start:register -->
+<section id="register" class="modal" style="display: none;">
+    <header>
+        <h6>Register</h6>
+        <a href="#" class="close ir" title="Close">Close</a>
+    </header>
+
+    <div class="content">
+        <a target="_blank" href="{{ facebook.loginUrl({ scope: 'email', redirect_uri: url('ZizooUserBundle_register_facebook', {ajax: ajax}), display: 'popup' }) }}" class="button facebook big">Login with Facebook</a>
+        <span class="or">or</span>
+        <a href="#" class="table">
+            <span class="table-cell">
+                <span class="button gray big">Connect with E-mail Account</span>
+            </span>
+            <span class="table-cell">
+                <span class="button gray big"><span></span></span>
+            </span>
+        </a>
+        <span class="or">or</span>
+        <a href="{{ path('ZizooCharterBundle_Registration_register') }}" class="button blue big">I am a Charter</a>
+    </div>
+
+    <div class="expand">
+        <div class="content">
+            <form novalidate="novalidate" action="{{ path('ZizooUserBundle_register')}}" method="post" {{ form_enctype(form) }} class="form">
+                {{ form_errors(form) }}
+
+                {{ form_row(form.profile.first_name) }}
+                {{ form_row(form.profile.last_name) }}
+                {{ form_row(form.user.username) }}
+                {{ form_row(form.user.email) }}
+                {{ form_row(form.user.password) }}
+                {{ form_row(form.terms) }}
+
+                {{ form_rest(form) }}
+                
+                <!--div class="row">
+                    <label><input name="registration[terms]" type="checkbox"> I Agree to Terms and Conditions</label>
+                </div-->
+                <div class="row">
+                    <button type="submit" class="button blue big">Create Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<!-- end:register -->
+
+<!--
     <div class="register" id="{% if ajax %}register_inner_ajax{% else %}register_inner{% endif %}">
         <input type="hidden" value="ongoing" id="status" />
         <div>
@@ -25,20 +73,6 @@
         </div>
 
         <div class="register_email">
-            <form novalidate="novalidate" action="{{ path('ZizooUserBundle_register')}}" method="post" {{ form_enctype(form) }} class="register_form">
-                {{ form_errors(form) }}
-
-                <div>
-                    {{ form_label(form.profile.first_name) }}
-                    {{ form_errors(form.profile.first_name) }}
-                    {{ form_widget(form.profile.first_name) }}
-                </div>
-                    
-                    <div>
-                    {{ form_label(form.profile.last_name) }}
-                    {{ form_errors(form.profile.last_name) }}
-                    {{ form_widget(form.profile.last_name) }}
-                </div>
                     
                 <div>
                     {{ form_label(form.user.username) }}
@@ -61,31 +95,8 @@
                     {% endif %}
                     {{ form_widget(form.user.email) }}
                 </div>
-
-                {{ form_rest(form) }}
-
-                <input type="submit" />
-            </form>
         </div>
     </div>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $('.register_facebook_btn').click(function(){
-                //top.location.href = $(this).attr('href');
-                window.open($(this).attr('href'), 'Register with Facebook', "height=200,width=200");
-            });
-            {% if relogin %}
-                $('.register_facebook_btn:first-child').click();
-            {% endif %}
-        });
-    </script>
-    <style type="text/css">
-        {% if is_post == false and email is null %}
-        .register_email {
-            display: none;
-        }
-        {% endif %}
-    </style>
-{% endblock %}
+-->   
 
 

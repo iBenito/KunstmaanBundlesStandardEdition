@@ -1,0 +1,419 @@
+/**
+       _____ ______
+      / ___// ____/
+      \__ \/ /_
+     ___/ / __/ (c) 2013
+    /____/_/ sasaforic.com
+
+    Customized version of git.io/normalize
+*/
+
+
+/* ==========================================================================
+   HTML5
+   ========================================================================== */
+
+/**
+ * Set block for HTML5 elements in IE7+, Firefox 3
+ */
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section,
+summary {
+    display: block;
+}
+
+/**
+ * Set inline-block for HTML5 elements in IE7+, Firefox 3
+ */
+
+audio,
+canvas,
+video {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+}
+
+/**
+ * Hide audio HTML5 element without controls
+ * Remove height in iOS5
+ */
+
+audio:not([controls]) {
+    display: none;
+    height: 0;
+}
+
+/**
+ * Add styling not present in (IE7+), Firefox 3, Safari 4
+ */
+
+[hidden] {
+    display: none;
+}
+
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+/**
+ * Adjust text after orientation change from portrait to landscape
+ */
+
+html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+/**
+ * Remove margin
+ */
+
+body {
+    margin: 0;
+}
+
+
+/* ==========================================================================
+   Links
+   ========================================================================== */
+
+/**
+ * Removes dots on :focus
+ */
+
+a:focus {
+    -moz-outline-style: none;
+}
+
+:focus {
+    outline: 0;
+}
+
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+
+/**
+ * Remove margin
+ */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+}
+
+/**
+ * Remove margin
+ */
+p {
+    margin: 0;
+}
+
+/**
+ * Remove margin
+ */
+blockquote {
+    margin: 0;
+}
+
+/**
+ * Set font family
+ */
+
+code,
+kbd,
+pre,
+samp {
+    font-family: monospace, serif;
+}
+
+/**
+ * Improve readability of pre-formatted text
+ */
+
+pre {
+    white-space: pre-wrap;
+}
+
+/**
+ * Set font size for small element
+ */
+
+small {
+    font-size: 80%;
+}
+
+/**
+ * Set sub and sup position ignoring line height
+ */
+
+sub,
+sup {
+    position: relative;
+    font-size: 75%;
+    line-height: 0;
+    vertical-align: baseline;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+sup {
+    top: -0.5em;
+}
+
+/**
+ * Removes text inside an element
+ */
+
+.ir {
+    font: 0/0 a;
+    text-shadow: none;
+    color: transparent;
+}
+
+
+/* ==========================================================================
+   Embedded
+   ========================================================================== */
+
+/**
+ * Removes image border inside link
+ * Improves image quality when scaled in IE7
+ */
+
+img {
+    border: 0;
+    -ms-interpolation-mode: bicubic;
+}
+
+/**
+ * Correct overflow display
+ */
+
+svg:not(:root) {
+    overflow: hidden;
+}
+
+/**
+ * Remove margin
+ */
+
+figure {
+    margin: 0;
+}
+
+
+/* ==========================================================================
+   List
+   ========================================================================== */
+
+/**
+ * Removes padding and margin
+ */
+
+ul,
+ol {
+    padding: 0;
+    margin: 0;
+}
+
+/**
+ * Removes default list style
+ */
+
+li {
+    list-style: none;
+}
+
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+
+/**
+ * Remove border in IE7
+ */
+
+form {
+    margin: 0;
+}
+
+/**
+ * Remove border
+ */
+
+fieldset {
+    border: 0;
+}
+
+/**
+ * Remove border and padding
+ */
+
+legend {
+    border: 0;
+    padding: 0;
+}
+
+/**
+ * Inherit font size and font family
+ * Remove margin
+ */
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+    margin: 0;
+}
+
+/**
+ * Set line height for Firefox 4+
+ */
+
+button,
+input {
+    line-height: normal;
+}
+
+/**
+ * Address inconsistent text-transform
+ */
+
+button,
+select {
+    text-transform: none;
+}
+
+/**
+ * Remove webkit appearance
+ * Add cursor on buttons
+ */
+
+button,
+html input[type='button'],
+input[type='reset'],
+input[type='submit'] {
+    -webkit-appearance: button;
+    cursor: pointer;
+}
+
+/**
+ * Remove cursor on buttons
+ */
+
+button[disabled],
+html input[disabled] {
+    cursor: default;
+}
+
+/**
+ * Set box-sizing and remove padding for IE8-IE9
+ */
+
+input[type='checkbox'],
+input[type='radio'] {
+    box-sizing: border-box;
+    padding: 0;
+}
+
+/**
+ * Set webkit apprearance
+ * Set box sizing
+ */
+
+input[type='search'] {
+    -webkit-appearance: textfield;
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+/**
+ * Remove inner padding and search cancel button in Safari 5 and Chrome on OS X
+ */
+
+input[type='search']::-webkit-search-cancel-button,
+input[type='search']::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+/**
+ * Remove inner padding and border in Firefox 4+
+ */
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+}
+
+/**
+ * Set vertical alignment
+ * Remove default scrollbar
+ */
+
+textarea {
+    vertical-align: top;
+    overflow: auto;
+}
+
+/**
+ * Removes right side padding in IE7
+ */
+
+*:first-child+html button {
+    overflow: visible;
+}
+
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+
+/**
+ * Remove table spacing
+ */
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+
+/* ==========================================================================
+   Clearfix
+   ========================================================================== */
+
+.clearfix {
+    *zoom: 1;
+}
+
+.clearfix:before,
+.clearfix:after {
+    display: table;
+    content: '';
+}
+
+.clearfix:after {
+    clear: both;
+}

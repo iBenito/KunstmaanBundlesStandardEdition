@@ -102,13 +102,13 @@ class BoatExtension extends \Twig_Extension
     public function displayAmenities($boat, $amenities)
     {
         $contains = $boat->getAmenities()->contains($amenities);
-        return '<li class="'.($contains?'active':'inactive').'">'.$amenities->getName().'</li>';
+        return $contains ? 'yes' : '';
     }
     
     public function displayEquipment($boat, $equipment)
     {
         $contains = $boat->getEquipment()->contains($equipment);
-        return '<li class="'.($contains?'active':'inactive').'">'.$equipment->getName().'</li>';
+        return $contains ? 'yes' : '';
     }
     
     public function getName()

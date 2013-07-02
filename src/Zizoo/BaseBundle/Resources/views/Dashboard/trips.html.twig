@@ -1,20 +1,23 @@
 {% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
     
-{% block dashboard_page_title %}Trips{% endblock %}
+{% block tabs %}
+{% include 'ZizooBaseBundle:Dashboard:user_tabs.html.twig' with {'current':'trips'} %}
+{% endblock %}
 
 {% block content %}
-    
-    <h3>Bookings</h3>
-    {% for booking in bookings %}   
-        <p>{{ booking.reservation.boat.title }}</p>
-        
-        <a href="{{ path('ZizooBoatBundle_Boat_Show', { 'id': booking.reservation.boat.id }) }}">
-            {% include 'ZizooBoatBundle:Image:index.html.twig' with { 'images': booking.reservation.boat.image, 'single': true, 'size': 'thumbnails' } %}
-        </a>
-        <p>Cost: {{ booking.cost }}</p>
-        <hr />
-    {% else %}
-        <p>You have no trips yet</p>
-    {% endfor %}
-        
+    <div class="content">
+        <h1>My Trips</h1>
+
+        {% for booking in bookings %}   
+            <p>{{ booking.reservation.boat.title }}</p>
+            
+            <a href="{{ path('ZizooBoatBundle_Boat_Show', { 'id': booking.reservation.boat.id }) }}">
+                {% include 'ZizooBoatBundle:Image:index.html.twig' with { 'images': booking.reservation.boat.image, 'single': true, 'size': 'thumbnails' } %}
+            </a>
+            <p>Cost: {{ booking.cost }}</p>
+            <hr />
+        {% else %}
+            <p>You have no trips yet</p>
+        {% endfor %}
+    </div>
 {% endblock %}

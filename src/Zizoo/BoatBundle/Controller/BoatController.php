@@ -54,8 +54,8 @@ class BoatController extends Controller
         $map->setMapOption('disableDefaultUI', true);
         $map->setMapOption('zoomControl', true);
         $map->setStylesheetOptions(array(
-            'width' => '100%',
-            'height' => '300px'
+            'width' => '610px',
+            'height' => '395px'
         ));
         
         if ($boatAddress->getLat() && $boatAddress->getLng()){

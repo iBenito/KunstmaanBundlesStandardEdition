@@ -18,6 +18,9 @@ use Zizoo\UserBundle\Form\Model\InviteSingle;
 use Zizoo\UserBundle\Form\Type\UserNewPasswordType;
 use Zizoo\UserBundle\Form\Model\UserNewEmail;
 
+use Zizoo\AddressBundle\Form\Model\SearchBoat;
+use Zizoo\AddressBundle\Form\Type\SearchBoatType;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -351,8 +354,15 @@ class UserController extends Controller
             $accountSettings->setNewEmail($newEmail);
             $form = $this->createForm(new AccountSettingsType(), $accountSettings);
         }
+
+        $searchForm = $this->createForm(new SearchBoatType($this->container), new SearchBoat());
         
-        return $this->render('ZizooUserBundle:User:account_settings.html.twig', array('form' => $form->createView()));
+        return $this->render('ZizooUserBundle:User:account_settings.html.twig',
+            array(
+                'form' => $form->createView(),
+                'searchForm' => $searchForm->createView()
+            )
+        );
     }
    
 }

@@ -1,0 +1,88 @@
+{# src/Zizoo/AddressBundle/Resources/views/Form/search_bar.html.twig #}
+
+{% block form_widget %}
+<!-- start:search -->
+<div id="search" class="bar">
+    <div class="container">
+        <form action="#" class="form clearfix">
+            <div class="column search">
+                <input type="text" placeholder="Where are you going">
+            </div>
+            <div class="column">
+                <span class="icon calendar white"></span> <input type="text" value="01/31/2013">
+            </div>
+            <div class="column">
+                <span class="icon calendar white"></span> <input type="text" value="02/07/2013">
+            </div>
+            <div class="column">
+                <span class="icon hash white"></span> <input type="text" class="clear" value="5 Guests">
+            </div>
+            <div class="column submit">
+                <button type="submit" class="button blue small">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#zizoo_boat_search_location').chosen();
+            
+            var clearBtnFnc1 = function(input) {
+                    setTimeout(function() {
+                        var buttonPane = $( input )
+                            .datepicker( "widget" )
+                            .find( ".ui-datepicker-buttonpane" );
+                        var btn = $( '<button class="ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all" type="button">Clear</button>');
+                        btn.unbind("click")  .bind("click", function () {  
+                            $.datepicker._clearDate( input ); 
+                        });
+                        btn.appendTo(buttonPane);
+                    }, 1 );
+                };
+
+            var clearBtnFnc2 = function(yes, month, inst) {
+                    setTimeout(function() {
+                        var buttonPane = $( this )
+                            .datepicker( "widget" )
+                            .find( ".ui-datepicker-buttonpane" );
+                        var btn = $( '<button class="ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all" type="button">Clear</button>');
+                        btn.unbind("click")  .bind("click", function () {  
+                           $.datepicker._clearDate( inst.input ); 
+                        });
+                        btn.appendTo(buttonPane);
+                    }, 1 );
+                };
+
+            $( "#zizoo_boat_search_reservation_from" ).datepicker({
+                defaultDate: "+1d",
+                changeMonth: true,
+                numberOfMonths: 1,
+                showAnim: 'slideDown',
+                dateFormat: 'dd/mm/yy',
+                showButtonPanel: true,
+                beforeShow: clearBtnFnc1,
+                onChangeMonthYear: clearBtnFnc2,
+                onClose: function( selectedDate ) {
+                    $( "#reservation_to" ).datepicker( "option", "minDate", selectedDate );
+                }
+            });
+            $( "#zizoo_boat_search_reservation_to" ).datepicker({
+                defaultDate: "+1d",
+                changeMonth: true,
+                numberOfMonths: 1,
+                showAnim: 'slideDown',
+                dateFormat: 'dd/mm/yy',
+                showButtonPanel: true,
+                beforeShow: clearBtnFnc1,
+                onChangeMonthYear: clearBtnFnc2,
+                onClose: function( selectedDate ) {
+                    $( "#zizoo_boat_search_reservation_from" ).datepicker( "option", "maxDate", selectedDate );
+                }
+            });
+        });
+    </script>
+
+
+</div>
+<!-- end:search -->
+{% endblock %}

@@ -19,111 +19,236 @@
 {% endblock %}
 
 {% block body %}
-    <div class="row-fluid">
-        
-        <div id="left-col" class="span2">
-            <ul id="boat-tabs">
-                <li><a href="#tabs-1">Photos</a></li>
-                <li><a href="#tabs-2">Location</a></li>
-                <li><a href="#tabs-3">Availability</a></li>
-            </ul>
-        </div>
-        
-        <div id="center-col" class="span7">
-            
-            <div class="tabs">
-                <div id="tabs-1" class="tab">
-                    <section class="images" id="images">
-                        <h3>{% trans %}zizoo_boat.label.images{% endtrans %}</h3>
-                        {% include 'ZizooBoatBundle:Image:index.html.twig' with { 'images': boat.image } %}
-                    </section>
-                </div>
 
-                <div id="tabs-2" class="tab" style="width: 100%;">
-                    <h2>Location</h2>
-                    {{ google_map_container(map) }}
-                </div>
-
-                <div id="tabs-3" class="tab current">
-                    <h2>Availability</h2>
-                    <div id="calendar" class="">
-                    </div>
+    <!-- start:name -->
+    <section id="name" class="bar">
+        <div class="container clearfix">
+            {% if boat.crewOptional %}
+            <div class="flag">
+                Crewed Boat
+                <span class="icon plus"></span>
+                <div class="tooltip">
+                    <p>
+                        You are able to charter and drive this boat yourself. A skipper can be booked as an additional extra if required.
+                    </p>
                 </div>
             </div>
-            
-            <article class="boat">
+            {% endif %}
+            <h1>{{ boat.title }} <span>{{ boat.address.locality }}, {{ boat.address.country }}/Year: ????</span></h1>
+            <ul class="social">
+                <li><a href="" class="facebook" title="Facebook"></a></li>
+                <li><a href="" class="twitter" title="Twitter"></a></li>
+            </ul>
+        </div>
+    </section>
+    <!-- end:name -->
 
-                <header>
-                    <h2>{{ boat.title }}</h2>
-                </header>
-                <div>
-                    <p>{{ boat.description }}</p>
+    <!-- start:content -->
+    <div id="content">
+        <div class="container clearfix">
+
+            <!-- start:subnavigation -->
+            <ul class="subnavigation clearfix">
+                <li><a href="" title="Photos"><span class="icon photo"></span> Photos</a></li>
+                <li class="current"><a href="" title="Location"><span class="icon location white shadow"></span> Location</a></li>
+                <li><a href="" title="Availability"><span class="icon availability"></span> Availability</a></li>
+            </ul>
+            <!-- end:subnavigation -->
+
+
+            <!-- start:overview -->
+            <div id="overview">
+
+                <!-- start:media -->
+                <div class="media" style="display:none;">
+                    <div class="full">
+                        <img src="images/temp/media/full1.jpg" alt="">
+                    </div>
+
+                    <a href="#" class="arrow prev ir" title="Previous">Previous</a>
+                    <div class="thumbs">
+                        <ul class="clearfix">
+                            <li><a href="images/temp/media/full1.jpg"><img src="images/temp/media/thumb1.jpg" alt=""></a></li>
+                            <li><a href="images/temp/media/full2.png"><img src="images/temp/media/thumb2.png" alt=""></a></li>
+                            <li><a href="images/temp/media/full3.png"><img src="images/temp/media/thumb3.png" alt=""></a></li>
+                            <li><a href="images/temp/media/full4.png"><img src="images/temp/media/thumb4.png" alt=""></a></li>
+                            <li><a href="images/temp/media/full5.png"><img src="images/temp/media/thumb5.png" alt=""></a></li>
+                            <li><a href="images/temp/media/full6.png"><img src="images/temp/media/thumb6.png" alt=""></a></li>
+                            <li><a href="images/temp/media/full7.png"><img src="images/temp/media/thumb7.png" alt=""></a></li>
+                            <li><a href="images/temp/media/full8.png"><img src="images/temp/media/thumb8.png" alt=""></a></li>
+                            <li><a href="images/temp/media/full7.png"><img src="images/temp/media/thumb7.png" alt=""></a></li>
+                            <li><a href="images/temp/media/full6.png"><img src="images/temp/media/thumb6.png" alt=""></a></li>
+                            <li><a href="images/temp/media/full5.png"><img src="images/temp/media/thumb5.png" alt=""></a></li>
+                        </ul>
+                    </div>
+                    <a href="#" class="arrow next ir" title="Next">Next</a>
                 </div>
-            </article>
+                <!-- end:media -->
 
-            <section class="details" id="details">
-                <h3>{{ boat.name }}</h3>
-                <p>{% trans %}zizoo_address.label.cities{% endtrans %}: 
-                    <ul>
-                        <li>{{ boat.address.locality }}</li>
-                    </ul>
-                </p>
-                <p>{% trans %}zizoo_boat.label.brand{% endtrans %}: {{ boat.brand }}</p>
-                <p>{% trans %}zizoo_boat.label.model{% endtrans %}: {{ boat.model }}</p>
-                <p>{% trans %}zizoo_boat.label.length{% endtrans %}: {{ boat.length }}</p>
-                <p>{% trans %}zizoo_boat.label.cabins{% endtrans %}: {{ boat.cabins }}</p>
-                {% if boat.bathrooms %}
-                    <p>{% trans %}zizoo_boat.label.bathrooms{% endtrans %}: {{ boat.bathrooms }}</p>
-                {% endif %}
-
-                <div id="amenities_div">
-                    <h4>Amenities</h4>
-                    <ul id="amenities" class="checklist">
-                        {% for amenity in amenities %}
-                            {{ boat|displayAmenities(amenity)|raw }}
-                        {% endfor %}
-                    </ul>
+                <!-- start:media -->
+                <div class="media">
+                     {{ google_map_container(map) }}
                 </div>
+                {{ google_map_js(map) }}
+                <!-- end:media -->
 
-                <div id="equipment_div">
-                    <h4>Equipment</h4>
-                    <ul id="equipment" class="checklist">
-                        {% for e in equipment %}
-                            {{ boat|displayEquipment(e)|raw }}
-                        {% endfor %}
-                    </ul>
+                <!-- start:description -->
+                <section class="section">
+                    <header>
+                        <h2>Description</h2>
+                    </header>
+
+                    <div class="content">
+                        <p>{{ boat.description }}</p>
+                    </div>
+                </section>
+                <!-- end:description -->
+
+                <!-- start:details -->
+                <section class="section">
+                    <header>
+                        <h2>Details</h2>
+                    </header>
+
+                    <div class="content">
+                        <div class="columns clearfix">
+                            <ul>
+                                <li><strong>Year:</strong> ????.</li>
+                                <li><strong>Length Over All:</strong> {{ boat.length }} m</li>
+                                <li><strong>Hull Material:</strong> ??</li>
+                                <li><strong>Beam:</strong> ?,?? m</li>
+                                <li><strong>Draft:</strong> ?,? m</li>
+                            </ul>
+                            <ul>
+                                <li><strong>Engine:</strong> ??</li>
+                                <li><strong>Fuel:</strong> ??</li>
+                                <li><strong>Fuel Capacity:</strong> ?? l</li>
+                                <li><strong>Water Capacity:</strong> ?? l</li>
+                                <li><strong>Cabins:</strong> {{ boat.cabins }}</li>
+                            </ul>
+                            <ul>
+                                <li><strong>Berths:</strong> {{ boat.nrGuests }}</li>
+                                <li><strong>Shower / Toilet:</strong> ? / {{ boat.bathrooms }}</li>
+                                <li><strong>Main Sail:</strong> ?</li>
+                                <li><strong>Flag:</strong> {{ boat.address.country }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+                <!-- end:details -->
+
+                <!-- start:extras -->
+                <section class="section">
+                    <header>
+                        <h2>Amenities</h2>
+                    </header>                    
+
+                    <div class="content">
+                        <div class="columns extras clearfix">
+                            {% set perColumn = amenities|length / 3 %}
+                            <ul>
+                                {% for amenity in amenities %}
+                                    {% if loop.index0 is divisibleby(perColumn) %}
+                                    </ul>
+                                    <ul>
+                                    {% endif %}
+                                    <li class="{{ boat|displayAmenities(amenity)|raw }}">{{ amenity.name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+                <!-- end:extras -->
+
+                <!-- start:extras -->
+                <section class="section">
+                    <header>
+                        <h2>Equipment</h2>
+                    </header>                    
+
+                    <div class="content">
+                        <div class="columns extras clearfix">
+                            {% set perColumn = equipment|length / 3 %}
+                            <ul>
+                                {% for e in equipment %}
+                                    {% if loop.index0 is divisibleby(perColumn) %}
+                                    </ul>
+                                    <ul>
+                                    {% endif %}
+                                    <li class="{{ boat|displayEquipment(e)|raw }}">{{ e.name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+                <!-- end:extras -->
+
+            </div>
+            <!-- end:overview -->
+
+            <!-- start:sidebar -->
+            <aside id="sidebar" class="right clearfix">
+
+                <!-- start:price -->
+                <div class="price">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>Price</td>
+                                <td>20,000 &euro;</td>
+                            </tr>
+                            <tr>
+                                <td>Crew</td>
+                                <td>500 &euro;</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td>Total</td>
+                                <td>20,500 &euro;</td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
+                <!-- end:price -->
 
-            </section>
+                <!-- start:summary -->
+                <div class="summary">
+                    <ul class="clearfix">
+                        <li>
+                            <span class="icon calendar black"></span>
+                            <span class="field">01/31/2013</span>
+                        </li>
+                        <li>
+                            <span class="icon calendar black"></span>
+                            <span class="field">02/07/2013</span>
+                        </li>
+                        <li>
+                            <span class="icon hash black"></span>
+                            <span class="field">5 Guests</span>
+                        </li>
+                    </ul>
+                    <a href="" class="button orange big" title="Book it">Book it</a>
+                </div>
+                <!-- end:summary -->
+
+                <!-- start:avatar -->
+                <div class="avatar">
+                    <figure>
+                        <img src="images/default/avatar-user.png" alt="Avatar">
+                        <figcaption>
+                            {{ boat.charter.charterName }}
+                        </figcaption>
+                    </figure>
+                    <a href="" class="button white big" title="Send Message">Send Message</a>
+                </div>
+                <!-- end:avatar -->
+
+            </aside>
+            <!-- end:sidebar -->
 
         </div>
-        
-        <style type="text/css">
-            .checklist .active {
-                color: green;
-            }
-            
-            .checklist .inactive {
-                color: grey;
-            }
-        </style>
-        
-        <script type="text/javascript">
-            var availabilityReservedDates   = {{ boat|reservedDates(reservations)|raw }}; 
-            var availabilityPriceDates      = {{ boat|priceDates(prices)|raw }};
-            var availabilityDefaultAllowed  = {{ boat.defaultPrice is not null ? 'true' : 'false' }};
-            var availabilityDefaultPrice    = {{ boat.defaultPrice is not null ? boat.defaultPrice : 'null' }};
-            var STATUS_ACCEPTED             = {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') }};
-            var STATUS_SELF                 = {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_SELF') }};
-            var STATUS_HOLD                 = {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') }};
-        </script>
-        
-        <div id="right-col" class="span3">
-            {% render controller('ZizooBoatBundle:Boat:bookingWidget', {id: boat.id, request:request, reservations: reservations, prices: prices}) %}
-        </div>
-        
     </div>
-    
-    {{ google_map_js(map) }}
+    <!-- end:content -->
     
 {% endblock %}

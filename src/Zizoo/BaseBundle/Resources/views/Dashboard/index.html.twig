@@ -1,28 +1,171 @@
 {% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
 
-{% block dashboard_page_title %}Notifications{% endblock %}
+{% block tabs %}
+{% include 'ZizooBaseBundle:Dashboard:user_tabs.html.twig' with {'current':'index'} %}
+{% endblock %}
 
 {% block content %}
+    <div class="content">
+        <h1>Dashboard</h1>
 
-    <h3>Reservations</h3>
-    <ul>
-    {% for reservation in reservations %}    
-        {% if reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_REQUESTED') %}
-            <li>You have requested a reservation for boat {{ reservation.boat.title }}</li>
-        {% elseif reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') %}
-            <li>Your requested reservation for boat {{ reservation.boat.title }} has been accepted</li>
-        {% elseif reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_EXPIRED') %}
-            <li>Your reservation request for boat {{ reservation.boat.title }} has expired</li>
-        {% elseif reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_DENIED') %}
-            <li>Your reservation request for boat {{ reservation.boat.title }} has been denied</li>
-        {% endif %}
-    {% endfor %} 
-    </ul>
-    <hr />
-        
-    <h3>Trips</h3>
-    {% for booking in bookings %}    
-        <p>Booked boat {{ booking.reservation.boat.title }} for {{ booking.cost }}</p>
-    {% endfor %}
+        <!-- start:links -->
+        <section class="links">
+            <h2>Alerts</h2>
 
+            <ul>
+                <li><a href=""><span class="circle red">5</span>Unread messages</a></li>
+                <li><a href=""><span class="circle red">2</span>Payment due</a></li>
+                <li><a href=""><span class="circle red">1</span>Payment overdue</a></li>
+                <li><a href=""><span class="circle red">3</span>Reviews due</a></li>
+            </ul>
+        </section>
+        <!-- end:links -->
+
+    </div>
+{% endblock %}
+{% block sub_content %}
+    <!-- start:section -->
+    <div class="section">
+
+        <div class="content">
+
+            <!-- start:inbox -->
+            <section class="inbox excerpt">
+                <h2>Messages</h2>
+
+                <!-- start:messagess -->
+                <ul class="messages">
+                    <li class="message unread">
+                        <a href="">
+                            <div class="article clearfix">
+                                <div class="image">
+                                    <img src="images/default/avatar.png" alt="">
+                                </div>
+                                <footer class="clearfix">
+                                    <div class="left">
+                                        Ludovik | <time datetime="2013-01-12T10:28:03">10:28am / Jan 12, 2013</time>
+                                    </div>
+                                    <div class="right">
+                                        Inquiry
+                                    </div>
+                                </footer>
+                                <div class="background">
+                                    <p>
+                                        Staying at Dalibor's boat was really great. His boat is very well...
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="message">
+                        <a href="">
+                            <div class="article clearfix">
+                                <div class="image">
+                                    <img src="images/default/avatar.png" alt="">
+                                </div>
+                                <footer class="clearfix">
+                                    <div class="left">
+                                        Ludovik | <time datetime="2013-01-12T10:28:03">10:28am / Jan 12, 2013</time>
+                                    </div>
+                                    <div class="right">
+                                        Inquiry
+                                    </div>
+                                </footer>
+                                <div class="background">
+                                    <p>
+                                        Staying at Dalibor's boat was really great. His boat is very well...
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="message">
+                        <a href="">
+                            <div class="article clearfix">
+                                <div class="image">
+                                    <img src="images/default/avatar.png" alt="">
+                                </div>
+                                <footer class="clearfix">
+                                    <div class="left">
+                                        Ludovik | <time datetime="2013-01-12T10:28:03">10:28am / Jan 12, 2013</time>
+                                    </div>
+                                    <div class="right">
+                                        Inquiry
+                                    </div>
+                                </footer>
+                                <div class="background">
+                                    <p>
+                                        Staying at Dalibor's boat was really great. His boat is very well...
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <!-- end:messagess -->
+
+                <!-- start:more -->
+                <div class="more">
+                    <a href="">All Messages</a>
+                </div>
+                <!-- end:more -->
+
+            </section>
+            <!-- end:inbox -->
+
+            <!-- start:upcoming -->
+            <section class="upcoming">
+                <h2>Upcoming Trips</h2>
+
+                <article>
+                    <header>
+                        <h3>Hvar | Aug 12, 2013</h3>
+                    </header>
+                    <div class="background clearfix">
+                        <a href="" title="Hvar"><img src="images/temp/upcoming-hvar.jpg" alt=""></a>
+                        <p>
+                            <strong>Boat:</strong> Absolute 52 Coupe<br>
+                            <strong>Homeport:</strong> Barcelona, Spain<br>
+                            <strong>Cabins / Bearings:</strong> 4 / 8 + 2
+                        </p>
+                    </div>
+                </article>
+                <article>
+                    <header>
+                        <h3>Hvar | Aug 12, 2013</h3>
+                    </header>
+                    <div class="background clearfix">
+                        <a href="" title="Hvar"><img src="images/temp/upcoming-hvar.jpg" alt=""></a>
+                        <p>
+                            <strong>Boat:</strong> Absolute 52 Coupe<br>
+                            <strong>Homeport:</strong> Barcelona, Spain<br>
+                            <strong>Cabins / Bearings:</strong> 4 / 8 + 2
+                        </p>
+                    </div>
+                </article>
+                <article>
+                    <header>
+                        <h3>Hvar | Aug 12, 2013</h3>
+                    </header>
+                    <div class="background clearfix">
+                        <a href="" title="Hvar"><img src="images/temp/upcoming-hvar.jpg" alt=""></a>
+                        <p>
+                            <strong>Boat:</strong> Absolute 52 Coupe<br>
+                            <strong>Homeport:</strong> Barcelona, Spain<br>
+                            <strong>Cabins / Bearings:</strong> 4 / 8 + 2
+                        </p>
+                    </div>
+                </article>
+            </section>
+            <!-- end:upcoming -->
+
+            <!-- start:more -->
+            <div class="more">
+                <a href="">Show More</a>
+            </div>
+            <!-- end:more -->
+
+        </div>
+    </div>
+    <!-- end:section -->
 {% endblock %}

@@ -1,9 +1,14 @@
 {% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
     
-{% block dashboard_page_title %}My Profile{% endblock %}
+{% block tabs %}
+{% include 'ZizooBaseBundle:Dashboard:user_tabs.html.twig' with {'current':'profile'} %}
+{% endblock %}
 
 {% block content %}
-    <a href="{{ path('ZizooProfileBundle_Profile_Show', {username: username}) }}">View Profile</a>
+	<div class="content">
+        <h1>Profile</h1>
+	    <a href="{{ path('ZizooProfileBundle_Profile_Show', {username: username}) }}">View Profile</a>
 
-    {{ response|raw }}
+    	{{ response|raw }}
+    </div>
 {% endblock %}

@@ -1,19 +1,15 @@
 {% trans_default_domain "labels" %}
 
 {% if logged_in %}
-<div id="login_widget" class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <a class="brand active" href="{{ path('ZizooBaseBundle_homepage') }}">Zizoo</a>
-            <div class="nav-collapse collapse">
-                <ul class="nav pull-right">
-                    <li class="active"><a href="{{ path('ZizooBaseBundle_homepage') }}">Home</a></li>
-                    <li><a href="{{ path('ZizooBaseBundle_how') }}">How it works</a></li>
+    <header id="header">
+
+        <!-- start:container -->
+        <div class="container clearfix">
+
+            <a href="{{ path('ZizooBaseBundle_homepage') }}" class="logo" title="Back to Homepage">The Sea Awaits <small>Boat Rentals made Easy</small></a><br>
+            <nav class="clearfix">
+                <ul class="menu clearfix">
+                    <li><a href="{{ path('ZizooBaseBundle_how') }}" title="How it Works">How it Works</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome {{ user.username | default("none") }}<b class="caret"></b></a>
                         <ul class="dropdown-menu">
@@ -25,40 +21,13 @@
                             <li><a href="{{ path('ZizooUserBundle_logout') }}">Logout</a></li>
                         </ul>
                     </li>
-                    <li class="add-boat"><a href="{{ path('ZizooBoatBundle_Boat_New') }}">Add Boat</a></li>
                 </ul>
-            </div><!--/.nav-collapse -->
+                <a href="" class="button orange add" title="List Your Boats"><span></span> List Your Boats</a>
+            </nav>
+
         </div>
-    </div>
-</div>
+        <!-- end:container -->
+    </header>
 {% else %}
-<div id="login_widget" class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <a class="brand active" href="{{ path('ZizooBaseBundle_homepage') }}">Zizoo</a>
-            <div class="nav-collapse collapse">
-                <ul class="nav pull-right">
-                    {% if show_login_form %}
-                        <li>
-                            <form class="navbar-form pull-right" action="{{ path('ZizooUserBundle_login_check') }}" method="post">
-                                <input class="span2" type="text" name="_username" placeholder="Email or username">
-                                <input class="span2" type="password" name="_password" placeholder="Password">
-                                <button type="submit" class="btn">Login</button>
-                            </form>
-                        </li>
-                    {% else %}
-                        <li><a id="login_link" href="{{ path('ZizooUserBundle_login') }}">Login</a></li>
-                    {% endif %}
-                    <li><a id="register_link" href="{{ path('ZizooUserBundle_register') }}">Register</a></li>
-                    <li><a href="#">Add Boat</a></li>
-                </ul>
-            </div><!--/.nav-collapse -->
-        </div>
-    </div>
-</div>
+    {% include 'ZizooBaseBundle:Page:guest_header.html.twig' %}
 {% endif %}

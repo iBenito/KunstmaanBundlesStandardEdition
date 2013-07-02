@@ -1,0 +1,32 @@
+<ul class="tabs user clearfix">
+    <li {% if current=="index" %} class="current" {% endif %}>
+    	<a href="{{ path('ZizooBaseBundle_Dashboard_UserDashboard', {show_user: 'true'}) }}" title="Dashboard">
+    		<span class="icon dashboard"></span> Dashboard
+    	</a>
+    </li>
+    <li {% if current=="inbox" %} class="current" {% endif %}>
+	    <a href="{{ path('fos_message_inbox') }}" title="Inbox"><span class="icon message">
+	    	<span class="circle red">5</span></span> Inbox
+	    </a>
+    </li>
+    <li {% if current=="profile" %} class="current" {% endif %}>
+	    <a href="{{ path('ZizooBaseBundle_Dashboard_Profile') }}" title="Profile">
+	    	<span class="icon profile"></span> Profile
+	    </a>
+    </li>
+    <li {% if current=="bookings" %} class="current" {% endif %}>
+	    <a href="{{ path('ZizooBookingBundle_view_all_bookings') }}" title="My Trips">
+	    	<span class="icon bookings"></span> My Trips
+	    </a>
+    </li>
+    <li {% if current=="skills" %} class="current" {% endif %}>
+	    <a href="{{ path('ZizooBaseBundle_Dashboard_Skills') }}" title="My Sills">
+	    	<span class="icon skills"></span> My Skills
+	    </a>
+    </li>
+    <li {% if current=="account" %} class="current" {% endif %}>
+	    <a href="{{ path('ZizooUserBundle_User_AccountSettings') }}" title="Account">
+	    	<span class="icon account"></span> Account
+	    </a>
+    </li>
+</ul>
