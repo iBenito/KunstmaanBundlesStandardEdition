@@ -14,6 +14,7 @@ use Zizoo\BoatBundle\Entity\Amenities;
 use Zizoo\BoatBundle\Entity\Equipment;
 use Zizoo\BoatBundle\Entity\Extra;
 use Zizoo\BoatBundle\Entity\BoatType;
+use Zizoo\BoatBundle\Entity\EngineType;
 use Zizoo\CrewBundle\Entity\SkillType;
 use Zizoo\BookingBundle\Entity\PaymentMethod;
 use Zizoo\BillingBundle\Entity\PayoutMethod;
@@ -344,6 +345,24 @@ class LoadDataCommand extends ContainerAwareCommand
             $this->em->persist($boatType);
         }
     }
+
+    private function loadEngineTypes()
+    {
+        $getEngineTypes = file_get_contents(dirname(__FILE__).'/Data/engine_types.json');
+
+        $engineTypes = json_decode($getEngineTypes);
+
+        foreach ($engineTypes as $e)
+        {
+            $engineType = new EngineType();
+            $engineType->setId($e->id);
+            $engineType->setName($e->name);
+            $engineType->setOrder($e->order);
+
+            $this->em->persist($engineType);
+        }
+    }
+
     private function loadSkillTypes()
     {
         $getSkillTypes = file_get_contents(dirname(__FILE__).'/Data/skill_types.json');
@@ -379,6 +398,7 @@ class LoadDataCommand extends ContainerAwareCommand
         $this->loadEquipment();
         $this->loadExtras();
         $this->loadBoatTypes();
+        $this->loadEngineTypes();
         $this->loadSkillTypes();
         $this->loadPaymentMethods();
         $this->loadPayoutMethods();

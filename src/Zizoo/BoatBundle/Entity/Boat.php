@@ -34,6 +34,11 @@ class Boat extends BaseEntity
     protected $name;
 
     /**
+     * @ORM\Column(type="string", length=100, nullable=TRUE)
+     */
+    protected $registrationNumber;
+
+    /**
      * @ORM\Column(type="text", nullable=TRUE)
      */
     protected $description;
@@ -62,11 +67,21 @@ class Boat extends BaseEntity
      * @ORM\Column(type="integer")
      */
     protected $cabins;
-    
+
     /**
-     * @ORM\Column(type="integer", nullable=TRUE)
+     * @ORM\Column(type="integer")
+     */
+    protected $berths;
+
+    /**
+     * @ORM\Column(type="integer")
      */
     protected $bathrooms;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $toilets;
     
     /**
      * @ORM\Column(type="integer")
@@ -114,6 +129,12 @@ class Boat extends BaseEntity
      * @ORM\JoinColumn(name="boat_type", referencedColumnName="id")
      */
     protected $boatType;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Zizoo\BoatBundle\Entity\EngineType")
+     * @ORM\JoinColumn(name="engine_type", referencedColumnName="id")
+     */
+    protected $engineType;
     
     /**
      * @ORM\ManyToMany(targetEntity="Zizoo\BoatBundle\Entity\Amenities", inversedBy="boats")
@@ -221,6 +242,29 @@ class Boat extends BaseEntity
     }
 
     /**
+     * Set registration number
+     *
+     * @param string $registrationNumber
+     * @return Boat
+     */
+    public function setRegistrationNumber($registrationNumber)
+    {
+        $this->registrationNumber = $registrationNumber;
+
+        return $this;
+    }
+
+    /**
+     * Get registration number
+     *
+     * @return string
+     */
+    public function getRegistrationNumber()
+    {
+        return $this->RegistrationNumber;
+    }
+
+    /**
      * Set description
      *
      * @param string $description
@@ -313,6 +357,29 @@ class Boat extends BaseEntity
     }
 
     /**
+     * Set berths
+     *
+     * @param integer $berths
+     * @return Boat
+     */
+    public function setBerths($berths)
+    {
+        $this->berths = $berths;
+    
+        return $this;
+    }
+
+    /**
+     * Get berths
+     *
+     * @return integer 
+     */
+    public function getBerths()
+    {
+        return $this->berths;
+    }
+
+    /**
      * Set cabins
      *
      * @param integer $cabins
@@ -321,14 +388,14 @@ class Boat extends BaseEntity
     public function setCabins($cabins)
     {
         $this->cabins = $cabins;
-    
+
         return $this;
     }
 
     /**
      * Get cabins
      *
-     * @return integer 
+     * @return integer
      */
     public function getCabins()
     {
@@ -356,6 +423,29 @@ class Boat extends BaseEntity
     public function getBathrooms()
     {
         return $this->bathrooms;
+    }
+
+    /**
+     * Set toilets
+     *
+     * @param integer $toilets
+     * @return Boat
+     */
+    public function setToilets($toilets)
+    {
+        $this->toilets = $toilets;
+
+        return $this;
+    }
+
+    /**
+     * Get toilets
+     *
+     * @return integer
+     */
+    public function getToilets()
+    {
+        return $this->toilets;
     }
 
     /**
@@ -570,6 +660,29 @@ class Boat extends BaseEntity
     public function getBoatType()
     {
         return $this->boatType;
+    }
+
+    /**
+     * Set engineType
+     *
+     * @param \Zizoo\BoatBundle\Entity\EngineType $engineType
+     * @return Boat
+     */
+    public function setEngineType(\Zizoo\BoatBundle\Entity\EngineType $engineType = null)
+    {
+        $this->engineType = $engineType;
+
+        return $this;
+    }
+
+    /**
+     * Get engineType
+     *
+     * @return \Zizoo\BoatBundle\Entity\EngineType
+     */
+    public function getEngineType()
+    {
+        return $this->engineType;
     }
 
     /**

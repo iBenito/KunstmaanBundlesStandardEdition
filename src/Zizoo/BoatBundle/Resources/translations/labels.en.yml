@@ -6,6 +6,10 @@ zizoo_boat.label.length: Length
 
 zizoo_boat.label.cabins: Cabins
 
+zizoo_boat.label.cabins_bearings: Cabins/Bearings
+
 zizoo_boat.label.bathrooms: Bathrooms
 
 zizoo_boat.label.images: Images
+
+zizoo_boat.label.price_from: from

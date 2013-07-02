@@ -21,19 +21,13 @@
 
             <section class="details" id="details">
                 <h3>{{ boat.name }}</h3>
-                <p>{% trans %}zizoo_address.label.cities{% endtrans %}: 
-                    <ul>
-                        <li>{{ boat.address.locality }}</li>
-                    </ul>
-                </p>
-                <p>{% trans %}zizoo_boat.label.brand{% endtrans %}: {{ boat.brand }}</p>
-                <p>{% trans %}zizoo_boat.label.model{% endtrans %}: {{ boat.model }}</p>
-                <p>{% trans %}zizoo_boat.label.length{% endtrans %}: {{ boat.length }}</p>
-                <p>{% trans %}zizoo_boat.label.cabins{% endtrans %}: {{ boat.cabins }}</p>
+                <div class="is_crewed">{{ boat.crewOptional }}</div>
+                <p>{% trans %}zizoo_address.label.homeport{% endtrans %}: {{ boat.address.locality }}, {{ boat.address.country.name }} </p>
+                <p>{% trans %}zizoo_boat.label.cabins_bearings{% endtrans %}: {{ boat.cabins }}</p>
                 {% if boat.bathrooms %}
                     <p>{% trans %}zizoo_boat.label.bathrooms{% endtrans %}: {{ boat.bathrooms }}</p>
                 {% endif %}
-
+                <p>{% trans %}zizoo_boat.label.price_from{% endtrans %}: {{ boat.lowestPrice }}</p>
             </section>
 
             <section class="images" id="images">
