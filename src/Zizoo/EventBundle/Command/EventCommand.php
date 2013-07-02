@@ -44,6 +44,9 @@ class EventCommand extends ContainerAwareCommand
                     $input = new ArrayInput($arguments);
                     $returnCode = $command->run($input, $output);
                     $event->setResult($returnCode);
+                    if ($returnCode!=0){
+                        $event->setRetry($event->getRetry()+1);
+                    }
                     $event->setLastRun($now);
                     
                     if ($eventService->willRunAgain($event, $now)){

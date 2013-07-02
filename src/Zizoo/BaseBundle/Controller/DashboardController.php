@@ -147,8 +147,16 @@ class DashboardController extends Controller {
      */
     public function inboxAction()
     {
+        $request    = $this->getRequest();
+        $response   = $this->forward('ZizooMessageBundle:Message:inbox');
+        
+        if ($response->isRedirect()){
+            return $this->redirect($this->generateUrl($request->get('_route')));
+        }
+        
         return $this->render('ZizooBaseBundle:Dashboard:inbox.html.twig', array(
-
+            'username'  => $this->getUser()->getUsername(),
+            'response'  => $response->getContent()
         ));
     }
 
@@ -191,7 +199,7 @@ class DashboardController extends Controller {
     public function tripsAction()
     {
         $request    = $this->getRequest();
-        $response   = $this->forward('ZizooCharterBundle:Charter:profile');
+        $response   = $this->forward('ZizooBookingBundle:Booking:viewAllBookings');
         
         if ($response->isRedirect()){
             return $this->redirect($this->generateUrl($request->get('_route')));

@@ -21,7 +21,7 @@ class CharterType extends AbstractType
     {
         $builder->add('charter_name', 'text', array('label' => 'zizoo_charter.label.charter_name', 'property_path' => 'charterName'));
         //$builder->add('charter_number', 'text', array('label' => 'zizoo_charter.label.charter_number', 'property_path' => 'charterNumber'));
-        $builder->add('charter_address', 'zizoo_address', array('label'             => 'zizoo_charter.label.charter_address', 
+        $builder->add('charter_address', 'zizoo_address', array('label'             => false, 
                                                                 'property_path'     => 'address',
                                                                 'validation_groups' => 'registration',
                                                                 'data_class'        => 'Zizoo\AddressBundle\Entity\CharterAddress',

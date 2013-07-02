@@ -1,15 +1,55 @@
 {# src/Zizoo/BaseBundle/Resources/views/Form/fields.html.twig #}
 
 {% block form_label %}
-<label class="label">
-    <span class="{{ name }}"></span>
-    {{ label|trans({}, translation_domain) }}
-</label>
-{% endblock %}
+{% spaceless %}
+    {% if label is not sameas(false) %}
+        {% if not compound %}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {% endif %}
+        {% if required %}
+            {% if label['class'] is defined %}
+                {% set class_attr = (label_attr.class|default('') ~ ' required')|trim ~ ' ' ~ label['class']|trim %}
+                {% set label_attr = label_attr|merge({'class': class_attr}) %}
+            {% else %}
+                {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+            {% endif %}
+        {% else %}
+            {% if label['class'] is defined %}
+                {% set class_attr = label['class']|trim %}
+                {% set label_attr = label_attr|merge({'class': class_attr}) %}
+            {% else %}
+                {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+            {% endif %}
+        {% endif %}
+
+        {% if label['value'] is defined %}
+            {% set label = label['value'] %}
+        {% endif %}
+
+        {% if label is empty %}
+            {% set label = name|humanize %}
+        {% endif %}
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}><span class="icon"></span>{{ label|trans({}, translation_domain) }}</label>
+    {% endif %}
+{% endspaceless %}
+{% endblock form_label %}
+
 
 {% block form_row %}
-<div class="row">
-	{{ block('form_label') }}
-    {{ block('form_widget') }}
-</div>
-{% endblock %}
+{% spaceless %}
+    <div class="row">
+        {{ form_label(form) }}
+        {% set actual_label = label %}
+        {% if label is not sameas(false) %}
+            {% if label is empty %}
+                {% set actual_label = name|humanize %}
+            {% endif %}
+        {% endif %}
+       
+        <div class="row_content{% if actual_label == false %} no_label{% endif %}">
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock form_row %}

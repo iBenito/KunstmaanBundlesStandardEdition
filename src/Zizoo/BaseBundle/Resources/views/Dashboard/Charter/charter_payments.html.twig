@@ -1,7 +1,12 @@
 {% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
     
-{% block dashboard_page_title %}My Charter Payments{% endblock %}
+{% block tabs %}
+{% include 'ZizooBaseBundle:Dashboard:Charter/charter_tabs.html.twig' with {'current':'payments'} %}
+{% endblock %}
 
 {% block content %}
-    {{ response|raw }}
+    <div class="content">
+        <h1>My Payments</h1>
+        {{ response|raw }}
+    </div>
 {% endblock %}

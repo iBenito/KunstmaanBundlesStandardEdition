@@ -88,6 +88,12 @@ ZizooBaseBundle_Dashboard_Trips:
     requirements:
         _method:  GET
         
+ZizooBaseBundle_Dashboard_Inbox:
+    pattern:  /account/inbox
+    defaults: { _controller: ZizooBaseBundle:Dashboard:inbox }
+    requirements:
+        _method:  GET
+        
 ZizooBaseBundle_Dashboard_CharterProfile:
     pattern:  /charter/account/profile
     defaults: { _controller: ZizooBaseBundle:Dashboard:charterProfile }

@@ -14,18 +14,26 @@ class AddressType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('address_line_1')
-            ->add('address_line_2', 'text', array(  'label'     => 'Address Line 2 (optional)',
+            ->add('address_line_1', 'text', array('label' => array( 'value' => 'zizoo_address.label.address_line1',
+                                                                    'class' => 'location')))
+            ->add('address_line_2', 'text', array(  'label' => array( 'value' => 'zizoo_address.label.address_line2',
+                                                                        'class' => 'location'),
                                                     'required'  => false))
-            ->add('postcode', 'text')
-            ->add('locality', 'text')
-            ->add('sub_locality', 'text', array('required' => false))
+            ->add('postcode', 'text', array('label' => array( 'value' => 'zizoo_address.label.postcode',
+                                                                'class' => 'location')))
+            ->add('locality', 'text', array('label' => array( 'value' => 'zizoo_address.label.locality',
+                                                                    'class' => 'location')))
+            ->add('sub_locality', 'text', array('required' => false,
+                                                'label'     => array(   'value' => 'zizoo_address.label.sub_locality',
+                                                                        'class' => 'location')))
             ->add('country', 'entity', array(
                                             'class' => 'ZizooAddressBundle:Country',
                                             'query_builder' => function(EntityRepository $er) {
                                                 return $er->createQueryBuilder('c')
                                                     ->orderBy('c.order, c.printableName', 'ASC');
                                             },
+                                            'label'     => array(   'value' => 'zizoo_address.label.country',
+                                                                    'class' => 'location')
                                         ))
             ->add('lat', 'hidden', array(   'required'  => false,
                                             'read_only'  => true))

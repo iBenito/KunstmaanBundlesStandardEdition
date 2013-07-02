@@ -11,7 +11,7 @@ ZizooBookingBundle_view_booking:
         _method:  GET
         
 ZizooBookingBundle_view_all_bookings:
-    pattern: /bookings
+    pattern: /bookings/view
     defaults: { _controller: ZizooBookingBundle:Booking:viewAllBookings }
     requirements:
         _method:  GET

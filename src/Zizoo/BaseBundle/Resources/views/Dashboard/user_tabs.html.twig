@@ -5,7 +5,7 @@
     	</a>
     </li>
     <li {% if current=="inbox" %} class="current" {% endif %}>
-	    <a href="{{ path('fos_message_inbox') }}" title="Inbox"><span class="icon message">
+	    <a href="{{ path('ZizooBaseBundle_Dashboard_Inbox') }}" title="Inbox"><span class="icon message">
 	    	<span class="circle red">5</span></span> Inbox
 	    </a>
     </li>
@@ -15,7 +15,7 @@
 	    </a>
     </li>
     <li {% if current=="bookings" %} class="current" {% endif %}>
-	    <a href="{{ path('ZizooBookingBundle_view_all_bookings') }}" title="My Trips">
+	    <a href="{{ path('ZizooBaseBundle_Dashboard_Trips') }}" title="My Trips">
 	    	<span class="icon bookings"></span> My Trips
 	    </a>
     </li>

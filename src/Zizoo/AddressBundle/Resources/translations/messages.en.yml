@@ -1,0 +1,6 @@
+zizoo_address.label.address_line1: Address
+zizoo_address.label.address_line2: Address
+zizoo_address.label.postcode: Postcode
+zizoo_address.label.locality: City
+zizoo_address.label.sub_locality: Extra
+zizoo_address.label.country: Country

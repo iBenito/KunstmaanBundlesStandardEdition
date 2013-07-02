@@ -1,15 +1,12 @@
-{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
-    
+   
 {% block dashboard_page_title %}My Bookings{% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
     <link href="{{ asset('bundles/zizoojqgridcustom/css/ui.jqgrid.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/custom_combobox.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
     
 {% block javascripts %}
-    {{ parent() }}
     <script src="{{ asset('js/main.js') }}" type="text/javascript"></script>
     <script type="text/javascript" src="{{ asset('bundles/zizoojqgridcustom/js/i18n/grid.locale-en.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/zizoojqgridcustom/js/jquery.jqGrid.src.js') }}"></script>

@@ -56,19 +56,19 @@ ZizooCharterBundle_Charter_Boats:
         listing_status:  active|incomplete|hidden|all
         
 ZizooCharterBundle_Charter_PayoutSettings:
-    pattern:  /account/payout_settings
+    pattern:  /account/payout_settings/view
     defaults: { _controller: ZizooCharterBundle:Charter:payoutSettings }
     requirements:
         _method:  GET|POST
         
 ZizooCharterBundle_Charter_Users:
-    pattern:  /account/users
+    pattern:  /account/users/view
     defaults: { _controller: ZizooCharterBundle:Charter:users }
     requirements:
         _method:  GET|POST
         
 ZizooCharterBundle_Charter_Bookings:
-    pattern:  /account/bookings
+    pattern:  /account/bookings/view
     defaults: { _controller: ZizooCharterBundle:Charter:bookings }
     requirements:
         _method:  GET|POST
@@ -80,7 +80,7 @@ ZizooCharterBundle_Charter_ViewBooking:
         _method:  GET|POST
         
 ZizooCharterBundle_Charter_Payments:
-    pattern:  /account/payments
+    pattern:  /account/payments/view
     defaults: { _controller: ZizooCharterBundle:Charter:payments }
     requirements:
         _method:  GET|POST

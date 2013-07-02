@@ -1,4 +1,4 @@
-{% block content %}
+{% block body %}
 
     {% for flashMessage in app.session.flashbag.get('notice') %}
         <div class="flash-notice">
@@ -14,7 +14,7 @@
 
     {% if form %}
 
-        <form method="post" novalidate="novalidate">
+        <form class="form" method="post" novalidate="novalidate">
             
             <div id="payout_method">
                 {{ form_label(form.payout_method) }}

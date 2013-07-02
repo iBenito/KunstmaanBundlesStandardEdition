@@ -22,11 +22,12 @@ class ProfileType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('firstName')
-            ->add('lastName')
-            ->add('about')
-            ->add('phone', NULL, array(
-                'attr'  => array('oninvalid'=>"setCustomValidity('Please enter a valid Phone Number')"),))
+            ->add('firstName', 'text', array('label' => array('value' => 'zizoo_profile.label.first_name', 'class' => 'first_name')))
+            ->add('lastName', 'text', array('label' => array('value' => 'zizoo_profile.label.last_name', 'class' => 'last_name')))
+            ->add('about', 'textarea', array('label' => array('value' => 'zizoo_profile.label.about', 'class' => 'about')))
+            ->add('phone', 'text', array(
+                                            'attr'  => array('oninvalid'=>"setCustomValidity('Please enter a valid Phone Number')"),
+                                            'label' => array('value' => 'zizoo_profile.label.phone', 'class' => 'phone')))
             ->add('languages', 'entity', array(
                 'class' => 'ZizooAddressBundle:Language',
                 'multiple'  => true,
@@ -48,13 +49,13 @@ class ProfileType extends AbstractType
                                                                 ),
                                                                 'allow_delete'      => true
                                                                 ))
-            ->add('profile_address', 'zizoo_address', array('label' => 'zizoo_charter.label.profile_address',
-                    'property_path'     => 'address',
-                    'validation_groups' => 'registration',
-                    'data_class'        => 'Zizoo\AddressBundle\Entity\ProfileAddress',
-                    'map_show'          => $options['map_show'],
-                    'map_update'        => $options['map_update'],
-                    'map_drag'          => $options['map_drag']))
+            ->add('profile_address', 'zizoo_address', array('label'             => false,
+                                                            'property_path'     => 'address',
+                                                            'validation_groups' => 'registration',
+                                                            'data_class'        => 'Zizoo\AddressBundle\Entity\ProfileAddress',
+                                                            'map_show'          => $options['map_show'],
+                                                            'map_update'        => $options['map_update'],
+                                                            'map_drag'          => $options['map_drag']))
             ;
         
         $profileSubscriber = $this->container->get('zizoo_profile.profile_subscriber');

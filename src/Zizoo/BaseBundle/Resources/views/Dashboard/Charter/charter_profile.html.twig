@@ -5,11 +5,12 @@
 {% endblock %}
 
 {% block content %}
-	<div class="content">
+    <div class="content">
         <h1>Profile</h1>
 
-		<a href="{{ path('ZizooCharterBundle_Charter_Show', {id: id}) }}">View Profile</a>
+        <a href="{{ path('ZizooCharterBundle_Charter_Show', {id: id}) }}">View Profile</a>
 
-		{{ response|raw }}
-	</div>
+        {{ response|raw }}
+    </div>
+    
 {% endblock %}
