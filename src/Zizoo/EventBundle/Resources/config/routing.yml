@@ -1,0 +1,3 @@
+ZizooEventBundle_Event_test:
+  pattern:    /
+  defaults:   {_controller: ZizooEventBundle:Event:index }  

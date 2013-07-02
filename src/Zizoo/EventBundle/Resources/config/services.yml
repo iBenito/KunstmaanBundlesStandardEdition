@@ -1,7 +1,11 @@
 parameters:
+    zizoo_event.event_retries: 3
 #    zizoo_event.example.class: Zizoo\EventBundle\Example
 
 services:
+    zizoo_event.event_service:
+        class:  Zizoo\EventBundle\Service\EventService
+        arguments: ["@service_container"]
 #    zizoo_event.example:
 #        class: %zizoo_event.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]

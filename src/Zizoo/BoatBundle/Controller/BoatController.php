@@ -250,7 +250,7 @@ class BoatController extends Controller
         $charter    = $user->getCharter();
 
         $boat = new Boat();
-        $form = $this->createForm(new BoatType(), $boat);
+        $form = $this->createForm(new BoatType(), $boat, array('validation_groups' => array('create')));
         $form->bind($request);
 
         if ($form->isValid()) {
@@ -349,14 +349,18 @@ class BoatController extends Controller
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
 
-        $editForm = $this->createForm(new BoatDetailsType(), $boat);
+        $session = $this->get('session');
+        $step = $session->get('step');
+        $validationGroup = $step?'boat_new':'boat_details';
+        
+        $editForm = $this->createForm(new BoatDetailsType(), $boat, array('validation_groups' => array($validationGroup)));
         $editForm->bind($request);
         if ($editForm->isValid()) {
             $em->persist($boat);
             $em->flush();
 
-            $session = $this->get('session');
-            if ($session->get('step')){
+            
+            if ($step){
                 $route = 'ZizooBoatBundle_Boat_EditPhotos';
             }
             else{
@@ -438,8 +442,8 @@ class BoatController extends Controller
             $em->persist($image);
 
             $validator          = $this->get('validator');
-            $boatErrors         = $validator->validate($boat, 'Default');
-            $imageErrors        = $validator->validate($image, 'Default');
+            $boatErrors         = $validator->validate($boat, 'boat_photos');
+            $imageErrors        = $validator->validate($image, 'boat_photos');
             $numBoatErrors      = $boatErrors->count();
             $numImageErrors     = $imageErrors->count();
 

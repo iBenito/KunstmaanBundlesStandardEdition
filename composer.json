@@ -26,7 +26,8 @@
         "friendsofsymfony/message-bundle": "dev-master",
         "punkave/symfony2-file-uploader-bundle": "dev-master",
         "egeloen/google-map-bundle": "*",
-        "willdurand/geocoder": "dev-master"
+        "willdurand/geocoder": "dev-master",
+        "mtdowling/cron-expression": "1.0.*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*"

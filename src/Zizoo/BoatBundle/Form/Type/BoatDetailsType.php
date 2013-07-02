@@ -21,7 +21,8 @@ class BoatDetailsType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Zizoo\BoatBundle\Entity\Boat'
+            'data_class'        => 'Zizoo\BoatBundle\Entity\Boat',
+            'validation_groups' => array('boat_details', 'boat_new')
         ));
     }
 

@@ -4,7 +4,7 @@ zizoo_media:
 
 zizoo_event:
     resource: "@ZizooEventBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix:   /event
 
 zizoo_charter:
     resource: "@ZizooCharterBundle/Resources/config/routing.yml"

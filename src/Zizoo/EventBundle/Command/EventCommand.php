@@ -1,7 +1,7 @@
 <?php
 namespace Zizoo\EventBundle\Command;
 
-use Zizoo\UserBundle\Entity\User;
+use Zizoo\EventBundle\Entity\Event;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -12,6 +12,8 @@ use Symfony\Component\Console\Input\ArrayInput;
 
 class EventCommand extends ContainerAwareCommand
 {
+    const RESPONSE_SUCCESS          = 0;
+    
     protected function configure()
     {
         $this
@@ -23,13 +25,41 @@ class EventCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $command = $this->getApplication()->find('zizoo:list_users');
+        $container      = $this->getContainer();
+        $em             = $container->get('doctrine.orm.entity_manager');
+        $eventService   = $container->get('zizoo_event.event_service');
         
-        $arguments = array('command' => 'zizoo:list_users');
-        $input = new ArrayInput($arguments);
+        $now = new \DateTime();
         
-        $returnCode = $command->run($input, $output);
-        var_dump($returnCode);
+        $possibleEvents = $em->getRepository('ZizooEventBundle:event')->getPossibleRunEvents($now, 3);
+        
+        foreach ($possibleEvents as $event){
+            try {
+                if ($eventService->eventRunnable($event, $now)){
+                    $event->setStatus(Event::STATUS_RUNNING);
+                    $em->persist($event);
+                    
+                    $command = $this->getApplication()->find($event->getCommand());
+                    $arguments = array_merge(array('command' => $event->getCommand()), $event->getParameters());
+                    $input = new ArrayInput($arguments);
+                    $returnCode = $command->run($input, $output);
+                    $event->setResult($returnCode);
+                    $event->setLastRun($now);
+                    
+                    if ($eventService->willRunAgain($event, $now)){
+                        $event->setStatus(Event::STATUS_NEW);
+                    } else {
+                        $event->setStatus(Event::STATUS_COMPLETE);
+                    }
+                    
+                    $em->persist($event);
+                    $em->flush();
+                }
+            } catch (\Exception $e){
+                var_dump($e->getMessage());
+            }
+        }
+        
     }
 }
 ?>

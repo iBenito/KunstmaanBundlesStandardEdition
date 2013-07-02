@@ -10,7 +10,12 @@ Zizoo\BoatBundle\Entity\Boat:
                 max: 10
                 minMessage: "You must upload at least 1 boat image"
                 maxMessage: "You cannot upload more than {{ limit }} images"
-                groups: [Default]
+                groups: [boat_photos]
+                
+        description:
+            - NotBlank:
+                message: Description must not be blank
+                groups: [boat_details]
 
 Zizoo\BoatBundle\Entity\BoatImage:
     properties:
@@ -19,4 +24,4 @@ Zizoo\BoatBundle\Entity\BoatImage:
                 pattern: "/image\\/(png|jpeg)/"
                 match:   true
                 message: Only png and jpeg images are allowed
-                groups: [Default]
+                groups: [boat_photos]
