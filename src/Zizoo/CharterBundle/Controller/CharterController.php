@@ -193,6 +193,7 @@ class CharterController extends Controller
         \Braintree_Configuration::publicKey($this->container->getParameter('braintree_public_key'));
         \Braintree_Configuration::privateKey($this->container->getParameter('braintree_private_key'));
         
+        $em                 = $this->getDoctrine()->getManager();
         $userService        = $this->container->get('zizoo_user_user_service');
         $trans              = $this->get('translator');
         $payoutSettingsType = new PayoutSettingsType();
@@ -265,7 +266,8 @@ class CharterController extends Controller
                 
                 if (is_array($braintreeCustomer->customFields)){
                     if (array_key_exists('payout_method', $braintreeCustomer->customFields)){
-                        $payoutSettings->setPayoutMethod($braintreeCustomer->customFields['payout_method']);
+                        $payoutMethod = $em->getRepository('ZizooBillingBundle:PayoutMethod')->findOneById($braintreeCustomer->customFields['payout_method']);
+                        $payoutSettings->setPayoutMethod($payoutMethod);
                     }
                     if (array_key_exists('account_owner', $braintreeCustomer->customFields)){
                         $bankAccount->setAccountOwner($braintreeCustomer->customFields['account_owner']);
@@ -274,7 +276,6 @@ class CharterController extends Controller
                         $bankAccount->setBankName($braintreeCustomer->customFields['bank_name']);
                     }
                     if (array_key_exists('bank_country', $braintreeCustomer->customFields)){
-                        $em = $this->getDoctrine()->getManager();
                         $country = $em->getRepository('ZizooAddressBundle:Country')->findOneByIso($braintreeCustomer->customFields['bank_country']);
                         $bankAccount->setCountry($country);
                     }
