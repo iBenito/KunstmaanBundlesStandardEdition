@@ -2,9 +2,12 @@
 
 <!-- start:avatar -->
 <div class="avatar">
-    <figure>
-        <img src="images/temp/boats-and-hos-crew.jpg" alt="{{ charter.charterName }}">
-        <!-- asset(charter.logo|pictureWebPath) -->
+    <figure id="charter_logo">
+        {% if charter.logo is not null %}
+            <img src="{{ asset(charter.logo|pictureWebPath) }}" alt="{{ charter.charterName }}" class="large" id="logo_img" />
+        {% else %}
+            <img alt="Charter logo not set" style="display: none" id="logo_img">
+        {% endif %}
         <figcaption>
             {{ charter.charterName }}
         </figcaption>

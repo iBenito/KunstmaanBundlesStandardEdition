@@ -2,9 +2,12 @@
 
 <!-- start:avatar -->
 <div class="avatar">
-    <figure>
-        <img src="images/temp/dalibor-hemingway.jpg" alt="{{ user.profile.firstName }} {{ user.profile.lastName }}">
-        <!-- asset(user.profile.avatar.first|pictureWebPath) -->
+    <figure id="user_avatar">
+        {% if user.profile.avatar|length > 0 %}
+            <img src="{{ asset(user.profile.avatar.first|pictureWebPath) }}" alt="{{ user.profile.firstName }} {{ user.profile.lastName }}" class="large" id="avatar_img" />
+        {% else %}
+            <img alt="Profile avatar not set" style="display: none" id="avatar_img" />
+        {% endif %}
         <figcaption>
             {{ user.profile.firstName }} {{ user.profile.lastName }}
         </figcaption>

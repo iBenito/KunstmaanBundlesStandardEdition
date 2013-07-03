@@ -376,9 +376,14 @@
     -webkit-appearance: none;
 }
 
-.form .row .row_errors_container {
+.form .row_errors_container {
     background: url("../images/error-arrow.png") no-repeat scroll 5% 1px transparent;
     padding: 10px 0 0;
+}
+
+.form > .row_errors_container {
+    background: none;
+    padding: 0;
 }
 
 .form .row_errors {

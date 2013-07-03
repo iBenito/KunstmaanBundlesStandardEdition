@@ -68,27 +68,29 @@
         mc.clearMarkers();
         {% for boat in boats %}
             {% if boat|bookable(form.vars.value.reservationFrom, form.vars.value.reservationTo)==true%}
-                    
-                infoWindows.push(new google.maps.InfoWindow({
-                    content: {% include "ZizooAddressBundle:Address:locations_boat_info_window.html.twig" with {'boat': boat } %}
-                }));
-                markers.push(new google.maps.Marker({
-                    title: '{{ boat.name }}',
-                    position: new google.maps.LatLng(
-                         {{ boat.address.lat }}, {{ boat.address.lng }}),
-                         clickable: true,
-                         draggable: false,
-                         flat: true
-                }));
-                google.maps.event.addListener(markers[{{ index }}], 'click', function() {
-                    if (lastOpenWindow!=-1){
-                        infoWindows[lastOpenWindow].close();
-                    }
-                    infoWindows[{{ index }}].open(map, markers[{{ index }}]);
-                    lastOpenWindow = {{ index }};
-                  });
-                  {% set index = index + 1 %}
-                   
+                
+                {% if boat.address.lat is not null and boat.address.lng is not null %}
+                
+                    infoWindows.push(new google.maps.InfoWindow({
+                        content: {% include "ZizooAddressBundle:Address:locations_boat_info_window.html.twig" with {'boat': boat } %}
+                    }));
+                    markers.push(new google.maps.Marker({
+                        title: '{{ boat.name }}',
+                        position: new google.maps.LatLng(
+                             {{ boat.address.lat }}, {{ boat.address.lng }}),
+                             clickable: true,
+                             draggable: false,
+                             flat: true
+                    }));
+                    google.maps.event.addListener(markers[{{ index }}], 'click', function() {
+                        if (lastOpenWindow!=-1){
+                            infoWindows[lastOpenWindow].close();
+                        }
+                        infoWindows[{{ index }}].open(map, markers[{{ index }}]);
+                        lastOpenWindow = {{ index }};
+                      });
+                      {% set index = index + 1 %}
+                {% endif %}
             {% endif %}
         {% endfor %}
         mc = new MarkerClusterer(map, markers, {maxZoom: 19});
