@@ -7,12 +7,12 @@
 <script type="text/javascript">
     
     function getLoginWidget(){
-        $('#login_widget').block({ message: '' });
+        $('#header').block({ message: '' });
         $.ajax({
             type: 'get',
             url: '{{ path('ZizooBaseBundle_login_widget') }}',
             success: function(data, textStatus, XHR){
-                $('#login_widget').html(data);
+                $('#header').html(data);
                 loginFormListeners();
                 registerFormListeners();
                 facebookFormListeners();
@@ -26,7 +26,9 @@
         $('#login_inner_ajax').dialog({
             modal: true,
             closeOnEscape: false,
-            resizable: false
+            resizable: false,
+            width: 470,
+            title: 'Login'
         });
     }
     
@@ -39,7 +41,10 @@
         $('#register_inner_ajax').dialog({
             modal: true,
             closeOnEscape: false,
-            resizable: false
+            resizable: false,
+            width: 470,
+            dialogClass: 'blank',
+            title: 'Register'
         });
     }
     
@@ -52,7 +57,9 @@
         $('#facebook_register_inner_ajax').dialog({
             modal: true,
             closeOnEscape: false,
-            resizable: false
+            resizable: false,
+            width: 470,
+            title: 'Register with Facebook'
         });
     }
     
@@ -65,7 +72,9 @@
         $('#forgot_password_inner_ajax').dialog({
             modal: true,
             closeOnEscape: false,
-            resizable: false
+            resizable: false,
+            width: 470,
+            title: 'Forgot password'
         });
     }
     
@@ -95,6 +104,7 @@
                         $('#login_inner_ajax .login_facebook_btn').click(function(){
                             $('#login_inner_ajax').block({ message: '' });
                             window.open($(this).attr('href'), 'Login with Facebook', "height=200,width=200");
+                            return false;
                         });
                         $('#login_inner_ajax .forgot_password_link').click(function(){
                             closeAllDialogs();
@@ -138,6 +148,7 @@
                         $('#login_inner_ajax .login_facebook_btn').click(function(){
                             $('#login_inner_ajax').block({ message: '' });
                             window.open($(this).attr('href'), 'Login with Facebook', "height=200,width=200");
+                            return false;
                         });
                         openLoginDialog();
                         $.unblockUI();
@@ -164,9 +175,13 @@
                     $('#register_inner_ajax').html($(data).find('#register_inner_ajax'));
                     $('#register_inner_ajax .register_facebook_btn').click(function(){
                         window.open($(this).attr('href'), 'Register with Facebook', "height=200,width=200");
+                        return false;
                     });
-                    $('#register_inner_ajax .register_email_btn').click(function(){
-                        $(this).parents('div.register').find('.register_email').slideDown(); 
+                    $('#register_hidden .register-table .button').click(function(){
+                        $(this).parents('div.register').find('.register_email_container').slideToggle(200, 'easeInQuad', function() {
+                            //$(this).find('input[type="text"]:first').focus();
+                        });
+                        return false;
                      });
                     $('#register_inner_ajax').unblock();
                 }
@@ -182,14 +197,17 @@
                     url: '{{ path('ZizooUserBundle_register') }}',
                     success: function(data, textStatus, XHR){
                         $('#register_hidden').removeClass('empty').html($(data).find('#register_inner_ajax'));
-                        $('#register_hidden .register_email').hide();
                         $('#register_hidden .register_facebook_btn').click(function(){
                             //top.location.href = $(this).attr('href');
                             $('#register_inner_ajax').block({ message: '' });
                             window.open($(this).attr('href'), 'Register with Facebook', "height=200,width=200");
+                            return false;
                         });
-                        $('#register_hidden .register_email_btn').click(function(){
-                            $(this).parents('div.register').find('.register_email').slideDown(); 
+                        $('#register_hidden .register-table .button').click(function(){
+                            $(this).parents('div.register').find('.register_email_container').slideToggle(200, 'easeInQuad', function() {
+                                //$(this).find('input[type="text"]:first').focus();
+                            });
+                            return false;
                          });
                         openRegisterDialog();
                         $.unblockUI();

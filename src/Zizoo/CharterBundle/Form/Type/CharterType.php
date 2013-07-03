@@ -29,7 +29,7 @@ class CharterType extends AbstractType
                                                                 'map_update'        => $options['map_update'],
                                                                 'map_drag'          => $options['map_drag']));
         $builder->add('charter_phone', 'text', array('label' => 'zizoo_charter.label.charter_phone', 'property_path' => 'phone'));
-        
+       
         $charterSubscriber = $this->container->get('zizoo_charter.charter_subscriber');
         $builder->addEventSubscriber($charterSubscriber);
     }
@@ -39,7 +39,7 @@ class CharterType extends AbstractType
     {
         $resolver->setDefaults(array(   'data_class'            => 'Zizoo\CharterBundle\Entity\Charter',
                                         'cascade_validation'    => true,
-                                        'validation_groups'     => 'registration',
+                                        'validation_groups'     => array('registration', 'logo', 'Default'),
                                         'map_show'              => true,
                                         'map_update'            => true,
                                         'map_drag'              => true));

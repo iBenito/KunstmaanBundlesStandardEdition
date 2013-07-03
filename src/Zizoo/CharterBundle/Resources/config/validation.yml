@@ -16,16 +16,16 @@ Zizoo\CharterBundle\Entity\Charter:
 Zizoo\AddressBundle\Entity\CharterAddress:
     properties:
         addressLine1:
-            - NotBlank: { message: zizoo_charter.error.charter_address_street_not_blank, groups: [registration, Default] }
+            - NotBlank: { message: zizoo_address.error.street_not_blank, groups: [registration, Default] }
 
         postcode:
-            - NotBlank: { message: zizoo_charter.error.charter_address_postcode_not_blank, groups: [registration, Default] }
+            - NotBlank: { message: zizoo_address.error.postcode_not_blank, groups: [registration, Default] }
             
         locality:
-            - NotBlank: { message: zizoo_charter.error.charter_address_locality_not_blank, groups: [registration, Default] }
+            - NotBlank: { message: zizoo_address.error.locality_not_blank, groups: [registration, Default] }
             
         country:
-            - NotNull: { message: zizoo_charter.error.charter_address_country_not_null, groups: [registration, Default] }
+            - NotNull: { message: zizoo_address.error.country_not_null, groups: [registration, Default] }
             
 Zizoo\CharterBundle\Entity\CharterLogo:
     properties:

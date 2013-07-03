@@ -10,15 +10,15 @@ class ProfileType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('first_name', 'text', array('label' => 'zizoo_user.label.first_name', 'property_path' => 'firstName'));
-        $builder->add('last_name', 'text', array('label' => 'zizoo_user.label.last_name', 'property_path' => 'lastName'));
+        $builder->add('first_name', 'text', array('label' => 'zizoo_profile.label.first_name', 'property_path' => 'firstName'));
+        $builder->add('last_name', 'text', array('label' => 'zizoo_profile.label.last_name', 'property_path' => 'lastName'));
     }
 
 
     public function setDefaultOptions(OptionsResolverInterface $resolver) 
     {
-        $resolver->setDefaults(array('data_class' => 'Zizoo\ProfileBundle\Entity\Profile',
-                     'validation_groups' => 'registration'));
+        $resolver->setDefaults(array(   'data_class' => 'Zizoo\ProfileBundle\Entity\Profile',
+                                        'validation_groups' => 'registration'));
     }
 
     public function getName()

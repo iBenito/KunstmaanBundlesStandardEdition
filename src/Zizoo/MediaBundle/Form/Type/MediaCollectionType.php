@@ -14,7 +14,8 @@ class MediaCollectionType extends AbstractType
     {
         $resolver->setDefaults(array(   'cascade_validation'    => true,
                                         'aspect_ratio'          => 0,
-                                        'dropzone'              => false));
+                                        'dropzone'              => false,
+                                        'error_bubbling'        => false));
     }
 
     

@@ -1,102 +1,174 @@
 {# src/Zizoo/UserBundle/Resources/views/Registration/register.html.twig #}
+{% extends 'ZizooUserBundle::layout.html.twig' %}
 
-<script type="text/javascript" src="{{ asset('bundles/zizoouser/js/register.js') }}"></script>
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/zizoouser/js/register.js') }}"></script>
+{% endblock %}
 
-<script>
-    $(document).ready(function() {
-        {% if relogin %}
-            $('.register_facebook_btn:first-child').click();
-        {% endif %}
-    });
-</script>
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/zizoouser/css/register.css') }}" type="text/css" rel="stylesheet" />
+    
+    <style type="text/css">
+        #{% if ajax %}register_inner_ajax{% else %}register_inner{% endif %} {
+            width: 470px;
+            margin: 20px auto;
+        }
 
+    </style>
+    
+{% endblock %}
 
-<!-- start:register -->
-<section id="register" class="modal" style="display: none;">
-    <header>
-        <h6>Register</h6>
-        <a href="#" class="close ir" title="Close">Close</a>
-    </header>
+{% block body %}
+    <div>
+        <div class="register" id="{% if ajax %}register_inner_ajax{% else %}register_inner{% endif %}">
 
-    <div class="content">
-        <a target="_blank" href="{{ facebook.loginUrl({ scope: 'email', redirect_uri: url('ZizooUserBundle_register_facebook', {ajax: ajax}), display: 'popup' }) }}" class="button facebook big">Login with Facebook</a>
-        <span class="or">or</span>
-        <a href="#" class="table">
-            <span class="table-cell">
-                <span class="button gray big">Connect with E-mail Account</span>
-            </span>
-            <span class="table-cell">
-                <span class="button gray big"><span></span></span>
-            </span>
-        </a>
-        <span class="or">or</span>
-        <a href="{{ path('ZizooCharterBundle_Registration_register') }}" class="button blue big">I am a Charter</a>
-    </div>
-
-    <div class="expand">
-        <div class="content">
-            <form novalidate="novalidate" action="{{ path('ZizooUserBundle_register')}}" method="post" {{ form_enctype(form) }} class="form">
-                {{ form_errors(form) }}
-
-                {{ form_row(form.profile.first_name) }}
-                {{ form_row(form.profile.last_name) }}
-                {{ form_row(form.user.username) }}
-                {{ form_row(form.user.email) }}
-                {{ form_row(form.user.password) }}
-                {{ form_row(form.terms) }}
-
-                {{ form_rest(form) }}
+            <style type="text/css">
+                .register_controls {
+                    background: none repeat scroll 0 0 #FFFFFF;
+                    border-radius: 0 0 5px 5px;
+                    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+                    padding: 30px;
+                }
                 
-                <!--div class="row">
-                    <label><input name="registration[terms]" type="checkbox"> I Agree to Terms and Conditions</label>
-                </div-->
-                <div class="row">
-                    <button type="submit" class="button blue big">Create Account</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</section>
-<!-- end:register -->
+                .register_email {
+                    background: none repeat scroll 0 0 #FFFFFF;
+                    border-radius: 0 0 5px 5px;
+                    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+                    padding: 30px;
+                }
+                
+                {% if is_post == false and email is null %}
+                .register_email_container {
+                    display: none;
+                }
+                {% else %}
+                .register .register_email_container {
+                    display: block;
+                }  
+                {% endif %}
+                
+            </style>
+            
+            <div class="register_controls">
+                <a class="register_facebook_btn button facebook big" href="{{ facebook.loginUrl({ scope: 'email', redirect_uri: url('ZizooUserBundle_register_facebook', {ajax: ajax}), display: 'popup' }) }}" target="_blank">Login with Facebook</a>
 
-<!--
-    <div class="register" id="{% if ajax %}register_inner_ajax{% else %}register_inner{% endif %}">
-        <input type="hidden" value="ongoing" id="status" />
-        <div>
-            <input type="button" value="With EMAIL account" class="register_email_btn" />
-            or
-            <input type="button" value="Connect with FACEBOOK" class="register_facebook_btn" href="{{ facebook.loginUrl({ scope: 'email', redirect_uri: url('ZizooUserBundle_register_facebook', {ajax: ajax}), display: 'popup' }) }}" />
-            or
-            <form method="get" action="{{ path('ZizooCharterBundle_Registration_register') }}">
-                <input type="submit" value="I am a Charter" class="charter_register_btn" />
-            </form>
-        </div>
+                <span class="or">or</span>
+                <a class="table register-table" href="#">
+                    <span class="table-cell">
+                        <span class="register_email_btn button gray big">Connect with E-mail Account</span>
+                    </span>
+                    <span class="table-cell">
+                        <span class="button gray big"><span></span></span>
+                    </span>
+                </a>
+                <span class="or">or</span>
+                <a class="charter_register_btn button blue big" href="{{ path('ZizooCharterBundle_Registration_register') }}">I am a Charter</a>
 
-        <div class="register_email">
+                <input type="hidden" value="ongoing" id="status" />
+            </div>
+
+            <div class="register_email_container expand">
+                <div class="register_email">
                     
-                <div>
-                    {{ form_label(form.user.username) }}
-                    {{ form_errors(form.user.username) }}
-                    {% if unconfirmed_username %}
-                        <ul>
-                            <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooUserBundle_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
-                        </ul>
-                    {% endif %}
-                    {{ form_widget(form.user.username) }}
-                </div>
+                    <form class="form register_form" novalidate="novalidate" action="{{ path('ZizooUserBundle_register')}}" method="post" {{ form_enctype(form) }} class="register_form">
+                        {{ form_errors(form) }}
+                            
+                        <div class="row">
+                            {{ form_label(form.profile.first_name) }}
+                            <div class="row_content">
+                            {{ form_widget(form.profile.first_name) }}
+                            </div>
+                        </div>
+                        {{ form_errors(form.profile.first_name) }}
+                            
+                        <div class="row">
+                            {{ form_label(form.profile.last_name) }}
+                            <div class="row_content">
+                            {{ form_widget(form.profile.last_name) }}
+                            </div>
+                        </div>
+                       {{ form_errors(form.profile.last_name) }}
+                            
+                        <div class="row">
+                            {{ form_label(form.user.username) }}
+                            <div class="row_content">
+                            {{ form_widget(form.user.username) }}
+                            </div>
+                        </div>
+                        {{ form_errors(form.user.username) }}
+                        {% if unconfirmed_username %}
+                            <ul>
+                                <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooUserBundle_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
+                            </ul>
+                        {% endif %}
+                            
+                        <div class="row">
+                            {{ form_label(form.user.email) }}
+                            <div class="row_content">
+                            {{ form_widget(form.user.email) }}
+                            </div>
+                        </div>
+                        {{ form_errors(form.user.email) }}
+                        {% if unconfirmed_email %}
+                            <ul>
+                                <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooUserBundle_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
+                            </ul>
+                        {% endif %}
 
-                <div>
-                    {{ form_label(form.user.email) }}
-                    {{ form_errors(form.user.email) }}
-                    {% if unconfirmed_email %}
-                        <ul>
-                            <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooUserBundle_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
-                        </ul>
-                    {% endif %}
-                    {{ form_widget(form.user.email) }}
+                        <div class="row">
+                            {{ form_label(form.user.password.password) }}
+                            <div class="row_content">
+                            {{ form_widget(form.user.password.password) }}
+                            </div>
+                        </div>
+                        {{ form_errors(form.user.password.password) }}
+                            
+                        <div class="row">
+                            {{ form_label(form.user.password.confirm) }}
+                            <div class="row_content">
+                            {{ form_widget(form.user.password.confirm) }}
+                            </div>
+                        </div>
+                        {{ form_errors(form.user.password.confirm) }}
+                        
+                        {{ form_widget(form.terms) }} 
+                        {{ form_label(form.terms) }}
+                        {{ form_errors(form.terms) }}
+                       
+                            
+                        {{ form_rest(form) }}
+
+                        <div class="row">
+                            <button class="button blue big" type="submit">Create Account</button>
+                        </div>
+
+                    </form>
                 </div>
+            </div>
         </div>
     </div>
--->   
-
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.register_facebook_btn').click(function(){
+                //top.location.href = $(this).attr('href');
+                window.open($(this).attr('href'), 'Register with Facebook', "height=200,width=200");
+                return false;
+            });
+            
+            $('.register-table .button').click(function(){
+                $(this).parents('div.register').find('.register_email_container').slideToggle(200, 'easeInQuad', function() {
+                    $(this).find('input[type="text"]:first').focus();
+                });
+                return false;
+             });
+            
+            {% if relogin %}
+                $('.register_facebook_btn:first-child').click();
+            {% endif %}
+        });
+    </script>
+    
+{% endblock %}
 

@@ -14,12 +14,13 @@ class UserType extends AbstractType
         $builder->add('username', 'text', array('label' => 'zizoo_user.label.username'));
         $builder->add('email', 'email', array('label' => 'zizoo_user.label.email'));
         $builder->add('password', 'repeated', array(
-           'first_name' => 'password',
-           'second_name' => 'confirm',
-           'type' => 'password',
-           'invalid_message' => 'zizoo_user.error.password_mismatch',
-           'first_options'  => array('label' => 'zizoo_user.label.password'),
-           'second_options' => array('label' => 'zizoo_user.label.password_repeat')
+           'label'              => false,
+           'first_name'         => 'password',
+           'second_name'        => 'confirm',
+           'type'               => 'password',
+           'invalid_message'    => 'zizoo_user.error.password_mismatch',
+           'first_options'      => array('label' => 'zizoo_user.label.password'),
+           'second_options'     => array('label' => 'zizoo_user.label.password_repeat')
         ));
     }
 

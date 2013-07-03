@@ -40,6 +40,12 @@ ZizooBaseBundle_faq:
     requirements:
         _method:  GET
         
+ZizooBaseBundle_login_page:
+    pattern:  /login-page
+    defaults: { _controller: ZizooBaseBundle:Page:login }
+    requirements:
+        _method:  GET|POST
+        
 ZizooBaseBundle_login_widget:
     pattern:  /login-widget
     defaults: { _controller: ZizooBaseBundle:Page:loginWidget }

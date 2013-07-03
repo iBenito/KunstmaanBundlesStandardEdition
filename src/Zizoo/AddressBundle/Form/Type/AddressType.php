@@ -15,17 +15,22 @@ class AddressType extends AbstractType
     {
         $builder
             ->add('address_line_1', 'text', array('label' => array( 'value' => 'zizoo_address.label.address_line1',
-                                                                    'class' => 'location')))
+                                                                    'class' => 'location'),
+                                                    'property_path' => 'addressLine1'))
             ->add('address_line_2', 'text', array(  'label' => array( 'value' => 'zizoo_address.label.address_line2',
                                                                         'class' => 'location'),
+                                                    'property_path' => 'addressLine2',
                                                     'required'  => false))
             ->add('postcode', 'text', array('label' => array( 'value' => 'zizoo_address.label.postcode',
-                                                                'class' => 'location')))
+                                                                'class' => 'location'),
+                                            'property_path' => 'postcode'))
             ->add('locality', 'text', array('label' => array( 'value' => 'zizoo_address.label.locality',
-                                                                    'class' => 'location')))
+                                                                    'class' => 'location'),
+                                            'property_path' => 'locality'))
             ->add('sub_locality', 'text', array('required' => false,
                                                 'label'     => array(   'value' => 'zizoo_address.label.sub_locality',
-                                                                        'class' => 'location')))
+                                                                        'class' => 'location'),
+                                                'property_path' => 'subLocality'))
             ->add('country', 'entity', array(
                                             'class' => 'ZizooAddressBundle:Country',
                                             'query_builder' => function(EntityRepository $er) {
@@ -33,7 +38,8 @@ class AddressType extends AbstractType
                                                     ->orderBy('c.order, c.printableName', 'ASC');
                                             },
                                             'label'     => array(   'value' => 'zizoo_address.label.country',
-                                                                    'class' => 'location')
+                                                                    'class' => 'location'),
+                                            'property_path' => 'country'
                                         ))
             ->add('lat', 'hidden', array(   'required'  => false,
                                             'read_only'  => true))

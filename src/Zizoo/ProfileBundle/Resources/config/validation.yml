@@ -9,11 +9,30 @@ Zizoo\ProfileBundle\Entity\Profile:
             
         avatar:
             - Count:
-                max: 2
-                minMessage: "You must upload at least 1 profile avatar"
+                max: 3
                 maxMessage: "You cannot upload more than {{ limit }} avatars"
+                groups: [avatars]
+            - Count:
+                min: 1
+                minMessage: "You must upload at least 1 avatar"
                 groups: [Default]
                 
+                
+Zizoo\AddressBundle\Entity\ProfileAddress:
+    properties:
+        addressLine1:
+            - NotBlank: { message: zizoo_address.error.street_not_blank, groups: [Default] }
+
+        postcode:
+            - NotBlank: { message: zizoo_address.error.postcode_not_blank, groups: [Default] }
+            
+        locality:
+            - NotBlank: { message: zizoo_address.error.locality_not_blank, groups: [Default] }
+            
+        country:
+            - NotNull: { message: zizoo_address.error.country_not_null, groups: [Default] }
+            
+
 Zizoo\ProfileBundle\Entity\ProfileAvatar:
     properties:
         mimeType:
@@ -21,4 +40,4 @@ Zizoo\ProfileBundle\Entity\ProfileAvatar:
                 pattern: "/image\\/(png|jpeg)/"
                 match:   true
                 message: Only png and jpeg images are allowed
-                groups: [Default]
+                groups: [avatars]

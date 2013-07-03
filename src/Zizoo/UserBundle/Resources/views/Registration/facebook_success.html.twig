@@ -1,19 +1,32 @@
 {% extends 'ZizooUserBundle::layout.html.twig' %}
 
 {% block body %}
-    <div id="{% if ajax %}facebook_register_inner_ajax{% else %}facebook_register_inner{% endif %}">
-        
-        <div id="fb_profile">
-            {% if fb_id %}
-            <img src="https://graph.facebook.com/{{ fb_id }}/picture?redirect=true" />
-            {% endif %}
-            {% if fb_name %}
-            <span>{{ fb_name }}</span>
-            {% endif %}
+<style type="text/css">
+    #{% if ajax %}facebook_register_inner_ajax{% else %}facebook_register_inner{% endif %} {
+        width: 470px;
+        margin: 20px auto;
+        background-color: white;
+        background: none repeat scroll 0 0 #FFFFFF;
+        border-radius: 0 0 5px 5px;
+        box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        padding: 30px;
+    }
+</style>
+    <div>
+        <div id="{% if ajax %}facebook_register_inner_ajax{% else %}facebook_register_inner{% endif %}">
+
+            <div id="fb_profile">
+                {% if fb_id %}
+                <img src="https://graph.facebook.com/{{ fb_id }}/picture?redirect=true" />
+                {% endif %}
+                {% if fb_name %}
+                <span>{{ fb_name }}</span>
+                {% endif %}
+            </div>
+
+            <p>Your registration has via Facebook has been successfull. You can now log in at ...</p>
+            <input type="hidden" value="success" id="status" />
         </div>
-        
-        <p>Your registration has via Facebook has been successfull. You can now log in at ...</p>
-        <input type="hidden" value="success" id="status" />
     </div>
 {% endblock %}
 

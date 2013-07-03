@@ -3,12 +3,23 @@
 {% extends 'ZizooUserBundle::layout.html.twig' %}
 
 {% block body %}
-
+<style type="text/css">
+    #{% if ajax %}login_inner_ajax{% else %}login_inner{% endif %} {
+        width: 470px;
+        margin: 20px auto;
+        background-color: white;
+        background: none repeat scroll 0 0 #FFFFFF;
+        border-radius: 0 0 5px 5px;
+        box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        padding: 30px;
+    }
+</style>
+<div>
     <div class="login" id="{% if ajax %}login_inner_ajax{% else %}login_inner{% endif %}">
         
         The logged in Facebook user does not have an account. Try logging out of Facebook:
         
-        <button type="submit" class="logout_facebook_btn" href="{{ facebook.logoutUrl({ next: url('ZizooUserBundle_logout_facebook', {ajax: ajax}) }) }}">Facebook logout</button>
+        <button type="submit" class="button facebook big logout_facebook_btn" href="{{ facebook.logoutUrl({ next: url('ZizooUserBundle_logout_facebook', {ajax: ajax}) }) }}">Facebook logout</button>
         
     </div>
     <script type="text/javascript">
@@ -18,5 +29,5 @@
            });
         });
     </script>
-    
+</div> 
 {% endblock %}

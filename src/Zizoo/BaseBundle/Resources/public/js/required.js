@@ -35,7 +35,7 @@ $(document).ready(function() {
      * Checkbox, radio
      */
 
-    $('input[type="radio"], input[type="checkbox"]').checkBox();
+    //$('input[type="radio"], input[type="checkbox"]').checkBox();
 
 
 /* ==========================================================================

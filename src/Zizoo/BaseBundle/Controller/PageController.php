@@ -174,6 +174,20 @@ class PageController extends Controller {
     }
     
     
+    public function loginAction()
+    {
+        $request    = $this->getRequest();
+        $response   = $this->forward('ZizooUserBundle:User:login');
+        
+        if ($response->isRedirect()){
+            return $this->redirect($this->generateUrl($request->get('_route')));
+        }
+        
+        return $this->render('ZizooBaseBundle:Page:login.html.twig', array(
+            'response'  => $response->getContent()
+        ));
+    }
+    
     public function test1Action()
     {
         $user       = $this->getUser();

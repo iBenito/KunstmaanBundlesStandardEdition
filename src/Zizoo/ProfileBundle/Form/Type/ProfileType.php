@@ -51,7 +51,7 @@ class ProfileType extends AbstractType
                                                                 ))
             ->add('profile_address', 'zizoo_address', array('label'             => false,
                                                             'property_path'     => 'address',
-                                                            'validation_groups' => 'registration',
+                                                            'validation_groups' => $options['validation_groups'],
                                                             'data_class'        => 'Zizoo\AddressBundle\Entity\ProfileAddress',
                                                             'map_show'          => $options['map_show'],
                                                             'map_update'        => $options['map_update'],
@@ -67,7 +67,7 @@ class ProfileType extends AbstractType
         $resolver->setDefaults(array(
             'data_class'            => 'Zizoo\ProfileBundle\Entity\Profile',
             'cascade_validation'    => true,
-            'validation_groups'     => array('Default'),
+            'validation_groups'     => array('Default', 'avatars'),
             'data_class'            => 'Zizoo\ProfileBundle\Entity\Profile',
             'map_show'              => true,
             'map_update'            => false,

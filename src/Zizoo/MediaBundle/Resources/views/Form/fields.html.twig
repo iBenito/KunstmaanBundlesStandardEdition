@@ -4,7 +4,6 @@
         {% if part_of_collection == false %}
         <div class="row_content">
         {% endif %}
-            {{ form_errors(form) }}
             {{ form_widget(form) }}
 
             {% if file_url is not null %}
@@ -28,6 +27,7 @@
         </div>
         {% endif %}
     </div>
+    {{ form_errors(form) }}
 {% endspaceless %}
 {% endblock zizoo_media_row %}
 

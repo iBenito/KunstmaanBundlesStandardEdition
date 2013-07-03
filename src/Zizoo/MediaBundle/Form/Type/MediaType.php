@@ -34,6 +34,7 @@ class MediaType extends AbstractType
                                         'dropzone'              => false,
                                         'crop_js'               => false,
                                         'delete_js'             => false,
+                                        'error_bubbling'        => false,
                                         'label'                 => null));
     }
 

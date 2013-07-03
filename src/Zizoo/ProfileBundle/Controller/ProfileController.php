@@ -49,7 +49,7 @@ class ProfileController extends Controller
 //        }
         
         $profileType = $this->get('zizoo_profile.profile_type');
-        $editForm = $this->createForm($profileType, $profile);
+        $editForm = $this->createForm($profileType, $profile, array('validation_groups' => 'Default'));
         
         if ($request->isMethod('post')){
             $editForm->bind($request);
@@ -120,8 +120,8 @@ class ProfileController extends Controller
             $em->persist($avatar);
 
             $validator          = $this->get('validator');
-            $profileErrors      = $validator->validate($profile, 'Default');
-            $avatarErrors       = $validator->validate($avatar, 'Default');
+            $profileErrors      = $validator->validate($profile, 'avatars');
+            $avatarErrors       = $validator->validate($avatar, 'avatars');
             $numProfileErrors   = $profileErrors->count();
             $numAvatarErrors    = $avatarErrors->count();
 

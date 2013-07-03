@@ -4,24 +4,56 @@
 
 {% block body %}
 
+<style type="text/css">
+    #{% if ajax %}login_inner_ajax{% else %}login_inner{% endif %} {
+        width: 470px;
+        margin: 20px auto;
+        background-color: white;
+        background: none repeat scroll 0 0 #FFFFFF;
+        border-radius: 0 0 5px 5px;
+        box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        padding: 30px;
+    }
+    
+    
+</style>
+<div>
     <div class="login" id="{% if ajax %}login_inner_ajax{% else %}login_inner{% endif %}">
 
-        <form action="{{ path('ZizooUserBundle_login_check') }}" method="post" class="login_form">
-            <label for="username">{% trans %}zizoo_user.label.username_or_email{% endtrans %}:</label>
-            <input type="text" id="username" name="_username" value="{{ last_username }}" />
-
-            <label for="password">{% trans %}zizoo_user.label.password{% endtrans %}:</label>
-            <input type="password" id="password" name="_password" />
-
-            <label for="remember_me">{% trans %}zizoo_user.label.remember_me{% endtrans %}:</label>
-            <input type="checkbox" id="remember_me" name="_remember_me" checked="checked" />
-            <br />
+        <a class="button facebook big login_facebook_btn" href="{{ facebook.loginUrl({ scope: 'email', redirect_uri: url('ZizooUserBundle_login_facebook', {forward: current_route, ajax: ajax}), display: 'popup' }) }}"><span></span> Login with Facebook</a>
+        <span class="or">or</span>
+        
+        <form class="form login_form" action="{{ path('ZizooUserBundle_login_check') }}" method="post" class="login_form">
+            <div class="row">
+                <label class="email"><span class="icon"></span>{% trans %}zizoo_user.label.username_or_email{% endtrans %}</label>
+                <div class="row_content">
+                    <input type="text" name="_username" id="username" value="{{ last_username }}" />
+                </div>
+            </div>
+            
+            <div class="row">
+                <label class="password"><span class="icon"></span>{% trans %}zizoo_user.label.password{% endtrans %}</label>
+                <div class="row_content">
+                    <input type="password" name="_password" id="password">
+                </div>
+            </div>
+                
+            
+            
+            <input type="checkbox" checked="checked" name="_remember_me" id="remember_me" />
+            <label class="remember_me" for="remember_me"><span class="icon"></span>Remember Me</label>
+            
+                
+  
+            <div class="row">
+                <button class="button blue big" type="submit">{% trans %}zizoo_user.label.login{% endtrans %}</button>
+            </div>
             {#
                 If you want to control the URL the user is redirected to on success (more details below)
                 <input type="hidden" name="_target_path" value="/account" />
             #}
 
-            <button type="submit">{% trans %}zizoo_user.label.login{% endtrans %}</button>
+            
         </form>
         
         {% if unconfirmed_user is not null %}
@@ -31,15 +63,14 @@
             <a class="forgot_password_link" href="{{ path('ZizooUserBundle_forgot_password') }}">{% trans %}zizoo_user.label.forgot_password{% endtrans %}</a>
         {% endif %}
             
-        <button type="submit" class="login_facebook_btn" href="{{ facebook.loginUrl({ scope: 'email', redirect_uri: url('ZizooUserBundle_login_facebook', {forward: current_route, ajax: ajax}), display: 'popup' }) }}">Login with FACEBOOK</button>
-        <br />
         
-        <a href="{{ path('ZizooUserBundle_invite') }}">Invite your friends</a>
     </div>
+</div>
     <script type="text/javascript">
         $(document).ready(function(){
             $('.login_facebook_btn').click(function(){
                 window.open($(this).attr('href'), 'Login with Facebook', "height=200,width=200");
+                return false;
             });
         });
     </script>

@@ -10,4 +10,6 @@ function tabbedMenu() {
 $(document).ready(function(){
     tabbedMenu();
     $("select[multiple]").asmSelect();
+    
+ 
 });
