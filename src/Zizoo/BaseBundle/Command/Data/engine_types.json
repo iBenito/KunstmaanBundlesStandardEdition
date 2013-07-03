@@ -1,0 +1,22 @@
+[
+    {
+        "id":       "inboard",
+        "name":     "Inboard",
+        "order":    0
+    },
+    {
+        "id":       "outboard",
+        "name":     "outboard",
+        "order":    1
+    },
+    {
+        "id":       "stern",
+        "name":     "Stern",
+        "order":    2
+    },
+    {
+        "id":       "jet",
+        "name":     "Jet",
+        "order":    3
+    }
+]

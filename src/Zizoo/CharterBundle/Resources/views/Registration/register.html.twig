@@ -12,86 +12,90 @@
 {% endblock %}
 
 {% block body %}
-    <div class="register" id="{% if ajax %}register_inner_ajax{% else %}register_inner{% endif %}">
-        <input type="hidden" value="ongoing" id="status" />
+    <!-- start:content -->
+    <div id="content">
+        <div class="container clearfix">
 
-        <div class="register_email">
-            <form novalidate="novalidate" action="{{ path('ZizooCharterBundle_Registration_register')}}" method="post" {{ form_enctype(form) }} class="register_form">
-                
-                {{ form_errors(form) }}
+            <!-- start:section -->
+            <section class="section alert">
+                <header>
+                    <h6>Alert</h6>
+                </header>
 
-                <div id="general">
-                    <h2>General</h2>
-                    <div>
-                        {{ form_label(form.charter.charter_name) }}
-                        {{ form_errors(form.charter.charter_name) }}
-                        {{ form_widget(form.charter.charter_name) }}
-                    </div>
-
-                    <div>
-                        {{ form_label(form.charter.charter_address) }}
-                        {{ form_errors(form.charter.charter_address) }}
-                        {{ form_widget(form.charter.charter_address) }}
-                    </div>
-                    
-                    <div>
-                        {{ form_label(form.charter.charter_phone) }}
-                        {{ form_errors(form.charter.charter_phone) }}
-                        {{ form_widget(form.charter.charter_phone) }}
-                    </div>
-                    
+                <div class="content">
+                    <p>
+                        If you are a private owner sign up and we will contact you when you open our private boat marketplace tick box and you can register as a regular user but they will be marked as a boat owner.
+                    </p>
                 </div>
-                    
-                <div id="main_contact">
-                    <h2>Main Contact</h2>
-                    <div>
-                        {{ form_label(form.registration.profile.first_name) }}
-                        {{ form_errors(form.registration.profile.first_name) }}
-                        {{ form_widget(form.registration.profile.first_name) }}
+            </section>
+            <!-- end:section -->
+
+            <!-- start:registration -->
+            <section id="registration" class="section">
+                <header>
+                    <h1>Charter Registration</h1>
+                </header>
+
+                <div class="content clearfix">
+                    <div class="main">
+
+                        <form novalidate="novalidate" action="{{ path('ZizooCharterBundle_Registration_register')}}" method="post" {{ form_enctype(form) }} class="form">
+
+                            <section>
+                                <h2>General</h2>
+                                {{ form_row(form.charter.charter_name) }}
+                                {{ form_row(form.charter.charter_address) }}
+                                {{ form_row(form.charter.charter_phone) }}
+                            </section>
+
+                            <section>
+                                <h2>Main Contact</h2>
+                                {{ form_row(form.registration.profile.first_name) }}
+                                {{ form_row(form.registration.profile.last_name) }}
+                                {{ form_row(form.registration.user.username) }}
+                                {{ form_row(form.registration.user.email) }}
+                                {{ form_row(form.registration.user.password) }}
+
+                                {{ form_rest(form) }}
+                                <div class="row">
+                                    <button type="submit" class="button blue big">Create Account</button>
+                                </div>
+                            </section>
+                        </form>
                     </div>
 
-                    <div>
-                        {{ form_label(form.registration.profile.last_name) }}
-                        {{ form_errors(form.registration.profile.last_name) }}
-                        {{ form_widget(form.registration.profile.last_name) }}
-                    </div>
-
-                    <div>
-                        {{ form_label(form.registration.user.username) }}
-                        {{ form_errors(form.registration.user.username) }}
-                        {% if unconfirmed_username %}
-                            <ul>
-                                <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooCharterBundle_Registration_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
-                            </ul>
-                        {% endif %}
-                        {{ form_widget(form.registration.user.username) }}
-                    </div>
-
-                    <div>
-                        {{ form_label(form.registration.user.email) }}
-                        {{ form_errors(form.registration.user.email) }}
-                        {% if unconfirmed_email %}
-                            <ul>
-                                <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooCharterBundle_Registration_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
-                            </ul>
-                        {% endif %}
-                        {{ form_widget(form.registration.user.email) }}
-                    </div>
-                    
-                    <div>
-                        
-                        {{ form_errors(form.registration.user.password) }}
-                        {{ form_widget(form.registration.user.password) }}
-                    </div>
-                    
+                    <aside>
+                        <ol class="steps">
+                            <li>
+                                <img src="{{ asset('bundles/zizoobase/images/how-it-works-book-step1.png') }}" alt="">
+                                <h3>Powerful Tools</h3>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor.
+                                </p>
+                            </li>
+                            <li>
+                                <img src="{{ asset('bundles/zizoobase/images/how-it-works-book-step2.png') }}" alt="">
+                                <h3>Best in Class</h3>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor.
+                                </p>
+                            </li>
+                            <li>
+                                <img src="{{ asset('bundles/zizoobase/images/how-it-works-book-step3.png') }}" alt="">
+                                <h3>Your Benefits</h3>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor.
+                                </p>
+                            </li>
+                        </ol>
+                    </aside>
                 </div>
-
-                {{ form_rest(form) }}
-
-                <input type="submit" />
-            </form>
+            </section>
+            <!-- end:registration -->
         </div>
     </div>
+    <!-- end:content -->
+
     <script type="text/javascript">
         $(document).ready(function(){
             
@@ -105,5 +109,3 @@
         {% endif %}
     </style>
 {% endblock %}
-
-

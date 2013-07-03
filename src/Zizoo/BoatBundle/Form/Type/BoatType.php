@@ -26,7 +26,9 @@ class BoatType extends AbstractType
             ->add('model')
             ->add('length')
             ->add('cabins')
+            ->add('berths')
             ->add('bathrooms')
+            ->add('toilets')
             ->add('nr_guests')
             ->add('bathrooms')
             ->add('crew_optional', 'choice', array( 'required'      => true,
@@ -49,6 +51,9 @@ class BoatType extends AbstractType
                 'class' => 'ZizooBoatBundle:Equipment',
                 'multiple'  => true,
                 'expanded' => true,
+                'property' => 'name',))
+            ->add('engine_type', 'entity', array(
+                'class' => 'ZizooBoatBundle:EngineType',
                 'property' => 'name',));
         
     }

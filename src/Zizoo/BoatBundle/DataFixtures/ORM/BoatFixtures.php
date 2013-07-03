@@ -71,6 +71,9 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat1->setModel('911');
         $boat1->setLength(5);
         $boat1->setCabins(6);
+        $boat1->setBerths(6);
+        $boat1->setBathrooms(6);
+        $boat1->setToilets(6);
         $boat1->setNrGuests(12);
         $boat1->setDefaultPrice(9.99);        
         
@@ -105,6 +108,9 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat2->setModel('912');
         $boat2->setLength(12);
         $boat2->setCabins(5);
+        $boat2->setBerths(5);
+        $boat2->setBathrooms(2);
+        $boat2->setToilets(1);
         $boat2->setNrGuests(1);
         $boat2->setDefaultPrice(11.99);
         
@@ -129,6 +135,9 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat3->setModel('911');
         $boat3->setLength(5);
         $boat3->setCabins(6);
+        $boat3->setBerths(5);
+        $boat3->setBathrooms(2);
+        $boat3->setToilets(2);
         $boat3->setNrGuests(20);
         $boat3->setDefaultPrice(99.99);
         
@@ -153,6 +162,9 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat4->setModel('911');
         $boat4->setLength(50);
         $boat4->setCabins(20);
+        $boat4->setBerths(20);
+        $boat4->setBathrooms(9);
+        $boat4->setToilets(4);
         $boat4->setNrGuests(40);
         $boat4->setDefaultPrice(10000);
         
