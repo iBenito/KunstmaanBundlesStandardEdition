@@ -28,7 +28,7 @@
                     }
                     if (newAvatars.length>0){
                         var src = $(newAvatars[0]).find('.controls .full_url').val();
-                        $('#user_avatar #avatar_img').attr('src', src);
+                        $('#user_avatar #avatar_img').attr('src', src).css('display', 'block');
                     }
                     removeUploadedFiles();
                 }
