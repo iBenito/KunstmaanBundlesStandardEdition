@@ -19,16 +19,7 @@ class CharterType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('charter_name', 'text', array('label' => 'zizoo_charter.label.charter_name', 'property_path' => 'charterName'));
-        //$builder->add('charter_number', 'text', array('label' => 'zizoo_charter.label.charter_number', 'property_path' => 'charterNumber'));
-        $builder->add('charter_address', 'zizoo_address', array('label'             => false, 
-                                                                'property_path'     => 'address',
-                                                                'validation_groups' => 'registration',
-                                                                'data_class'        => 'Zizoo\AddressBundle\Entity\CharterAddress',
-                                                                'map_show'          => $options['map_show'],
-                                                                'map_update'        => $options['map_update'],
-                                                                'map_drag'          => $options['map_drag']));
-        $builder->add('charter_phone', 'text', array('label' => 'zizoo_charter.label.charter_phone', 'property_path' => 'phone'));
+        
        
         $charterSubscriber = $this->container->get('zizoo_charter.charter_subscriber');
         $builder->addEventSubscriber($charterSubscriber);
