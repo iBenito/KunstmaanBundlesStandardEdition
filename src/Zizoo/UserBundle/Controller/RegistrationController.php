@@ -11,7 +11,6 @@ use Zizoo\UserBundle\Form\Type\FacebookNewRegistrationType;
 use Zizoo\UserBundle\Form\Type\FacebookNewUserType;
 use Zizoo\UserBundle\Form\Type\FacebookLinkRegistrationType;
 use Zizoo\UserBundle\Form\Type\FacebookLinkUserType;
-use Zizoo\UserBundle\Form\Type\RegistrationType;
 use Zizoo\UserBundle\Form\Type\UserType;
 use Zizoo\UserBundle\Form\Type\UserForgotPasswordType;
 use Zizoo\UserBundle\Form\Model\Registration;
@@ -54,7 +53,7 @@ class RegistrationController extends Controller
         }
         $registration->setUser($user);
         
-        $form = $this->createForm(new RegistrationType(), $registration);
+        $form = $this->createForm('zizoo_registration', $registration);
         
         
         // If submit

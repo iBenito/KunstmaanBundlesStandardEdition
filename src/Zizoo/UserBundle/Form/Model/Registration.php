@@ -10,17 +10,17 @@ use Zizoo\ProfileBundle\Entity\Profile;
 class Registration
 {
     /**
-     * @Assert\Type(type="Zizoo\UserBundle\Entity\User")
+     * @Assert\Type(type="Zizoo\UserBundle\Entity\User", groups={"registration"})
      */
     protected $user;
     
     /**
-     * @Assert\Type(type="Zizoo\ProfileBundle\Entity\Profile")
+     * @Assert\Type(type="Zizoo\ProfileBundle\Entity\Profile", groups={"registration"})
      */
     protected $profile;
 
     /**
-     * @Assert\True(message="You must accept the Terms & Conditions.")
+     * @Assert\True(message="You must accept the Terms & Conditions.", groups={"registration"})
      */
     protected $termsAccepted;
 

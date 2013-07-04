@@ -24,3 +24,13 @@ services:
         class:  Zizoo\BaseBundle\Form\Type\NumberNullableType
         tags:
             - { name: form.type, alias: zizoo_number_nullable }
+            
+    zizoo_base.terms_type:
+        class:  Zizoo\BaseBundle\Form\Type\TermsType
+        tags:
+            - { name: form.type, alias: zizoo_terms }
+            
+    zizoo_base.terms_type_extension:
+        class:  Zizoo\BaseBundle\Form\Extension\TermsTypeExtension
+        tags:
+            - { name: form.type_extension, alias: zizoo_terms }

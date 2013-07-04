@@ -133,11 +133,8 @@
                         </div>
                         {{ form_errors(form.user.password.confirm) }}
                         
-                        {{ form_widget(form.terms) }} 
-                        {{ form_label(form.terms) }}
-                        {{ form_errors(form.terms) }}
-                       
-                            
+                        {{ form_row(form.terms) }} 
+                        
                         {{ form_rest(form) }}
 
                         <div class="row">

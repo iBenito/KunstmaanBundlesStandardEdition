@@ -38,7 +38,7 @@ class CharterSubscriber implements EventSubscriberInterface
         
         $logo = $charter->getLogo();
         
-        if (!$logo->getId()){
+        if (!$logo || !$logo->getId()){
             $charter->setLogo(null);
         }
     }

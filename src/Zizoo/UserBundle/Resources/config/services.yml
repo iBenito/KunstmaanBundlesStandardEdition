@@ -30,6 +30,13 @@ services:
         tags:
             - { name: form.type, alias: zizoo_invite_single }
             
+            
+    zizoo_user.registration_type:
+        class:  Zizoo\UserBundle\Form\Type\RegistrationType
+        arguments: ["@service_container"]
+        tags:
+            - { name: form.type, alias: zizoo_registration }
+            
     # VALIDATORS
     zizoo_user.invite_single_validator:
         class: Zizoo\UserBundle\Validator\Constraints\InviteSingleValidator

@@ -11,7 +11,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Zizoo\AddressBundle\Form\Model\SearchBoat;
 use Zizoo\AddressBundle\Form\Type\SearchBoatType;
 
-use Zizoo\UserBundle\Form\Type\RegistrationType;
 use Zizoo\UserBundle\Form\Model\Registration;
 
 /**
@@ -150,7 +149,7 @@ class PageController extends Controller {
         $facebook = $this->get('facebook');
 
         $registration   = new Registration();
-        $form = $this->createForm(new RegistrationType(), $registration);
+        $form = $this->createForm('zizoo_registration', $registration);
        
         if ($user && $user->getCharter()){
             return $this->render('ZizooBaseBundle:Page:login_charter_widget.html.twig', array(

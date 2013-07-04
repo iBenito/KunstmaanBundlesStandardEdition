@@ -18,7 +18,7 @@
                 {% set class_attr = label['class']|trim %}
                 {% set label_attr = label_attr|merge({'class': class_attr}) %}
             {% else %}
-                {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+                {% set label_attr = label_attr|merge({'class': (label_attr.class|default(''))|trim}) %}
             {% endif %}
         {% endif %}
 
@@ -33,7 +33,6 @@
     {% endif %}
 {% endspaceless %}
 {% endblock form_label %}
-
 
 {% block form_errors %}
 {% spaceless %}
@@ -51,8 +50,6 @@
 {% endspaceless %}
 {% endblock form_errors %}
         
-        
-        
 {% block form_row %}
 {% spaceless %}
     <div class="row">
@@ -64,10 +61,93 @@
             {% endif %}
         {% endif %}
        
-        <div class="row_content{% if actual_label == false %} no_label{% endif %}">
+        <div class="row_content{% if actual_label == false %} no_margin{% endif %}">
         {{ form_widget(form) }}
         </div>
     </div>
     {{ form_errors(form) }}
 {% endspaceless %}
 {% endblock form_row %}
+        
+        
+{% block checkbox_row %}
+{% spaceless %}
+    <div class="row">       
+        <div class="row_content no_margin">
+        {{ form_widget(form) }}
+        {{ form_label(form) }}
+        </div>
+    </div>
+    {{ form_errors(form) }}
+{% endspaceless %}
+{% endblock checkbox_row %}
+   
+
+{% block zizoo_terms_label %}
+{% spaceless %}
+    {% if not compound %}
+        {% set label_attr = label_attr|merge({'for': id}) %}
+    {% endif %}
+    {% if required %}
+        {% if label['class'] is defined %}
+            {% set class_attr = (label_attr.class|default('') ~ ' required')|trim ~ ' ' ~ label['class']|trim %}
+            {% set label_attr = label_attr|merge({'class': class_attr}) %}
+        {% else %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+        {% endif %}
+    {% else %}
+        {% if label['class'] is defined %}
+            {% set class_attr = label['class']|trim %}
+            {% set label_attr = label_attr|merge({'class': class_attr}) %}
+        {% else %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default(''))|trim}) %}
+        {% endif %}
+    {% endif %}
+    {% if label is empty %}
+        {% set label = name|humanize %}
+    {% endif %}
+    <label id="{{ id }}_label" {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ ( terms_text|trans({'%terms_link%': '<a target="_blank" href="' ~ terms_url ~ '">' ~ terms_link|trans ~ '</a>' }) )|raw }}</label>
+    <div id="{{ id }}_terms" class="empty" style="display: none"></div>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#{{ id }}_label a').click(function(){
+                if ($('#{{ id }}_terms').hasClass('empty')){
+                    $.blockUI({ message: '' });
+                    $.ajax({
+                        url: '{{ terms_url }}',
+                        type: 'get',
+                        success: function(data){
+                            var terms = $(data).find('#terms');
+                            if (terms.length>0){
+                                $('#{{ id }}_terms').removeClass('empty').html(terms);
+                                {{ id }}_openTermsDialog();
+                                $.unblockUI();
+                            } else {
+                                window.location.href = '{{ terms_url }}';
+                                $.unblockUI();
+                            }
+                        },
+                        error: function(data){
+                            window.location.href = '{{ terms_url }}';
+                            $.unblockUI();
+                        }
+                    });
+                } else {
+                    {{ id }}_openTermsDialog();
+                }
+                return false;
+            });
+        });
+        
+        function {{ id }}_openTermsDialog(){
+            $('#{{ id }}_terms').dialog({
+                modal: true,
+                closeOnEscape: false,
+                resizable: false,
+                width: 470,
+                title: '{{ terms_link|trans }}'
+            });
+        }
+    </script>
+{% endspaceless %}
+{% endblock zizoo_terms_label %}

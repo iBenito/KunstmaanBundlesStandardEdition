@@ -262,6 +262,7 @@
     margin: 15px 0 0 0;
 }
 
+
 .form .row:first-child {
     margin-top: 0;
 }
@@ -310,6 +311,17 @@
     background-position: right center;
 }
 
+.form .row label.checkbox {
+    position: static;
+    width: auto;
+    background: none;
+    color: #222222;
+}
+
+.form .row label.checkbox .icon {
+    display: none;
+}
+
 .form .row label.first_name .icon {
     background-image: url(../images/label/name.png);
 }
@@ -347,7 +359,7 @@
     z-index: 1001;
 }
 
-.form .row .row_content.no_label {
+.form .row .row_content.no_margin {
     margin-left: 0;
 }
 

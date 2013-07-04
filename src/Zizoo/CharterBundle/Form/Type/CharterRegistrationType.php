@@ -16,18 +16,19 @@ class CharterRegistrationType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('charter', 'zizoo_charter', array(  'label'             => ' ',
+        $builder->add('charter', 'zizoo_charter', array(    'label'             => ' ',
                                                             'map_show'          => $options['map_show'],
                                                             'map_update'        => $options['map_update'],
-                                                            'map_drag'          => $options['map_drag']));
-        $builder->add('registration', new RegistrationType(), array('label' => ' '));
+                                                            'map_drag'          => $options['map_drag'],
+                                                            'validation_groups' => array($options['validation_groups'])));
+        $builder->add('registration', 'zizoo_registration', array('label' => false));
     }
     
     public function setDefaultOptions(OptionsResolverInterface $resolver) 
     {
         $resolver->setDefaults(array(   'data_class'            => 'Zizoo\CharterBundle\Form\Model\CharterRegistration',
                                         'cascade_validation'    => true,
-                                        'validation_groups'     => 'registration',
+                                        'validation_groups'     => array('registration', 'logo', 'Default'),
                                         'map_show'              => true,
                                         'map_update'            => false,
                                         'map_drag'              => false

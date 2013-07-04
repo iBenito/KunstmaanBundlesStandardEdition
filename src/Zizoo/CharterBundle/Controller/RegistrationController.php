@@ -26,7 +26,9 @@ class RegistrationController extends Controller
     public function registerAction()
     {
         $charterRegistrationType = $this->container->get('zizoo_charter.charter_registration_type');
-        $form = $this->createForm($charterRegistrationType, null, array('map_drag' => true, 'map_update' => true));
+        $form = $this->createForm($charterRegistrationType, null, array('map_drag'          => true, 
+                                                                        'map_update'        => true,
+                                                                        'validation_groups' => array('registration')));
         $request = $this->getRequest();
         $relogin = $request->query->get('relogin', false);
         $isPost = $request->isMethod('POST');
