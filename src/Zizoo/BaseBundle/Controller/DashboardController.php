@@ -329,10 +329,10 @@ class DashboardController extends Controller {
      *
      * @return Response
      */
-    public function charterBoatsAction()
+    public function charterBoatsAction($listing_status)
     {
         $request    = $this->getRequest();
-        $response   = $this->forward('ZizooCharterBundle:Charter:boats');
+        $response   = $this->forward('ZizooCharterBundle:Charter:boats', array('listing_status' => $listing_status), $request->query->all());
         
         if ($response->isRedirect()){
             return $this->redirect($this->generateUrl($request->get('_route')));
@@ -368,4 +368,18 @@ class DashboardController extends Controller {
         ));
     }
     
+    
+    public function charterTabsAction($current)
+    {
+        $request            = $this->getRequest();
+        $user               = $this->getUser();
+        
+        $messageManager     = $this->container->get('fos_message.message_manager');
+        $numUnreadMessages  = $messageManager->getNbUnreadMessageByParticipant($user);
+        
+        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_tabs.html.twig', array(
+            'current'           => $current,
+            'unread_messages'   => $numUnreadMessages
+        ));
+    }
 }

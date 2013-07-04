@@ -15,8 +15,8 @@
                 $('#header').html(data);
                 loginFormListeners();
                 registerFormListeners();
-                facebookFormListeners();
                 $('#login_inner').unblock();
+                facebookFormListeners();
                 closeAllDialogs();
             }
         });
@@ -28,6 +28,8 @@
             closeOnEscape: false,
             resizable: false,
             width: 470,
+            maxWidth: 470,
+            fluid: true,
             title: 'Login'
         });
     }
@@ -43,6 +45,8 @@
             closeOnEscape: false,
             resizable: false,
             width: 470,
+            maxWidth: 470,
+            fluid: true,
             dialogClass: 'blank',
             title: 'Register'
         });
@@ -59,6 +63,8 @@
             closeOnEscape: false,
             resizable: false,
             width: 470,
+            maxWidth: 470,
+            fluid: true,
             title: 'Register with Facebook'
         });
     }
@@ -74,6 +80,8 @@
             closeOnEscape: false,
             resizable: false,
             width: 470,
+            maxWidth: 470,
+            fluid: true,
             title: 'Forgot password'
         });
     }

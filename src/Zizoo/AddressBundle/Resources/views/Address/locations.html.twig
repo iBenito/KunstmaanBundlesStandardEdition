@@ -20,7 +20,7 @@
     <link href="{{ asset('bundles/zizooaddress/css/locations.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
-{% block body %}
+{% block content %}
 <form id="search_form" action="{{ path('ZizooAddressBundle_locations') }}" method="get">
     {{ form_widget(form.location) }}
     {{ form_widget(form.page) }}

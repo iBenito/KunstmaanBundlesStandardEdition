@@ -654,7 +654,7 @@ class BoatController extends Controller
                     $em->remove($overlapExternalReservation);
                 }
                 
-                return $this->forward('ZizooBoat:Boat:boatPrice', array('id' => $id));
+                return $this->forward('ZizooBoatBundle:Boat:boatPrice', array('id' => $id));
             }
         }
         

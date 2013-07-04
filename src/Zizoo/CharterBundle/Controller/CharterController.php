@@ -75,7 +75,7 @@ class CharterController extends Controller
         $searchBoatType     = $request->query->get('boat_type', null);
         $showDeleted        = $request->query->get('show_deleted', false);
         $page               = $this->get('request')->query->get('page', 1);
-        $pageSize           = $this->get('request')->query->get('page_size', 25);
+        $pageSize           = $this->get('request')->query->get('page_size', 5);
 
         $em    = $this->getDoctrine()->getManager();
         //$dql   = "SELECT b, c FROM ZizooBoatBundle:Boat b, ZizooCharterBundle:Charter c WHERE ";

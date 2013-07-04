@@ -1,1 +1,44 @@
-{% extends 'ZizooBaseBundle::layout.html.twig' %}
+{% extends '::zizoo.html.twig' %}
+
+{% block navigation %}
+{% include 'ZizooBaseBundle:Page:ajax_login_register.html.twig' %}
+{% render controller('ZizooBaseBundle:Page:loginWidget', {showLoginForm: false}) %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/zizooprofile/css/profile.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/zizoobase/css/custom.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/zizoobase/css/style.css') }}" rel="stylesheet" >
+    <link href="{{ asset('bundles/zizoobase/css/responsive.css') }}" rel="stylesheet" >
+
+{% endblock %}
+    
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/main.js') }}" type="text/javascript"></script>
+
+
+    <!--script src="{{ asset('http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/jquery-ui.js') }}"></script-->
+    <script src="{{ asset('bundles/zizoobase/js/easing.js') }}"></script>
+    <script src="{{ asset('bundles/zizoobase/js/sfrotator.js') }}"></script>
+    <script src="{{ asset('bundles/zizoobase/js/sfmodal.js') }}"></script>
+    <script src="{{ asset('bundles/zizoobase/js/checkbox.js') }}"></script>
+    <script src="{{ asset('bundles/zizoobase/js/carouFredSel.js') }}"></script>
+    <script src="{{ asset('bundles/zizoobase/js/required.js') }}"></script>
+
+{% endblock %}
+    
+{% block body %}
+
+    {% render controller('ZizooAddressBundle:Address:searchBar') %}
+
+    <!-- start:content -->
+    <div id="content">
+        <div class="container clearfix">
+            {% block content %}
+            {% endblock content %}
+        </div>
+    </div>
+{% endblock body %}

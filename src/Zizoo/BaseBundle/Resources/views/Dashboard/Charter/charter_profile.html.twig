@@ -1,7 +1,7 @@
 {% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
     
 {% block tabs %}
-{% include 'ZizooBaseBundle:Dashboard:Charter/charter_tabs.html.twig' with {'current':'profile'} %}
+{{ render(controller('ZizooBaseBundle:Dashboard:charterTabs', { 'current': 'profile' })) }}
 {% endblock %}
 
 {% block content %}

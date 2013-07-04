@@ -49,7 +49,7 @@ ZizooCharterBundle_Charter_Edit:
         _method:  GET|POST
         
 ZizooCharterBundle_Charter_Boats:
-    pattern:  /account/boats/{listing_status}
+    pattern:  /account/boats/{listing_status}/view
     defaults: { _controller: ZizooCharterBundle:Charter:boats, listing_status: all }
     requirements:
         _method:  GET

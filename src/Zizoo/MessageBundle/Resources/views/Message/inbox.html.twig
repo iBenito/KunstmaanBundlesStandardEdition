@@ -63,6 +63,9 @@
     
     function openDeleteDialog(){
         $('#delete_thread_inner_ajax').dialog({
+            width: 470,
+            maxWidth: 470,
+            fluid: true,
             modal: true,
             closeOnEscape: false,
             resizable: false
@@ -80,6 +83,9 @@
         var dialogHeight = viewport['h'] - 300;
         if (dialogHeight <=0) dialogHeight = viewportHeight;
         $('#new_thread_inner_ajax').dialog({
+            width: 470,
+            maxWidth: 470,
+            fluid: true,
             modal: true,
             closeOnEscape: true,
             resizable: true,
@@ -116,6 +122,9 @@
         var dialogHeight = viewport['h'] - 300;
         if (dialogHeight <=0) dialogHeight = viewportHeight;
         $('#view_thread_inner_ajax').dialog({
+            width: 470,
+            maxWidth: 470,
+            fluid: true,
             modal: true,
             closeOnEscape: true,
             resizable: true,
