@@ -381,7 +381,7 @@
     padding: 10px 0 0;
 }
 
-.form > .row_errors_container {
+.form .general_errors .row_errors_container {
     background: none;
     padding: 0;
 }

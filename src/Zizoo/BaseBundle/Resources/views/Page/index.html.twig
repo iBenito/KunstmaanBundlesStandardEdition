@@ -28,11 +28,7 @@
             <a href="#" class="arrow prev"></a>
 
             <!-- start:search -->
-            
-            {% form_theme form 'ZizooAddressBundle:Form:search_index.html.twig' %}
-            <form id="search_form" action="{{ path('ZizooAddressBundle_locations') }}" method="get">
-                
-            </form>
+            {% render controller('ZizooAddressBundle:Address:searchBlock') %}
             <!-- end:search -->
 
             <a href="#" class="arrow next"></a>

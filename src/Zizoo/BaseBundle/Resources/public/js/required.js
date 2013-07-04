@@ -60,7 +60,7 @@ $(document).ready(function() {
      * sfModal
      */
 
-    $('.trigger').sfModal();
+    //$('.trigger').sfModal();
 
 
     /**

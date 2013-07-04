@@ -1,0 +1,91 @@
+{# src/Zizoo/AddressBundle/Resources/views/Form/search_bar.html.twig #}
+
+<!-- start:search -->
+<div id="search" class="bar">
+    <div class="container">
+        <form id="search_form" class="form clearfix" action="{{ path('ZizooAddressBundle_locations') }}" method="get">
+            <div class="column search">
+                {{ form_widget(form.location) }}
+            </div>
+            <div class="column">
+                <span id="search_bar_from" class="icon calendar white"></span> {{ form_widget(form.reservation_from) }}
+            </div>
+            <div class="column">
+                <span id="search_bar_to" class="icon calendar white"></span> {{ form_widget(form.reservation_to) }}
+            </div>
+            <div class="column" id="search_bar_guests">
+                <span class="icon hash white"></span> {{ form_widget(form.num_guests) }}
+            </div>
+            <div class="column submit">
+                <button type="submit" class="button blue small">Search</button>
+            </div>
+        </form>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('#zizoo_boat_search_location').chosen();
+
+                var clearBtnFnc1 = function(input) {
+                        setTimeout(function() {
+                            var buttonPane = $( input )
+                                .datepicker( "widget" )
+                                .find( ".ui-datepicker-buttonpane" );
+                            var btn = $( '<button class="ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all" type="button">Clear</button>');
+                            btn.unbind("click")  .bind("click", function () {  
+                                $.datepicker._clearDate( input ); 
+                            });
+                            btn.appendTo(buttonPane);
+                        }, 1 );
+                    };
+
+                var clearBtnFnc2 = function(yes, month, inst) {
+                        setTimeout(function() {
+                            var buttonPane = $( this )
+                                .datepicker( "widget" )
+                                .find( ".ui-datepicker-buttonpane" );
+                            var btn = $( '<button class="ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all" type="button">Clear</button>');
+                            btn.unbind("click")  .bind("click", function () {  
+                               $.datepicker._clearDate( inst.input ); 
+                            });
+                            btn.appendTo(buttonPane);
+                        }, 1 );
+                    };
+
+                $( "#zizoo_boat_search_reservation_from" ).datepicker({
+                    defaultDate: "+1d",
+                    changeMonth: true,
+                    numberOfMonths: 1,
+                    showAnim: 'slideDown',
+                    dateFormat: 'dd/mm/yy',
+                    showButtonPanel: true,
+                    beforeShow: clearBtnFnc1,
+                    onChangeMonthYear: clearBtnFnc2,
+                    onClose: function( selectedDate ) {
+                        $( "#reservation_to" ).datepicker( "option", "minDate", selectedDate );
+                    }
+                });
+                $('#search_bar_from').click(function(){
+                    $( "#zizoo_boat_search_reservation_from" ).datepicker('show');
+                });
+
+                $( "#zizoo_boat_search_reservation_to" ).datepicker({
+                    defaultDate: "+1d",
+                    changeMonth: true,
+                    numberOfMonths: 1,
+                    showAnim: 'slideDown',
+                    dateFormat: 'dd/mm/yy',
+                    showButtonPanel: true,
+                    beforeShow: clearBtnFnc1,
+                    onChangeMonthYear: clearBtnFnc2,
+                    onClose: function( selectedDate ) {
+                        $( "#zizoo_boat_search_reservation_from" ).datepicker( "option", "maxDate", selectedDate );
+                    }
+                });
+                $('#search_bar_to').click(function(){
+                    $( "#zizoo_boat_search_reservation_to" ).datepicker('show');
+                });
+            });
+        </script>
+    </div>
+
+</div>
+<!-- end:search -->

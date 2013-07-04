@@ -158,5 +158,21 @@ class AddressController extends Controller
         
     }
     
+    public function searchBarAction()
+    {
+        $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat());
+        
+        return $this->render('ZizooAddressBundle:Address:search_bar.html.twig',array(
+            'form' => $form->createView()
+        ));
+    }
     
+    public function searchBlockAction()
+    {
+        $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat());
+        
+        return $this->render('ZizooAddressBundle:Address:search_block.html.twig',array(
+            'form' => $form->createView()
+        ));
+    }
 }

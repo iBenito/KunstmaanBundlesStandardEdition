@@ -425,13 +425,38 @@ a:hover {
     background: none;
 }
 
+#slideshow .search #zizoo_boat_search_location {
+    width: 100%;
+}
+
+#slideshow .search #zizoo_boat_search_location_chzn ul li {
+    
+}
+
 #slideshow .search input[type='text'] {
     width: 100%;
     height: 30px;
     font: 14px/30px 'Asap', Arial;
     color: #000;
     padding: 0 10px 0 40px;
-    background: #fff url(../images/magnifier-big.png) no-repeat 10px center;
+    background: #fff url(../images/icon/calendar-black.png) no-repeat 10px center;
+    border: 0;
+    border-radius: 20px;
+    -webkit-box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5), 0 1px 1px 1px rgba(255,255,255,0.2);
+    -moz-box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5), 0 1px 1px 1px rgba(255,255,255,0.2);
+    box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5), 0 1px 1px 1px rgba(255,255,255,0.2);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#slideshow .search input[type='number'] {
+    width: 100%;
+    height: 30px;
+    font: 14px/30px 'Asap', Arial;
+    color: #000;
+    padding: 0 10px 0 40px;
+    background: #fff url(../images/icon/hash-black.png) no-repeat 10px center;
     border: 0;
     border-radius: 20px;
     -webkit-box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5), 0 1px 1px 1px rgba(255,255,255,0.2);
@@ -466,11 +491,11 @@ a:hover {
     opacity: 1;
 }
 
-#slideshow .search ul {
+#slideshow .search ul.search_list {
     margin: 0 -10px 0 0;
 }
 
-#slideshow .search ul li {
+#slideshow .search ul.search_list li {
     float: left;
     width: 33.33%;
     padding: 0 10px 0 0;

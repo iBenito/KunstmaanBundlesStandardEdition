@@ -4,8 +4,7 @@
 
 {% block body %}
 
-    {% form_theme form 'ZizooAddressBundle:Form:search_bar.html.twig' %}
-    {{ form_widget(form) }}
+    {% render controller('ZizooAddressBundle:Address:searchBar') %}
 
     <!-- start:content -->
     <div id="content">
