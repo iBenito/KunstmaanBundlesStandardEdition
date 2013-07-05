@@ -255,6 +255,7 @@ a:hover {
     margin: 0 2px 0 0;
 }
 
+
 /**
  * Name
  */
@@ -1613,4 +1614,24 @@ a:hover {
     font-size: 11px;
     line-height: 16px;
     color: #fff;
+}
+
+
+
+
+/**
+*       Locations
+*/
+
+#search #search-filter-hidden {
+    display: none;
+}
+
+#search-results {
+    width: 700px;
+    float: left;
+}
+
+#search-filter {
+    width: 200px;
 }

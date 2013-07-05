@@ -101,7 +101,7 @@ class FilterBoat
     
     public function getEquipment()
     {
-        return $this->equipment['equipment'];
+        return $this->equipment;
     }
     
     public function setEquipment($type)
@@ -112,7 +112,7 @@ class FilterBoat
     
     public function equipmentSelected()
     {
-        return $this->equipment['equipment']->count()>0;
+        return $this->equipment->count()>0;
     }
     
     

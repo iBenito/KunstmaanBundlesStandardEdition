@@ -31,14 +31,47 @@
 {% endblock %}
     
 {% block body %}
-
-    {% render controller('ZizooAddressBundle:Address:searchBar') %}
-
+<form id="search_form" class="form clearfix" action="{{ path('ZizooAddressBundle_locations') }}" method="get">
+    
+    <!-- start:search -->
+    <div id="search" class="bar">
+        <div class="container clearfix">
+            <div class="column search">
+                {{ form_widget(form.location) }}
+            </div>
+            <div class="column">
+                <span id="search_bar_from" class="icon calendar white"></span> {{ form_widget(form.reservation_from) }}
+            </div>
+            <div class="column">
+                <span id="search_bar_to" class="icon calendar white"></span> {{ form_widget(form.reservation_to) }}
+            </div>
+            <div class="column" id="search_bar_guests">
+                <span class="icon hash white"></span> {{ form_widget(form.num_guests) }}
+            </div>
+            <div class="column submit">
+                <button type="submit" class="button blue small">Search</button>
+            </div>
+        </div>
+    </div>
+    
     <!-- start:content -->
     <div id="content">
         <div class="container clearfix">
-            {% block content %}
-            {% endblock content %}
+            <div id="search-results">
+                {% block search_results %}
+                {% endblock search_results %}
+            </div>
+            <div id="sidebar" class="right">
+                {% block search_filter %}
+                {% endblock search_filter %}
+            </div>
+        </div>
+        <div>
+            {% block search_map %}
+            {% endblock search_map %}
         </div>
     </div>
+</form>
+    
+
 {% endblock body %}

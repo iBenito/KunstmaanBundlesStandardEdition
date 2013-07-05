@@ -158,13 +158,31 @@ class AddressController extends Controller
         
     }
     
-    public function searchBarAction()
+    public function searchBarAction($filter=false)
     {
-        $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat());
+        $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat(), array('filter' => $filter));
         
-        return $this->render('ZizooAddressBundle:Address:search_bar.html.twig',array(
-            'form' => $form->createView()
-        ));
+        $a = $form->createView();
+        
+        if ($filter){
+            $em = $this->getDoctrine()
+                   ->getManager();
+        
+            $minMaxBoatValues   = $em->getRepository('ZizooBoatBundle:Boat')->getMaxBoatValues();
+            
+            return $this->render('ZizooAddressBundle:Address:search_bar.html.twig',array(
+                'form' => $form->createView(),
+                'max_length'        => $minMaxBoatValues['max_length'],
+                'max_cabins'        => $minMaxBoatValues['max_cabins'],
+                'min_price'         => $minMaxBoatValues['min_lowest_price']?$minMaxBoatValues['min_lowest_price']:1,
+                'max_price'         => $minMaxBoatValues['max_highest_price']?$minMaxBoatValues['max_highest_price']:10000
+            ));
+        } else {
+            return $this->render('ZizooAddressBundle:Address:search_bar.html.twig',array(
+                'form' => $form->createView()
+            ));
+        }
+        
     }
     
     public function searchBlockAction()

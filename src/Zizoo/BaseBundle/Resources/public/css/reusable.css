@@ -311,14 +311,14 @@
     background-position: right center;
 }
 
-.form .row label.checkbox {
+.form .row label.choice, .form .row label.checkbox {
     position: static;
     width: auto;
     background: none;
     color: #222222;
 }
 
-.form .row label.checkbox .icon {
+.form .row label.choice .icon, .form .row label.checkbox .icon {
     display: none;
 }
 
@@ -354,12 +354,12 @@
     background-image: url(../images/label/phone.png);
 }
 
-.form .row .row_content {
+.form .row .row-content {
     margin-left: 140px;
     z-index: 1001;
 }
 
-.form .row .row_content.no_margin {
+.form .row .row-content.choice, .form .row .row-content.checkbox, .form .row .row-content.no-margin {
     margin-left: 0;
 }
 

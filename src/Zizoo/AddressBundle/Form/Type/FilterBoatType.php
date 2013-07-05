@@ -32,8 +32,12 @@ class FilterBoatType extends AbstractType
         $builder->add('price_to', 'hidden', array('required'      => false,
                                                         'by_reference'  => false));
         
-        $builder->add('equipment', 'zizoo_equipment_selector', array('expanded'     => true,
-                                                                        'multiple'  => true));
+        $builder->add('equipment', 'entity', array(
+                'class' => 'ZizooBoatBundle:Equipment',
+                'multiple'  => true,
+                'expanded' => true,
+                'property' => 'name',
+                'label'     => 'Equipment'));
         
     }
 

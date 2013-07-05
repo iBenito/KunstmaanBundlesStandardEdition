@@ -2,23 +2,31 @@
 
 {% block form_label %}
 {% spaceless %}
+    {% set default_class = '' %}
+    
+    {% for block_prefix in block_prefixes %}
+        {% set default_class = default_class ~ ' ' ~ block_prefix %}
+    {% endfor %}
+    {% set default_class = default_class|trim %}
+    
     {% if label is not sameas(false) %}
         {% if not compound %}
             {% set label_attr = label_attr|merge({'for': id}) %}
         {% endif %}
+        
         {% if required %}
             {% if label['class'] is defined %}
-                {% set class_attr = (label_attr.class|default('') ~ ' required')|trim ~ ' ' ~ label['class']|trim %}
+                {% set class_attr = (label_attr.class|default(default_class) ~ ' required')|trim ~ ' ' ~ label['class']|trim %}
                 {% set label_attr = label_attr|merge({'class': class_attr}) %}
             {% else %}
-                {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+                {% set label_attr = label_attr|merge({'class': (label_attr.class|default(default_class) ~ ' required')|trim}) %}
             {% endif %}
         {% else %}
             {% if label['class'] is defined %}
                 {% set class_attr = label['class']|trim %}
                 {% set label_attr = label_attr|merge({'class': class_attr}) %}
             {% else %}
-                {% set label_attr = label_attr|merge({'class': (label_attr.class|default(''))|trim}) %}
+                {% set label_attr = label_attr|merge({'class': (label_attr.class|default(default_class))|trim}) %}
             {% endif %}
         {% endif %}
 
@@ -52,6 +60,12 @@
         
 {% block form_row %}
 {% spaceless %}
+    {% set default_class = '' %}
+    
+    {% for block_prefix in block_prefixes %}
+        {% set default_class = default_class ~ ' row-' ~ block_prefix %}
+    {% endfor %}
+    {% set default_class = default_class|trim %}
     <div class="row">
         {{ form_label(form) }}
         {% set actual_label = label %}
@@ -61,13 +75,28 @@
             {% endif %}
         {% endif %}
        
-        <div class="row_content{% if actual_label == false %} no_margin{% endif %}">
+        <div class="row_content {{ default_class }} {% if actual_label == false %}no_margin{% endif %}">
         {{ form_widget(form) }}
         </div>
     </div>
     {{ form_errors(form) }}
 {% endspaceless %}
 {% endblock form_row %}
+        
+{% block choice_widget_expanded %}
+{% spaceless %}
+    <div {{ block('widget_container_attributes') }}>
+        <ul>
+            {% for child in form %}
+                <li>
+                {{ form_widget(child) }}
+                {{ form_label(child) }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endspaceless %}
+{% endblock choice_widget_expanded %}
         
         
 {% block checkbox_row %}
