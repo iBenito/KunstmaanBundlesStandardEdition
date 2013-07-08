@@ -946,6 +946,10 @@
     width: 14.28%;
 }
 
+.tabs.boat li {
+    width: 25%;
+}
+
 .tabs li a {
     display: block;
     font: italic 400 11px/30px 'Asap', Arial;

@@ -1,23 +1,24 @@
-{% extends 'ZizooBoatBundle::layout.html.twig' %}
+{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
 
-{% block body %}
+{% block content %}
     {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat }  %}
 
-    {% set step = app.session.get('step') %}
-
-    {% if step != "" %}
-        <h3>Step {{ step }}</h3>
-    {% endif %}
-
-    <form action="{{ path("ZizooBoatBundle_Boat_UpdateDetails", { 'id': boat.id }) }}" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
+    <div class="content">
+        {% set step = app.session.get('step') %}
 
         {% if step != "" %}
-            <button type="submit">Continue</button>
-        {% else %}
-            <button type="submit">Save</button>
+            <h3>Step {{ step }}</h3>
         {% endif %}
 
-    </form>
-{% endblock %}
+        <form action="{{ path("ZizooBoatBundle_Boat_UpdateDetails", { 'id': boat.id }) }}" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
 
+            {% if step != "" %}
+                <button type="submit">Continue</button>
+            {% else %}
+                <button type="submit">Save</button>
+            {% endif %}
+
+        </form>
+    </div>
+{% endblock %}

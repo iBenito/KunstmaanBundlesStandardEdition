@@ -1,7 +1,7 @@
 {% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
 
 {% block tabs %}
-{% include 'ZizooBaseBundle:Dashboard:user_tabs.html.twig' with {'current':'index'} %}
+{{ render(controller('ZizooBaseBundle:Dashboard:userTabs', { 'current': 'index' })) }}
 {% endblock %}
 
 {% block content %}

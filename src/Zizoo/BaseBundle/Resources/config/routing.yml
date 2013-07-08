@@ -51,13 +51,7 @@ ZizooBaseBundle_login_widget:
     defaults: { _controller: ZizooBaseBundle:Page:loginWidget }
     requirements:
         _method:  GET
-        
-ZizooBaseBundle_Dashboard:
-    pattern:  /charter/account/dashboard
-    defaults: { _controller: ZizooBaseBundle:Dashboard:index }
-    requirements:
-        _method:  GET
-        
+                
 ZizooBaseBundle_Dashboard_CharterDashboard:
     pattern:  /charter/account/dashboard
     defaults: { _controller: ZizooBaseBundle:Dashboard:index }
@@ -97,6 +91,12 @@ ZizooBaseBundle_Dashboard_Trips:
 ZizooBaseBundle_Dashboard_Inbox:
     pattern:  /account/inbox
     defaults: { _controller: ZizooBaseBundle:Dashboard:inbox }
+    requirements:
+        _method:  GET
+        
+ZizooBaseBundle_Dashboard_Sent:
+    pattern:  /account/sent
+    defaults: { _controller: ZizooBaseBundle:Dashboard:sent }
     requirements:
         _method:  GET
         

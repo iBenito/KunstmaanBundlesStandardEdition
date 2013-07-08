@@ -2,8 +2,6 @@
 
 {% block fos_message_content %}
 
-<h2>{% trans from 'FOSMessageBundle' %}sent{% endtrans %}</h2>
-
 <a id="new_thread_link" href="{{ url('fos_message_thread_new' )}}">{% trans from 'FOSMessageBundle' %}send_new{% endtrans %}</a><br />
 
     <div id="context_hidden" style="display: none">
@@ -34,11 +32,11 @@
     </div>
 
     <select id="box_select" style="display: none">
-        <option value="{{ path('fos_message_sent') }}">Inbox</option>
-        <option value="{{ path('fos_message_sent') }}" selected="selected">Sent Messages</option>
+        <option value="{{ path(grid.extraParams['inbox_url']) }}">Inbox</option>
+        <option value="{{ path(grid.extraParams['sent_url']) }}" selected="selected">Sent Messages</option>
     </select>
     <noscript>
-        <a href="{{ url('fos_message_sent' )}}">Inbox</a>
+        <a href="{{ path(grid.extraParams['inbox_url']) }}">Inbox</a>
     </noscript>
 
     <div id="script">

@@ -1,106 +1,94 @@
 {% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
-    
-{% block dashboard_page_title %}Boats{% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-{% endblock %}
+{% block content %}
+    {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat }  %}
 
+    <div class="content">
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+            <div class="flash-notice">
+                {{ flashMessage}}
+            </div>
+        {% endfor %}
 
-{% block stylesheets %}
-    {{ parent() }}
-{% endblock %}
+        <script type="text/javascript">
+            var uploadedFiles = new Array();
 
-{% block body %}
-
-    {% for flashMessage in app.session.flashbag.get('notice') %}
-        <div class="flash-notice">
-            {{ flashMessage}}
-        </div>
-    {% endfor %}
-
-    <script type="text/javascript">
-        var uploadedFiles = new Array();
-
-        function removeUploadedFiles(){
-            for (var i=0; i<uploadedFiles.length; i++){
-                zizoo_boat_image_image_dropzone_api.removeFile(uploadedFiles[i]);
+            function removeUploadedFiles(){
+                for (var i=0; i<uploadedFiles.length; i++){
+                    zizoo_boat_image_image_dropzone_api.removeFile(uploadedFiles[i]);
+                }
+                uploadedFiles = new Array();
             }
-            uploadedFiles = new Array();
-        }
 
-        function getPhotos(){
-            $.ajax({
-                url:        '{{ path('ZizooBoatBundle_Boat_GetPhotos', {id: boat.id}) }}',
-                type:       'get',
-                success:    function(data, textStatus, XHR){
-                    var newPhotos = $(data).find('#zizoo_boat_image_image_list .zizoo_media_container');
-                    $('#zizoo_boat_image_image_list .zizoo_media_container').remove();
-                    for (var i=newPhotos.length-1; i>=0; i--){
-                        $('#zizoo_boat_image_image_list').prepend(newPhotos[i]);
+            function getPhotos(){
+                $.ajax({
+                    url:        '{{ path('ZizooBoatBundle_Boat_GetPhotos', {id: boat.id}) }}',
+                    type:       'get',
+                    success:    function(data, textStatus, XHR){
+                        var newPhotos = $(data).find('#zizoo_boat_image_image_list .zizoo_media_container');
+                        $('#zizoo_boat_image_image_list .zizoo_media_container').remove();
+                        for (var i=newPhotos.length-1; i>=0; i--){
+                            $('#zizoo_boat_image_image_list').prepend(newPhotos[i]);
+                        }
+                        removeUploadedFiles();
                     }
-                    removeUploadedFiles();
-                }
-            });
-        }
+                });
+            }
 
-        function photoUploadError(file, response){
-            var queuedFiles     = zizoo_boat_image_image_dropzone_api.getQueuedFiles();
-            var uploadingFiles  = zizoo_boat_image_image_dropzone_api.getUploadingFiles();
-            if (queuedFiles.length>0 || uploadingFiles.length>0 || uploadedFiles.length==0) return;
+            function photoUploadError(file, response){
+                var queuedFiles     = zizoo_boat_image_image_dropzone_api.getQueuedFiles();
+                var uploadingFiles  = zizoo_boat_image_image_dropzone_api.getUploadingFiles();
+                if (queuedFiles.length>0 || uploadingFiles.length>0 || uploadedFiles.length==0) return;
 
-            getPhotos();
-        }
+                getPhotos();
+            }
 
-        function photoUploadSuccess(file, response){
-            if (file!=null) uploadedFiles.push(file);
-            var queuedFiles     = zizoo_boat_image_image_dropzone_api.getQueuedFiles();
-            var uploadingFiles  = zizoo_boat_image_image_dropzone_api.getUploadingFiles();
-            if (queuedFiles.length>0 || uploadingFiles.length>0) return;
+            function photoUploadSuccess(file, response){
+                if (file!=null) uploadedFiles.push(file);
+                var queuedFiles     = zizoo_boat_image_image_dropzone_api.getQueuedFiles();
+                var uploadingFiles  = zizoo_boat_image_image_dropzone_api.getUploadingFiles();
+                if (queuedFiles.length>0 || uploadingFiles.length>0) return;
 
-            getPhotos();
-        }
+                getPhotos();
+            }
 
-        function photoCrop(id, x1, y1, x2, y2, w, h){
-            $.ajax({
-                url:            '{{ path('ZizooMediaBundle_Media_CropMedia') }}',
-                type:           'post',
-                data: {
-                    id:             id,
-                    entity_type:    'ZizooBoatBundle:BoatImage',
-                    x1:             x1,
-                    y1:             y1,
-                    x2:             x2,
-                    y2:             y2,
-                    w:              w,
-                    h:              h
-                },
-                success: function(data){
-                    photoUploadSuccess(null,{id: id});
-                }
-            });
-        }
+            function photoCrop(id, x1, y1, x2, y2, w, h){
+                $.ajax({
+                    url:            '{{ path('ZizooMediaBundle_Media_CropMedia') }}',
+                    type:           'post',
+                    data: {
+                        id:             id,
+                        entity_type:    'ZizooBoatBundle:BoatImage',
+                        x1:             x1,
+                        y1:             y1,
+                        x2:             x2,
+                        y2:             y2,
+                        w:              w,
+                        h:              h
+                    },
+                    success: function(data){
+                        photoUploadSuccess(null,{id: id});
+                    }
+                });
+            }
 
-        function photoDelete(container){
-            var id  = $(container).find('.media_id').val();
-            $(container).remove();
-            $.ajax({
-                url:            '{{ path('ZizooMediaBundle_Media_DeleteMedia') }}',
-                type:           'post',
-                data: {
-                    id:             id,
-                    entity_type:    'ZizooBoatBundle:BoatImage'
-                },
-                success: function(data){
-                }
-            });
-        }
+            function photoDelete(container){
+                var id  = $(container).find('.media_id').val();
+                $(container).remove();
+                $.ajax({
+                    url:            '{{ path('ZizooMediaBundle_Media_DeleteMedia') }}',
+                    type:           'post',
+                    data: {
+                        id:             id,
+                        entity_type:    'ZizooBoatBundle:BoatImage'
+                    },
+                    success: function(data){
+                    }
+                });
+            }
 
-    </script>
-
-    {% block content %}
-        {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat }  %}
-
+        </script>
+        
         {% set step = app.session.get('step') %}
 
         {% if step != "" %}
@@ -117,7 +105,6 @@
                 <a href="{{ path('ZizooBoatBundle_Boat_EditPrice', { 'id': boat.id }) }}">Continue</a>
             {% endif %}
         </form>
-
-    {% endblock %}
-        
+    </div>
 {% endblock %}
+

@@ -1,3 +1,13 @@
 {% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
-    
-{% block dashboard_page_title %}Outbox{% endblock %}
+
+{% block tabs %}
+{{ render(controller('ZizooBaseBundle:Dashboard:userTabs', { 'current': 'inbox' })) }}
+{% endblock %}
+
+
+{% block content %}
+    <div class="content">
+        <h1>My Sent Messages</h1>
+        {{ response|raw }}
+    </div>
+{% endblock %}

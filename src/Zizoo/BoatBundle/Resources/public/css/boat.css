@@ -1,6 +1,6 @@
-.boat { margin-bottom: 20px; }
-.boat img { width: 190px; float: left; padding: 5px; border: 1px solid #ccc; margin: 0 10px 10px 0; }
-.boat img.large { width: 300px; min-height: 165px; }
+div.boat { margin-bottom: 20px; }
+div.boat img { width: 190px; float: left; padding: 5px; border: 1px solid #ccc; margin: 0 10px 10px 0; }
+div.boat img.large { width: 300px; min-height: 165px; }
 
 
 
@@ -87,6 +87,7 @@
 
 #availability-calendar .ui-datepicker-inline {
     width: 100% !important;
+    float: none;
 }
 
 #availability-calendar .ui-datepicker-group.last-in-line {

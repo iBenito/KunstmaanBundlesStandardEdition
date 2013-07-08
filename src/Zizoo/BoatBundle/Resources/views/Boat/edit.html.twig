@@ -1,8 +1,10 @@
-{% extends 'ZizooBoatBundle::layout.html.twig' %}
+{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
 
-{% block body %}
+{% block content %}
     {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat }  %}
 
-    {% render controller('ZizooBoatBundle:Boat:boatFormWidget', { 'boat': boat, 'formAction': formAction }) %}
+    <div class="content">
+        {% render controller('ZizooBoatBundle:Boat:boatFormWidget', { 'boat': boat, 'formAction': formAction }) %}
+    </div>
 {% endblock %}
 

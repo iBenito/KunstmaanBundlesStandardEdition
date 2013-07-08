@@ -1,8 +1,6 @@
-<div class="boat_navigation">
-    <ul class="nav">
-        <li><a href="{{ path('ZizooBoatBundle_Boat_Edit', { 'id': boat.id }) }}">Overview</a></li>
-        <li><a href="{{ path('ZizooBoatBundle_Boat_EditDetails', { 'id': boat.id }) }}">Details</a></li>
-        <li><a href="{{ path('ZizooBoatBundle_Boat_EditPhotos', { 'id': boat.id }) }}">Photos</a></li>
-        <li><a href="{{ path('ZizooBoatBundle_Boat_EditPrice', { 'id': boat.id }) }}">Price</a></li>
-    </ul>
-</div>
+<ul class="tabs boat clearfix">
+    <li><a href="{{ path('ZizooBoatBundle_Boat_Edit', { 'id': boat.id }) }}">Overview</a></li>
+    <li><a href="{{ path('ZizooBoatBundle_Boat_EditDetails', { 'id': boat.id }) }}">Details</a></li>
+    <li><a href="{{ path('ZizooBoatBundle_Boat_EditPhotos', { 'id': boat.id }) }}">Photos</a></li>
+    <li><a href="{{ path('ZizooBoatBundle_Boat_EditPrice', { 'id': boat.id }) }}">Price</a></li>
+</ul>

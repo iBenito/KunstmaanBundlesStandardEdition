@@ -148,7 +148,8 @@ class DashboardController extends Controller {
     public function inboxAction()
     {
         $request    = $this->getRequest();
-        $response   = $this->forward('ZizooMessageBundle:Message:inbox');
+        $response   = $this->forward('ZizooMessageBundle:Message:inbox', array(), array('inbox_url' => 'ZizooBaseBundle_Dashboard_Inbox',
+                                                                                        'sent_url'  => 'ZizooBaseBundle_Dashboard_Sent'));
         
         if ($response->isRedirect()){
             return $this->redirect($this->generateUrl($request->get('_route')));
@@ -156,6 +157,29 @@ class DashboardController extends Controller {
         
         return $this->render('ZizooBaseBundle:Dashboard:inbox.html.twig', array(
             'username'  => $this->getUser()->getUsername(),
+            'response'  => $response->getContent()
+        ));
+    }
+    
+    /**
+     * Display User outbox
+     *
+     * @return Response
+     */
+    public function sentAction()
+    {
+        $request    = $this->getRequest();
+        $response   = $this->forward('ZizooMessageBundle:Message:sent', array(), array('inbox_url' => 'ZizooBaseBundle_Dashboard_Inbox',
+                                                                                        'sent_url'  => 'ZizooBaseBundle_Dashboard_Sent'));
+        
+        if ($response->isRedirect()){
+            return $this->redirect($this->generateUrl($request->get('_route')));
+        }
+        
+        $user = $this->getUser();
+        $charter = $user->getCharter();
+        return $this->render('ZizooBaseBundle:Dashboard:outbox.html.twig', array(
+            'id'        => $charter->getId(),
             'response'  => $response->getContent()
         ));
     }
@@ -244,7 +268,8 @@ class DashboardController extends Controller {
     public function charterInboxAction()
     {
         $request    = $this->getRequest();
-        $response   = $this->forward('ZizooMessageBundle:Message:inbox');
+        $response   = $this->forward('ZizooMessageBundle:Message:inbox', array(), array('inbox_url' => 'ZizooBaseBundle_Dashboard_CharterInbox',
+                                                                                        'sent_url'  => 'ZizooBaseBundle_Dashboard_CharterSent'));
         
         if ($response->isRedirect()){
             return $this->redirect($this->generateUrl($request->get('_route')));
@@ -266,7 +291,8 @@ class DashboardController extends Controller {
     public function charterSentAction()
     {
         $request    = $this->getRequest();
-        $response   = $this->forward('ZizooMessageBundle:Message:sent');
+        $response   = $this->forward('ZizooMessageBundle:Message:sent', array(), array('inbox_url' => 'ZizooBaseBundle_Dashboard_CharterInbox',
+                                                                                        'sent_url'  => 'ZizooBaseBundle_Dashboard_CharterSent'));
         
         if ($response->isRedirect()){
             return $this->redirect($this->generateUrl($request->get('_route')));
@@ -378,6 +404,21 @@ class DashboardController extends Controller {
         $numUnreadMessages  = $messageManager->getNbUnreadMessageByParticipant($user);
         
         return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_tabs.html.twig', array(
+            'current'           => $current,
+            'unread_messages'   => $numUnreadMessages
+        ));
+    }
+    
+    
+    public function userTabsAction($current)
+    {
+        $request            = $this->getRequest();
+        $user               = $this->getUser();
+        
+        $messageManager     = $this->container->get('fos_message.message_manager');
+        $numUnreadMessages  = $messageManager->getNbUnreadMessageByParticipant($user);
+        
+        return $this->render('ZizooBaseBundle:Dashboard:user_tabs.html.twig', array(
             'current'           => $current,
             'unread_messages'   => $numUnreadMessages
         ));
