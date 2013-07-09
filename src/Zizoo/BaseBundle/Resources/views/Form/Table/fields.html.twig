@@ -1,0 +1,168 @@
+{# src/Zizoo/BaseBundle/Resources/views/Form/fields.html.twig #}
+
+{% block form_label %}
+{% spaceless %}
+    {% set default_class = '' %}
+    
+    {% for block_prefix in block_prefixes %}
+        {% set default_class = default_class ~ ' ' ~ block_prefix %}
+    {% endfor %}
+    {% set default_class = default_class|trim %}
+    
+    {% if label is not sameas(false) %}
+        {% if not compound %}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {% endif %}
+        
+        {% if required %}
+            {% if label['class'] is defined %}
+                {% set class_attr = (label_attr.class|default(default_class) ~ ' required')|trim ~ ' ' ~ label['class']|trim %}
+                {% set label_attr = label_attr|merge({'class': class_attr}) %}
+            {% else %}
+                {% set label_attr = label_attr|merge({'class': (label_attr.class|default(default_class) ~ ' required')|trim}) %}
+            {% endif %}
+        {% else %}
+            {% if label['class'] is defined %}
+                {% set class_attr = label['class']|trim %}
+                {% set label_attr = label_attr|merge({'class': class_attr}) %}
+            {% else %}
+                {% set label_attr = label_attr|merge({'class': (label_attr.class|default(default_class))|trim}) %}
+            {% endif %}
+        {% endif %}
+
+        {% if label['value'] is defined %}
+            {% set label = label['value'] %}
+        {% endif %}
+
+        {% if label is empty %}
+            {% set label = name|humanize %}
+        {% endif %}
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}><span class="icon"></span>{{ label|trans({}, translation_domain) }}</label>
+    {% endif %}
+{% endspaceless %}
+{% endblock form_label %}
+
+{% block form_errors %}
+{% spaceless %}
+    {% if errors|length > 0 %}
+        <ul>
+            {% for error in errors %}
+                <li>{{ error.message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endspaceless %}
+{% endblock form_errors %}
+        
+{% block form_row %}
+{% spaceless %}
+    {% set default_class = '' %}
+    
+    {% for block_prefix in block_prefixes %}
+        {% set default_class = default_class ~ ' row-' ~ block_prefix %}
+    {% endfor %}
+    {% set default_class = default_class|trim %}
+    <tr class="row">
+        <td class="label-cell">
+            {{ form_label(form) }}
+        </td>
+        <td class="content-cell">
+            {{ form_widget(form) }}
+        </td>
+    </tr>
+    {% if errors|length > 0 %}
+    <tr class="error-row">
+        <td colspan="2" class="error-cell">
+            {{ form_errors(form) }}
+        </td>
+    </tr>
+    {% endif %}
+        
+{% endspaceless %}
+{% endblock form_row %}
+        
+{% block choice_widget_expanded %}
+{% spaceless %}
+    <div {{ block('widget_container_attributes') }}>
+        <ul>
+            {% for child in form %}
+                <li>
+                {{ form_widget(child) }}
+                {{ form_label(child) }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endspaceless %}
+{% endblock choice_widget_expanded %}
+        
+{% block zizoo_terms_label %}
+{% spaceless %}
+    {% if not compound %}
+        {% set label_attr = label_attr|merge({'for': id}) %}
+    {% endif %}
+    {% if required %}
+        {% if label['class'] is defined %}
+            {% set class_attr = (label_attr.class|default('') ~ ' required')|trim ~ ' ' ~ label['class']|trim %}
+            {% set label_attr = label_attr|merge({'class': class_attr}) %}
+        {% else %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+        {% endif %}
+    {% else %}
+        {% if label['class'] is defined %}
+            {% set class_attr = label['class']|trim %}
+            {% set label_attr = label_attr|merge({'class': class_attr}) %}
+        {% else %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default(''))|trim}) %}
+        {% endif %}
+    {% endif %}
+    {% if label is empty %}
+        {% set label = name|humanize %}
+    {% endif %}
+    <label id="{{ id }}_label" {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ ( terms_text|trans({'%terms_link%': '<a target="_blank" href="' ~ terms_url ~ '">' ~ terms_link|trans ~ '</a>' }) )|raw }}</label>
+    <div id="{{ id }}_terms" class="empty" style="display: none"></div>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#{{ id }}_label a').click(function(){
+                if ($('#{{ id }}_terms').hasClass('empty')){
+                    $.blockUI({ message: '' });
+                    $.ajax({
+                        url: '{{ terms_url }}',
+                        type: 'get',
+                        success: function(data){
+                            var terms = $(data).find('#terms');
+                            if (terms.length>0){
+                                $('#{{ id }}_terms').removeClass('empty').html(terms);
+                                {{ id }}_openTermsDialog();
+                                $.unblockUI();
+                            } else {
+                                window.location.href = '{{ terms_url }}';
+                                $.unblockUI();
+                            }
+                        },
+                        error: function(data){
+                            window.location.href = '{{ terms_url }}';
+                            $.unblockUI();
+                        }
+                    });
+                } else {
+                    {{ id }}_openTermsDialog();
+                }
+                return false;
+            });
+        });
+        
+        function {{ id }}_openTermsDialog(){
+            $('#{{ id }}_terms').dialog({
+                modal: true,
+                closeOnEscape: false,
+                resizable: false,
+                width: 470,
+                maxWidth: 470,
+                fluid: true,
+                title: '{{ terms_link|trans }}'
+            });
+        }
+    </script>
+{% endspaceless %}
+{% endblock zizoo_terms_label %}

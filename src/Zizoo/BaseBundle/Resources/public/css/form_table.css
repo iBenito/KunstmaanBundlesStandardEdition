@@ -1,0 +1,31 @@
+/* ==========================================================================
+   Form
+   ========================================================================== */
+
+tr.row td {
+    vertical-align: top;
+}
+
+td.label-cell {
+    width: 140px;
+}
+
+td.label-cell label {
+    -moz-box-sizing: border-box;
+    background: none repeat scroll 0 0 #4D4D4D;
+    border-radius: 5px 0 0 5px;
+    color: #FFFFFF;
+    font: italic 14px/36px 'Asap',Arial;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+    margin: 0 0 10px 0;
+    padding: 0 0 0 10px;
+    display: block;
+}
+
+td.content-cell {
+    min-height: 36px;
+}
+
+td.content-cell input, td.content-cell select {
+    min-height: 36px;
+}

@@ -43,18 +43,20 @@ class BoatType extends AbstractType
                                                 'required'  => false))
             ->add('address',new BoatAddressType())
             ->add('amenities', 'entity', array(
-                'class' => 'ZizooBoatBundle:Amenities',
+                'class'     => 'ZizooBoatBundle:Amenities',
                 'multiple'  => true,
-                'expanded' => true,
-                'property' => 'name',))
+                'expanded'  => true,
+                'property'  => 'name',
+                'label'     => 'Amenities'))
             ->add('equipment', 'entity', array(
-                'class' => 'ZizooBoatBundle:Equipment',
+                'class'     => 'ZizooBoatBundle:Equipment',
                 'multiple'  => true,
-                'expanded' => true,
-                'property' => 'name',))
+                'expanded'  => true,
+                'property'  => 'name',
+                'label'     => 'Equipment'))
             ->add('engine_type', 'entity', array(
-                'class' => 'ZizooBoatBundle:EngineType',
-                'property' => 'name',));
+                'class'     => 'ZizooBoatBundle:EngineType',
+                'property'  => 'name',));
         
     }
 

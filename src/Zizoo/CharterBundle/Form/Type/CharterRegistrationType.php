@@ -16,7 +16,7 @@ class CharterRegistrationType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('charter', 'zizoo_charter', array(    'label'             => ' ',
+        $builder->add('charter', 'zizoo_charter', array(    'label'             => false,
                                                             'map_show'          => $options['map_show'],
                                                             'map_update'        => $options['map_update'],
                                                             'map_drag'          => $options['map_drag'],

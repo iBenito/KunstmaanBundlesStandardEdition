@@ -23,12 +23,14 @@ twig:
     strict_variables: "%kernel.debug%"
     form:
         resources:
-            - ZizooBaseBundle:Form:fields.html.twig
-            - ZizooBookingBundle:Form:fields.html.twig
-            - ZizooUserBundle:Form:fields.html.twig
-            - ZizooBoatBundle:Form:fields.html.twig
-            - ZizooAddressBundle:Form:fields.html.twig
-            - ZizooMediaBundle:Form:fields.html.twig
+            #- form_table_layout.html.twig
+            - ZizooAddressBundle:Form:Div/fields.html.twig
+            - ZizooBaseBundle:Form:Div/fields.html.twig
+            - ZizooBoatBundle:Form:Div/fields.html.twig
+            - ZizooBookingBundle:Form:Div/fields.html.twig
+            - ZizooMediaBundle:Form:Div/fields.html.twig
+            - ZizooUserBundle:Form:Div/fields.html.twig
+            
 
 # Assetic Configuration
 assetic:

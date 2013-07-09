@@ -78,7 +78,7 @@ ZizooBoatBundle_Boat_Update:
     pattern:  /charter/account/boat/{id}/update
     defaults: { _controller: ZizooBoatBundle:Boat:update }
     requirements: 
-        _method: POST 
+        _method: POST
         id: \d+
 
 ZizooBoatBundle_Boat_UpdateDetails:

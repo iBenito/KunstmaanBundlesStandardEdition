@@ -4,7 +4,7 @@
     <h3>Step {{ step }}</h3>
 {% endif %}
 
-<form action="{{ path(formAction, { 'id': boat.id }) }}" method="post" {{ form_enctype(form) }}>
+<form class="form" action="{{ path(formAction, { 'id': boat.id }) }}" method="post" {{ form_enctype(form) }}>
 
     {{ form_widget(form) }}
 
@@ -15,3 +15,19 @@
     {% endif %}
 
 </form>
+<script type="text/javascript">
+    
+    function changeCrew(){
+        if ($('#zizoo_boat_crew_optional input[name="zizoo_boat[crew_optional]"]:checked').val()=='1'){
+            $('#zizoo_boat_num_crew').attr('disabled', null);
+            $('#zizoo_boat_crew_price').attr('disabled', null);
+        } else {
+            $('#zizoo_boat_num_crew').attr('disabled', 'disabled');
+            $('#zizoo_boat_crew_price').attr('disabled', 'disabled');
+        }
+    }
+    
+    $(document).ready(function(){
+        $('#zizoo_boat_crew_optional input[name="zizoo_boat[crew_optional]"]').change(changeCrew).change();
+    });
+</script>
