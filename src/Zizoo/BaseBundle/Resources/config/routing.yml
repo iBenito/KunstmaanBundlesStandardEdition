@@ -100,6 +100,12 @@ ZizooBaseBundle_Dashboard_Sent:
     requirements:
         _method:  GET
         
+ZizooBaseBundle_Dashboard_AccountSettings:
+    pattern:  /account/settings
+    defaults: { _controller: ZizooBaseBundle:Dashboard:accountSettings }
+    requirements:
+        _method:  GET|POST
+        
 ZizooBaseBundle_Dashboard_CharterProfile:
     pattern:  /charter/account/profile
     defaults: { _controller: ZizooBaseBundle:Dashboard:charterProfile }

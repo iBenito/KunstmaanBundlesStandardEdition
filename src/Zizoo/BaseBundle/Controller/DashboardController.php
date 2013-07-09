@@ -205,6 +205,26 @@ class DashboardController extends Controller {
     }
     
     /**
+     * Display User Account Settings
+     *
+     * @return Response
+     */
+    public function accountSettingsAction()
+    {
+        $request    = $this->getRequest();
+        $response   = $this->forward('ZizooUserBundle:User:accountSettings');
+        
+        if ($response->isRedirect()){
+            return $this->redirect($this->generateUrl($request->get('_route')));
+        }
+        
+        return $this->render('ZizooBaseBundle:Dashboard:account_settings.html.twig', array(
+            'response'  => $response->getContent()
+        ));
+    }
+    
+    
+    /**
      * Display User Skills
      *
      * @return Response

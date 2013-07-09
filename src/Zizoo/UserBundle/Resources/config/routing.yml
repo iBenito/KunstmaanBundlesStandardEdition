@@ -117,7 +117,7 @@ ZizooUserBundle_forward:
   defaults:   {_controller: ZizooUserBundle:Registration:forward }
   
 ZizooUserBundle_User_AccountSettings:
-  pattern:    /account/settings/
+  pattern:    /account/settings/edit
   defaults:   {_controller: ZizooUserBundle:User:accountSettings }
   requirements:
         _method:  GET|POST 
