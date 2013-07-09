@@ -3,6 +3,7 @@
 namespace Zizoo\BoatBundle\Form\Type;
 
 use Zizoo\BoatBundle\Form\Type\BoatTypeType;
+use Zizoo\BoatBundle\Form\Type\Crew\BoatCrewType;
 use Zizoo\BaseBundle\Form\Type\NumberNullableType;
 use Zizoo\AddressBundle\Form\BoatAddressType;
 
@@ -31,16 +32,7 @@ class BoatType extends AbstractType
             ->add('toilets')
             ->add('nr_guests')
             ->add('bathrooms')
-            ->add('crew_optional', 'choice', array( 'required'      => true,
-                                                    'label'         => 'Crew',
-                                                    'expanded'      => true,
-                                                    'multiple'      => false,
-                                                    'choices'       => array(false => 'Included', true => 'Optional'),
-                                                    'property_path' => 'crewOptional'))
-            ->add('num_crew', 'number', array(  'label'     => 'Optional number of crew provided',
-                                                'required'  => false))
-            ->add('crew_price', 'number', array('label'     => 'Total price of crew per day',
-                                                'required'  => false))
+            ->add('crew', new BoatCrewType(), array('label' => 'Crew'))
             ->add('address',new BoatAddressType())
             ->add('amenities', 'entity', array(
                 'class'     => 'ZizooBoatBundle:Amenities',
