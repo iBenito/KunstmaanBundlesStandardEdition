@@ -13,7 +13,7 @@
             </ul>
         {% endif %}
 
-        <form action="{{ path('ZizooReservationBundle_accept', {id: reservation.id}) }}" method="post" novalidate="novalidate">
+        <form action="{{ path('ZizooReservationBundle_accept', {id: reservation.id}) }}" method="post">
             {{ form_widget(form) }}
             <input type="submit" name="accept" value="Accept" />
         </form>

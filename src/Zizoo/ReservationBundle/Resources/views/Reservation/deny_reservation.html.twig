@@ -4,7 +4,7 @@
 
 {% block content %}
     <div class="deny_reservation" id="{% if ajax %}deny_reservation_inner_ajax{% else %}deny_reservation_inner{% endif %}">
-        <form action="{{ path('ZizooReservationBundle_deny', {id: reservation.id}) }}" method="post" novalidate="novalidate">
+        <form action="{{ path('ZizooReservationBundle_deny', {id: reservation.id}) }}" method="post">
             {{ form_widget(form) }}
             <input type="submit" name="deny" value="Deny" />
         </form>

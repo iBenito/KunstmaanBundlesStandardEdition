@@ -313,7 +313,7 @@ class UserController extends Controller
                         $existingUser = $this->getDoctrine()->getRepository('ZizooUserBundle:User')->findOneByEmail($newEmail);
                         if ($existingUser){
                             $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.error.email_taken'));
-                            return $this->redirect($this->generateUrl('ZizooUserBundle_User_AccountSettings'));
+                            return $this->redirect($this->generateUrl($request->query->get('redirect_route')));
                         }
                         
                         $userService    = $this->get('zizoo_user_user_service');
@@ -339,11 +339,13 @@ class UserController extends Controller
                         
                     }
                     
-                    return $this->redirect($this->generateUrl('ZizooUserBundle_User_AccountSettings'));
+                    return $this->redirect($this->generateUrl($request->query->get('redirect_route')));
+                    
 
                 } else {
                     $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.message.account_settings_not_changed'));
-                    return $this->redirect($this->generateUrl('ZizooUserBundle_User_AccountSettings'));
+                    return $this->redirect($this->generateUrl($request->query->get('redirect_route')));
+                    
                 }
             }
    

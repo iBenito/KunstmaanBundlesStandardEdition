@@ -117,6 +117,8 @@ class AddressBase
             $this->setAddressLine1($address->getAddressLine1());
             $this->setAddressLine2($address->getAddressLine2());
             $this->setSubLocality($address->getSubLocality());
+            $this->setLat($address->getLat());
+            $this->setLng($address->getLng());
         }
     }
     
@@ -408,72 +410,6 @@ class AddressBase
         return $this->lng;
     }
     
-    /**
-     * Gets a formatted boat address, used by fetchGeo() to search.
-     * @return string   Formatted address
-     * @author Alex Fuckert <alexf83@gmail.com>
-     */
-    public function getFormattedAddress(){
-        $address = array();
-        
-        $addressLine1 = $this->getAddressLine1();
-        if ($addressLine1 && $addressLine1!=''){
-            $address[] = $addressLine1;
-        }
-        
-        $addressLine2 = $this->getAddressLine2();
-        if ($addressLine2 && $addressLine2!=''){
-            $address[] = $addressLine2;
-        }
-        
-        $postcode = $this->getPostcode();
-        if ($postcode && $postcode!=''){
-            $address[] = $postcode;
-        }
-        
-        $locality = $this->getLocality();
-        if ($locality && $locality!=''){
-            $address[] = $locality;
-        }
-        
-        $country = $this->getCountry()->getPrintableName();
-        if ($country && $country!=''){
-            $address[] = $country;
-        }
-        
-        return implode(',', $address);
-    }
     
-    /**
-     * Fetch geo data (lat, lng) for boat address from Google Maps service. Requires CURL.
-     * TODO: Fail gracefully.
-     * @author Alex Fuckert <alexf83@gmail.com>
-     */
-    public function fetchGeo(){
-        // jSON URL which should be requested
-        $json_url = 'http://maps.googleapis.com/maps/api/geocode/json?address='.urlencode($this->getFormattedAddress()).'&sensor=false';
-
-        // Initializing curl
-        $ch = curl_init( $json_url );
-
-        // Configuring curl options
-        $options = array(
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER => array('Content-type: application/json')
-        );
-
-        // Setting curl options
-        curl_setopt_array( $ch, $options );
-
-        // Getting results
-        $result = json_decode(curl_exec($ch)); 
-
-        if ($result->results && count($result->results)>0){
-            $geoLocation = $result->results[0]->geometry->location;
-
-            $this->setLat($geoLocation->lat);
-            $this->setLng($geoLocation->lng);
-        }
-    }
     
 }

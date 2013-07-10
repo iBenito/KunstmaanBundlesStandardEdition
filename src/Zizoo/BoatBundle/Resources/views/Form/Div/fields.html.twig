@@ -37,15 +37,21 @@
         #{{ id }}_table_inner.hidden {
             display: none;
         }
+        
+        #{{ form.crew_optional.vars.id }}{
+            padding: 16px 0;
+        }
     </style>
     <script type="text/javascript">
         function {{id }}_changeCrew(){
             var crewOptional = $('#{{ form.crew_optional.vars.id }} input[name="{{ form.crew_optional.vars.full_name }}"]:checked').val();
             if (crewOptional=='1'){
+                $('#{{ id }}_table_inner input').attr('disabled', null);
                 $('#{{ id }}_table_inner').show('slide', 500, function(){
                     $(this).removeClass('hidden');
                 });
             } else {
+                $('#{{ id }}_table_inner input').attr('disabled', 'disabled');
                 $('#{{ id }}_table_inner').hide('slide', 500, function(){
                     $(this).addClass('hidden');
                 });

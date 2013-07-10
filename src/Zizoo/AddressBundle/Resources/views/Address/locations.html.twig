@@ -1,6 +1,6 @@
 {# src/Zizoo/AddressBundle/Resources/views/Address/locations_test.html.twig #}
 {% trans_default_domain "labels" %}
-{% form_theme form 'ZizooAddressBundle:Form:Div/fields.html.twig' %}
+
 {% extends 'ZizooAddressBundle::layout.html.twig' %}
 
 {% block javascripts %}
@@ -33,7 +33,7 @@
 {% block search_filter %}
     <div id="search-filter" style="display: none">
         <div id="boat_type_filter">
-        {{ form_widget(form.filter.boat_type) }}
+        {{ form_row(form.filter.boat_type) }}
         </div>
         <div id="length_filter">
             <label for="length_text">Boat Length:</label>
@@ -51,7 +51,7 @@
             <div id="num_cabins_slider"></div>
         </div>
         <div id="equipment_filter">
-            {{ form_widget(form.filter.equipment) }}
+            {{ form_row(form.filter.equipment) }}
         </div>
         {{ form_widget(form.filter.length_from) }}
         {{ form_widget(form.filter.length_from) }}

@@ -2,6 +2,8 @@
 
 namespace Zizoo\BoatBundle\Entity;
 
+use Zizoo\AddressBundle\Entity\BoatAddress;
+
 use Zizoo\BaseBundle\Entity\BaseEntity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -29,17 +31,17 @@ class Boat extends BaseEntity
     protected $title;
     
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=100, nullable=true)
      */
     protected $name;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=TRUE)
+     * @ORM\Column(type="string", length=100, nullable=true)
      */
     protected $registrationNumber;
 
     /**
-     * @ORM\Column(type="text", nullable=TRUE)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $description;
 
@@ -49,42 +51,42 @@ class Boat extends BaseEntity
     protected $address;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $brand;
     
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $model;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $length;
     
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $cabins;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $berths;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $bathrooms;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $toilets;
     
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $nr_guests;
     
@@ -180,7 +182,7 @@ class Boat extends BaseEntity
     protected $crewOptional;
 
     
-    public function __construct()
+    public function __construct(BoatAddress $boatAddress = null)
     {
         $this->image        = new ArrayCollection();
         $this->reservation  = new ArrayCollection();
@@ -192,6 +194,10 @@ class Boat extends BaseEntity
         $this->status       = 0;
         $this->active       = false;
         $this->crewOptional = false;
+        
+        if ($boatAddress !== null){
+            $this->address = $boatAddress;
+        }
     }
     
 
@@ -985,57 +991,4 @@ class Boat extends BaseEntity
         $this->updateLowestAndHighestPrice();
     }
 
-    /**
-     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
-     * @Assert\File(maxSize="2M")
-     */
-    public $imageFile;
-
-    /**
-     * Sets file.
-     *
-     * @param UploadedFile $file
-     */
-    public function setImageFile(UploadedFile $file = null)
-    {
-        $this->imageFile = $file;
-    }
-
-    /**
-     * Get file.
-     *
-     * @return UploadedFile
-     */
-    public function getImageFile()
-    {
-        return $this->imageFile;
-    }
-
-    /**
-     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
-     * @Assert\File(maxSize="2M")
-     */
-    public $documentFile;
-
-    /**
-     * Sets file.
-     *
-     * @param UploadedFile $file
-     */
-    public function setDocumentFile(UploadedFile $file = null)
-    {
-        $this->documentFile = $file;
-    }
-
-    /**
-     * Get file.
-     *
-     * @return UploadedFile
-     */
-    public function getDocumentFile()
-    {
-        return $this->documentFile;
-    }
-
-    
 }

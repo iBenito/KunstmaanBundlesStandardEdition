@@ -83,10 +83,10 @@
                             </noscript>
                         </form>
                         <div class="controls">
-                            <a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" target="_blank">View</a>
-                            <a href="{{ path('ZizooBoatBundle_Boat_Edit', {id: boat.id}) }}" target="_blank">Edit</a>
-                            <a href="{{ path('ZizooBoatBundle_Boat_EditPrice', {id: boat.id}) }}" target="_blank">Calendar</a>
-                            <a href="{{ path('ZizooBoatBundle_Boat_Delete', {id: boat.id}) }}" target="_blank">{% if boat.deleted is null %}Delete{% else %}Undelete{% endif %}</a>
+                            <a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}">View</a>
+                            <a href="{{ path(edit_route, {id: boat.id}) }}">Edit</a>
+                            <a href="{{ path(calendar_route, {id: boat.id}) }}">Calendar</a>
+                            <a href="{{ path(delete_route, {id: boat.id}) }}">{% if boat.deleted is null %}Delete{% else %}Undelete{% endif %}</a>
                         </div>
                     </div>
                 {% endfor %}

@@ -6,7 +6,7 @@
                 </div>
             {% endfor %}
 
-            <form id="delete_thread_form" novalidate="novalidate" action="{{ path('ZizooMessageBundle_delete_thread', {threadId: form.get('thread_id') }) }}" method="post" {{ form_enctype(form) }}>
+            <form id="delete_thread_form" action="{{ path('ZizooMessageBundle_delete_thread', {threadId: form.get('thread_id') }) }}" method="post" {{ form_enctype(form) }}>
                 <p>
                     {% trans %}zizoo_message.label.confirm_message_delete{% endtrans %}
                 </p>

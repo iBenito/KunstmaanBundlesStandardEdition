@@ -72,7 +72,7 @@
             <div class="register_email_container expand">
                 <div class="register_email">
                     
-                    <form class="form register_form" novalidate="novalidate" action="{{ path('ZizooUserBundle_register')}}" method="post" {{ form_enctype(form) }} class="register_form">
+                    <form class="form register_form" action="{{ path('ZizooUserBundle_register')}}" method="post" {{ form_enctype(form) }} class="register_form">
                         {{ form_errors(form) }}
                             
                         {{ form_row(form.profile.first_name) }}
@@ -82,7 +82,7 @@
                             
                         <div class="row">
                             {{ form_label(form.user.username) }}
-                            <div class="row-content">
+                            <div class="row-content root">
                             {{ form_widget(form.user.username) }}
                             </div>
                         </div>
@@ -100,7 +100,7 @@
  
                         <div class="row">
                             {{ form_label(form.user.email) }}
-                            <div class="row-content">
+                            <div class="row-content root">
                             {{ form_widget(form.user.email) }}
                             </div>
                         </div>
@@ -118,7 +118,7 @@
                             
                         <div class="row">
                             {{ form_label(form.user.password.password) }}
-                            <div class="row-content">
+                            <div class="row-content root">
                             {{ form_widget(form.user.password.password) }}
                             </div>
                         </div>
@@ -126,7 +126,7 @@
                             
                         <div class="row">
                             {{ form_label(form.user.password.confirm) }}
-                            <div class="row-content">
+                            <div class="row-content root">
                             {{ form_widget(form.user.password.confirm) }}
                             </div>
                         </div>

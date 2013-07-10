@@ -21,7 +21,7 @@
             <span><a href="{{ facebook.logoutURL({ next: url('ZizooUserBundle_register', {'relogin': 'true'}) }) }}">Not you?</a></span>
         </div>
         <div>
-            <form novalidate="novalidate" action="{{ path('ZizooUserBundle_register_facebook_link')}}" method="post" {{ form_enctype(form) }} class="facebook_register_form">
+            <form action="{{ path('ZizooUserBundle_register_facebook_link')}}" method="post" {{ form_enctype(form) }} class="facebook_register_form">
                 {{ form_errors(form) }}
 
                 <div>

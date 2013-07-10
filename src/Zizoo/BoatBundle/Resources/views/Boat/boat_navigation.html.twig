@@ -1,6 +1,13 @@
 <ul class="tabs boat clearfix">
-    <li><a href="{{ path('ZizooBoatBundle_Boat_Edit', { 'id': boat.id }) }}">Overview</a></li>
-    <li><a href="{{ path('ZizooBoatBundle_Boat_EditDetails', { 'id': boat.id }) }}">Details</a></li>
-    <li><a href="{{ path('ZizooBoatBundle_Boat_EditPhotos', { 'id': boat.id }) }}">Photos</a></li>
-    <li><a href="{{ path('ZizooBoatBundle_Boat_EditPrice', { 'id': boat.id }) }}">Price</a></li>
+    {% if boat.id is not null %}
+    <li><a href="{{ path(edit_route, { 'id': boat.id }) }}">Overview</a></li>
+    <li><a href="{{ path(details_route, { 'id': boat.id }) }}">Details</a></li>
+    <li><a href="{{ path(photos_route, { 'id': boat.id }) }}">Photos</a></li>
+    <li><a href="{{ path(calendar_route, { 'id': boat.id }) }}">Price</a></li>
+    {% else %}
+    <li><a href="#">Overview</a></li>
+    <li><a href="#">Details</a></li>
+    <li><a href="#">Photos</a></li>
+    <li><a href="#">Price</a></li>
+    {% endif %}
 </ul>

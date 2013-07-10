@@ -68,7 +68,6 @@ class ProfileType extends AbstractType
             'data_class'            => 'Zizoo\ProfileBundle\Entity\Profile',
             'cascade_validation'    => true,
             'validation_groups'     => array('Default', 'avatars'),
-            'data_class'            => 'Zizoo\ProfileBundle\Entity\Profile',
             'map_show'              => true,
             'map_update'            => false,
             'map_drag'              => false

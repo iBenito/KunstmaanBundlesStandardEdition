@@ -33,7 +33,7 @@
         </ul>
     {% endif %}
     
-    <form action="{{ path('ZizooBoatBundle_Boat_ConfirmBoatPrice', {id: boat.id}) }}" method="post" novalidate="novalidate">
+    <form action="{{ path('ZizooBoatBundle_Boat_ConfirmBoatPrice', {id: boat.id}) }}" method="post">
         {{ form_widget(form) }}
         <input name="date_from" id="date_from" type="hidden" value="{{ from }}" />
         <input name="date_to" id="date_to" type="hidden" value="{{ to }}" />

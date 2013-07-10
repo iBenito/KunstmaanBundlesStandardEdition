@@ -121,7 +121,7 @@ class BoatService {
         
     }
     
-    public function createBoat(Boat $boat, BoatAddress $address, BoatType $boatType, Charter $charter, ArrayCollection $equipment=null, $flush=false){
+    public function createBoat(Boat $boat, BoatAddress $address, BoatType $boatType = null, Charter $charter, ArrayCollection $equipment=null, $flush=false){
 
         $boat->setBoatType($boatType);
         $boat->setCharter($charter);

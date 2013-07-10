@@ -57,10 +57,9 @@
         
 {% block form_row %}
 {% spaceless %}
-    {% set default_class = '' %}
-    {% if block_prefixes|length > 1 %}
-        {% set default_class = block_prefixes[block_prefixes|length - 2]|trim %}
-    {% endif %}
+    {% set default_class = block_prefixes|parentBlockPrefix %}
+    
+    {% set default_class = form|rootLabel(default_class) %}
     
     <div class="row">
         {{ form_label(form) }}
