@@ -358,31 +358,4 @@ class Charter extends BaseEntity
     }    
     
     
-    
-    /**
-     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
-     * @Assert\File(maxSize="2M")
-     */
-    public $logoFile;
-    
-    /**
-     * Sets file.
-     *
-     * @param UploadedFile $file
-     */
-    public function setLogoFile(UploadedFile $file = null)
-    {
-        $this->logoFile = $file;
-    }
-
-    /**
-     * Get file.
-     *
-     * @return UploadedFile
-     */
-    public function getLogoFile()
-    {
-        return $this->logoFile;
-    }
-    
 }

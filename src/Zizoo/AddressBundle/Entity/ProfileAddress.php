@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 class ProfileAddress extends AddressBase {
     
     /**
-     * @ORM\ManyToOne(targetEntity="Zizoo\ProfileBundle\Entity\Profile", inversedBy="address")
+     * @ORM\OneToOne(targetEntity="Zizoo\ProfileBundle\Entity\Profile", inversedBy="address")
      */
     protected $profile;
     
