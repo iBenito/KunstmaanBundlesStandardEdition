@@ -194,16 +194,18 @@ class Boat extends BaseEntity
     
     public function __construct(BoatAddress $boatAddress = null)
     {
-        $this->image        = new ArrayCollection();
-        $this->reservation  = new ArrayCollection();
-        $this->amenities    = new ArrayCollection();
-        $this->equipment    = new ArrayCollection();
-        $this->extra        = new ArrayCollection();
-        $this->created      = new \DateTime();
-        $this->updated      = new \DateTime();
-        $this->status       = 0;
-        $this->active       = false;
-        $this->crewOptional = false;
+        $this->image            = new ArrayCollection();
+        $this->reservation      = new ArrayCollection();
+        $this->amenities        = new ArrayCollection();
+        $this->equipment        = new ArrayCollection();
+        $this->extra            = new ArrayCollection();
+        $this->created          = new \DateTime();
+        $this->updated          = new \DateTime();
+        $this->status           = 0;
+        $this->active           = false;
+        $this->crewOptional     = false;
+        $this->hasDefaultPrice  = false;
+        $this->hasMinimumDays   = false;
         
         if ($boatAddress !== null){
             $this->address = $boatAddress;
