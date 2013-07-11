@@ -12,7 +12,7 @@ class BoatValidator extends ConstraintValidator
         if ($boat->getHasDefaultPrice()){
             if (!$boat->getDefaultPrice()){
                 $this->context->addViolationAt('defaultPrice', $constraint->messageDefaultPrice, array(), null);
-            } else if (!is_int($boat->getDefaultPrice())){
+            } else if (!is_float($boat->getDefaultPrice())){
                 $this->context->addViolationAt('defaultPrice', $constraint->messageDefaultPrice, array(), null);
             }
         }
@@ -20,7 +20,7 @@ class BoatValidator extends ConstraintValidator
         if ($boat->getHasMinimumDays()){
             if (!$boat->getMinimumDays()){
                 $this->context->addViolationAt('minimumDays', $constraint->messageMinDays, array(), null);
-            }else if (!is_int($boat->getMinimumDays())){
+            }else if (!is_float($boat->getMinimumDays())){
                 $this->context->addViolationAt('minimumDays', $constraint->messageMinDays, array(), null);
             }
         }
