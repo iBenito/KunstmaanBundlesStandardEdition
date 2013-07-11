@@ -132,7 +132,7 @@ class BoatService {
         
         if ($equipment){
             foreach ($equipment as $e){
-                $this->addEquipment($boat, $e, false);
+                //$this->addEquipment($boat, $e, false);
             }
         }
         
