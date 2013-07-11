@@ -1,10 +1,26 @@
 {% extends 'ZizooUserBundle::layout.html.twig' %}
 
 {% block body %}
-    <div class="register" id="{% if ajax %}register_inner_ajax{% else %}register_inner{% endif %}">
-        <p>Your registration has been submitted. You'll receive a confirmation with an activation link shortly. Please click on this link to complete registration.</p>
-        <input type="hidden" value="submitted" id="status" />
+    <!-- start:content -->
+    <div id="content">
+        <div class="container clearfix">
+            
+            <section id="registration" class="section">
+                <header>
+                    <h1>Charter Registration</h1>
+                </header>
+                    
+                <div class="content clearfix">
+                    <div class="main">
+                        <div class="register" id="{% if ajax %}register_inner_ajax{% else %}register_inner{% endif %}">
+                            <p>Your registration has been submitted. You'll receive a confirmation with an activation link shortly. Please click on this link to complete registration.</p>
+                            <input type="hidden" value="submitted" id="status" />
+                        </div>
+                    </div>
+                </div>
+                    
+            </section>
+        </div>
     </div>
+    <!-- end:content -->
 {% endblock %}
-
-

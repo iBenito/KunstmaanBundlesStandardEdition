@@ -42,6 +42,7 @@ class RegistrationController extends Controller
             $charter    = $data->getCharter();
             $user       = $data->getRegistration()->getUser();
             $profile    = $data->getRegistration()->getProfile();
+            $profile->setAddress(new \Zizoo\AddressBundle\Entity\ProfileAddress($charter->getAddress()));
             if ($form->isValid()) {
                 $charterService = $this->get('zizoo_charter_charter_service');
                 $userService    = $this->get('zizoo_user_user_service');

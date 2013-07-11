@@ -35,9 +35,12 @@ class AddressService {
             $addressArr[] = $locality;
         }
         
-        $country = $address->getCountry()->getPrintableName();
-        if ($country && $country!=''){
-            $addressArr[] = $country;
+        $countryEntity = $address->getCountry();
+        if ($countryEntity){
+            $country = $countryEntity->getPrintableName();
+            if ($country && $country!=''){
+                $addressArr[] = $country;
+            }
         }
         
         return implode(',', $addressArr);

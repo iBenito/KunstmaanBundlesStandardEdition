@@ -95,18 +95,14 @@ class UserService
         } else {
             $user->addGroup($groupRepo->findOneByRole('ROLE_ZIZOO_USER'));
         }
-        
-        $profileAddress = new ProfileAddress();
-        $profileAddress->setProfile($profile);
-        $profile->setAddress($profileAddress);
-        
+
         $profile->setCreated($user->getCreated());
         $profile->setUpdated($user->getUpdated());
         $profile->setUser($user);
         
         $this->em->persist($user);
         $this->em->persist($profile);
-        $this->em->persist($profileAddress);
+        //$this->em->persist($profileAddress);
         $this->em->flush();
         
         return $user;

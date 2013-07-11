@@ -1,9 +1,27 @@
 {% extends 'ZizooUserBundle::layout.html.twig' %}
 
 {% block body %}
-    <p>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder?</p>
-    <p>Click the "Resend Confirmation Email" button below to resend the email</p>
-    <form method="post">
-        <input type="submit" value="Resend Confirmation Email" />
-    </form>
+    <!-- start:content -->
+    <div id="content">
+        <div class="container clearfix">
+            
+            <section id="registration" class="section">
+                <header>
+                    <h1>Charter Registration</h1>
+                </header>
+                    
+                <div class="content clearfix">
+                    <div class="main">
+                        <p>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder?</p>
+                        <p>Click the "Resend Confirmation Email" button below to resend the email</p>
+                        <form method="post">
+                            <input type="submit" value="Resend Confirmation Email" />
+                        </form>
+                    </div>
+                </div>
+                    
+            </section>
+        </div>
+    </div>
+    <!-- end:content -->
 {% endblock %}

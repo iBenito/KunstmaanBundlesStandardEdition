@@ -41,7 +41,7 @@ class Profile extends BaseEntity
     protected $about;
   
     /**
-     * @ORM\OneToOne(targetEntity="Zizoo\AddressBundle\Entity\ProfileAddress", mappedBy="profile")
+     * @ORM\OneToOne(targetEntity="Zizoo\AddressBundle\Entity\ProfileAddress", mappedBy="profile", cascade={"persist", "remove"})
      */
     protected $address;
     
@@ -104,7 +104,6 @@ class Profile extends BaseEntity
      */
     public function __construct()
     {
-        $this->addresses = new ArrayCollection();
         $this->languages = new ArrayCollection();
         $this->avatar    = new ArrayCollection();
         $notificationSettings = new NotificationSettings();
