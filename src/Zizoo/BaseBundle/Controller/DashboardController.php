@@ -18,6 +18,16 @@ use Zizoo\AddressBundle\Form\Type\SearchBoatType;
  */
 class DashboardController extends Controller {
 
+    private $routes     = array('new_route'         => 'ZizooBaseBundle_Dashboard_CharterNewBoat',
+                            'edit_route'        => 'ZizooBaseBundle_Dashboard_CharterEditBoat',
+                            'details_route'     => 'ZizooBaseBundle_Dashboard_CharterEditDetailsBoat',
+                            'photos_route'      => 'ZizooBaseBundle_Dashboard_CharterEditPhotosBoat',
+                            'calendar_route'    => 'ZizooBaseBundle_Dashboard_CharterEditPriceBoat',
+                            'confirm_route'     => 'ZizooBaseBundle_Dashboard_CharterConfirmPriceBoat',
+                            'complete_route'    => 'ZizooBaseBundle_Dashboard_CharterBoats',
+                            'delete_route'      => 'ZizooBaseBundle_Dashboard_CharterDeleteBoat'
+                            );
+    
     private function widgetCharterAction($charter, $route)
     {
         return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_widget.html.twig', array(
@@ -417,11 +427,8 @@ class DashboardController extends Controller {
     {
         $request    = $this->getRequest();
         
-        $params     = array('edit_route'        => 'ZizooBaseBundle_Dashboard_CharterEditBoat',
-                            'calendar_route'    => 'ZizooBaseBundle_Dashboard_CharterEditPriceBoat',
-                            'delete_route'      => 'ZizooBaseBundle_Dashboard_CharterDeleteBoat'
-                            );
-        $params = array_merge($params, $request->query->all());
+        $params = $request->query->all();
+        $params['routes'] = $this->routes;
         
         $response   = $this->forward('ZizooCharterBundle:Charter:boats', array('listing_status' => $listing_status), $params);
         
@@ -448,17 +455,9 @@ class DashboardController extends Controller {
     public function charterBoatAction($id=null)
     {
         $request    = $this->getRequest();
-        
-        $params     = array('new_route'         => 'ZizooBaseBundle_Dashboard_CharterNewBoat',
-                            'edit_route'        => 'ZizooBaseBundle_Dashboard_CharterEditBoat',
-                            'details_route'     => 'ZizooBaseBundle_Dashboard_CharterEditDetailsBoat',
-                            'photos_route'      => 'ZizooBaseBundle_Dashboard_CharterEditPhotosBoat',
-                            'calendar_route'    => 'ZizooBaseBundle_Dashboard_CharterEditPriceBoat',
-                            'confirm_route'     => 'ZizooBaseBundle_Dashboard_CharterConfirmPriceBoat',
-                            'complete_route'    => 'ZizooBaseBundle_Dashboard_CharterBoats',
-                            'delete_route'      => 'ZizooBaseBundle_Dashboard_CharterDeleteBoat'
-                            );
-        $params = array_merge($params, $request->query->all());
+ 
+        $params = $request->query->all();
+        $params['routes'] = $this->routes;
         
         $boatController = $request->attributes->get('boat_controller');
         

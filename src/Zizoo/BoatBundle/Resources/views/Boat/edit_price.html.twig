@@ -1,6 +1,6 @@
 {% set step = app.session.get('step') %}
 
-{% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat }  %}
+{% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['calendar_route'], 'routes': routes }  %}
 
 {% block javascripts %}
     <script type="text/javascript" src="{{ asset('js/datepick/jquery.datepick.js') }}"></script>
@@ -29,12 +29,12 @@
     </div>
     
     {% if step != "" %}
-        <a href="{{ path(complete_route) }}">Complete</a>
+        <a href="{{ path(routes['complete_route']) }}">Complete</a>
     {% endif %}
     
     
     <div id="popup" style="display: none">
-        <form action="{{ path(calendar_route, {id: boat.id}) }}" method="post">
+        <form action="{{ path(routes['calendar_route'], {id: boat.id}) }}" method="post">
             <table>
                 <tr>
                     <td><label for="date_range_text">Date range:</label></td>

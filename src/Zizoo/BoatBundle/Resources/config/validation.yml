@@ -1,8 +1,13 @@
 Zizoo\BoatBundle\Form\Model\BookBoat:
     constraints:
         - Zizoo\BoatBundle\Validator\Constraints\BookBoat: ~
+        
 
 Zizoo\BoatBundle\Entity\Boat:
+    constraints:
+        - Zizoo\BoatBundle\Validator\Constraints\Boat:
+            groups: [boat_edit]
+        
     properties:
         # Boat edit
         name:
@@ -21,31 +26,73 @@ Zizoo\BoatBundle\Entity\Boat:
                 groups: [boat_edit]
                 
         length:
+            - Range:
+                min: 0
+                max: 4294967295
+                minMessage: Your boat is too small
+                maxMessage: Your boat is too big
+                groups: [boat_edit]
+                
             - NotBlank:
                 message: Length must not be blank
                 groups: [boat_edit]
                 
         cabins:
+            - Range:
+                min: 0
+                max: 4294967295
+                minMessage: Your boat doesn't have enough cabins
+                maxMessage: Your boat has too many cabins
+                groups: [boat_edit]
+                
             - NotBlank:
                 message: Cabins must not be blank
                 groups: [boat_edit]
                 
         berths:
+            - Range:
+                min: 0
+                max: 4294967295
+                minMessage: Your boat doesn't have enough berths
+                maxMessage: Your boat has too many berths
+                groups: [boat_edit]
+                
             - NotBlank:
                 message: Berths must not be blank
                 groups: [boat_edit]
                 
         bathrooms:
-          - NotBlank:
-              message: Bathrooms must not be blank
-              groups: [boat_edit]
+            - Range:
+                min: 0
+                max: 4294967295
+                minMessage: Your boat doesn't have enough bathrooms
+                maxMessage: Your boat has too many bathrooms
+                groups: [boat_edit]
+                
+            - NotBlank:
+                message: Bathrooms must not be blank
+                groups: [boat_edit]
               
         toilets:
+            - Range:
+                min: 0
+                max: 4294967295
+                minMessage: Your boat doesn't have enough toilets
+                maxMessage: Your boat has too many toilets
+                groups: [boat_edit]
+                
             - NotBlank:
                 message: Toilets must not be blank
                 groups: [boat_edit]
                 
         nr_guests:
+            - Range:
+                min: 0
+                max: 4294967295
+                minMessage: Your boat can't handle enough guests
+                maxMessage: Your boat attempts to handle too many guests
+                groups: [boat_edit]
+                
             - NotBlank:
                 message: Number of guests must not be blank
                 groups: [boat_edit]

@@ -159,15 +159,22 @@ class BoatService {
     
     public function canDeleteBoat(Boat $boat)
     {
-        
+        return true;
     }
     
     public function deleteBoat(Boat $boat, $delete)
     {
-        $now = new \DateTime();
-        $boat->setDeleted($delete==true?$now:null);
-        $this->em->persist($boat);
-        $this->em->flush();
+        if ($this->canDeleteBoat($boat)){
+            $now = new \DateTime();
+            $boat->setDeleted($delete==true?$now:null);
+            if ($delete==true){
+                $boat->setActive(false);
+            }
+            $this->em->persist($boat);
+            $this->em->flush();
+        } else {
+            throw new \Exception('Boat cannot be deleted');
+        }
     }
     
 }

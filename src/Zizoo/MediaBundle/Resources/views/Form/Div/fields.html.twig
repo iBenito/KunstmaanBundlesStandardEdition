@@ -150,7 +150,7 @@
          
         function {{ id }}_resort(){
             $('#{{ id }}_list > div').each(function(index, el){
-                $(el).find('.order').val(index);
+                $(el).find('.order').val(index).change();
             });
         }
         
@@ -321,7 +321,7 @@
          
         function {{ id }}_resort(){
             $('#{{ id }}_list > div').each(function(index, el){
-                $(el).find('.order').val(index);
+                $(el).find('.order').val(index).change();
             });
         }
         

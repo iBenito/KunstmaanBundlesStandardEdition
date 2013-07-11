@@ -1,13 +1,13 @@
 {% set step = app.session.get('step') %}
 
-{% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat }  %}
+{% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['details_route'], 'routes': routes }  %}
 
 <div class="content">
     {% if step != "" %}
         <h3>Step {{ step }}</h3>
     {% endif %}
 
-    <form class="form" action="{{ path(formAction, { 'id': boat.id }) }}" method="post" {{ form_enctype(form) }}>
+    <form class="form" action="{{ path(routes['details_route'], { 'id': boat.id }) }}" method="post" {{ form_enctype(form) }}>
 
         {{ form_widget(form) }}
 
@@ -16,7 +16,7 @@
         {% else %}
             <button type="submit">Save</button>
         {% endif %}
-
+        <input id="override_url" name="override_url" type="hidden" value="" />
     </form>
     <script type="text/javascript">
 

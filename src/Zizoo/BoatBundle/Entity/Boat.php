@@ -107,6 +107,11 @@ class Boat extends BaseEntity
     protected $reservation;
     
     /**
+     * @ORM\Column(name="has_default_price", type="boolean")
+     */
+    protected $hasDefaultPrice;
+    
+    /**
      * @ORM\Column(name="default_price", type="decimal", precision=19, scale=4, nullable=true)
      */
     protected $defaultPrice;
@@ -160,6 +165,11 @@ class Boat extends BaseEntity
      * @ORM\Column(name="active", type="boolean")
      */
     protected $active;
+    
+    /**
+     * @ORM\Column(name="has_min_days", type="boolean")
+     */
+    protected $hasMinimumDays;
     
     /**
      * @ORM\Column(name="min_days", type="integer", nullable=true)
@@ -691,6 +701,18 @@ class Boat extends BaseEntity
         return $this->engineType;
     }
 
+    public function setHasDefaultPrice($hasDefaultPrice)
+    {
+        $this->hasDefaultPrice = $hasDefaultPrice;
+    
+        return $this;
+    }    
+    
+    public function getHasDefaultPrice()
+    {
+        return $this->hasDefaultPrice;
+    }
+    
     /**
      * Set defaultPrice
      *
@@ -869,6 +891,18 @@ class Boat extends BaseEntity
     {
         return $this->active;
     }
+    
+    public function setHasMinimumDays($hasMinimumDays)
+    {
+        $this->hasMinimumDays = $hasMinimumDays;
+        return $this;
+    }
+    
+    public function getHasMinimumDays()
+    {
+        return $this->hasMinimumDays;
+    }
+    
     
     public function setMinimumDays($minimumDays)
     {

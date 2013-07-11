@@ -1,43 +1,59 @@
 {% block content %}
-    {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat }  %}
+    {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['delete_route'], 'routes': routes }  %}
 
     <div class="content">
-        {% if boat.deleted is not null %}
-            <p>Are you sure you want to undelete this boat?</p>
-            <form action="{{ path(delete_route, { 'id': boat.id }) }}" method="post">
-                {{ form_widget(form) }}
-                <button type="submit">Yes</button>
-            </form>
-        {% else %}
-            {% if future_reservations|length > 0 %}
-                <p>This boat cannot be deleted because the following future reservations exist:</p>
-                <ul>
-                    {% for reservation in future_reservations %}
-                        <li>{{ reservation.checkIn|date }} - {{ reservation.checkOut|date }} ({{ reservation.id}})</li>
-                    {% endfor %}
-                </ul>
+        {% if can_be_deleted %}
+            {% if boat.deleted is not null %}
+                <p>Are you sure you want to undelete this boat?</p>
+                <form action="{{ path(routes['delete_route'], { 'id': boat.id }) }}" method="post">
+                    {{ form_widget(form) }}
+                    <button type="submit" class="button blue small" id="delete_btn">Yes</button>
+                </form>
             {% else %}
-                {% if reservation_requests|length > 0 %}
-                    <p>The following requested reservations will be denied:</p>
+                {% if future_reservations|length > 0 %}
+                    <p>This boat cannot be deleted because the following future reservations exist:</p>
                     <ul>
-                        {% for reservation in reservation_requests %}
+                        {% for reservation in future_reservations %}
                             <li>{{ reservation.checkIn|date }} - {{ reservation.checkOut|date }} ({{ reservation.id}})</li>
                         {% endfor %}
                     </ul>
-                {% endif %}
+                {% else %}
+                    {% if reservation_requests|length > 0 %}
+                        <p>The following requested reservations will be denied:</p>
+                        <ul>
+                            {% for reservation in reservation_requests %}
+                                <li>{{ reservation.checkIn|date }} - {{ reservation.checkOut|date }} ({{ reservation.id}})</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
 
-                <p>Are you sure you want to delete this boat?</p>
-                <form action="{{ path(delete_route, { 'id': boat.id }) }}" method="post">
-                    {{ form_widget(form) }}
-                    <button type="submit">Yes</button>
-                </form>
+                    <p>Are you sure you want to delete this boat?</p><br />
+                    <form action="{{ path(routes['delete_route'], { 'id': boat.id }) }}" method="post">
+                        {{ form_widget(form) }}
+                        <button type="submit" class="button blue small" id="delete_btn">Yes</button>
+                    </form>
+                {% endif %}
             {% endif %}
+        {% else %}
+            <p>This boat cannot be deleted</p><br />
         {% endif %}
 
 
 
-        <form action="{{ path(complete_route) }}" method="get">
-            <input type="submit" value="Cancel" />
+        <form action="{{ path(routes['complete_route']) }}" method="get">
+            <button type="submit" class="button blue small" id="cancel_btn">Cancel</button>
         </form>
+        <br />
     </div>
+
+    <style type="text/css">
+        #delete_btn {
+            float: left;
+            margin-right: 20px;
+        }
+        
+        #cancel_btn {
+            float: left;
+        }
+    </style>
 {% endblock %}

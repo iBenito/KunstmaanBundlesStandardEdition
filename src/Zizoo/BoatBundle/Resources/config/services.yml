@@ -78,6 +78,11 @@ services:
         arguments: ["@service_container"]
         tags:
             - { name: validator.constraint_validator, alias: validator.book_boat_validator }
+            
+    zizoo_boat.boat_validator:
+        class: Zizoo\BoatBundle\Validator\Constraints\BoatValidator
+        tags:
+            - { name: validator.constraint_validator, alias: validator.boat_validator }
 
    # LISTENERS
     zizoo_boat_price_listener:

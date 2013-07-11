@@ -61,7 +61,7 @@ class CharterController extends Controller
         ));
     }
     
-    public function boatsAction(Request $request, $listing_status)
+    public function boatsAction(Request $request)
     {
         $request    = $this->getRequest();
         $session    = $request->getSession();
@@ -76,13 +76,14 @@ class CharterController extends Controller
         $searchBoatName     = $request->query->get('boat_name', null);
         $searchBoatType     = $request->query->get('boat_type', null);
         $showDeleted        = $request->query->get('show_deleted', false);
-        $page               = $this->get('request')->query->get('page', 1);
-        $pageSize           = $this->get('request')->query->get('page_size', 5);
-
+        $page               = $request->query->get('page', 1);
+        $pageSize           = $request->query->get('page_size', 5);
+        $listing_status     = $request->query->get('listing_status');
+                
         $em    = $this->getDoctrine()->getManager();
         //$dql   = "SELECT b, c FROM ZizooBoatBundle:Boat b, ZizooCharterBundle:Charter c WHERE ";
         $dql = 'SELECT b, c FROM ZizooBoatBundle:Boat b JOIN b.charter c WHERE c.id = '.$charter->getId()
-                .' AND '.($showDeleted?'b.deleted IS NOT NULL':'b.deleted IS NULL');
+                .' AND '.($listing_status=='deleted'?'b.deleted IS NOT NULL':'b.deleted IS NULL');
         
         if ($searchBoatName) {
             $dql .= " AND (b.name LIKE '%".$searchBoatName."%' OR b.title LIKE '%".$searchBoatName."%')";
@@ -92,6 +93,7 @@ class CharterController extends Controller
             $dql .= " AND b.boatType = '" . $searchBoatType . "'";
         }
 
+        
         switch ($listing_status) {
             case "incomplete":
                 $dql .= " AND b.status = 0";
@@ -116,11 +118,15 @@ class CharterController extends Controller
             $pageSize/*limit per page*/
         );
         
-        $editRoute      = $request->query->get('edit_route');
-        $calendarRoute  = $request->query->get('calendar_route');
-        $deleteRoute    = $request->query->get('delete_route');
+        $routes = $request->query->get('routes');
         
         $session->remove('step');
+        
+        $listingStatuses = array(   'all'           => 'All',
+                                    'active'        => 'Active',
+                                    'incomplete'    => 'Incomplete',
+                                    'hidden'        => 'Hidden',
+                                    'deleted'       => 'Deleted',);
         
         return $this->render('ZizooCharterBundle:Charter:boats.html.twig', array(
             'pagination'        => $pagination,
@@ -132,9 +138,9 @@ class CharterController extends Controller
             'search_boat_name'  => $searchBoatName,
             'search_boat_type'  => $searchBoatType,
             'boat_types'        => $em->getRepository('ZizooBoatBundle:BoatType')->findAll(),
-            'edit_route'        => $editRoute,
-            'delete_route'      => $deleteRoute,
-            'calendar_route'    => $calendarRoute
+            'routes'            => $routes,
+            'listing_status'    => $listing_status,
+            'listing_statuses'  => $listingStatuses
         ));
     }
     

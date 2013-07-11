@@ -38,6 +38,13 @@
 
                 <input type="input" name="boat_name" placeholder="Boat Name" {% if search_boat_name %}value="{{ search_boat_name }}{% endif %}" />
 
+                <label for="listing_status">Boat Status:</label>
+                <select name="listing_status" id="listing_status">
+                    {% for key, status in listing_statuses %}
+                        <option value="{{ key }}" {% if status==listing_status %}selected="selected"{% endif %}>{{ status }}</option>
+                    {% endfor %}
+                </select>
+                
                 <label for="boat_type">Boat Type:</label>
                 <select name="boat_type" autocomplete="off">
                     <option value="">All</option>
@@ -56,8 +63,8 @@
                         <option value="50" {% if page_size==50 %}selected="selected" {% endif %}>50</option>
                     </select>
                 </div>
-
-                <button type="submit">Filter</button>
+                
+                <button type="submit" class="button blue small">Filter</button>
             </form>
         </div>
 
@@ -72,7 +79,7 @@
                         {% endif %}
                     </div>
                     <div class="boat_details">
-                        <h3 class="boat_name">{{ boat.name }}</h3>
+                        <h3 class="boat_name">{{ boat.name is not null ? boat.name : boat.created|date }}</h3>
                         <h4 class="boat_title">{{ boat.title }}</h4>
                         <form action="{{ path('ZizooBoatBundle_Boat_Active', {id: boat.id}) }}" method="post">
                             <input type="hidden" name="boat_id" value="{{ boat.id }}" />
@@ -84,9 +91,9 @@
                         </form>
                         <div class="controls">
                             <a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}">View</a>
-                            <a href="{{ path(edit_route, {id: boat.id}) }}">Edit</a>
-                            <a href="{{ path(calendar_route, {id: boat.id}) }}">Calendar</a>
-                            <a href="{{ path(delete_route, {id: boat.id}) }}">{% if boat.deleted is null %}Delete{% else %}Undelete{% endif %}</a>
+                            <a href="{{ path(routes['edit_route'], {id: boat.id}) }}">Edit</a>
+                            <a href="{{ path(routes['calendar_route'], {id: boat.id}) }}">Calendar</a>
+                            <a href="{{ path(routes['delete_route'], {id: boat.id}) }}">{% if boat.deleted is null %}Delete{% else %}Undelete{% endif %}</a>
                         </div>
                     </div>
                 {% endfor %}
@@ -105,7 +112,8 @@
         </style>
 
         <script type="text/javascript">
-
+            var routes;
+            
             function doBlock(block){
                 if (block){
                     $('#navigation_container').block({ message: null }); 
@@ -127,9 +135,9 @@
                     $(this).change(function(){
                         doBlock(true);
                         $.ajax({
-                            type: 'post', 
+                            type: 'post',
                             url: '{{ path('ZizooBoatBundle_Boat_Active') }}',
-                            data: $(this).parent('form').serialize(),
+                            data: $(this).parent('form').serialize()+'&'+$('#filter_form').serialize()+$.param(routes),
                             success: function(data, textStatus, XHR){
                                 doBlock(false);
                             }
@@ -168,6 +176,10 @@
             }
 
             $(document).ready(function(){
+
+                routes = { 
+                    routes: {{ routes|json_encode|raw }}
+                };
 
                 setupFilter();
 

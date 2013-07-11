@@ -235,13 +235,13 @@ class BoatController extends Controller
         $charter    = $user->getCharter();
         $session    = $this->get('session');
         
-        $newRoute       = $request->query->get('new_route');
-        $editRoute      = $request->query->get('edit_route');
-        $detailsRoute   = $request->query->get('details_route');
+        $routes         = $request->query->get('routes');
         
         $session->set('step', 'one');
         
         $boat = new Boat(new BoatAddress($charter->getAddress()));
+        $boat->setHasDefaultPrice(false);
+        $boat->setHasMinimumDays(false);
         
         $form = $this->createForm(new BoatType(), $boat, array('validation_groups' => array('boat_create'), 'required' => false));
         
@@ -258,15 +258,22 @@ class BoatController extends Controller
                 $boatService = $this->get('boat_service');
                 $boatCreated = $boatService->createBoat($boat, $boat->getAddress(), $boat->getBoatType(), $charter, null, true);
 
-                return $this->redirect($this->generateUrl($detailsRoute, array('id' => $boatCreated->getId())));
+                $overrideUrl = $request->request->get('override_url', null);
+                if ($overrideUrl){
+                    $url = $this->generateUrl($overrideUrl, array('id' => $boatCreated->getId()));
+                } else {
+                    $url = $this->generateUrl($routes['details_route'], array('id' => $boatCreated->getId()));
+                } 
+                
+                return $this->redirect($url);
             }
         }
         
         
         return $this->render('ZizooBoatBundle:Boat:new_edit.html.twig', array(
             'boat'          => $boat,
-            'formAction'    => $newRoute,
-            'form'          => $form->createView()
+            'form'          => $form->createView(),
+            'routes'        => $routes
         ));
     }
 
@@ -286,10 +293,7 @@ class BoatController extends Controller
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
         
-        $editRoute      = $request->query->get('edit_route');
-        $detailsRoute   = $request->query->get('details_route');
-        $photosRoute    = $request->query->get('photos_route');
-        $calendarRoute  = $request->query->get('calendar_route');
+        $routes         = $request->query->get('routes');
         
         $step = $session->get('step');
         if ($step){
@@ -297,7 +301,8 @@ class BoatController extends Controller
         }
         $validationGroup = $step?'boat_create':'boat_edit';
         
-        $form = $this->createForm(new BoatType(), $boat, array('validation_groups'  => array($validationGroup), 'required' => $step===null));
+        $form = $this->createForm(new BoatType(), $boat, array( 'validation_groups'     => array($validationGroup), 
+                                                                'required'              => $step===null));
         
         if ($request->isMethod('post')){
             $form->bind($request);
@@ -310,24 +315,23 @@ class BoatController extends Controller
                 $em->persist($boat);
                 $em->flush();
 
-                if ($step){
-                    $route = $detailsRoute;
+                $overrideUrl = $request->request->get('override_url', null);
+                if ($overrideUrl){
+                    $url = $overrideUrl;
+                } else if ($step){
+                    $url = $this->generateUrl($routes['details_route'], array('id' => $id));
                 } else {
-                    $route = $editRoute;
+                    $url = $this->generateUrl($routes['edit_route'], array('id' => $id));
                 }
                 
-                return $this->redirect($this->generateUrl($route, array('id' => $id)));
+                return $this->redirect($url);
             }
         }
 
         return $this->render('ZizooBoatBundle:Boat:new_edit.html.twig', array(
             'boat'              => $boat,
-            'formAction'        => $editRoute,
-            'form'              => $form->createView(),
-            'edit_route'        => $editRoute,
-            'details_route'     => $detailsRoute,
-            'photos_route'      => $photosRoute,
-            'calendar_route'    => $calendarRoute
+            'routes'            => $routes,
+            'form'              => $form->createView()
         ));
     }
 
@@ -345,10 +349,7 @@ class BoatController extends Controller
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
         
-        $editRoute      = $request->query->get('edit_route');
-        $detailsRoute   = $request->query->get('details_route');
-        $photosRoute    = $request->query->get('photos_route');
-        $calendarRoute  = $request->query->get('calendar_route');
+        $routes         = $request->query->get('routes');
         
         $session = $this->get('session');
         $step = $session->get('step');
@@ -370,25 +371,23 @@ class BoatController extends Controller
                 $em->flush();
 
 
-                if ($step){
-                    $route = $photosRoute;
+                $overrideUrl = $request->request->get('override_url', null);
+                if ($overrideUrl){
+                    $url = $overrideUrl;
+                } else if ($step){
+                    $url = $this->generateUrl($routes['photos_route'], array('id' => $id));
+                } else {
+                    $url = $this->generateUrl($routes['details_route'], array('id' => $id));
                 }
-                else{
-                    $route = $detailsRoute;
-                }
-
-                return $this->redirect($this->generateUrl($route, array('id' => $id)));
+                
+                return $this->redirect($url);
             }
         }
         
         return $this->render('ZizooBoatBundle:Boat:edit_details.html.twig', array(
             'boat'              => $boat,
-            'formAction'        => $detailsRoute,
-            'form'              => $form->createView(),
-            'edit_route'        => $editRoute,
-            'details_route'     => $detailsRoute,
-            'photos_route'      => $photosRoute,
-            'calendar_route'    => $calendarRoute
+            'routes'            => $routes,
+            'form'              => $form->createView()
         ));
     }
 
@@ -404,10 +403,7 @@ class BoatController extends Controller
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
 
-        $editRoute      = $request->query->get('edit_route');
-        $detailsRoute   = $request->query->get('details_route');
-        $photosRoute    = $request->query->get('photos_route');
-        $calendarRoute  = $request->query->get('calendar_route');
+        $routes         = $request->query->get('routes');
         
         $session = $this->get('session');
         $step = $session->get('step');
@@ -432,25 +428,23 @@ class BoatController extends Controller
 
                 $em->flush();
                 
-                if ($step){
-                    $route = $calendarRoute;
+                $overrideUrl = $request->request->get('override_url', null);
+                if ($overrideUrl){
+                    $url = $overrideUrl;
+                } else if ($step){
+                    $url = $this->generateUrl($routes['calendar_route'], array('id' => $id));
+                } else {
+                    $url = $this->generateUrl($routes['photos_route'], array('id' => $id));
                 }
-                else{
-                    $route = $photosRoute;
-                }
-                
-                return $this->redirect($this->generateUrl($route, array('id' => $id)));
+    
+                return $this->redirect($url);
             }
         }
 
         return $this->render('ZizooBoatBundle:Boat:edit_photos.html.twig', array(
             'boat'              => $boat,
-            'formAction'        => $photosRoute,
-            'form'              => $imagesForm->createView(),
-            'edit_route'        => $editRoute,
-            'details_route'     => $detailsRoute,
-            'photos_route'      => $photosRoute,
-            'calendar_route'    => $calendarRoute
+            'routes'            => $routes,
+            'form'              => $imagesForm->createView()
         ));
 
     }
@@ -523,11 +517,13 @@ class BoatController extends Controller
                 throw $this->createNotFoundException('Unable to find Boat entity.');
             }
 
+            $routes = $request->request->get('routes');
+            
             $imagesForm = $this->createForm($this->get('zizoo_boat.boat_image_type'), $boat);
 
             return $this->render('ZizooBoatBundle:Boat:edit_photos.html.twig', array(
                 'boat'          => $boat,
-                'formAction'    => $request->get('_route'),
+                'routes'        => $routes,
                 'form'          => $imagesForm->createView()
             ));
         } catch (\Exception $e){
@@ -559,16 +555,7 @@ class BoatController extends Controller
             $session->set('step', 'four');
         }
         
-        $editRoute      = $request->query->get('edit_route');
-        $detailsRoute   = $request->query->get('details_route');
-        $photosRoute    = $request->query->get('photos_route');
-        $calendarRoute  = $request->query->get('calendar_route');
-        $completeRoute  = $request->query->get('complete_route');
-        $confirmRoute   = $request->query->get('confirm_route');
-        
-        $params = array('calendar_route'    => $calendarRoute,
-                        'confirm_route'     => $confirmRoute,
-                        'complete_route'    => $completeRoute);
+        $routes = $request->query->get('routes');
         
         $reservations   = $boat->getReservation();
         $prices         = $boat->getPrice();
@@ -600,7 +587,7 @@ class BoatController extends Controller
                     }
                     
                     $session->set('overlap_'.$id, array('requested_reservations' => $requestedIds, 'external_reservations' => $externalIds, 'from' => $fromStr, 'to' => $toStr, 'price' => $p, 'type' => $type));
-                    return $this->redirect($this->generateUrl($confirmRoute, array('id' => $id), $params));
+                    return $this->redirect($this->generateUrl($routes['confirm_route'], array('id' => $id), $request->query->all()));
                 }
             }
             
@@ -614,14 +601,14 @@ class BoatController extends Controller
                 } catch (DBALException $e){
                     $this->container->get('session')->getFlashBag()->add('error', 'Something went wrong');
                 }
-                return $this->redirect($this->generateUrl($calendarRoute, array('id' => $id), $params));
+                return $this->redirect($this->generateUrl($routes['calendar_route'], array('id' => $id), $request->query->all()));
             } else if ($type=='unavailability'){
                 try {
                     $reservationAgent->makeReservationForSelf($boat, $from, $to, true);
                 } catch (InvalidReservationException $e){
                     $this->container->get('session')->getFlashBag()->add('error', $e->getMessage());
                 }
-                return $this->redirect($this->generateUrl($calendarRoute, array('id' => $id), $params));
+                return $this->redirect($this->generateUrl($routes['calendar_route'], array('id' => $id), $request->query->all()));
             }
         }
         
@@ -631,11 +618,7 @@ class BoatController extends Controller
             'boat'              => $boat,
             'reservations'      => $reservations,
             'prices'            => $prices,
-            'edit_route'        => $editRoute,
-            'details_route'     => $detailsRoute,
-            'photos_route'      => $photosRoute,
-            'calendar_route'    => $calendarRoute,
-            'complete_route'    => $completeRoute
+            'routes'            => $routes
         ));
     }
 
@@ -659,12 +642,7 @@ class BoatController extends Controller
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
         
-        $editRoute      = $request->query->get('edit_route');
-        $detailsRoute   = $request->query->get('details_route');
-        $photosRoute    = $request->query->get('photos_route');
-        $calendarRoute  = $request->query->get('calendar_route');
-        $deleteRoute    = $request->query->get('delete_route');
-        $completeRoute  = $request->query->get('complete_route');
+        $routes         = $request->query->get('routes');
         
         $form = $this->createDeleteForm($id);
         
@@ -680,6 +658,8 @@ class BoatController extends Controller
                                                             null, $now,
                                                             array(Reservation::STATUS_ACCEPTED, Reservation::STATUS_HOLD), null);
         
+        $canBeDeleted = $boatService->canDeleteBoat($boat);
+        
         if ($request->isMethod('post')){
             $form->bind($request);
 
@@ -688,7 +668,7 @@ class BoatController extends Controller
                 try {
                     
                     $delete = $boat->getDeleted()==null;
-                    if ($delete){
+                    if ($delete && $canBeDeleted){
                         // Reject any outstanding reservation requests
                         foreach ($reservationRequests as $reservationRequest){
                             $reservationAgent->denyReservation($reservationRequest, false);
@@ -704,10 +684,10 @@ class BoatController extends Controller
                         $this->container->get('session')->getFlashBag()->add('notice', $boat->getName() . ' was undeleted successfully');
                     }
                 } catch (\Exception $e){
-                    $this->container->get('session')->getFlashBag()->add('error', $boat->getName() . ' was not deleted successfully, because' . $e->getMessage());
+                    $this->container->get('session')->getFlashBag()->add('error', $boat->getName() . ' was not deleted successfully, because ' . $e->getMessage());
                 }
                 
-                return $this->redirect($this->generateUrl($completeRoute));
+                return $this->redirect($this->generateUrl($routes['complete_route']));
             }
         }
 
@@ -716,12 +696,8 @@ class BoatController extends Controller
             'reservation_requests'              => $reservationRequests,
             'future_reservations'               => $futureReservations,
             'form'                              => $form->createView(),
-            'edit_route'                        => $editRoute,
-            'details_route'                     => $detailsRoute,
-            'photos_route'                      => $photosRoute,
-            'calendar_route'                    => $calendarRoute,
-            'delete_route'                      => $deleteRoute,
-            'complete_route'                    => $completeRoute
+            'routes'                            => $routes,
+            'can_be_deleted'                    => $canBeDeleted
         ));
         
     }
@@ -747,24 +723,18 @@ class BoatController extends Controller
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
         
-        $calendarRoute  = $request->query->get('calendar_route');
-        $confirmRoute   = $request->query->get('confirm_route');
-        $completeRoute  = $request->query->get('complete_route');
-        
-        $params = array('calendar_route'    => $calendarRoute,
-                        'confirm_route'     => $confirmRoute,
-                        'complete_route'    => $completeRoute);
+        $routes         = $request->query->get('routes');
         
         $overlap        = $session->get('overlap_'.$id);
         if (!$overlap){
-            return $this->redirect($this->generateUrl($calendarRoute, array('id' => $id), $params));
+            return $this->redirect($this->generateUrl($routes['calendar_route'], array('id' => $id), $request->query->all()));
         }
         
         $requestedIds   = $overlap['requested_reservations'];
         $externalIds    = $overlap['external_reservations'];
         
         if (count($requestedIds)==0 && count($externalIds)==0){
-            return $this->redirect($this->generateUrl($calendarRoute, array('id' => $id), $params));
+            return $this->redirect($this->generateUrl($routes['calendar_route'], array('id' => $id), $request->query->all()));
         }
         
         $overlapRequestedReservations = array();
@@ -797,7 +767,7 @@ class BoatController extends Controller
                 }
                 
                 //return $this->forward('ZizooBoatBundle:Boat:boatPrice', array('id' => $id));
-                return $this->redirect($this->generateUrl($calendarRoute, array('id' => $id), $params));
+                return $this->redirect($this->generateUrl($routes['calendar_route'], array('id' => $id), $request->query->all()));
             }
         }
         
@@ -810,6 +780,7 @@ class BoatController extends Controller
             'to'                                => $overlap['to'],
             'price'                             => $overlap['price'],
             'type'                              => $overlap['type'],
+            'routes'                            => $routes
         ));
     }
         
@@ -839,8 +810,10 @@ class BoatController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($boat);
         $em->flush();
-
-        return $this->redirect($this->generateUrl('ZizooCharterBundle_Charter_Boats'));
+        
+        $listing_status = $request->request->get('listing_status');
+        
+        return $this->forward('ZizooCharterBundle:Charter:boats', array('listing_status' => $listing_status), $request->request->all());
     }
     
 

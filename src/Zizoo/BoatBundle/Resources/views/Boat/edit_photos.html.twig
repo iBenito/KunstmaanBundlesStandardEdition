@@ -1,6 +1,6 @@
 {% set step = app.session.get('step') %}
 
-{% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat }  %}
+{% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['photos_route'], 'routes': routes }  %}
 
 <div class="content">
     {% if step != "" %}
@@ -12,6 +12,19 @@
         </div>
     {% endfor %}
 
+    <h2>Boat Gallery</h2>
+
+    <form class="form" action="{{ path(routes['photos_route'], { 'id': boat.id }) }}" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+        
+        {% if step != "" %}
+            <button type="submit">Continue</button>
+        {% else %}
+            <button type="submit">Save</button>
+        {% endif %}
+        <input id="override_url" name="override_url" type="hidden" value="" />
+    </form>
+    
     <script type="text/javascript">
         var uploadedFiles = new Array();
 
@@ -25,7 +38,10 @@
         function getPhotos(){
             $.ajax({
                 url:        '{{ path('ZizooBoatBundle_Boat_GetPhotos', {id: boat.id}) }}',
-                type:       'get',
+                type:       'post',
+                data:       {
+                    routes: {{ routes|json_encode|raw }}
+                },
                 success:    function(data, textStatus, XHR){
                     var newPhotos = $(data).find('#zizoo_boat_image_image_list .zizoo_media_container');
                     $('#zizoo_boat_image_image_list .zizoo_media_container').remove();
@@ -88,19 +104,11 @@
                 }
             });
         }
+        
+        $(document).ready(function(){
+            changed = false;
+        });
 
     </script>
-
-    <h2>Boat Gallery</h2>
-
-    <form class="form" action="{{ path(formAction, { 'id': boat.id }) }}" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-        
-        {% if step != "" %}
-            <button type="submit">Continue</button>
-        {% else %}
-            <button type="submit">Save</button>
-        {% endif %}
-    </form>
 </div>
 

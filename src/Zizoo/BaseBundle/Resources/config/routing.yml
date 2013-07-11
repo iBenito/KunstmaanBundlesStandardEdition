@@ -148,11 +148,11 @@ ZizooBaseBundle_Dashboard_CharterPayoutSettings:
 
 # CHARTER BOATS
 ZizooBaseBundle_Dashboard_CharterBoats:
-    pattern:  /charter/account/dashboard/boats/{listing_status}
+    pattern:  /charter/account/dashboard/boats
     defaults: { _controller: ZizooBaseBundle:Dashboard:charterBoats, listing_status: all }
     requirements:
         _method:  GET
-        listing_status:  active|incomplete|hidden|all
+        listing_status:  active|incomplete|hidden|deleted|all
         
 
 ZizooBaseBundle_Dashboard_CharterNewBoat:
