@@ -99,9 +99,9 @@ class VerificationController extends Controller
                 $em->persist($user);
                 $em->flush();
                 $facebook->setAccessToken(null);
-                $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.unverify_facebook_success'). ' ' . $e->getMessage());
+                $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.unverify_facebook_success'));
             } else {
-                $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.unverify_facebook_error'). ' ' . $e->getMessage());
+                $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.unverify_facebook_error'));
             }
             return $this->redirect($this->generateUrl('ZizooUserBundle_Verification_VerifyFacebook'));
         } catch (FacebookApiException $e){
