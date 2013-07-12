@@ -1,0 +1,52 @@
+{% extends 'ZizooUserBundle::layout.html.twig' %}
+
+{% block body %}
+    <div class="facebook_verify" id="{% if ajax %}facebook_verify_inner_ajax{% else %}facebook_verify_inner{% endif %}">
+        
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+            <div class="flash-notice">
+                {{ flashMessage}}
+            </div>
+        {% endfor %}
+        
+        {% for flashMessage in app.session.flashbag.get('error') %}
+            <div class="flash-error">
+                {{ flashMessage}}
+            </div>
+        {% endfor %}
+        
+        {% if user.facebookUid is null %}
+            {% if fb_redirect and data is not null %}
+                <div id="fb_profile">
+                    <img src="https://graph.facebook.com/{{ data['id'] }}/picture?redirect=true" />
+                    <span>{{ data['name'] }}</span>
+                    <span><a href="{{ facebook.logoutURL({ next: url('ZizooUserBundle_Verification_VerifyFacebook', {fb_redirect: false}) }) }}">Not you?</a></span>
+                </div>
+                <div>
+                    <form action="{{ path('ZizooUserBundle_Verification_VerifyFacebook')}}" method="post" {{ form_enctype(form) }} class="facebook_verify_form">
+                        {{ form_widget(form) }}
+                        <button type="submit">Verify with Facebook</button>
+                    </form>
+                </div
+            {% else %}
+                <a href="{{ facebook.loginUrl({ scope: 'email', redirect_uri: url('ZizooUserBundle_Verification_VerifyFacebook', {fb_redirect: true}) }) }}">Verify with Facebook</a>
+            {% endif %}
+        {% else %}
+            {% if data is not null %}
+                <div id="fb_profile">
+                    <img src="https://graph.facebook.com/{{ data['id'] }}/picture?redirect=true" />
+                    <span>{{ data['name'] }}</span>
+                </div>
+                <div>
+                    <form action="{{ path('ZizooUserBundle_Verification_UnverifyFacebook')}}" method="post" {{ form_enctype(form) }} class="facebook_verify_form">
+                        {{ form_widget(form) }}
+                        <button type="submit">Unverify with Facebook</button>
+                    </form>
+                </div>
+            {% else %}
+                <a href="{{ facebook.loginUrl({ scope: 'email', redirect_uri: url('ZizooUserBundle_Verification_VerifyFacebook', {fb_redirect: true}) }) }}">Verify with Facebook</a>
+            {% endif %}
+        {% endif %}
+        
+    </div>
+{% endblock %}

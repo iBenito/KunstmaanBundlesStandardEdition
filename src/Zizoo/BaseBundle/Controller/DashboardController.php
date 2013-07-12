@@ -38,14 +38,13 @@ class DashboardController extends Controller {
     
     private function widgetUserAction($user, $route, $showUser)
     {
-        $profileService = $this->get('profile_service');
-        $profileCompleteness = $profileService->getCompleteness($user->getProfile());
+        $facebook       = $this->get('facebook');
 
         return $this->render('ZizooBaseBundle:Dashboard:user_widget.html.twig', array(
             'user'      => $user,
             'route'     => $route,
             'show_user' => $showUser,
-            'profile_completeness' => $profileCompleteness
+            'facebook'  => $facebook
         ));
     }
     

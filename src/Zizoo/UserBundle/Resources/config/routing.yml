@@ -121,3 +121,18 @@ ZizooUserBundle_User_AccountSettings:
   defaults:   {_controller: ZizooUserBundle:User:accountSettings }
   requirements:
         _method:  GET|POST 
+        
+        
+        
+# Verification
+ZizooUserBundle_Verification_VerifyFacebook:
+  pattern:    /account/verify/facebook
+  defaults:   {_controller: ZizooUserBundle:Verification:verifyFacebook }
+  requirements:
+        _method:  GET|POST 
+        
+ZizooUserBundle_Verification_UnverifyFacebook:
+  pattern:    /account/unverify/facebook
+  defaults:   {_controller: ZizooUserBundle:Verification:unverifyFacebook }
+  requirements:
+        _method:  POST 

@@ -1,1 +1,59 @@
 {% extends 'ZizooBaseBundle::layout.html.twig' %}
+
+{% block body %}
+
+    <!-- start:content -->
+    <div id="content">
+        <div class="container clearfix">
+
+            <!-- start:sidebar -->
+            <aside id="sidebar" class="left clearfix">
+                <!-- start:avatar -->
+                <div class="avatar">
+                    <figure id="user_avatar">
+                        {% if user.profile.avatar|length > 0 %}
+                            <img src="{{ asset(user.profile.avatar.first|pictureWebPath|imagine_filter('thumb_190x_')) }}" alt="{{ user.profile.firstName }} {{ user.profile.lastName }}" class="large" id="avatar_img" />
+                        {% else %}
+                            <img src="{{ asset('bundles/zizoobase/images/default/avatar-user.png'|imagine_filter('thumb_190x_')) }}" alt="Profile avatar not set" id="avatar_img" />
+                        {% endif %}
+                        <figcaption>
+                            {{ user.profile.firstName }} {{ user.profile.lastName }}
+                        </figcaption>
+                    </figure>
+                    <section class="completeness">
+                        {{ user.profile|profileCompleteness }}
+                    </section>
+                    <a href="{{ path('ZizooBaseBundle_Dashboard_Skills') }}" class="button blue big" title="Add Skills">Add Skills</a>
+                </div>
+                <!-- end:avatar -->
+
+                <!-- start:verifications -->
+                <section class="verifications">
+                    <h4>Verifications</h4>
+                    <ul>
+                        <li class="phone verificated"><span></span>Phone <span class="icon check black"></span></li>
+                        <li class="facebook verificated"><span></span>Facebook <span class="icon check white"></span></li>
+                        <li class="twitter"><span></span>Twitter <span class="icon cross"></span></li>
+                    </ul>
+                </section>
+                <!-- end:verifications -->
+            </aside>
+            <!-- end:sidebar -->
+
+            <!-- start:dashboard -->
+            <div id="dashboard">
+
+                <!-- start:section -->
+                <section class="section">
+                    {% block tabs %}{% endblock %}
+                    {% block content %}{% endblock %}
+                    {% block sub_content %}{% endblock %}
+                </section>
+                <!-- end:section -->
+            </div>
+            <!-- end:dashboard -->
+        </div>
+    </div>
+    <!-- end:content -->
+
+{% endblock %}

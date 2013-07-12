@@ -2,43 +2,7 @@
 
 {% trans_default_domain "labels" %}
 
-{% block body %}
+{% block sidebar %}
+{% endblock %}
 
-    <div class="span4 hero-unit">
-        <section class="user">
-            <h2>PICTURE BOX</h2>
-            <div class="avatar">
-                {% if user.profile.picture is not null %}
-                    <img src="{{ asset(user.profile|pictureWebPath) }}" alt="image not found" class="large" />
-                {% endif %}
-            </div>
-            <p>{{ user.profile.firstName }} {{ user.profile.lastName }}</p>
-        </section>
-            
-    </div>
 
-    <div class="span8 hero-unit">
-        <header>
-            <h2>Profile</h2>
-        </header>
-            
-        <section class="details" id="profile">
-            <h3>{% trans %}zizoo_profile.label.about{% endtrans %}</h3>
-            <p>{{ user.profile.about }}</p>
-            <section class="addresses" id="profile_addresses">
-                <h3>{% trans %}zizoo_profile.label.address{% endtrans %}</h3>
-                {% if user.profile.address is not null %}
-                    <p>{{ user.profile.address.locality }}</p>
-                {% endif %}
-            </section>
-            <section class="languages" id="profile_languages">
-                <h3>{% trans %}zizoo_profile.label.languages{% endtrans %}</h3>
-                {% for language in user.profile.languages %}
-                    <p>{{ language.name }}</p>
-                {% endfor %}
-            </section>
-        </section>
-
-    </div>
-  
-{% endblock %} 

@@ -171,7 +171,7 @@ class RegistrationController extends Controller
             
             return $this->doLogin($user, $this->generateUrl('ZizooCharterBundle_Registration_confirmed'));
         } else {
-            return $this->redirect($this->generateUrl('ZizooCharterBundle_register'));
+            return $this->redirect($this->generateUrl('ZizooCharterBundle_Registration_register'));
         }
         
     }

@@ -52,8 +52,38 @@
                                 <h2>Main Contact</h2>
                                 {{ form_row(form.registration.profile.first_name) }}
                                 {{ form_row(form.registration.profile.last_name) }}
-                                {{ form_row(form.registration.user.username) }}
-                                {{ form_row(form.registration.user.email) }}
+                                <div class="row">
+                                    {{ form_label(form.registration.user.username) }}
+                                    <div class="row-content root">
+                                    {{ form_widget(form.registration.user.username) }}
+                                    </div>
+                                </div>
+                                {{ form_errors(form.registration.user.username) }}
+                                {% if unconfirmed_username %}
+                                    <div class="row-errors-container">
+                                        <div class="row-errors">
+                                            <ul>
+                                                <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooCharterBundle_Registration_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                <div class="row">
+                                    {{ form_label(form.registration.user.email) }}
+                                    <div class="row-content root">
+                                    {{ form_widget(form.registration.user.email) }}
+                                    </div>
+                                </div>
+                                {{ form_errors(form.registration.user.email) }}
+                                {% if unconfirmed_email %}
+                                    <div class="row-errors-container">
+                                        <div class="row-errors">
+                                            <ul>
+                                                <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooCharterBundle_Registration_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                {% endif %}
                                 {{ form_row(form.registration.user.password) }}
 
                                 {{ form_rest(form) }}

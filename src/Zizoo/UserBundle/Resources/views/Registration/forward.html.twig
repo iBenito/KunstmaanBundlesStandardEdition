@@ -3,7 +3,7 @@
     <body>
         <script type="text/javascript">
             {% if ajax %}
-                window.opener.{{action}}Callback();
+                window.opener.{{action}}Callback('{{ url(action) }}');
                 window.close();
             {% else %}
                 window.opener.location.href = '{{ url(action) }}';
