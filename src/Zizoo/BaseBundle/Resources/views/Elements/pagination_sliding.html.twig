@@ -1,0 +1,34 @@
+{# Zizoo Sliding pagination control implementation #}
+
+{% if pageCount > 1 %}
+
+<!-- start:pagination -->
+<div class="pagination">
+    
+    {% if previous is defined %}
+        <a href="{{ path(route, query|merge({(pageParameterName): previous})) }}" class="arrow prev" title="Previous">
+            <span></span>Previous
+        </a>
+    {% endif %}
+
+    <ol class="clearfix">
+    {% for page in pagesInRange %}
+        {% if page != current %}
+            <li><a href="{{ path(route, query|merge({(pageParameterName): page})) }}">{{ page }}</a></li>
+        {% else %}
+            <li class="current"><a href="{{ path(route, query|merge({(pageParameterName): page})) }}">{{ page }}</a></li>
+        {% endif %}
+
+    {% endfor %}
+    </ol>
+
+    {% if next is defined %}
+        <a href="{{ path(route, query|merge({(pageParameterName): next})) }}" class="arrow next" title="Next">
+            Next<span></span>
+        </a>
+    {% endif %}
+
+</div>
+<!-- end:pagination -->
+
+{% endif %}
