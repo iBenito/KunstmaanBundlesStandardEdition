@@ -22,6 +22,8 @@ class VerificationController extends Controller
         $isPost     = $request->isMethod('POST');
         $fbRedirect = $request->query->get('fb_redirect', false);
         
+        $routes     = $request->query->get('routes');
+        
         $trans      = $this->get('translator');
         
         $facebook   = $this->get('facebook');       
@@ -42,10 +44,10 @@ class VerificationController extends Controller
         $defaultData = array();
         if ($fbRedirect){
             $existingUser = $em->getRepository('ZizooUserBundle:User')->findOneByEmail($obj['email']);
-            if ($existingUser && $existingUser->getId() != $user->getId()){
-                $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_user.verify_facebook_error'). ' a user with email address '.$existingUser->getEmail().' already exists');
-                return $this->redirect($this->generateUrl('ZizooUserBundle_Verification_VerifyFacebook'));
-            }
+//            if ($existingUser && $existingUser->getId() != $user->getId()){
+//                $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_user.verify_facebook_error'). ' a user with email address '.$existingUser->getEmail().' already exists');
+//                return $this->redirect($this->generateUrl($routes['verify_facebook_route']));
+//            }
             $defaultData = array('facebookUID' => $obj['id']);
         }
 
@@ -66,7 +68,7 @@ class VerificationController extends Controller
                 $em->flush();
                 
                 $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.verify_facebook_success'));
-                return $this->redirect($this->generateUrl('ZizooUserBundle_Verification_VerifyFacebook'));
+                return $this->redirect($this->generateUrl($routes['verify_facebook_route']));
             }
         }
         
@@ -75,7 +77,8 @@ class VerificationController extends Controller
                                                                                         'data'                  => $obj,
                                                                                         'facebook'              => $facebook, 
                                                                                         'ajax'                  => $request->isXmlHttpRequest(),
-                                                                                        'fb_redirect'           => $fbRedirect));
+                                                                                        'fb_redirect'           => $fbRedirect,
+                                                                                        'routes'                => $routes));
     }
     
     
@@ -84,6 +87,8 @@ class VerificationController extends Controller
         $user       = $this->getUser();
         $request    = $this->getRequest();
 
+        $routes     = $request->query->get('routes');
+        
         $trans      = $this->get('translator');
         
         $facebook   = $this->get('facebook');       
@@ -103,13 +108,13 @@ class VerificationController extends Controller
             } else {
                 $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.unverify_facebook_error'));
             }
-            return $this->redirect($this->generateUrl('ZizooUserBundle_Verification_VerifyFacebook'));
+            return $this->redirect($this->generateUrl($routes['verify_facebook_route']));
         } catch (FacebookApiException $e){
             $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_user.unverify_facebook_error'). ' ' . $e->getMessage());
-            return $this->redirect($this->generateUrl('ZizooUserBundle_Verification_VerifyFacebook'));
+            return $this->redirect($this->generateUrl($routes['verify_facebook_route']));
         } catch (\Exception $e){
             $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_user.unverify_facebook_error'). ' ' . $e->getMessage());
-            return $this->redirect($this->generateUrl('ZizooUserBundle_Verification_VerifyFacebook'));
+            return $this->redirect($this->generateUrl($routes['verify_facebook_route']));
         }
         
     }

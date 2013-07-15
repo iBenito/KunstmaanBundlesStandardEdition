@@ -25,9 +25,9 @@
     <ul id="user_verifications">
         <li class="phone verificated"><span></span>Phone <span class="icon check black"></span></li>
         {% if user.facebookUid is not null %}
-        <li class="facebook verificated"><a href="{{ path('ZizooUserBundle_Verification_VerifyFacebook') }}"><span></span>Facebook <span class="icon check white"></span></a></li>
+        <li class="facebook verificated"><a href="{{ path('ZizooBaseBundle_Dashboard_VerifyFacebook') }}"><span></span>Facebook <span class="icon check white"></span></a></li>
         {% else %}
-        <li class="facebook"><a href="{{ path('ZizooUserBundle_Verification_VerifyFacebook') }}"><span></span>Facebook <span class="icon cross"></span></a></li>
+        <li class="facebook"><a href="{{ path('ZizooBaseBundle_Dashboard_VerifyFacebook') }}"><span></span>Facebook <span class="icon cross"></span></a></li>
         {% endif %}
         <li class="twitter"><span></span>Twitter <span class="icon cross"></span></li>
     </ul>
