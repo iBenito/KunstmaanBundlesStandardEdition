@@ -1861,7 +1861,7 @@
     background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#47c2d2), color-stop(50%,#44baca));
     background: -webkit-linear-gradient(top, #47c2d2 50%,#44baca 50%);
     background: -o-linear-gradient(top, #47c2d2 50%,#44baca 50%);
-    background: -ms-linear-gradient(top, #47c2d2 50%,##44baca 50%);
+    background: -ms-linear-gradient(top, #47c2d2 50%,#44baca 50%);
     background: linear-gradient(to bottom, #47c2d2 50%,#44baca 50%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#47c2d2", endColorstr="#44baca",GradientType=0);
 }
@@ -1876,6 +1876,27 @@
     background: -ms-linear-gradient(top, #ffffff 50%,#fafafa 50%);
     background: linear-gradient(to bottom, #ffffff 50%,#fafafa 50%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff", endColorstr="#fafafa",GradientType=0);
+}
+
+.tabs .disabled a,
+.tabs .disabled a:hover
+{
+    display: block;
+    font: italic 400 11px/30px 'Asap', Arial;
+    color: #e0e0e0;
+    padding: 0 0 0 7px;
+    background: -moz-linear-gradient(top, #696969 50%, #6e6e6e 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#6e6e6e), color-stop(50%,#6e6e6e));
+    background: -webkit-linear-gradient(top, #696969 50%,#6e6e6e 50%);
+    background: -o-linear-gradient(top, #696969 50%,#6e6e6e 50%);
+    background: -ms-linear-gradient(top, #696969 50%,#6e6e6e 50%);
+    background: linear-gradient(to bottom, #696969 50%,#6e6e6e 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4d4d4d', endColorstr='#474747',GradientType=0);
+    -webkit-box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4);
+    -moz-box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4);
+    box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4);
+    border-radius: 5px 5px 0 0;
+    cursor: default;
 }
 
 .tabs .icon {

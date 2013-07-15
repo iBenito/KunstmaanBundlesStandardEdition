@@ -33,7 +33,7 @@
         </ul>
     {% endif %}
     
-    <form action="{{ path('ZizooBoatBundle_Boat_ConfirmBoatPrice', {id: boat.id}) }}" method="post" novalidate="novalidate">
+    <form action="{{ path(routes['confirm_route'], {id: boat.id}) }}" method="post">
         {{ form_widget(form) }}
         <input name="date_from" id="date_from" type="hidden" value="{{ from }}" />
         <input name="date_to" id="date_to" type="hidden" value="{{ to }}" />
@@ -47,7 +47,7 @@
         {% endif %}
     </form>
         
-    <form action="{{ path('ZizooBoatBundle_Boat_EditPrice', {id: boat.id}) }}" method="get">
+    <form action="{{ path(routes['calendar_route'], {id: boat.id}) }}" method="get">
         <input type="submit" value="Cancel" />
     </form>
     <script type="text/javascript">

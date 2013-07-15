@@ -11,8 +11,13 @@ class FilterBoatType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
      
-        $builder->add('boat_type', 'zizoo_boat_type_selector', array('expanded'     => true,
-                                                                        'multiple'  => true));
+        $builder->add('boat_type', 'entity', array(
+                                                    'class'     => 'ZizooBoatBundle:BoatType',
+                                                    'multiple'  => true,
+                                                    'expanded'  => true,
+                                                    'property'  => 'name',
+                                                    'label'     => array(   'value' => 'Boat Type',
+                                                                            'class' => 'filter')));
         
         $builder->add('length_from', 'hidden', array('required'      => false,
                                                         'by_reference'  => false));

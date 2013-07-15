@@ -5,6 +5,8 @@ use Zizoo\ProfileBundle\Entity\Profile;
 
 class ProfileService {
 
+    const MAX_PROFILE_COMPLETENESS = 3;
+    
     private $em;
 
     public function __construct($em) {

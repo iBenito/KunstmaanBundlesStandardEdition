@@ -25,4 +25,12 @@ services:
         tags:
             - { name: form.event_listener, alias: 'zizoo_profile_listener' }
             
+            
+    # TWIG EXTENSIONS
+    zizoo_profile.twig.profile_extension:
+        class: Zizoo\ProfileBundle\Twig\ProfileExtension
+        arguments:
+            container:      "@service_container"
+        tags:
+            - { name: twig.extension }
  

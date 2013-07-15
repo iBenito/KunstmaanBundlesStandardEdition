@@ -1,0 +1,39 @@
+{% set step = app.session.get('step') %}
+
+{% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['edit_route'], 'routes': routes }  %}
+
+<div class="content">
+    {% if step != "" %}
+        <h3>Step {{ step }}</h3>
+    {% endif %}
+
+    {% set formPath = boat.id is null ? path(routes['new_route']) : path(routes['edit_route'], { 'id': boat.id }) %}
+    <form class="form" action="{{ formPath }}" method="post" {{ form_enctype(form) }}>
+
+        {{ form_widget(form) }}
+
+        {% if step != "" %}
+            <button type="submit">Continue</button>
+        {% else %}
+            <button type="submit">Save</button>
+        {% endif %}
+        <input id="override_url" name="override_url" type="hidden" value="" />
+    </form>
+    <script type="text/javascript">
+
+        function changeCrew(){
+            if ($('#zizoo_boat_crew_optional input[name="zizoo_boat[crew_optional]"]:checked').val()=='1'){
+                $('#zizoo_boat_num_crew').attr('disabled', null);
+                $('#zizoo_boat_crew_price').attr('disabled', null);
+            } else {
+                $('#zizoo_boat_num_crew').attr('disabled', 'disabled');
+                $('#zizoo_boat_crew_price').attr('disabled', 'disabled');
+            }
+        }
+
+        $(document).ready(function(){
+            $('#zizoo_boat_crew_optional input[name="zizoo_boat[crew_optional]"]').change(changeCrew).change();
+            changed = false;
+        });
+    </script>
+</div>

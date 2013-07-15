@@ -7,10 +7,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-use Zizoo\UserBundle\Form\Type\FacebookNewRegistrationType;
-use Zizoo\UserBundle\Form\Type\FacebookNewUserType;
-use Zizoo\UserBundle\Form\Type\FacebookLinkRegistrationType;
-use Zizoo\UserBundle\Form\Type\FacebookLinkUserType;
+use Zizoo\UserBundle\Form\Type\Facebook\FacebookNewRegistrationType;
+use Zizoo\UserBundle\Form\Type\Facebook\FacebookNewUserType;
+use Zizoo\UserBundle\Form\Type\Facebook\FacebookLinkRegistrationType;
+use Zizoo\UserBundle\Form\Type\Facebook\FacebookLinkUserType;
 use Zizoo\UserBundle\Form\Type\UserType;
 use Zizoo\UserBundle\Form\Type\UserForgotPasswordType;
 use Zizoo\UserBundle\Form\Model\Registration;

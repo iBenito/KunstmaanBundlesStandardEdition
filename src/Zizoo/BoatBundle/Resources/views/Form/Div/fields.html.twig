@@ -19,10 +19,24 @@
                     <tr>
                         <td>{{ form_label(form.num_crew) }}</td>
                         <td>{{ form_widget(form.num_crew) }}</td>
+                        {% if form.num_crew.vars.errors|length > 0 %}
+                        <tr>
+                            <td colspan="2">
+                                {{ form_errors(form.num_crew) }}
+                            </td>
+                        </tr>
+                        {% endif %}
                     </tr>
                     <tr>
                         <td>{{ form_label(form.crew_price) }}</td>
                         <td>{{ form_widget(form.crew_price) }}</td>
+                        {% if form.crew_price.vars.errors|length > 0 %}
+                        <tr>
+                            <td colspan="2">
+                                {{ form_errors(form.crew_price) }}
+                            </td>
+                        </tr>
+                        {% endif %}
                     </tr>
                 </table>
                 
@@ -37,15 +51,21 @@
         #{{ id }}_table_inner.hidden {
             display: none;
         }
+        
+        #{{ form.crew_optional.vars.id }}{
+            padding: 16px 0;
+        }
     </style>
     <script type="text/javascript">
         function {{id }}_changeCrew(){
             var crewOptional = $('#{{ form.crew_optional.vars.id }} input[name="{{ form.crew_optional.vars.full_name }}"]:checked').val();
             if (crewOptional=='1'){
+                $('#{{ id }}_table_inner input').attr('disabled', null);
                 $('#{{ id }}_table_inner').show('slide', 500, function(){
                     $(this).removeClass('hidden');
                 });
             } else {
+                $('#{{ id }}_table_inner input').attr('disabled', 'disabled');
                 $('#{{ id }}_table_inner').hide('slide', 500, function(){
                     $(this).addClass('hidden');
                 });

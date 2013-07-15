@@ -51,13 +51,13 @@ ZizooBoatBundle_Boat_GetPhotos:
 
 ZizooBoatBundle_Boat_EditPrice:
     pattern:  /charter/account/boat/{id}/edit/price
-    defaults: { _controller: ZizooBoatBundle:Boat:boatPrice }
+    defaults: { _controller: ZizooBoatBundle:Boat:editPrice }
     requirements:
         _method:  GET|POST
         id: \d+
 
 ZizooBoatBundle_Boat_ConfirmBoatPrice:
-    pattern:  /charter/account/boat/{id}/confirm-price
+    pattern:  /charter/account/boat/{id}/price/confirm
     defaults: { _controller: ZizooBoatBundle:Boat:boatConfirmPrice }
     requirements:
         _method:  GET|POST

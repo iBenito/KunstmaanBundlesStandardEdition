@@ -2,6 +2,8 @@
 
 namespace Zizoo\BoatBundle\Entity;
 
+use Zizoo\AddressBundle\Entity\BoatAddress;
+
 use Zizoo\BaseBundle\Entity\BaseEntity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -29,17 +31,17 @@ class Boat extends BaseEntity
     protected $title;
     
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=100, nullable=true)
      */
     protected $name;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=TRUE)
+     * @ORM\Column(type="string", length=100, nullable=true)
      */
     protected $registrationNumber;
 
     /**
-     * @ORM\Column(type="text", nullable=TRUE)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $description;
 
@@ -49,42 +51,42 @@ class Boat extends BaseEntity
     protected $address;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $brand;
     
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $model;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $length;
     
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $cabins;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $berths;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $bathrooms;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $toilets;
     
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $nr_guests;
     
@@ -103,6 +105,11 @@ class Boat extends BaseEntity
      * @ORM\OneToMany(targetEntity="Zizoo\ReservationBundle\Entity\Reservation", mappedBy="boat")
      */
     protected $reservation;
+    
+    /**
+     * @ORM\Column(name="has_default_price", type="boolean")
+     */
+    protected $hasDefaultPrice;
     
     /**
      * @ORM\Column(name="default_price", type="decimal", precision=19, scale=4, nullable=true)
@@ -160,6 +167,11 @@ class Boat extends BaseEntity
     protected $active;
     
     /**
+     * @ORM\Column(name="has_min_days", type="boolean")
+     */
+    protected $hasMinimumDays;
+    
+    /**
      * @ORM\Column(name="min_days", type="integer", nullable=true)
      */
     protected $minimumDays;
@@ -180,18 +192,24 @@ class Boat extends BaseEntity
     protected $crewOptional;
 
     
-    public function __construct()
+    public function __construct(BoatAddress $boatAddress = null)
     {
-        $this->image        = new ArrayCollection();
-        $this->reservation  = new ArrayCollection();
-        $this->amenities    = new ArrayCollection();
-        $this->equipment    = new ArrayCollection();
-        $this->extra        = new ArrayCollection();
-        $this->created      = new \DateTime();
-        $this->updated      = new \DateTime();
-        $this->status       = 0;
-        $this->active       = false;
-        $this->crewOptional = false;
+        $this->image            = new ArrayCollection();
+        $this->reservation      = new ArrayCollection();
+        $this->amenities        = new ArrayCollection();
+        $this->equipment        = new ArrayCollection();
+        $this->extra            = new ArrayCollection();
+        $this->created          = new \DateTime();
+        $this->updated          = new \DateTime();
+        $this->status           = 0;
+        $this->active           = false;
+        $this->crewOptional     = false;
+        $this->hasDefaultPrice  = false;
+        $this->hasMinimumDays   = false;
+        
+        if ($boatAddress !== null){
+            $this->address = $boatAddress;
+        }
     }
     
 
@@ -685,6 +703,18 @@ class Boat extends BaseEntity
         return $this->engineType;
     }
 
+    public function setHasDefaultPrice($hasDefaultPrice)
+    {
+        $this->hasDefaultPrice = $hasDefaultPrice;
+    
+        return $this;
+    }    
+    
+    public function getHasDefaultPrice()
+    {
+        return $this->hasDefaultPrice;
+    }
+    
     /**
      * Set defaultPrice
      *
@@ -864,6 +894,18 @@ class Boat extends BaseEntity
         return $this->active;
     }
     
+    public function setHasMinimumDays($hasMinimumDays)
+    {
+        $this->hasMinimumDays = $hasMinimumDays;
+        return $this;
+    }
+    
+    public function getHasMinimumDays()
+    {
+        return $this->hasMinimumDays;
+    }
+    
+    
     public function setMinimumDays($minimumDays)
     {
         $this->minimumDays = $minimumDays;
@@ -985,57 +1027,4 @@ class Boat extends BaseEntity
         $this->updateLowestAndHighestPrice();
     }
 
-    /**
-     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
-     * @Assert\File(maxSize="2M")
-     */
-    public $imageFile;
-
-    /**
-     * Sets file.
-     *
-     * @param UploadedFile $file
-     */
-    public function setImageFile(UploadedFile $file = null)
-    {
-        $this->imageFile = $file;
-    }
-
-    /**
-     * Get file.
-     *
-     * @return UploadedFile
-     */
-    public function getImageFile()
-    {
-        return $this->imageFile;
-    }
-
-    /**
-     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
-     * @Assert\File(maxSize="2M")
-     */
-    public $documentFile;
-
-    /**
-     * Sets file.
-     *
-     * @param UploadedFile $file
-     */
-    public function setDocumentFile(UploadedFile $file = null)
-    {
-        $this->documentFile = $file;
-    }
-
-    /**
-     * Get file.
-     *
-     * @return UploadedFile
-     */
-    public function getDocumentFile()
-    {
-        return $this->documentFile;
-    }
-
-    
 }

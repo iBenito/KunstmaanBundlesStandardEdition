@@ -28,7 +28,7 @@ class AddressController extends Controller
      * @author Alex Fuckert <alexf83@gmail.com>
      */
     public function locationsAction(Request $request){       
-        $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat(), array('filter' => true));
+        $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat(), array('filter' => true, 'label' => array('value' => false)));
         
         $form->bind($request);
         $searchBoat = $form->getData();

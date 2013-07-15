@@ -61,12 +61,14 @@ class CharterController extends Controller
         ));
     }
     
-    public function boatsAction(Request $request, $listing_status)
+    public function boatsAction(Request $request)
     {
+        $request    = $this->getRequest();
+        $session    = $request->getSession();
         $user       = $this->getUser();
         $charter    = $user->getCharter();
         if (!$charter){
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_CharterDashboard'));
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
         }
         
         $sort               = $request->query->get('sort', 'b.id');
@@ -74,13 +76,14 @@ class CharterController extends Controller
         $searchBoatName     = $request->query->get('boat_name', null);
         $searchBoatType     = $request->query->get('boat_type', null);
         $showDeleted        = $request->query->get('show_deleted', false);
-        $page               = $this->get('request')->query->get('page', 1);
-        $pageSize           = $this->get('request')->query->get('page_size', 5);
-
+        $page               = $request->query->get('page', 1);
+        $pageSize           = $request->query->get('page_size', 5);
+        $listing_status     = $request->query->get('listing_status');
+                
         $em    = $this->getDoctrine()->getManager();
         //$dql   = "SELECT b, c FROM ZizooBoatBundle:Boat b, ZizooCharterBundle:Charter c WHERE ";
         $dql = 'SELECT b, c FROM ZizooBoatBundle:Boat b JOIN b.charter c WHERE c.id = '.$charter->getId()
-                .' AND '.($showDeleted?'b.deleted IS NOT NULL':'b.deleted IS NULL');
+                .' AND '.($listing_status=='deleted'?'b.deleted IS NOT NULL':'b.deleted IS NULL');
         
         if ($searchBoatName) {
             $dql .= " AND (b.name LIKE '%".$searchBoatName."%' OR b.title LIKE '%".$searchBoatName."%')";
@@ -90,6 +93,7 @@ class CharterController extends Controller
             $dql .= " AND b.boatType = '" . $searchBoatType . "'";
         }
 
+        
         switch ($listing_status) {
             case "incomplete":
                 $dql .= " AND b.status = 0";
@@ -114,6 +118,16 @@ class CharterController extends Controller
             $pageSize/*limit per page*/
         );
         
+        $routes = $request->query->get('routes');
+        
+        $session->remove('step');
+        
+        $listingStatuses = array(   'all'           => 'All',
+                                    'active'        => 'Active',
+                                    'incomplete'    => 'Incomplete',
+                                    'hidden'        => 'Hidden',
+                                    'deleted'       => 'Deleted',);
+        
         return $this->render('ZizooCharterBundle:Charter:boats.html.twig', array(
             'pagination'        => $pagination,
             'direction'         => $dir,
@@ -123,7 +137,10 @@ class CharterController extends Controller
             'request_uri'       => $request->getSchemeAndHttpHost().$request->getRequestUri(),
             'search_boat_name'  => $searchBoatName,
             'search_boat_type'  => $searchBoatType,
-            'boat_types'        => $em->getRepository('ZizooBoatBundle:BoatType')->findAll()
+            'boat_types'        => $em->getRepository('ZizooBoatBundle:BoatType')->findAll(),
+            'routes'            => $routes,
+            'listing_status'    => $listing_status,
+            'listing_statuses'  => $listingStatuses
         ));
     }
     
@@ -139,9 +156,8 @@ class CharterController extends Controller
         $charter    = $user->getCharter();
         
         if (!$charter) {
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_CharterDashboard'));
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
         }
-        
         
         $charterType = $this->container->get('zizoo_charter.charter_type');
         $form = $this->createForm($charterType, $charter, array('map_drag'          => true, 
@@ -154,7 +170,6 @@ class CharterController extends Controller
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
                 
-                
                 //setting the updated field manually for file upload DO NOT REMOVE
                 $charter->setUpdated(new \DateTime());
                 
@@ -166,7 +181,7 @@ class CharterController extends Controller
                 
                 $em->flush();
                 $this->get('session')->setFlash('notice', 'Your charter profile was updated!');
-                return $this->redirect($this->generateUrl('ZizooCharterBundle_Charter_Edit'));
+                return $this->redirect($this->generateUrl($request->query->get('redirect_route')));
             }
             
         }
@@ -204,7 +219,7 @@ class CharterController extends Controller
         $charter            = $user->getCharter();
         
         if (!$charter) {
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_CharterDashboard'));
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
         }
         
         $billingUser = $charter->getBillingUser();
@@ -242,12 +257,12 @@ class CharterController extends Controller
                         );
                     } else {
                         $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_billing.payout_settings_not_changed'));
-                        return $this->redirect($this->generateUrl('ZizooCharterBundle_Charter_PayoutSettings'));
+                        return $this->redirect($this->generateUrl($request->query->get('redirect_route')));
                     }
 
                     if ($updateResult->success){
                         $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_billing.payout_settings_changed'));
-                        return $this->redirect($this->generateUrl('ZizooCharterBundle_Charter_PayoutSettings'));
+                        return $this->redirect($this->generateUrl($request->query->get('redirect_route')));
                     } else {
                         $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_billing.payout_settings_not_changed'));
                     }
@@ -309,7 +324,7 @@ class CharterController extends Controller
         $charter    = $user->getCharter();
         
         if (!$charter) {
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_CharterDashboard'));
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
         }
         
         
@@ -325,7 +340,7 @@ class CharterController extends Controller
         $charter    = $user->getCharter();
         
         if (!$charter) {
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_CharterDashboard'));
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
         }
         
         $router     = $this->container->get('router');
@@ -545,7 +560,7 @@ class CharterController extends Controller
         $charter    = $user->getCharter();
         
         if (!$charter) {
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_CharterDashboard'));
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
         }
         
         $router     = $this->container->get('router');
@@ -743,6 +758,10 @@ class CharterController extends Controller
         $user       = $this->getUser();
         $charter    = $user->getCharter();
         
+        if (!$charter){
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
+        }
+        
         $reservation   = $em->getRepository('ZizooReservationBundle:Reservation')->find($id);
         if (!$reservation){
             return $this->redirect($this->generateUrl('ZizooCharterBundle_Charter_Bookings'));
@@ -829,7 +848,7 @@ class CharterController extends Controller
         $charter    = $user->getCharter();
         
         if (!$charter) {
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_CharterDashboard'));
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
         }
         
         

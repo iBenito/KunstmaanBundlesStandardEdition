@@ -66,7 +66,9 @@
                 <input type="hidden" class="page_num" value="{{ page }} " />
                 <input type="hidden" class="request_uri" value="{{ request_uri }} " />
                 {% for boat in pagination %}
+
                     {% include "ZizooCharterBundle:Charter:boat_admin_bar.html.twig" with { boat: boat } %}
+
                 {% endfor %}
             </div>
         </div>
@@ -83,7 +85,8 @@
         </style>
 
         <script type="text/javascript">
-
+            var routes;
+            
             function doBlock(block){
                 if (block){
                     $('#navigation_container').block({ message: null }); 
@@ -105,9 +108,9 @@
                         $('input[name=active]', form).val( $(this).hasClass("off") ? 0 : 1 );
                         
                         $.ajax({
-                            type: 'post', 
+                            type: 'post',
                             url: '{{ path('ZizooBoatBundle_Boat_Active') }}',
-                            data: $(this).parent('form').serialize(),
+                            data: $(this).parent('form').serialize()+'&'+$('#filter_form').serialize()+$.param(routes),
                             success: function(data, textStatus, XHR){
                                 doBlock(false);
                             }
@@ -146,6 +149,10 @@
             }
 
             $(document).ready(function(){
+
+                routes = { 
+                    routes: {{ routes|json_encode|raw }}
+                };
 
                 setupFilter();
 

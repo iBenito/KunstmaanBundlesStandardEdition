@@ -38,11 +38,6 @@ class BoatAssetBase
      */
     private $order;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Zizoo\BoatBundle\Entity\Boat", mappedBy="equipment")
-     */
-    protected $boats;
-
 
     public function __construct($id=null, $name=null, $order=null) {
         $this->id       = $id;
@@ -113,36 +108,6 @@ class BoatAssetBase
         return $this->order;
     }
 
-    /**
-     * Add boats
-     *
-     * @param \Zizoo\BoatBundle\Entity\Boat $boats
-     * @return Equipment
-     */
-    public function addBoat(\Zizoo\BoatBundle\Entity\Boat $boats)
-    {
-        $this->boats[] = $boats;
-
-        return $this;
-    }
-
-    /**
-     * Remove boats
-     *
-     * @param \Zizoo\BoatBundle\Entity\Boat $boats
-     */
-    public function removeBoat(\Zizoo\BoatBundle\Entity\Boat $boats)
-    {
-        $this->boats->removeElement($boats);
-    }
-
-    /**
-     * Get boats
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getBoats()
-    {
-        return $this->boats;
-    }
+   
+    
 }

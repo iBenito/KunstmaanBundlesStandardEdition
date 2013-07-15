@@ -18,6 +18,16 @@ use Zizoo\AddressBundle\Form\Type\SearchBoatType;
  */
 class DashboardController extends Controller {
 
+    private $routes     = array('new_route'         => 'ZizooBaseBundle_Dashboard_CharterNewBoat',
+                            'edit_route'        => 'ZizooBaseBundle_Dashboard_CharterEditBoat',
+                            'details_route'     => 'ZizooBaseBundle_Dashboard_CharterEditDetailsBoat',
+                            'photos_route'      => 'ZizooBaseBundle_Dashboard_CharterEditPhotosBoat',
+                            'calendar_route'    => 'ZizooBaseBundle_Dashboard_CharterEditPriceBoat',
+                            'confirm_route'     => 'ZizooBaseBundle_Dashboard_CharterConfirmPriceBoat',
+                            'complete_route'    => 'ZizooBaseBundle_Dashboard_CharterBoats',
+                            'delete_route'      => 'ZizooBaseBundle_Dashboard_CharterDeleteBoat'
+                            );
+    
     private function widgetCharterAction($charter, $route)
     {
         return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_widget.html.twig', array(
@@ -28,14 +38,13 @@ class DashboardController extends Controller {
     
     private function widgetUserAction($user, $route, $showUser)
     {
-        $profileService = $this->get('profile_service');
-        $profileCompleteness = $profileService->getCompleteness($user->getProfile());
+        $facebook       = $this->get('facebook');
 
         return $this->render('ZizooBaseBundle:Dashboard:user_widget.html.twig', array(
             'user'      => $user,
             'route'     => $route,
             'show_user' => $showUser,
-            'profile_completeness' => $profileCompleteness
+            'facebook'  => $facebook
         ));
     }
     
@@ -148,11 +157,11 @@ class DashboardController extends Controller {
     public function inboxAction()
     {
         $request    = $this->getRequest();
-        $response   = $this->forward('ZizooMessageBundle:Message:inbox', array(), array('inbox_url' => 'ZizooBaseBundle_Dashboard_Inbox',
-                                                                                        'sent_url'  => 'ZizooBaseBundle_Dashboard_Sent'));
+        $response   = $this->forward('ZizooMessageBundle:Message:inbox', array(), array('inbox_url'     => 'ZizooBaseBundle_Dashboard_Inbox',
+                                                                                        'sent_url'      => 'ZizooBaseBundle_Dashboard_Sent'));
         
         if ($response->isRedirect()){
-            return $this->redirect($this->generateUrl($request->get('_route')));
+            return $this->redirect($response->headers->get('Location'));
         }
         
         return $this->render('ZizooBaseBundle:Dashboard:inbox.html.twig', array(
@@ -173,8 +182,9 @@ class DashboardController extends Controller {
                                                                                         'sent_url'  => 'ZizooBaseBundle_Dashboard_Sent'));
         
         if ($response->isRedirect()){
-            return $this->redirect($this->generateUrl($request->get('_route')));
+            return $this->redirect($response->headers->get('Location'));
         }
+        
         
         $user = $this->getUser();
         $charter = $user->getCharter();
@@ -192,10 +202,10 @@ class DashboardController extends Controller {
     public function profileAction()
     {
         $request    = $this->getRequest();
-        $response   = $this->forward('ZizooProfileBundle:Profile:edit');
+        $response   = $this->forward('ZizooProfileBundle:Profile:edit', array(), array('redirect_route'    => $request->get('_route')));
         
         if ($response->isRedirect()){
-            return $this->redirect($this->generateUrl($request->get('_route')));
+            return $this->redirect($response->headers->get('Location'));
         }
         
         return $this->render('ZizooBaseBundle:Dashboard:profile.html.twig', array(
@@ -212,10 +222,10 @@ class DashboardController extends Controller {
     public function accountSettingsAction()
     {
         $request    = $this->getRequest();
-        $response   = $this->forward('ZizooUserBundle:User:accountSettings');
+        $response   = $this->forward('ZizooUserBundle:User:accountSettings', array(), array('redirect_route'    => $request->get('_route')));
         
         if ($response->isRedirect()){
-            return $this->redirect($this->generateUrl($request->get('_route')));
+           return $this->redirect($response->headers->get('Location'));
         }
         
         return $this->render('ZizooBaseBundle:Dashboard:account_settings.html.twig', array(
@@ -243,10 +253,10 @@ class DashboardController extends Controller {
     public function tripsAction()
     {
         $request    = $this->getRequest();
-        $response   = $this->forward('ZizooBookingBundle:Booking:viewAllBookings');
+        $response   = $this->forward('ZizooBookingBundle:Booking:viewAllBookings', array(), array('redirect_route'  => $request->get('_route')));
         
         if ($response->isRedirect()){
-            return $this->redirect($this->generateUrl($request->get('_route')));
+            return $this->redirect($response->headers->get('Location'));
         }
         
         $user = $this->getUser();
@@ -266,15 +276,18 @@ class DashboardController extends Controller {
     public function charterProfileAction()
     {
         $request    = $this->getRequest();
-        $response   = $this->forward('ZizooCharterBundle:Charter:profile');
+        $response   = $this->forward('ZizooCharterBundle:Charter:profile', array(), array(  'redirect_route'        => $request->get('_route'),
+                                                                                            'unauthorized_route'    => 'ZizooBaseBundle_Dashboard_CharterDashboard'));
         
         if ($response->isRedirect()){
-            return $this->redirect($this->generateUrl($request->get('_route')));
+            return $this->redirect($response->headers->get('Location'));
         }
         
         $user = $this->getUser();
         $charter = $user->getCharter();
-        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_profile.html.twig', array(
+        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter.html.twig', array(
+            'title'     => 'My Charter Profile',
+            'current'   => 'profile',
             'id'        => $charter->getId(),
             'response'  => $response->getContent()
         ));
@@ -292,12 +305,14 @@ class DashboardController extends Controller {
                                                                                         'sent_url'  => 'ZizooBaseBundle_Dashboard_CharterSent'));
         
         if ($response->isRedirect()){
-            return $this->redirect($this->generateUrl($request->get('_route')));
+            return $this->redirect($response->headers->get('Location'));
         }
         
         $user = $this->getUser();
         $charter = $user->getCharter();
-        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_inbox.html.twig', array(
+        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter.html.twig', array(
+            'title'     => 'My Inbox',
+            'current'   => 'inbox',
             'id'        => $charter->getId(),
             'response'  => $response->getContent()
         ));
@@ -315,12 +330,14 @@ class DashboardController extends Controller {
                                                                                         'sent_url'  => 'ZizooBaseBundle_Dashboard_CharterSent'));
         
         if ($response->isRedirect()){
-            return $this->redirect($this->generateUrl($request->get('_route')));
+            return $this->redirect($response->headers->get('Location'));
         }
         
         $user = $this->getUser();
         $charter = $user->getCharter();
-        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_sent.html.twig', array(
+        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter.html.twig', array(
+            'title'     => 'My Sent Messages',
+            'current'   => 'inbox',
             'id'        => $charter->getId(),
             'response'  => $response->getContent()
         ));
@@ -334,15 +351,17 @@ class DashboardController extends Controller {
     public function charterBookingsAction()
     {
         $request    = $this->getRequest();
-        $response   = $this->forward('ZizooCharterBundle:Charter:bookings');
+        $response   = $this->forward('ZizooCharterBundle:Charter:bookings', array(), array('redirect_route' => $request->get('_route')));
         
         if ($response->isRedirect()){
-            return $this->redirect($this->generateUrl($request->get('_route')));
+            return $this->redirect($response->headers->get('Location'));
         }
         
         $user = $this->getUser();
         $charter = $user->getCharter();
-        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_bookings.html.twig', array(
+        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter.html.twig', array(
+            'title'     => 'My Bookings',
+            'current'   => 'boats',
             'id'        => $charter->getId(),
             'response'  => $response->getContent()
         ));
@@ -356,41 +375,22 @@ class DashboardController extends Controller {
     public function charterPaymentsAction()
     {
         $request    = $this->getRequest();
-        $response   = $this->forward('ZizooCharterBundle:Charter:payments');
+        $response   = $this->forward('ZizooCharterBundle:Charter:payments', array(), array('redirect_route' => $request->get('_route')));
         
         if ($response->isRedirect()){
-            return $this->redirect($this->generateUrl($request->get('_route')));
+            return $this->redirect($response->headers->get('Location'));
         }
         
         $user = $this->getUser();
         $charter = $user->getCharter();
-        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_payments.html.twig', array(
+        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter.html.twig', array(
+            'title'     => 'My Payments',
+            'current'   => 'payments',
             'id'        => $charter->getId(),
             'response'  => $response->getContent()
         ));
     }
     
-    /**
-     * Display Charter Boats
-     *
-     * @return Response
-     */
-    public function charterBoatsAction($listing_status)
-    {
-        $request    = $this->getRequest();
-        $response   = $this->forward('ZizooCharterBundle:Charter:boats', array('listing_status' => $listing_status), $request->query->all());
-        
-        if ($response->isRedirect()){
-            return $this->redirect($this->generateUrl($request->get('_route')));
-        }
-        
-        $user = $this->getUser();
-        $charter = $user->getCharter();
-        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_boats.html.twig', array(
-            'id'        => $charter->getId(),
-            'response'  => $response->getContent()
-        ));
-    }
     
     /**
      * Display Charter Payout Settings
@@ -400,20 +400,84 @@ class DashboardController extends Controller {
     public function charterPayoutSettingsAction()
     {
         $request    = $this->getRequest();
-        $response   = $this->forward('ZizooCharterBundle:Charter:payoutSettings');
+        $response   = $this->forward('ZizooCharterBundle:Charter:payoutSettings', array(), array('redirect_route' => $request->get('_route')));
         
         if ($response->isRedirect()){
-            return $this->redirect($this->generateUrl($request->get('_route')));
+            return $this->redirect($response->headers->get('Location'));
         }
         
         $user = $this->getUser();
         $charter = $user->getCharter();
-        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_payout_settings.html.twig', array(
+        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter.html.twig', array(
+            'title'     => 'My Payout Settings',
+            'current'   => 'settings',
             'id'        => $charter->getId(),
             'response'  => $response->getContent()
         ));
     }
     
+    
+    /**
+     * Display Charter Boats
+     *
+     * @return Response
+     */
+    public function charterBoatsAction($listing_status)
+    {
+        $request    = $this->getRequest();
+        
+        $params = $request->query->all();
+        $params['routes'] = $this->routes;
+        
+        $response   = $this->forward('ZizooCharterBundle:Charter:boats', array('listing_status' => $listing_status), $params);
+        
+        if ($response->isRedirect()){
+            return $this->redirect($response->headers->get('Location'));
+        }
+        
+        $user = $this->getUser();
+        $charter = $user->getCharter();
+        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter.html.twig', array(
+            'title'     => 'My Boats',
+            'current'   => 'boats',
+            'id'        => $charter->getId(),
+            'response'  => $response->getContent()
+        ));
+    }
+    
+    
+    /**
+     * Display charter add boat 
+     *
+     * @return Response
+     */
+    public function charterBoatAction($id=null)
+    {
+        $request    = $this->getRequest();
+ 
+        $params = $request->query->all();
+        $params['routes'] = $this->routes;
+        
+        $boatController = $request->attributes->get('boat_controller');
+        
+        $response   = $this->forward($boatController, array('id' => $id), $params);
+        
+        if ($response->isRedirect()){
+            return $this->redirect($response->headers->get('Location'));
+        }
+        
+        $user = $this->getUser();
+        $charter = $user->getCharter();
+        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_boat.html.twig', array(
+            'title'     => 'Add Boat',
+            'current'   => 'boats',
+            'response'  => $response->getContent()
+        ));
+    }
+    
+    
+    
+
     
     public function charterTabsAction($current)
     {

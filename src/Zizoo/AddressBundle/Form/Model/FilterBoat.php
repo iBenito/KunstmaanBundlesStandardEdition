@@ -19,7 +19,7 @@ class FilterBoat
 
     public function getBoatType()
     {
-        return $this->boat_type['boat_type'];
+        return $this->boat_type;
     }
     
     public function setBoatType($type)
@@ -30,7 +30,7 @@ class FilterBoat
     
     public function boatTypeSelected()
     {
-        return $this->boat_type['boat_type']->count()>0;
+        return $this->boat_type->count()>0;
     }
     
     public function getLengthFrom()

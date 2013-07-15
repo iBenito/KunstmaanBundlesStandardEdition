@@ -7,12 +7,7 @@ services:
         arguments: 
             entityManager:  "@doctrine.orm.entity_manager"
             container:      "@service_container"
-            
-    zizoo_profile.twig.profile_extension:
-        class: Zizoo\ProfileBundle\Twig\ProfileExtension
-        tags:
-            - { name: twig.extension }
-            
+    
     zizoo_message.new_thread_form.type:
         class: Zizoo\MessageBundle\Form\Type\NewThreadMessageFormType
         arguments:  ["@doctrine.orm.entity_manager"]

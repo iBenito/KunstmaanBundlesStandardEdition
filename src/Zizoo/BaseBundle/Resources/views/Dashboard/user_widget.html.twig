@@ -4,21 +4,16 @@
 <div class="avatar">
     <figure id="user_avatar">
         {% if user.profile.avatar|length > 0 %}
-            <img src="{{ asset(user.profile.avatar.first|pictureWebPath) }}" alt="{{ user.profile.firstName }} {{ user.profile.lastName }}" class="large" id="avatar_img" />
+            <img src="{{ asset(user.profile.avatar.first|pictureWebPath|imagine_filter('thumb_190x_')) }}" alt="{{ user.profile.firstName }} {{ user.profile.lastName }}" class="large" id="avatar_img" />
         {% else %}
-            <img alt="Profile avatar not set" style="display: none" id="avatar_img" />
+            <img src="{{ asset('bundles/zizoobase/images/default/avatar-user.png'|imagine_filter('thumb_190x_')) }}" alt="Profile avatar not set" id="avatar_img" />
         {% endif %}
         <figcaption>
             {{ user.profile.firstName }} {{ user.profile.lastName }}
         </figcaption>
     </figure>
     <section class="completeness">
-        <h4>Profile Completeness {% if profile_completeness < 3 %}<span class="icon cross"></span>{% endif %}</h4>
-        <ul class="clearfix">
-            <li {% if profile_completeness >=1 %}class="complete"{% endif %}><span>1</span></li>
-            <li {% if profile_completeness >=2 %}class="complete"{% endif %}><span>2</span></li>
-            <li {% if profile_completeness >=3 %}class="complete"{% endif %}><span>3</span></li>
-        </ul>
+        {{ user.profile|profileCompleteness }}
     </section>
     <a href="{{ path('ZizooBaseBundle_Dashboard_Skills') }}" class="button blue big" title="Add Skills">Add Skills</a>
 </div>
@@ -27,11 +22,19 @@
 <!-- start:verifications -->
 <section class="verifications">
     <h4>Verifications</h4>
-    <ul>
+    <ul id="user_verifications">
         <li class="phone verificated"><span></span>Phone <span class="icon check black"></span></li>
-        <li class="facebook verificated"><span></span>Facebook <span class="icon check white"></span></li>
+        <li class="facebook verificated"><a href="{{ path('ZizooUserBundle_Verification_VerifyFacebook') }}"><span></span>Facebook <span class="icon {{ user.facebookUid is not null ? 'check white' : 'icon cross'}}"></span></a></li>
         <li class="twitter"><span></span>Twitter <span class="icon cross"></span></li>
     </ul>
+    <div id="facebook_verify_hidden"></div>
+    
+    <script type="text/javascript">
+        
+        $(document).ready(function(){
+           
+        });
+    </script>
 </section>
 <!-- end:verifications -->
 

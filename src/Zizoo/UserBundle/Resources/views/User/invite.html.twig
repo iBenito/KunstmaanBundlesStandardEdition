@@ -21,7 +21,7 @@
         {% endfor %}
         
         <div id="invite">
-            <form novalidate="novalidate" action="{{ path('ZizooUserBundle_invite')}}" method="post" {{ form_enctype(form) }} class="invite_form">
+            <form action="{{ path('ZizooUserBundle_invite')}}" method="post" {{ form_enctype(form) }} class="invite_form">
                 
                 <div>
                     {{ form_widget(form) }}

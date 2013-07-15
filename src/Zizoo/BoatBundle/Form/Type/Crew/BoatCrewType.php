@@ -21,11 +21,11 @@ class BoatCrewType extends AbstractType
                                                         'property_path' => 'crewOptional'))
                 
             ->add('num_crew', 'number', array(  'label'         => 'Number of crew members provided:',
-                                                'required'      => false,
+                                                'required'      => true,
                                                 'property_path' => 'numCrew'))
                 
             ->add('crew_price', 'number', array('label'         => 'Total crew price per day:',
-                                                'required'      => false,
+                                                'required'      => true,
                                                 'property_path' => 'crewPrice'));
     }
 
@@ -33,7 +33,8 @@ class BoatCrewType extends AbstractType
     {
         $resolver->setDefaults(array(
             'virtual'           => true,
-            'validation_groups' => array('boat_details', 'boat_new')
+            'data_class'        => 'Zizoo\BoatBundle\Entity\Boat',
+            'validation_groups' => array('Default')
         ));
     }
 

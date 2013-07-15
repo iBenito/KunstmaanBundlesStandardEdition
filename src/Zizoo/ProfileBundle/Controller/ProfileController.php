@@ -41,12 +41,6 @@ class ProfileController extends Controller
     {
         $user       = $this->getUser();
         $profile    = $user->getProfile();
-
-//        $originalAvatars = array();
-//        // Create an array of the current ProfileAvatar objects in the database
-//        foreach ($profile->getAvatar() as $avatar) {
-//            $originalAvatars[] = $avatar;
-//        }
         
         $profileType = $this->get('zizoo_profile.profile_type');
         $editForm = $this->createForm($profileType, $profile, array('validation_groups' => 'Default'));
@@ -63,32 +57,17 @@ class ProfileController extends Controller
                 $avatars = $profile->getAvatar();
 
                 $now = new \DateTime();
-                // filter $originalAvatars to contain avatars no longer present
                 foreach ($avatars as $avatar) {
-//                    foreach ($originalAvatars as $key => $toDel) {
-//                        if ($toDel->getId() === $avatar->getId()) {
-//                            unset($originalAvatars[$key]);
-//                        } 
-//                    }
                     $avatar->setUpdated($now);
                     $em->persist($avatar);
                 }
-
-//                // remove the relationship between the avatar and the profile
-//                foreach ($originalAvatars as $avatar) {
-//                    // remove the ProvileAvatar from the Profile
-//                    $profile->removeAvatar($avatar);
-//
-//                    // remove the avatar completely
-//                    $em->remove($avatar);
-//                }
 
                 $em->persist($profile);
 
                 $em->flush();
                 
                 $this->get('session')->setFlash('notice', 'Your profile was updated!');
-                return $this->redirect($this->generateUrl('ZizooProfileBundle_Profile_Edit'));
+                return $this->redirect($this->generateUrl($request->query->get('redirect_route')));
             }
         }
    

@@ -3,6 +3,20 @@ parameters:
 
 services:
     
+    # SERVICES:
+    zizoo_address.address_service:
+        class: Zizoo\AddressBundle\Service\AddressService
+    
+    
+    # LISTENERS
+    zizoo_address.address_listener:
+        class: Zizoo\AddressBundle\EventListener\AddressListener
+        arguments: ["@zizoo_address.address_service"]
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+    
+    
+    # FORM TYPES
     zizoo_address.address_type:
         class:  Zizoo\AddressBundle\Form\Type\AddressType
         tags:
@@ -25,13 +39,9 @@ services:
         tags:
             - { name: form.type, alias: zizoo_boat_search }
             
-            
+          
+    # FORM TYPE EXTENSIONS
     zizoo_address.address_type_extension:
         class: Zizoo\AddressBundle\Form\Extension\AddressTypeExtension
         tags:
             - { name: form.type_extension, alias: zizoo_address }
-            
-    
-#    zizoo_address.example:
-#        class: %zizoo_address.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]

@@ -64,7 +64,7 @@
 
     {{ form_widget(form._token) }}
     {{ form_errors(form) }}
-    <form id="tr_booking_form" method="post" action="{{ braintree_action }}" novalidate="novalidate">
+    <form id="tr_booking_form" method="post" action="{{ braintree_action }}">
         <input type="hidden" name="tr_data" value="{{ tr_data }}" />
 
         {{ form_widget(form) }}

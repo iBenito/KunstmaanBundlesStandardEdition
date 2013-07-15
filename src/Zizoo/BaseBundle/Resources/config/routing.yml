@@ -52,12 +52,8 @@ ZizooBaseBundle_login_widget:
     requirements:
         _method:  GET
                 
-ZizooBaseBundle_Dashboard_CharterDashboard:
-    pattern:  /charter/account/dashboard
-    defaults: { _controller: ZizooBaseBundle:Dashboard:index }
-    requirements:
-        _method:  GET
-        
+                        
+# USER                       
 ZizooBaseBundle_Dashboard_UserDashboard:
     pattern:  /account/dashboard
     defaults: { _controller: ZizooBaseBundle:Dashboard:index }
@@ -71,80 +67,139 @@ ZizooBaseBundle_Dashboard_Widget:
         _method:  GET
 
 ZizooBaseBundle_Dashboard_Profile:
-    pattern:  /account/profile
+    pattern:  /account/dashboard/profile
     defaults: { _controller: ZizooBaseBundle:Dashboard:profile }
     requirements:
         _method:  GET|POST
 
 ZizooBaseBundle_Dashboard_Skills:
-    pattern:  /account/skills
+    pattern:  /account/dashboard/skills
     defaults: { _controller: ZizooBaseBundle:Dashboard:skills }
     requirements:
         _method:  GET
 
 ZizooBaseBundle_Dashboard_Trips:
-    pattern:  /account/trips
+    pattern:  /account/dashboard/trips
     defaults: { _controller: ZizooBaseBundle:Dashboard:trips }
     requirements:
         _method:  GET
         
 ZizooBaseBundle_Dashboard_Inbox:
-    pattern:  /account/inbox
+    pattern:  /account/dashboard/inbox
     defaults: { _controller: ZizooBaseBundle:Dashboard:inbox }
     requirements:
         _method:  GET
         
 ZizooBaseBundle_Dashboard_Sent:
-    pattern:  /account/sent
+    pattern:  /account/dashboard/sent
     defaults: { _controller: ZizooBaseBundle:Dashboard:sent }
     requirements:
         _method:  GET
         
 ZizooBaseBundle_Dashboard_AccountSettings:
-    pattern:  /account/settings
+    pattern:  /account/dashboard/settings
     defaults: { _controller: ZizooBaseBundle:Dashboard:accountSettings }
     requirements:
         _method:  GET|POST
+   
+        
+# CHARTER
+ZizooBaseBundle_Dashboard_CharterDashboard:
+    pattern:  /charter/account/dashboard
+    defaults: { _controller: ZizooBaseBundle:Dashboard:index }
+    requirements:
+        _method:  GET
         
 ZizooBaseBundle_Dashboard_CharterProfile:
-    pattern:  /charter/account/profile
+    pattern:  /charter/account/dashboard/profile
     defaults: { _controller: ZizooBaseBundle:Dashboard:charterProfile }
     requirements:
         _method:  GET|POST    
         
 ZizooBaseBundle_Dashboard_CharterInbox:
-    pattern:  /charter/account/inbox
+    pattern:  /charter/account/dashboard/inbox
     defaults: { _controller: ZizooBaseBundle:Dashboard:charterInbox }
     requirements:
         _method:  GET
         
 ZizooBaseBundle_Dashboard_CharterSent:
-    pattern:  /charter/account/sent
+    pattern:  /charter/account/dashboard/sent
     defaults: { _controller: ZizooBaseBundle:Dashboard:charterSent }
     requirements:
         _method:  GET
         
 ZizooBaseBundle_Dashboard_CharterBookings:
-    pattern:  /charter/account/bookings
+    pattern:  /charter/account/dashboard/bookings
     defaults: { _controller: ZizooBaseBundle:Dashboard:charterBookings }
     requirements:
         _method:  GET
-        
-ZizooBaseBundle_Dashboard_CharterBoats:
-    pattern:  /charter/account/boats/{listing_status}
-    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBoats, listing_status: all }
-    requirements:
-        _method:  GET
-        listing_status:  active|incomplete|hidden|all
-                
+                        
 ZizooBaseBundle_Dashboard_CharterPayments:
-    pattern:  /charter/account/payments
+    pattern:  /charter/account/dashboard/payments
     defaults: { _controller: ZizooBaseBundle:Dashboard:charterPayments }
     requirements:
         _method:  GET
         
 ZizooBaseBundle_Dashboard_CharterPayoutSettings:
-    pattern:  /charter/account/payout-settings
+    pattern:  /charter/account/dashboard/payout-settings
     defaults: { _controller: ZizooBaseBundle:Dashboard:charterPayoutSettings }
     requirements:
         _method:  GET|POST
+
+# CHARTER BOATS
+ZizooBaseBundle_Dashboard_CharterBoats:
+    pattern:  /charter/account/dashboard/boats
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBoats, listing_status: all }
+    requirements:
+        _method:  GET
+        listing_status:  active|incomplete|hidden|deleted|all
+        
+
+ZizooBaseBundle_Dashboard_CharterNewBoat:
+    pattern:  /charter/account/dashboard/boat/new
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBoat, boat_controller: ZizooBoatBundle:Boat:new }
+    requirements:
+        _method:  GET|POST
+        
+ZizooBaseBundle_Dashboard_CharterEditBoat:
+    pattern:  /charter/account/dashboard/boat/{id}/edit
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBoat, boat_controller: ZizooBoatBundle:Boat:edit }
+    requirements:
+        _method:  GET|POST
+        id: \d+
+        
+ZizooBaseBundle_Dashboard_CharterEditDetailsBoat:
+    pattern:  /charter/account/dashboard/boat/{id}/edit/details
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBoat, boat_controller: ZizooBoatBundle:Boat:editDetails }
+    requirements:
+        _method:  GET|POST
+        id: \d+
+        
+ZizooBaseBundle_Dashboard_CharterEditPhotosBoat:
+    pattern:  /charter/account/dashboard/boat/{id}/edit/photos
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBoat, boat_controller: ZizooBoatBundle:Boat:editPhotos }
+    requirements:
+        _method:  GET|POST
+        id: \d+
+        
+ZizooBaseBundle_Dashboard_CharterEditPriceBoat:
+    pattern:  /charter/account/dashboard/boat/{id}/edit/price
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBoat, boat_controller: ZizooBoatBundle:Boat:editPrice }
+    requirements:
+        _method:  GET|POST
+        id: \d+
+        
+ZizooBaseBundle_Dashboard_CharterConfirmPriceBoat:
+    pattern:  /charter/account/dashboard/boat/{id}/edit/price/confirm
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBoat, boat_controller: ZizooBoatBundle:Boat:boatConfirmPrice }
+    requirements:
+        _method:  GET|POST
+        id: \d+
+         
+ZizooBaseBundle_Dashboard_CharterDeleteBoat:
+    pattern:  /charter/account/dashboard/boat/{id}/delete
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBoat, boat_controller: ZizooBoatBundle:Boat:delete }
+    requirements:
+        _method:  GET|POST
+        id: \d+
+        
