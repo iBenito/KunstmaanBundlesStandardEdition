@@ -1,0 +1,44 @@
+<article class="trip clearfix">
+    <div class="box">
+        <a href="" class="boat gray clearfix">
+            <figure>
+                <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg') }}" alt="">
+                <figcaption class="clearfix">
+                    {{ boat.name }} <span class="icon plus"></span>
+                </figcaption>
+            </figure>
+            <div class="left">
+                ?? Reviews
+            </div>
+            <div class="right">
+                from <strong>{{ boat.lowestPrice|number_format(0, '.', ',') }} &euro;</strong>
+            </div>
+        </a>
+    </div>
+    <div class="info">
+        <h2>{{ boat.title }}</h2>
+        <ul class="actions clearfix">
+            <li>{{ boat.address.locality }}, {{ boat.address.country }}</li>
+            {% if boat.status %}
+                <li>Complete <span class="icon complete"></span></li>
+            {% else %}
+                <li>Incomplete <span class="icon incomplete"></span></li>
+            {% endif %}
+            <li>
+                <form>
+                    <input type="hidden" name="boat_id" value="{{ boat.id }}" />
+                    <input type="hidden" name="active" />
+                    <span class="text">Active</span> <a href="#" class="toggle {% if not boat.active %} off{% endif %}"></a>
+                </form>
+            </li>
+        </ul>
+        <ul class="buttons clearfix">
+            <li><a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" target="_blank" class="button blue medium">View</a></li>
+            <li><a href="{{ path('ZizooBoatBundle_Boat_Edit', {id: boat.id}) }}" target="_blank" class="button blue medium">Edit</a></li>
+            <li><a href="{{ path('ZizooBoatBundle_Boat_EditPrice', {id: boat.id}) }}" target="_blank" class="button blue medium">Calendar</a></li>
+            <li><a href="{{ path('ZizooBoatBundle_Boat_Delete', {id: boat.id}) }}" target="_blank" class="button blue medium">
+                {% if boat.deleted is null %}Delete{% else %}Undelete{% endif %}
+            </a></li>
+        </ul>
+    </div>
+</article>

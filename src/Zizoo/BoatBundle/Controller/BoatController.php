@@ -772,7 +772,7 @@ class BoatController extends Controller
         $charter            = $user->getCharter();
         
         if (!$id) $id       = $request->request->get('boat_id', null);
-        $active             = $request->request->get('active_'.$id, false)=='on';
+        $active             = $request->request->get('active', false);
                 
         $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
         //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {

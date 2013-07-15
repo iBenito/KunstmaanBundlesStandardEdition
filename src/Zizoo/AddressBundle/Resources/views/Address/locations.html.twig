@@ -1,6 +1,6 @@
 {# src/Zizoo/AddressBundle/Resources/views/Address/locations_test.html.twig #}
 {% trans_default_domain "labels" %}
-{% form_theme form 'ZizooAddressBundle:Form:fields.html.twig' %}
+
 {% extends 'ZizooAddressBundle::layout.html.twig' %}
 
 {% block javascripts %}
@@ -22,15 +22,45 @@
 
 
 {% block search_results %}
-    <div id="results_container">
-        <div id="boats">
-            {% include "ZizooAddressBundle:Address:locations_boats.html.twig" with {'page': page, 'page_size': page_size } %}
+
+    <div id="all">
+        <div class="tabbed">
+            {% include "ZizooAddressBundle:Address:boats_grid.html.twig" with {'page': page, 'page_size': page_size } %}
+            {% include "ZizooAddressBundle:Address:boats_list.html.twig" with {'page': page, 'page_size': page_size } %}
         </div>
     </div>
     
 {% endblock search_results %}
     
 {% block search_filter %}
+    <form class="form">
+        <div class="box">
+            <h3>Boat Type</h3>
+            <div class="block">
+                <div class="row">
+                    <label><input type="checkbox"> Yacht</label>
+                </div>
+                <div class="row">
+                    <label><input type="checkbox"> Sail Boat</label>
+                </div>
+                <div class="row">
+                    <label><input type="checkbox" checked="checked"> Motor Boat</label>
+                </div>
+                <div class="row">
+                    <label><input type="checkbox"> Catamaran</label>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+
+
+
+
+
+
+
     <div id="search-filter" style="display: none">
         <div id="boat_type_filter">
         {{ form_widget(form.filter.boat_type) }}
