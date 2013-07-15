@@ -36,14 +36,13 @@ class DashboardController extends Controller {
         ));
     }
     
-    private function widgetUserAction($user, $route, $showUser)
+    private function widgetUserAction($user, $route)
     {
         $facebook       = $this->get('facebook');
 
         return $this->render('ZizooBaseBundle:Dashboard:user_widget.html.twig', array(
             'user'      => $user,
             'route'     => $route,
-            'show_user' => $showUser,
             'facebook'  => $facebook
         ));
     }
@@ -55,14 +54,16 @@ class DashboardController extends Controller {
      */
     public function widgetAction($route)
     {
-        $request    = $this->getRequest();
         $user       = $this->getUser();
+        $url        = $this->generateUrl($route, array('id' => 0));
+
+        $pattern = '/^\charter\/|^\/app_dev\.php\/charter\//';
+        $isCharterRoute = preg_match($pattern, $url);
         
-        $showUser = $request->getSession()->get('show_user');
-        if ($user->getCharter() && !$showUser){
+        if ($user->getCharter() && $isCharterRoute){
             return $this->widgetCharterAction($user->getCharter(), $route);
         } else {
-            return $this->widgetUserAction($user, $route, $showUser);
+            return $this->widgetUserAction($user, $route);
         }
     }
     
@@ -72,8 +73,11 @@ class DashboardController extends Controller {
      * 
      * @return Response
      */
-    private function indexCharterAction($charter)
+    public function indexCharterAction()
     {
+        $user       = $this->getUser();
+        $charter    = $user->getCharter();
+        
         $messageProvider    = $this->container->get('fos_message.provider');
         $unreadMessages     = $messageProvider->getNbUnreadMessages();
 
@@ -115,39 +119,24 @@ class DashboardController extends Controller {
      * 
      * @return Response
      */
-    private function indexUserAction($user)
+    public function indexUserAction()
     {
-        $reservationsMade = $user->getReservations();
-        $bookingsMade = $user->getBookings();
+        $user               = $this->getUser();
+        $reservationsMade   = $user->getReservations();
+        $bookingsMade       = $user->getBookings();
+        
+        $messageProvider    = $this->container->get('fos_message.provider');
+        $unreadMessages     = $messageProvider->getNbUnreadMessages();
 
         $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat());
         return $this->render('ZizooBaseBundle:Dashboard:index.html.twig', array(
-            'reservations' => $reservationsMade,
-            'bookings' => $bookingsMade,
-            'searchForm' => $form->createView()
+            'reservations'      => $reservationsMade,
+            'bookings'          => $bookingsMade,
+            'unreadMessages'    => $unreadMessages,
+            'searchForm'        => $form->createView()
         ));
     }
     
-    /**
-     * Display User or Charter Dashboard
-     * 
-     * @return Response
-     */
-    public function indexAction()
-    {
-        $request    = $this->getRequest();
-        $showUser   = $request->query->get('show_user', false);
-        $user       = $this->getUser();
-        
-        $request->getSession()->set('show_user', $showUser);
-        
-        if ($user->getCharter() && !$showUser){
-            return $this->indexCharterAction($user->getCharter());
-        } else {
-            return $this->indexUserAction($user);
-        }
-        
-    }
 
     /**
      * Display User Inbox

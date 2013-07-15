@@ -56,7 +56,7 @@ ZizooBaseBundle_login_widget:
 # USER                       
 ZizooBaseBundle_Dashboard_UserDashboard:
     pattern:  /account/dashboard
-    defaults: { _controller: ZizooBaseBundle:Dashboard:index }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:indexUser }
     requirements:
         _method:  GET
         
@@ -106,7 +106,7 @@ ZizooBaseBundle_Dashboard_AccountSettings:
 # CHARTER
 ZizooBaseBundle_Dashboard_CharterDashboard:
     pattern:  /charter/account/dashboard
-    defaults: { _controller: ZizooBaseBundle:Dashboard:index }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:indexCharter }
     requirements:
         _method:  GET
         

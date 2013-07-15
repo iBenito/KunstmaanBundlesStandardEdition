@@ -32,9 +32,10 @@ class BoatController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $qb = $em->createQueryBuilder()->from('ZizooBoatBundle:Boat', 'boat')
-                                        ->leftJoin('boat.user', 'user')
-                                        ->select('boat.id, boat.name, boat.title, user.username, boat.created, boat')
+                                        ->leftJoin('boat.charter', 'charter')
+                                        ->select('boat.id, boat.name, boat.title, charter.charterName, boat.created, boat')
                                         ->groupBy('boat.id');
+
         $grid->setSource($qb);
                 
         $extraJS = "";
@@ -44,12 +45,11 @@ class BoatController extends Controller
         
         $grid->addColumn('Name', array('name' => 'name', 'jsonmap' => 'cell.1', 'index' => 'boat.name', 'width' => '200', 'sortable' => true, 'search' => true));
         $grid->addColumn('Title', array('name' => 'title', 'jsonmap' => 'cell.2', 'index' => 'boat.title', 'width' => '200', 'sortable' => true, 'search' => true));
-        $grid->addColumn('Owner', array('name' => 'username', 'jsonmap' => 'cell.3', 'index' => 'user.username', 'width' => '200', 'sortable' => true, 'search' => true));
+        $grid->addColumn('Owner', array('name' => 'charterName', 'jsonmap' => 'cell.3', 'index' => 'charter.charterName', 'width' => '200', 'sortable' => true, 'search' => true));
         $grid->addColumn('Created', array('name' => 'created', 'jsonmap' => 'cell.4.date', 'index' => 'boat.created', 'formatter' => 'date', 'formatoptions' => array( 'srcformat' => 'Y-m-d H:i:s', 'newformat' => 'd/m/Y H:i' ), 'datepicker' => true, 'sortable' => true, 'search' => true));
 
         
-        $grid->setExtraParams(array( 'show_threads'         => (true?'checked="checked"':''),
-                                        'loadComplete'      => 'loadComplete',
+        $grid->setExtraParams(array(    'loadComplete'      => 'loadComplete',
                                         'extraJS'           => $extraJS));
         
         
