@@ -1,15 +1,6 @@
-{% block stylesheets %}
-    <link href="{{ asset('css/jquery.switchButton.css') }}" type="text/css" rel="stylesheet" />
-{% endblock %}
-    
-{% block javascripts %}
-    <script src="{{ asset('js/jquery.switchButton.js') }}" type="text/javascript"></script>
-{% endblock %}
-
 {% block content %}
 
     <div>
-    
         {% for flashMessage in app.session.flashbag.get('notice') %}
             <div class="flash-notice">
                 {{ flashMessage}}
@@ -22,80 +13,62 @@
             </div>
         {% endfor %}
 
-        <div id="filter">
+        <!-- start:filter -->
+        <div id="filter" class="filter">
             <form method="get" id="filter_form">
-                <label for="sort">Sort by</label>
-                <select name="sort" id="sort" autocomplete="off">
-                    <option value="b.id"{% if pagination.isSorted('b.id') %} selected="selected"{% endif %}>Id</option>
-                    <option value="b.name"{% if pagination.isSorted('b.name') %} selected="selected"{% endif %}>Name</option>
-                </select>
-                <label for="direction">Direction</label>
-                <select name="direction" id="direction" autocomplete="off">
-                    <option value="asc"{% if direction=='asc' %} selected="selected"{% endif %}>Ascending</option>
-                    <option value="desc"{% if direction =='desc' %} selected="selected"{% endif %}>Descending</option>
-                </select>
-
-
-                <input type="input" name="boat_name" placeholder="Boat Name" {% if search_boat_name %}value="{{ search_boat_name }}{% endif %}" />
-
-                <label for="listing_status">Boat Status:</label>
-                <select name="listing_status" id="listing_status">
-                    {% for key, status in listing_statuses %}
-                        <option value="{{ key }}" {% if status==listing_status %}selected="selected"{% endif %}>{{ status }}</option>
-                    {% endfor %}
-                </select>
-                
-                <label for="boat_type">Boat Type:</label>
-                <select name="boat_type" autocomplete="off">
-                    <option value="">All</option>
-                    {% for boat_type in boat_types %}
-                        <option value="{{ boat_type.id }}" {% if search_boat_type==boat_type.id %}selected="selected"{% endif %}>{{ boat_type.name }}</option>
-                    {% endfor %}
-                </select>
-
-                <div id="page_size_container">
-                    <label for="page_size">Boats per page:</label>
-                    <select name="page_size" id="page_size_select" autocomplete="off">
-                        <option value="1" {% if page_size==1 %}selected="selected" {% endif %}>1</option>
-                        <option value="5" {% if page_size==5 %}selected="selected" {% endif %}>5</option>
-                        <option value="10" {% if page_size==10 %}selected="selected" {% endif %}>10</option>
-                        <option value="25" {% if page_size==25 %}selected="selected" {% endif %}>25</option>
-                        <option value="50" {% if page_size==50 %}selected="selected" {% endif %}>50</option>
+                <ul class="clearfix">
+                    
+                    <!--label for="sort">Sort by</label>
+                    <select name="sort" id="sort" autocomplete="off">
+                        <option value="b.id"{% if pagination.isSorted('b.id') %} selected="selected"{% endif %}>Id</option>
+                        <option value="b.name"{% if pagination.isSorted('b.name') %} selected="selected"{% endif %}>Name</option>
                     </select>
-                </div>
-                
-                <button type="submit" class="button blue small">Filter</button>
+                    <label for="direction">Direction</label>
+                    <select name="direction" id="direction" autocomplete="off">
+                        <option value="asc"{% if direction=='asc' %} selected="selected"{% endif %}>Ascending</option>
+                        <option value="desc"{% if direction =='desc' %} selected="selected"{% endif %}>Descending</option>
+                    </select-->
+
+                    <div id="page_size_container">
+                        <label for="page_size">Boats per page:</label>
+                        <select name="page_size" id="page_size_select" autocomplete="off">
+                            <option value="1" {% if page_size==1 %}selected="selected" {% endif %}>1</option>
+                            <option value="5" {% if page_size==5 %}selected="selected" {% endif %}>5</option>
+                            <option value="10" {% if page_size==10 %}selected="selected" {% endif %}>10</option>
+                            <option value="25" {% if page_size==25 %}selected="selected" {% endif %}>25</option>
+                            <option value="50" {% if page_size==50 %}selected="selected" {% endif %}>50</option>
+                        </select>
+                    </div>
+
+
+                    <li>
+                        <input type="text" name="boat_name" placeholder="Boat Name" {% if search_boat_name %}value="{{ search_boat_name }}{% endif %}" />
+                    </li>
+                    <li>
+                        <select class="gray small" name="boat_type" autocomplete="off">
+                            <option value="">All</option>
+                            {% for boat_type in boat_types %}
+                                <option value="{{ boat_type.id }}" {% if search_boat_type==boat_type.id %}selected="selected"{% endif %}>{{ boat_type.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </li>
+                    <li class="submit">
+                        <button type="submit" class="button blue small">Filter</button>
+                    </li>
+                </ul>
             </form>
         </div>
+        <!-- end:filter -->
 
-        <div id="boats">
+        <!-- start:trips -->
+        <div id="boats" class="trips boats">
             <div class="page" id="page_{{ page }}">
                 <input type="hidden" class="page_num" value="{{ page }} " />
                 <input type="hidden" class="request_uri" value="{{ request_uri }} " />
                 {% for boat in pagination %}
-                    <div class="boat_image">
-                        {% if boat.image.first != false %}
-                            <img src="{{ boat.image.first.path }}" />
-                        {% endif %}
-                    </div>
-                    <div class="boat_details">
-                        <h3 class="boat_name">{{ boat.name is not null ? boat.name : boat.created|date }}</h3>
-                        <h4 class="boat_title">{{ boat.title }}</h4>
-                        <form action="{{ path('ZizooBoatBundle_Boat_Active', {id: boat.id}) }}" method="post">
-                            <input type="hidden" name="boat_id" value="{{ boat.id }}" />
-                            <label for="active_{{ boat.id }}"></label>
-                            <input id="active_{{ boat.id }}" name="active_{{ boat.id }}" type="checkbox" class="active_control" {% if boat.active %}value="1" checked{% endif %} autocomplete="off" />
-                            <noscript>
-                                <button type="submit">Save</button>
-                            </noscript>
-                        </form>
-                        <div class="controls">
-                            <a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}">View</a>
-                            <a href="{{ path(routes['edit_route'], {id: boat.id}) }}">Edit</a>
-                            <a href="{{ path(routes['calendar_route'], {id: boat.id}) }}">Calendar</a>
-                            <a href="{{ path(routes['delete_route'], {id: boat.id}) }}">{% if boat.deleted is null %}Delete{% else %}Undelete{% endif %}</a>
-                        </div>
-                    </div>
+
+                    {% include "ZizooCharterBundle:Charter:boat_admin_bar.html.twig" with { boat: boat } %}
+
                 {% endfor %}
             </div>
         </div>
@@ -127,13 +100,13 @@
             }
 
             function loadPage(page){
-                $('#page_'+page).find('.active_control').each(function(){
-                    $(this).switchButton({
-                        on_label: 'Active',
-                        off_label: 'Hidden'
-                    });
-                    $(this).change(function(){
+                $('#page_'+page).find('.toggle').each(function(){
+                    $(this).click(function(){
                         doBlock(true);
+
+                        var form = $(this).parent('form');
+                        $('input[name=active]', form).val( $(this).hasClass("off") ? 0 : 1 );
+                        
                         $.ajax({
                             type: 'post',
                             url: '{{ path('ZizooBoatBundle_Boat_Active') }}',

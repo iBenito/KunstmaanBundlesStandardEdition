@@ -50,6 +50,68 @@
     }
 
     /**
+     * Form row
+     */
+
+    .form .row .label .help .tooltip {
+        right: auto;
+        left: 0;
+    }
+
+    .form .row .label .help .tooltip:after {
+        right: auto;
+        left: 4px;
+    }
+
+    /**
+     * Form row
+     */
+
+    .form .row.textarea {
+        margin-right: 0;
+    }
+
+    /**
+     * Form column
+     */
+
+    .form .row.two .column {
+        width: 100%;
+    }
+
+    .form .row.two .column:first-child {
+        margin: 0 0 15px 0;
+    }
+
+    .form .row.two .column input[type="text"],
+    .form .row.two .column input[type="email"],
+    .form .row.two .column input[type="password"],
+    .form .row.two .column textarea,
+    .form .row.two .column .selectboxit-container {
+        left: 0;
+    }
+
+    .form .row.two .column:first-child input[type="text"],
+    .form .row.two .column:first-child input[type="email"],
+    .form .row.two .column:first-child input[type="password"],
+    .form .row.two .column:first-child textarea,
+    .form .row.two .column:first-child .selectboxit-container {
+        right: 0;
+    }
+
+    .form .row.two .column .label {
+        left: 0;
+    }
+
+    /**
+     * Form checkboxes
+     */
+
+    .form .row .checkboxes li {
+        width: 50%;
+    }
+
+    /**
      * Tabs
      */
 
@@ -121,6 +183,24 @@
         right: 20px;
     }
 
+    /**
+     * Trips
+     */
+
+    .trips.boats .trip .box {
+        margin: 0 20px 15px 0;
+    }
+
+    .trips.boats .trip .info {
+        position: relative;
+        top: 0;
+        left: 0;
+    }
+
+    .trips.boats .trip .info .buttons {
+        position: relative;
+    }
+
 
     /* =================================
        General
@@ -139,15 +219,16 @@
     }
 
     #header br {
-        display: block
+        display: block;
     }
 
     #header nav {
-        display: inline-block;
         float: none;
-        height: 31px;
-        vertical-align: top;
-        padding: 22px 0;
+        padding: 22px 0 16px 0;
+    }
+
+    #header nav br {
+        display: none;
     }
 
     /**
@@ -162,7 +243,7 @@
         padding-right: 20px;
     }
 
-    #search .search input[type='text'] {
+    #search .search input[type="text"] {
         width: 200px;
     }
 
@@ -290,11 +371,11 @@
         padding-left: 200px;
     }
 
-    #how-it-works .steps.book li img {
+    #how-it-works .steps li img {
         left: 45px;
     }
 
-    #how-it-works .steps.book li:first-child img {
+    #how-it-works .steps li:first-child img {
         left: 20px;
     }
 
@@ -364,6 +445,166 @@
         padding-top: 20px;
     }
 
+    /**
+     * Dashboard trips
+     */
+
+    #dashboard .trips .trip .info .actions li {
+        float: none;
+        width: 100%;
+        text-align: left;
+        padding: 0 0 10px 0;
+    }
+
+    #dashboard .trips .trip .info .actions li:first-child {
+        width: 100%;
+    }
+
+    /**
+     * Dashboard responsive table
+     */
+
+    #dashboard .responsive-table table {
+        display: block;
+    }
+
+    #dashboard .responsive-table table thead {
+        display: block;
+        float: left;
+    }
+
+    #dashboard .responsive-table table tbody {
+        display: block;
+        position: relative;
+        width: auto;
+        white-space: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #dashboard .responsive-table table thead th {
+        display: block;
+        padding: 5px 25px 5px 5px;
+        border-top: 1px solid #fff;
+        border-left: 0;
+    }
+
+    #dashboard .responsive-table table thead th:first-child {
+        border-top: 0;
+    }
+
+    #dashboard .responsive-table table thead .sort {
+        background-position: 90% center;
+    }
+
+    #dashboard .responsive-table table thead .ascending {
+        background-image: url(../images/ascending-horizontal.png);
+    }
+
+    #dashboard .responsive-table table thead .descending {
+        background-image: url(../images/descending-horizontal.png);
+    }
+
+    #dashboard .responsive-table table tbody tr {
+        display: inline-block;
+    }
+
+    #dashboard .responsive-table table tbody td {
+        display: block;
+    }
+
+    #dashboard .responsive-table table tbody td:first-child {
+        border-top: 0;
+        border-left: 1px solid #ebecec;
+    }
+
+    /**
+     * Dashboard availability calendar
+     */
+
+    #dashboard #availability-calendar .ui-datepicker.ui-datepicker-inline {
+        max-width: 100%;
+    }
+
+    /**
+     * Results
+     */
+
+    #results {
+        width: 530px;
+    }
+
+    /**
+     * View
+     */
+
+    #view .left {
+        float: none;
+        padding: 0 0 10px 0;
+    }
+
+    #view .right {
+        float: none;
+    }
+
+    #view .right .view {
+        position: absolute;
+        top: 6px;
+        right: 15px;
+    }
+
+    /**
+     * Grid
+     */
+
+    #grid .box {
+        width: 50%;
+    }
+
+    /**
+     * List
+     */
+
+    #list .box .boat figure {
+        width: 25%;
+    }
+
+    #list .box .boat .details {
+        width: 70%;
+    }
+
+    #list .box .boat .details .header li:first-child {
+        width: 56%;
+    }
+
+    /**
+     * Details
+     */
+
+    #details .trips .trip .info {
+        position: relative;
+        float: left;
+        left: 0;
+        padding: 0 0 0 35px;
+    }
+
+    #details .trips .trip .info .overall {
+        position: relative;
+        bottom: 0;
+    }
+
+    #details .include {
+        padding-right: 0;
+    }
+
+    #details .payment .right {
+        padding-top: 233px;
+    }
+
+    #details .payment-options .right {
+        padding-top: 44px;
+    }
+
 }
 
 
@@ -424,7 +665,7 @@
         background: -o-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
         background: -ms-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
         background: linear-gradient(to bottom, #47c2d2 50%,#45bccb 50%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#47c2d2', endColorstr='#45bccb',GradientType=0);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#47c2d2", endColorstr="#45bccb",GradientType=0);
         -webkit-box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4), 1px 1px 1px rgba(0,0,0,0.3);
         -moz-box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4), 1px 1px 1px rgba(0,0,0,0.3);
         box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4), 1px 1px 1px rgba(0,0,0,0.3);
@@ -441,16 +682,76 @@
         background: -o-linear-gradient(top, #005a69 50%,#005260 50%);
         background: -ms-linear-gradient(top, #005a69 50%,#005260 50%);
         background: linear-gradient(to bottom, #005a69 50%,#005260 50%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#005a69', endColorstr='#005260',GradientType=0);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#005a69", endColorstr="#005260",GradientType=0);
         -webkit-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
         -moz-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
         box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+    }
+
+    /**
+     * Filter
+     */
+
+    .filter {
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+    }
+
+    .filter > form > ul > li {
+        padding-right: 10px;
+    }
+
+    /**
+     * Select subpage
+     */
+
+    .select-subpage .dropdown {
+        top: 15px;
+    }
+
+    /**
+     * Trips
+     */
+
+    .trips .trip {
+        padding-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .trips .trip .info {
+        top: 15px;
+    }
+
+    .pagination .results {
+        display: block;
+        float: none;
+        padding: 0 0 10px 0;
     }
 
 
     /* =================================
        General
        ================================= */
+
+    /**
+     * Header
+     */
+
+    #header nav {
+        padding: 8px 0;
+    }
+
+    #header nav br {
+        display: block;
+    }
+
+    #header nav .button {
+        margin: 0 5px;
+    }
+
+    #header nav .dropdown {
+        margin: 0 5px;
+    }
 
     /**
      * Search
@@ -462,7 +763,7 @@
         padding: 0 0 10px 0;
     }
 
-    #search .search input[type='text'] {
+    #search .search input[type="text"] {
         width: 100%;
     }
 
@@ -639,6 +940,19 @@
     }
 
     /**
+     * Dashboard intro
+     */
+
+    #dashboard .intro {
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+    }
+
+    #content #dashboard .section .content .intro h1 {
+        margin: 0;
+    }
+
+    /**
      * Dashboard inbox
      */
 
@@ -653,6 +967,25 @@
 
     #dashboard .reply {
         padding-left: 0;
+    }
+
+    /**
+     * Confirmation
+     */
+
+    #confirmation h2 {
+        font-size: 28px;
+        line-height: 34px;
+        padding: 10px 0 15px 0;
+    }
+
+    #confirmation .entry {
+        padding-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    #confirmation .entry p {
+        padding-bottom: 20px;
     }
 
     /**
@@ -711,6 +1044,92 @@
          display: none;
      }
 
+    /**
+     * Results
+     */
+
+    #results {
+        float: none;
+        width: auto;
+    }
+
+    /**
+     * All
+     */
+
+    #all {
+        padding-top: 20px;
+    }
+
+    /**
+     * Filter
+     */
+
+    #filter {
+        float: none;
+        width: 100%;
+    }
+
+    #filter .help .tooltip {
+        right: auto;
+        left: -4px;
+    }
+
+    #filter .help .tooltip:after {
+        right: auto;
+        left: 4px;
+    }
+
+    /**
+     * Details
+     */
+
+    #details h2 {
+        font-size: 28px;
+        line-height: 34px;
+        padding: 10px 0 15px 0;
+    }
+
+    #details .trips .trip .box {
+        float: none;
+        width: auto;
+        margin: 0 0 15px 0;
+    }
+
+    #details .trips .trip .info {
+        float: none;
+        padding-left: 0;
+    }
+
+    #details .payment .left {
+        float: none;
+        width: 100%;
+    }
+
+    #details .payment .right {
+        float: none;
+        width: 100%;
+        padding-top: 10px;
+    }
+
+    #details .payment-options .right {
+        padding-top: 0;
+    }
+
+    #details .payment-options .right .information {
+        min-height: auto;
+        margin: 0 0 10px 0;
+    }
+
+    #details .payment-options #bank .right .information {
+        min-height: auto;
+    }
+
+    #details .payment-options table td {
+        font-size: 16px;
+        line-height: 26px;
+    }
+
 }
 
 
@@ -725,6 +1144,41 @@
        ================================= */
 
     /**
+     * Form profile picture
+     */
+    
+    .form .row .profile-placeholder {
+        margin-right: 15px;
+    }
+
+    .form .row .profile-placeholder img {
+        width: 70px;
+    }
+
+    /**
+     * Form checkboxes
+     */
+
+    .form .row .checkboxes li {
+        width: 100%;
+    }
+
+    /**
+     * Form verifications
+     */
+
+    .form .row .verifications span {
+        float: left;
+        width: auto;
+        padding-left: 30px;
+    }
+
+    .form .row .verifications .button {
+        float: right;
+        width: 145px;
+    }
+
+    /**
      * Content
      */
 
@@ -734,7 +1188,22 @@
     }
 
     .section.alert .content p {
-        font: 14px/22px 'Asap', Arial;
+        font: 14px/22px "Asap", Arial;
+    }
+
+    .section.blue .content p {
+        font: 14px/22px "Asap", Arial;
+        padding: 0 0 15px 0;
+    }
+
+    /**
+     * Select subpage
+     */
+
+    .select-subpage .dropdown {
+        position: relative;
+        top: 0;
+        margin: 0 0 20px 0;
     }
 
     /**
@@ -770,6 +1239,36 @@
         float: none;
     }
 
+    /**
+     * Trips
+     */
+
+    .trips .trip .box {
+        float: none;
+        width: auto;
+        margin: 0 0 15px 0;
+    }
+
+    .trips.boats .trip .box {
+        margin: 0 0 15px 0;
+    }
+
+    .trips .trip .info {
+        position: relative;
+        top: 0;
+        left: 0;
+    }
+
+    .trips .trip .info .buttons {
+        position: relative;
+    }
+
+    .trips .trip .info .buttons li {
+        float: left;
+        width: 50%;
+        padding: 10px 10px 0 0;
+    }
+
 
     /* =================================
        General
@@ -795,7 +1294,7 @@
 
     #name h1 {
         float: none;
-        font: italic 400 28px/34px 'Asap', Arial;
+        font: italic 400 28px/34px "Asap", Arial;
         padding-left: 75px;
     }
 
@@ -866,17 +1365,17 @@
         padding: 20px 0 20px 120px;
     }
 
-    #how-it-works .steps.book li img {
+    #how-it-works .steps li img {
         top: 35px;
         height: 80px;
     }
 
-    #how-it-works .steps.book li img {
+    #how-it-works .steps li img {
         left: 15px;
         margin: 0;
     }
 
-    #how-it-works .steps.book li:first-child img {
+    #how-it-works .steps li:first-child img {
         left: 5px;
         margin: 0;
     }
@@ -913,6 +1412,97 @@
 
     #sidebar .similiar .box {
         width: 50%;
+    }
+
+    #view .right .show > li {
+        float: none;
+    }
+
+    #view .right .show > li:first-child {
+        padding: 0 0 10px 0;
+    }
+
+    /**
+     * Grid
+     */
+
+    #grid {
+        margin-right: 0;
+    }
+
+    #grid .box {
+        float: none;
+        width: 100%;
+        padding: 0 0 10px 0;
+    }
+
+    /**
+     * List
+     */
+
+    #list .box .boat {
+        padding: 6px;
+    }
+
+    #list .box .boat figure {
+        float: none;
+        width: 100%;
+        margin: 0 0 10px 0;
+    }
+
+    #list .box .boat .details {
+        float: none;
+        width: 100%;
+        padding: 0 10px 5px 10px;
+        margin: 0;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    #list .box .boat .details .header {
+        padding: 0 0 5px 0;
+    }
+
+    #list .box .boat .details .header li:first-child {
+        width: 100%;
+        padding: 0;
+    }
+
+    /**
+     * Details
+     */
+
+    #details .trip-table .column {
+        float: none;
+        width: 100%;
+    }
+
+    #details .trip-table .column:first-child {
+        float: none;
+    }
+
+    #details .trip-table .column .table {
+        padding-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    #details .trip-table .column .table:first-child {
+        padding-top: 10px;
+        border-top: 1px solid #000;
+    }
+
+    #details .trip-table .column:first-child .table:first-child {
+        padding-top: 0;
+        border: 0;
+    }
+
+    #details .payment-options {
+        padding: 20px 20px 10px 20px;
+    }
+    
+    #details .book-it {
+        width: 100%;
     }
 
     /**
@@ -955,6 +1545,10 @@
      */
 
     .tabs.user li {
+        width: 50%;
+    }
+
+    .tabs.charter.edit li {
         width: 50%;
     }
 
@@ -1039,20 +1633,6 @@
 
     #header .logo small {
         font: 0/0 a;
-    }
-
-    #header nav {
-        height: auto;
-        padding: 8px 0;
-    }
-
-    #header nav ul {
-        float: none;
-    }
-
-    #header nav .button {
-        float: none;
-        margin: 1px 0 0 0;
     }
 
     /**
@@ -1179,6 +1759,26 @@
     }
 
     /**
+     * Dashboard availability calendar
+     */
+
+    #dashboard #availability-calendar .ui-datepicker td a.ui-state-default,
+    #dashboard #availability-calendar .ui-datepicker td span.day_available_default,
+    #dashboard #availability-calendar .ui-datepicker td span.day_available,
+    #dashboard #availability-calendar .ui-datepicker td span.day_reserved {
+        min-height: 33px;
+        font-size: 10px;
+        padding: 2px;
+        border-width: 1px;
+    }
+
+    #dashboard #availability-calendar .ui-datepicker td .day_price {
+        left: 1px;
+        bottom: 2px;
+        font-weight: 400;
+    }
+
+    /**
      * Sidebar similiar
      */
 
@@ -1190,6 +1790,14 @@
         float: none;
         width: 100%;
         padding-right: 0;
+    }
+
+    /**
+     * Details
+     */
+
+    #details .payment-options {
+        padding: 15px 10px 5px 10px;
     }
 
     /**

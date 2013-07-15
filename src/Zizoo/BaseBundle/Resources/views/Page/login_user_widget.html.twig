@@ -1,6 +1,8 @@
 {% trans_default_domain "labels" %}
 
 {% if logged_in %}
+
+    <!-- start:header -->
     <header id="header">
 
         <!-- start:container -->
@@ -10,23 +12,30 @@
             <nav class="clearfix">
                 <ul class="menu clearfix">
                     <li><a href="{{ path('ZizooBaseBundle_how') }}" title="How it Works">How it Works</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome {{ user.username | default("none") }}<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ path('ZizooBaseBundle_Dashboard_UserDashboard') }}">Dashboard</a></li>
-                            <li><a href="{{ path('ZizooBaseBundle_Dashboard_Profile') }}">My Profile</a></li>
-                            <li><a href="{{ path('ZizooBookingBundle_view_all_bookings') }}">My Bookings</a></li>
-                            <li class="divider"></li>
-                            <li class="nav-header">Account</li>
-                            <li><a href="{{ path('ZizooUserBundle_User_AccountSettings') }}">Account Settings</a></li>
-                            <li><a href="{{ path('ZizooUserBundle_logout') }}">Logout</a></li>
-                        </ul>
-                    </li>
+                    <li><a href="{{ path('ZizooBaseBundle_homepage') }}" title="Home">Home</a></li>
                 </ul>
+                <br>
+                <div class="dropdown selectboxit-container">
+                    <span class="selectboxit white">
+                        <span class="selectboxit-text">My Account</span>
+                        <span class="selectboxit-arrow-container"><span></span></span>
+                    </span>
+                    <ul class="selectboxit-options white">
+                        <li><a href="{{ path('ZizooBaseBundle_Dashboard_UserDashboard') }}">Dashboard</a></li>
+                        <li class="borderless"><a href="{{ path('ZizooBaseBundle_Dashboard_Profile') }}">My Profile</a></li>
+                        <li class="borderless"><a href="{{ path('ZizooBookingBundle_view_all_bookings') }}">My Bookings</a></li>
+                        <li><a href="">Settings</a></li>
+                        <li class="borderless"><a href="{{ path('ZizooUserBundle_User_AccountSettings') }}">Account Settings</a></li>
+                        <li><a href="{{ path('ZizooUserBundle_logout') }}">Logout</a></li>
+                    </ul>
+                </div>
             </nav>
+
         </div>
         <!-- end:container -->
+
     </header>
+    <!-- end:header -->
 {% else %}
     {% include 'ZizooBaseBundle:Page:guest_header.html.twig' %}
 {% endif %}

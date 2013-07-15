@@ -13,7 +13,7 @@
             return this.each(function() {
 
                 // Modal and modal trigger
-                var sfModalCurrent = $('#' + $(this).data('modal'));
+                var sfModalCurrent = $("#" + $(this).data("modal"));
                 var sfModalTrigger = $(this);
 
                 // Activate modal
@@ -22,21 +22,21 @@
                     e.stopPropagation();
 
                     // Hide all open dialogs
-                    $('.overlay').remove();
-                    $('.modal').hide();
+                    $(".overlay").remove();
+                    $(".modal").hide();
 
                     // Append modal after overlay
-                    $('body').append('<div class="overlay"></div>');
-                    sfModalCurrent.insertAfter('.overlay').show();
+                    $("body").append("<div class='overlay'></div>");
+                    sfModalCurrent.insertAfter(".overlay").show();
                 });
 
-                $('html').click(function() {
-                    $('.overlay').remove();
+                $("html").click(function() {
+                    $(".overlay").remove();
                     sfModalCurrent.hide();
                 });
 
-                $('.modal .close').click(function() {
-                    $('.overlay').remove();
+                $(".modal .close").click(function() {
+                    $(".overlay").remove();
                     sfModalCurrent.hide();
                     return false;
                 });

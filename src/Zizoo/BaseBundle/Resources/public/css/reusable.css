@@ -1,6 +1,3 @@
-@import url('form_div.css');
-
-
 /* ==========================================================================
    Reusable
    ========================================================================== */
@@ -28,7 +25,7 @@
     background: -o-linear-gradient(top, #4d4d4d 50%,#484848 50%);
     background: -ms-linear-gradient(top, #4d4d4d 50%,#484848 50%);
     background: linear-gradient(to bottom, #4d4d4d 50%,#484848 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4d4d4d', endColorstr='#484848',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#4d4d4d", endColorstr="#484848",GradientType=0);
     -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.5);
     -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.5);
     box-shadow: 0 1px 2px rgba(0,0,0,0.5);
@@ -66,6 +63,14 @@
     box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5);
 }
 
+/**
+ * Date picker
+ */
+
+.date-picker {
+    cursor: text;
+}
+
 
 /* ==========================================================================
    Buttons
@@ -78,7 +83,7 @@
 .button {
     display: inline-block;
     height: 40px;
-    font: italic 14px/40px 'Asap', Arial;
+    font: italic 14px/40px "Asap", Arial;
     vertical-align: top;
     padding: 0 30px;
     -webkit-box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4), 1px 1px 1px rgba(0,0,0,0.3);
@@ -100,14 +105,14 @@
  * Button sizes
  */
 
-.button.add {
-    height: 30px;
-    line-height: 30px;
-}
-
 .button.small {
     height: 26px;
     line-height: 26px;
+}
+
+.button.medium {
+    height: 35px;
+    line-height: 35px;
 }
 
 .button.big {
@@ -132,7 +137,7 @@
     background: -o-linear-gradient(top, #ff9922 50%,#f29120 50%);
     background: -ms-linear-gradient(top, #ff9922 50%,#f29120 50%);
     background: linear-gradient(to bottom, #ff9922 50%,#f29120 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff9922', endColorstr='#f29120',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff9922", endColorstr="#f29120",GradientType=0);
 }
 
 .button.orange:hover {
@@ -144,7 +149,7 @@
     background: -o-linear-gradient(top, #e5891f 50%,#d9821d 50%);
     background: -ms-linear-gradient(top, #e5891f 50%,#d9821d 50%);
     background: linear-gradient(to bottom, #e5891f 50%,#d9821d 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e5891f', endColorstr='#d9821d',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e5891f", endColorstr="#d9821d",GradientType=0);
 }
 
 .button.blue {
@@ -156,7 +161,7 @@
     background: -o-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
     background: -ms-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
     background: linear-gradient(to bottom, #47c2d2 50%,#45bccb 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#47c2d2', endColorstr='#45bccb',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#47c2d2", endColorstr="#45bccb",GradientType=0);
 }
 
 .button.blue:hover {
@@ -168,7 +173,7 @@
     background: -o-linear-gradient(top, #40aebd 50%,#3ca5b3 50%);
     background: -ms-linear-gradient(top, #40aebd 50%,#3ca5b3 50%);
     background: linear-gradient(to bottom, #40aebd 50%,#3ca5b3 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#40aebd', endColorstr='#3ca5b3',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#40aebd", endColorstr="#3ca5b3",GradientType=0);
 }
 
 .button.white {
@@ -180,7 +185,7 @@
     background: -o-linear-gradient(top, #ffffff 50%,#f2f2f2 50%);
     background: -ms-linear-gradient(top, #ffffff 50%,#f2f2f2 50%);
     background: linear-gradient(to bottom, #ffffff 50%,#f2f2f2 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f2f2f2',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff", endColorstr="#f2f2f2",GradientType=0);
 }
 
 .button.white:hover {
@@ -191,7 +196,7 @@
     background: -o-linear-gradient(top, #e1e2e2 50%,#d6d6d6 50%);
     background: -ms-linear-gradient(top, #e1e2e2 50%,#d6d6d6 50%);
     background: linear-gradient(to bottom, #e1e2e2 50%,#d6d6d6 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e1e2e2', endColorstr='#d6d6d6',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e1e2e2", endColorstr="#d6d6d6",GradientType=0);
 }
 
 .button.gray {
@@ -203,7 +208,7 @@
     background: -o-linear-gradient(top, #ebecec 50%,#dfe0e0 50%);
     background: -ms-linear-gradient(top, #ebecec 50%,#dfe0e0 50%);
     background: linear-gradient(to bottom, #ebecec 50%,#dfe0e0 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebecec', endColorstr='#dfe0e0',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ebecec", endColorstr="#dfe0e0",GradientType=0);
 }
 
 .button.gray:hover {
@@ -214,7 +219,7 @@
     background: -o-linear-gradient(top, #d3d4d4 50%,#c8c9c9 50%);
     background: -ms-linear-gradient(top, #d3d4d4 50%,#c8c9c9 50%);
     background: linear-gradient(to bottom, #d3d4d4 50%,#c8c9c9 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d3d4d4', endColorstr='#c8c9c9',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#d3d4d4", endColorstr="#c8c9c9",GradientType=0);
 }
 
 .button.facebook {
@@ -226,7 +231,7 @@
     background: -o-linear-gradient(top, #3a5897 50%,#344f88 50%);
     background: -ms-linear-gradient(top, #3a5897 50%,#344f88 50%);
     background: linear-gradient(to bottom, #3a5897 50%,#344f88 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3a5897', endColorstr='#344f88',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3a5897", endColorstr="#344f88",GradientType=0);
 }
 
 .button.facebook:hover {
@@ -237,7 +242,272 @@
     background: -o-linear-gradient(top, #344f88 50%,#314b80 50%);
     background: -ms-linear-gradient(top, #344f88 50%,#314b80 50%);
     background: linear-gradient(to bottom, #344f88 50%,#314b80 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#344f88', endColorstr='#314b80',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#344f88", endColorstr="#314b80",GradientType=0);
+}
+
+.button.twitter {
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    color: #fff;
+    background: -moz-linear-gradient(top, #3bc9f1 50%, #39c3e9 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#3bc9f1), color-stop(50%,#39c3e9));
+    background: -webkit-linear-gradient(top, #3bc9f1 50%,#39c3e9 50%);
+    background: -o-linear-gradient(top, #3bc9f1 50%,#39c3e9 50%);
+    background: -ms-linear-gradient(top, #3bc9f1 50%,#39c3e9 50%);
+    background: linear-gradient(to bottom, #3bc9f1 50%,#39c3e9 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3bc9f1", endColorstr="#39c3e9",GradientType=0);
+}
+
+.button.twitter:hover {
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    background: -moz-linear-gradient(top, #35b5d8 50%, #32acce 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#35b5d8), color-stop(50%,#32acce));
+    background: -webkit-linear-gradient(top, #35b5d8 50%,#32acce 50%);
+    background: -o-linear-gradient(top, #35b5d8 50%,#32acce 50%);
+    background: -ms-linear-gradient(top, #35b5d8 50%,#32acce 50%);
+    background: linear-gradient(to bottom, #35b5d8 50%,#32acce 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#35b5d8", endColorstr="#32acce",GradientType=0);
+}
+
+
+/* ==========================================================================
+   Selectbox
+   ========================================================================== */
+
+/**
+ * Default
+ */
+
+.selectboxit-container {
+    display: inline-block;
+    position: relative;
+}
+
+.selectboxit-container * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: -moz-none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.selectboxit-container .selectboxit {
+    display: block;
+    position: relative;
+    height: 26px;
+    cursor: pointer;
+}
+
+.selectboxit-container .selectboxit.selectboxit-open:after {
+    display: block;
+    position: absolute;
+    top: 34px;
+    right: 8px;
+    content: "";
+    width: 10px;
+    height: 7px;
+    z-index: 9999999999999;
+}
+
+.selectboxit-container .selectboxit .selectboxit-text {
+    float: left;
+    display: block;
+    height: 26px;
+    font: 12px/26px "Asap", Arial;
+    text-overflow: ellipsis;
+    padding: 0 10px;
+    margin: 0 1px 0 0;
+    -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    -moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    border-radius: 5px 0 0 5px;
+    overflow: hidden;
+}
+
+.selectboxit-container .selectboxit .selectboxit-arrow-container {
+    display: block;
+    position: relative;
+    float: left;
+    width: 26px;
+    height: 26px;
+    -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    -moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    border-radius: 0 5px 5px 0;
+}
+
+.selectboxit-container .selectboxit .selectboxit-arrow-container * {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-repeat: no-repeat;
+    background-position: center 11px;
+    background-image: url(../images/selectbox-arrow.png);
+}
+
+.selectboxit-container .selectboxit-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    font: 12px/20px "Asap", Arial;
+    max-height: 197px;
+    padding: 5px 0;
+    margin: 15px 0 0 0;
+    -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    -moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+    cursor: pointer;
+    border-radius: 3px;
+    z-index: 9999999999999;
+}
+
+.selectboxit-container .selectboxit-options li {
+    padding: 0 10px;
+}
+
+.selectboxit-container .selectboxit-options li a {
+    display: block;
+    text-overflow: ellipsis;
+    padding: 7px 0 5px 0;
+    background: url(../images/selectbox-line.png) repeat-x left top;
+    overflow: hidden;
+}
+
+.selectboxit-container .selectboxit-options li:first-child a {
+    background: none;
+}
+
+.selectboxit-container .selectboxit-options .borderless a {
+    padding: 1px 0 5px 0;
+    background: none;
+}
+
+.selectboxit-container .selectboxit-options li a:hover {
+    color: #47c2d2;
+}
+
+.selectboxit.selectboxit-disabled,
+.selectboxit-options .selectboxit-disabled {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    opacity: 0.65;
+    filter: alpha(opacity=65);
+    cursor: default;
+}
+
+/**
+ * Selectbox sizes
+ */
+
+.selectboxit-container .selectboxit.small {
+    height: 20px;
+}
+
+.selectboxit-container .selectboxit.small.selectboxit-open:after {
+    top: 28px;
+}
+
+.selectboxit-container .selectboxit.small .selectboxit-text {
+    height: 20px;
+    font-style: italic;
+    line-height: 20px;
+}
+
+.selectboxit-container .selectboxit.small.gray .selectboxit-text {
+    color: #969696;
+}
+
+.selectboxit-container .selectboxit.small .selectboxit-arrow-container {
+    width: 20px;
+    height: 20px;
+}
+
+.selectboxit-container .selectboxit.small .selectboxit-arrow-container * {
+    background-position: center 8px;
+    background-image: url(../images/selectbox-arrow-small.png);
+}
+
+/**
+ * Selectbox colors
+ */
+
+.selectboxit-container .selectboxit.white.selectboxit-open:after {
+    background: url(../images/selectbox-options-arrow-white.png);
+}
+
+.selectboxit-container .selectboxit.white .selectboxit-text,
+.selectboxit-container .selectboxit.white .selectboxit-arrow-container {
+    text-shadow: 1px 1px 1px rgba(255,255,255,0.4);
+    color: #000;
+    background: -moz-linear-gradient(top, #ffffff 50%, #f2f2f2 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#ffffff), color-stop(50%,#f2f2f2));
+    background: -webkit-linear-gradient(top, #ffffff 50%,#f2f2f2 50%);
+    background: -o-linear-gradient(top, #ffffff 50%,#f2f2f2 50%);
+    background: -ms-linear-gradient(top, #ffffff 50%,#f2f2f2 50%);
+    background: linear-gradient(to bottom, #ffffff 50%,#f2f2f2 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff", endColorstr="#f2f2f2",GradientType=0);
+}
+
+.selectboxit-container .selectboxit.white.selectboxit-hover .selectboxit-text,
+.selectboxit-container .selectboxit.white.selectboxit-hover .selectboxit-arrow-container {
+    text-shadow: 1px 1px 1px rgba(255,255,255,0.4);
+    background: -moz-linear-gradient(top, #e1e2e2 50%, #d6d6d6 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#e1e2e2), color-stop(50%,#d6d6d6));
+    background: -webkit-linear-gradient(top, #e1e2e2 50%,#d6d6d6 50%);
+    background: -o-linear-gradient(top, #e1e2e2 50%,#d6d6d6 50%);
+    background: -ms-linear-gradient(top, #e1e2e2 50%,#d6d6d6 50%);
+    background: linear-gradient(to bottom, #e1e2e2 50%,#d6d6d6 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e1e2e2", endColorstr="#d6d6d6",GradientType=0);
+}
+
+.selectboxit-container .selectboxit-options.white {
+    background: #fff;
+}
+
+.selectboxit-container .selectboxit.gray.selectboxit-open:after {
+    background: url(../images/selectbox-options-arrow-gray.png);
+}
+
+.selectboxit-container .selectboxit.gray .selectboxit-text,
+.selectboxit-container .selectboxit.gray .selectboxit-arrow-container {
+    text-shadow: 1px 1px 1px rgba(255,255,255,0.4);
+    color: #000;
+    background: -moz-linear-gradient(top, #ebecec 50%, #dfe0e0 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#ebecec), color-stop(50%,#dfe0e0));
+    background: -webkit-linear-gradient(top, #ebecec 50%,#dfe0e0 50%);
+    background: -o-linear-gradient(top, #ebecec 50%,#dfe0e0 50%);
+    background: -ms-linear-gradient(top, #ebecec 50%,#dfe0e0 50%);
+    background: linear-gradient(to bottom, #ebecec 50%,#dfe0e0 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ebecec", endColorstr="#dfe0e0",GradientType=0);
+}
+
+.selectboxit-container .selectboxit.gray.selectboxit-hover .selectboxit-text,
+.selectboxit-container .selectboxit.gray.selectboxit-hover .selectboxit-arrow-container {
+    text-shadow: 1px 1px 1px rgba(255,255,255,0.4);
+    background: -moz-linear-gradient(top, #d3d4d4 50%, #c8c9c9 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#d3d4d4), color-stop(50%,#c8c9c9));
+    background: -webkit-linear-gradient(top, #d3d4d4 50%,#c8c9c9 50%);
+    background: -o-linear-gradient(top, #d3d4d4 50%,#c8c9c9 50%);
+    background: -ms-linear-gradient(top, #d3d4d4 50%,#c8c9c9 50%);
+    background: linear-gradient(to bottom, #d3d4d4 50%,#c8c9c9 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#d3d4d4", endColorstr="#c8c9c9",GradientType=0);
+}
+
+.selectboxit-container .selectboxit-options.gray {
+    background: #ebecec;
 }
 
 
@@ -245,36 +515,627 @@
    Form
    ========================================================================== */
 
-.form .row label.first_name .icon {
+/**
+ * Form block
+ */
+
+.form .block {
+    padding: 0 120px 15px 0;
+    margin: 0 0 30px 0;
+    border-bottom: 1px solid #ebecec;
+}
+
+.form .block.borderless {
+    margin: 0;
+    border: 0;
+}
+
+/**
+ * Form row
+ */
+
+.form .row {
+    position: relative;
+    min-height: 36px;
+    margin: 0 0 15px 0;
+}
+
+.form .row.disabled {
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+}
+
+.form .row.right {
+    text-align: right;
+}
+
+.form .row.center {
+    text-align: center;
+}
+
+.form .row.textarea {
+    margin-right: -120px;
+}
+
+.form .row .label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 145px;
+    height: 100%;
+    font: italic 14px/36px "Asap", Arial;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    color: #fff;
+    padding: 0 0 0 10px;
+    background: #4d4d4d;
+    border-radius: 5px 0 0 5px;
+    z-index: 2;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.form .row .label .icon {
+    display: block;
+    float: left;
+    width: 30px;
+    height: 36px;
+    margin: 0 8px 0 0;
+    background-repeat: no-repeat;
+    background-position: right center;
+}
+
+.form .row .label.first_name .icon {
     background-image: url(../images/label/name.png);
 }
 
-.form .row label.last_name .icon {
+.form .row .label.last_name .icon {
     background-image: url(../images/label/surname.png);
 }
 
-.form .row label.email .icon {
+.form .row .label.email .icon {
     background-image: url(../images/label/email.png);
 }
 
-.form .row label.password .icon {
+.form .row .label.email_confirm .icon {
+    background-image: url(../images/label/email-confirm.png);
+}
+
+.form .row .label.password .icon {
     background-image: url(../images/label/password.png);
 }
 
-.form .row label.confirm .icon {
-    background-image: url(../images/label/password.png);
-}
-
-.form .row label.charter_name .icon {
+.form .row .label.charter .icon {
     background-image: url(../images/label/charter.png);
 }
 
-.form .row label.location .icon {
+.form .row .label.location .icon {
     background-image: url(../images/label/location.png);
 }
 
-.form .row label.phone .icon {
+.form .row .label.phone .icon {
     background-image: url(../images/label/phone.png);
+}
+
+.form .row .label.photo .icon {
+    background-image: url(../images/label/photo.png);
+}
+
+.form .row .label.address .icon {
+    background-image: url(../images/label/address.png);
+}
+
+.form .row .label.languages .icon {
+    background-image: url(../images/label/languages.png);
+}
+
+.form .row .label.description .icon {
+    background-image: url(../images/label/description.png);
+}
+
+.form .row .label.country .icon {
+    background-image: url(../images/label/country.png);
+}
+
+.form .row .label.postal_code .icon {
+    background-image: url(../images/label/postal-code.png);
+}
+
+.form .row .label.credit_card .icon {
+    background-image: url(../images/label/credit-card.png);
+}
+
+.form .row .label .help .tooltip {
+    width: 140px;
+    white-space: normal;
+}
+
+.form .row input[type="text"],
+.form .row input[type="email"],
+.form .row input[type="password"],
+.form .row textarea {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    font: italic 14px/36px "Asap", Arial;
+    text-overflow: ellipsis;
+    color: #000;
+    padding: 0 15px 0 155px;
+    background: #ebebeb;
+    border: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+    border-radius: 5px;
+    z-index: 1;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+}
+
+.form .row textarea {
+    position: relative;
+    width: 100%;
+    min-height: 110px;
+    line-height: 20px;
+    padding: 8px 15px 8px 155px;
+    resize: vertical;
+}
+
+.form .row.error input[type="text"],
+.form .row.error input[type="email"],
+.form .row.error input[type="password"],
+.form .row.error textarea {
+    color: #f22;
+    background: #ffbebe;
+}
+
+/**
+ * Form column
+ */
+
+.form .column {
+    float: left;
+}
+
+.form .row.buttons .column {
+    display: inline-block;
+    float: none;
+    padding: 0 0 0 5px;
+}
+
+.form .row.two .column {
+    position: relative;
+    width: 50%;
+    min-height: 36px;
+}
+
+.form .row.two .column input[type="text"],
+.form .row.two .column input[type="email"],
+.form .row.two .column input[type="password"],
+.form .row.two .column textarea,
+.form .row.two .column .selectboxit-container {
+    left: 5px;
+}
+
+.form .row.two .column:first-child input[type="text"],
+.form .row.two .column:first-child input[type="email"],
+.form .row.two .column:first-child input[type="password"],
+.form .row.two .column:first-child textarea,
+.form .row.two .column:first-child .selectboxit-container {
+    left: 0;
+    right: 5px;
+}
+
+.form .row.two .column .label {
+    left: 5px;
+}
+
+.form .row.two .column:first-child .label {
+    left: 0;
+}
+
+/**
+ * Form checkbox, radio
+ */
+
+.form .row .ui-helper-hidden-accessible {
+    display: none;
+}
+
+.form .row .ui-checkbox,
+.form .row .ui-radio {
+    font-style: italic;
+    color: #959595;
+}
+
+.form .row .ui-checkbox-checked,
+.form .row .ui-radio-checked {
+    color: #000;
+}
+
+.form .row span.ui-checkbox,
+.form .row span.ui-radio {
+    display: inline-block;
+    position: relative;
+    top: 2px;
+    width: 14px;
+    height: 14px;
+    margin: 0 3px 0 0;
+    background: url(../images/checkbox.png) 0 0;
+}
+
+.form .row span.ui-checkbox.ui-checkbox-checked,
+.form .row span.ui-radio.ui-radio-checked {
+    background-position: 0 -14px;
+}
+
+/**
+ * Form profile picture
+ */
+
+.form .row .profile-placeholder {
+    float: left;
+    margin: 0 25px 0 0;
+}
+
+.form .row .profile-placeholder img {
+    display: block;
+    width: 100px;
+    border-radius: 5px;
+}
+
+.form .row .profile-pic-upload .filestyle {
+    position: relative;
+    float: left;
+    height: 35px;
+    font: italic 14px/35px "Asap", Arial;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    white-space: nowrap;
+    color: #fff;
+    vertical-align: top;
+    padding: 0 15px 0 10px;
+    background: -moz-linear-gradient(top, #47c2d2 50%, #45bccb 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#47c2d2), color-stop(50%,#45bccb));
+    background: -webkit-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
+    background: -o-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
+    background: -ms-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
+    background: linear-gradient(to bottom, #47c2d2 50%,#45bccb 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#47c2d2", endColorstr="#45bccb",GradientType=0);
+    -webkit-box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4), 1px 1px 1px rgba(0,0,0,0.3);
+    -moz-box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4), 1px 1px 1px rgba(0,0,0,0.3);
+    box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4), 1px 1px 1px rgba(0,0,0,0.3);
+    border: 0;
+    border-radius: 5px;
+    -webkit-transition: background-color 200ms ease, color 200ms ease, box-shadow 200ms ease, text-shadow 200ms ease;
+    transition: background-color 200ms ease, color 200ms ease, box-shadow 200ms ease, text-shadow 200ms ease;
+}
+
+.form .row .profile-pic-upload .filestyle:hover {
+    background: -moz-linear-gradient(top, #40aebd 50%, #3ca5b3 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#40aebd), color-stop(50%,#3ca5b3));
+    background: -webkit-linear-gradient(top, #40aebd 50%,#3ca5b3 50%);
+    background: -o-linear-gradient(top, #40aebd 50%,#3ca5b3 50%);
+    background: -ms-linear-gradient(top, #40aebd 50%,#3ca5b3 50%);
+    background: linear-gradient(to bottom, #40aebd 50%,#3ca5b3 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#40aebd", endColorstr="#3ca5b3",GradientType=0);
+    -webkit-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+    -moz-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+}
+
+.form .row .profile-pic-upload .filestyle .file {
+    display: none;
+}
+
+.form .row .profile-pic-upload .filestyle .fileButton {
+    position: relative;
+}
+
+.form .row .profile-pic-upload .filestyle .fileButton .icon {
+    display: inline-block;
+    width: 30px;
+    height: 35px;
+    margin: 0 5px 0 0;
+    background: url(../images/label/photo.png) no-repeat right center;
+}
+
+.form .row .profile-pic-upload .filestyle input[type="file"] {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/**
+ * Form file upload
+ */
+
+.form .row.file-upload .filestyle {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 90px;
+    height: 36px;
+    z-index: 1;
+}
+
+.form .row.file-upload .filestyle .fileName {
+    position: absolute;
+    width: 100%;
+    height: 36px;
+    font: italic 14px/30px "Asap", Arial;
+    text-overflow: ellipsis;
+    color: #000;
+    padding: 0 15px 0 155px;
+    background: #ebebeb;
+    border: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+    border-radius: 5px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+}
+
+.form .row.file-upload .filestyle .fileButton {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: -90px;
+    width: 80px;
+    height: 36px;
+    font: italic 14px/36px "Asap", Arial;
+    vertical-align: top;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    color: #fff;
+    background: -moz-linear-gradient(top, #47c2d2 50%, #45bccb 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#47c2d2), color-stop(50%,#45bccb));
+    background: -webkit-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
+    background: -o-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
+    background: -ms-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
+    background: linear-gradient(to bottom, #47c2d2 50%,#45bccb 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#47c2d2", endColorstr="#45bccb",GradientType=0);
+    -webkit-box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4), 1px 1px 1px rgba(0,0,0,0.3);
+    -moz-box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4), 1px 1px 1px rgba(0,0,0,0.3);
+    box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4), 1px 1px 1px rgba(0,0,0,0.3);
+    border: 0;
+    border-radius: 5px;
+    -webkit-transition: background-color 200ms ease, color 200ms ease, box-shadow 200ms ease, text-shadow 200ms ease;
+    transition: background-color 200ms ease, color 200ms ease, box-shadow 200ms ease, text-shadow 200ms ease;
+    cursor: pointer;
+}
+
+.form .row.file-upload .filestyle .fileButton:hover {
+    text-shadow: 1px 1px 1px rgba(255,255,255,0.4);
+    color: #005a69;
+    background: -moz-linear-gradient(top, #40aebd 50%, #3ca5b3 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#40aebd), color-stop(50%,#3ca5b3));
+    background: -webkit-linear-gradient(top, #40aebd 50%,#3ca5b3 50%);
+    background: -o-linear-gradient(top, #40aebd 50%,#3ca5b3 50%);
+    background: -ms-linear-gradient(top, #40aebd 50%,#3ca5b3 50%);
+    background: linear-gradient(to bottom, #40aebd 50%,#3ca5b3 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#40aebd", endColorstr="#3ca5b3",GradientType=0);
+    -webkit-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+    -moz-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+}
+
+.form .row.file-upload .filestyle .fileButton .icon {
+    display: none;
+}
+
+.form .row.file-upload .filestyle input[type="file"] {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/**
+ * Form selectbox
+ */
+
+.form .row .selectboxit-container {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    min-width: 250px;
+    height: 100%;
+}
+
+.form .row .selectboxit-container .selectboxit {
+    height: 36px;
+}
+
+.form .row .selectboxit-container .selectboxit.selectboxit-open:after {
+    top: 39px;
+    background: url(../images/selectbox-options-arrow-gray.png);
+}
+
+.form .row .selectboxit-container .selectboxit .selectboxit-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 36px;
+    float: none;
+    height: 36px;
+    font: italic 14px/36px "Asap", Arial;
+    text-overflow: ellipsis;
+    color: #000;
+    padding: 0 15px 0 155px;
+    background: #ebebeb;
+    border: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+    border-radius: 5px 0 0 5px;
+    z-index: 1;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+}
+
+.form .row .selectboxit-container .selectboxit .selectboxit-arrow-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    float: none;
+    width: 36px;
+    height: 36px;
+    background: #ebebeb;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+    border-radius: 0 5px 5px 0;
+}
+
+.form .row .selectboxit-container .selectboxit .selectboxit-arrow-container * {
+    background-position: center center;
+}
+
+.form .row .selectboxit-container .selectboxit-options {
+    left: 160px;
+    margin: 10px 0 0 0;
+    background: #ebecec;
+}
+
+/**
+ * Form checkboxes
+ */
+
+.form .row .checkboxes {
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 110px;
+    font: italic 14px/36px "Asap", Arial;
+    text-overflow: ellipsis;
+    color: #000;
+    padding: 8px 15px 8px 155px;
+    background: #ebebeb;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+    border-radius: 5px;
+    z-index: 1;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+}
+
+.form .row.two .checkboxes {
+    min-height: 36px;
+}
+
+.form .row .checkboxes li {
+    float: left;
+    width: 33%;
+    line-height: 20px;
+}
+
+.form .row.two .checkboxes li {
+    float: none;
+    width: 100%;
+    padding-right: 0;
+}
+
+.form .row .checkboxes .ui-checkbox-checked {
+    color: #47c3d3;
+}
+
+.form .row .checkboxes span.ui-checkbox {
+    top: 0;
+    width: 11px;
+    height: 11px;
+    background: url(../images/checkbox-checkboxes.png) 0 0;
+}
+
+.form .row .checkboxes span.ui-checkbox.ui-checkbox-checked {
+    background-position: 0 -11px;
+}
+
+/**
+ * Form verifications
+ */
+
+.form .row .verifications li {
+    line-height: 35px;
+    padding: 15px 0 0 0;
+}
+
+.form .row .verifications li:first-child {
+    padding-top: 0;
+}
+
+.form .row .verifications span {
+    display: inline-block;
+    width: 180px;
+    padding: 0 0 0 35px;
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+
+.form .row .verifications span.phone {
+    background-image: url(../images/verifications-add-phone.png);
+}
+
+.form .row .verifications span.facebook {
+    color: #3b5998;
+    background-position: 5px center;
+    background-image: url(../images/verifications-add-facebook.png);
+}
+
+.form .row .verifications span.twitter {
+    color: #3bc9f1;
+    background-image: url(../images/verifications-add-twitter.png);
+}
+
+.form .row .verifications .button {
+    width: 190px;
+    text-align: center;
+    padding: 0;
+}
+
+/**
+ * Form error
+ */
+
+.form span.error {
+    display: block;
+    position: relative;
+    font-size: 12px;
+    line-height: 18px;
+    color: #f22;
+    padding: 5px 10px;
+    margin: -5px 0 10px 145px;
+    background: #fff;
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    border-radius: 5px;
+}
+
+.form span.error:after {
+    position: absolute;
+    top: -7px;
+    left: 10px;
+    content: "";
+    width: 10px;
+    height: 7px;
+    background: url(../images/selectbox-options-arrow-gray.png);
 }
 
 
@@ -406,6 +1267,18 @@
     background: url(../images/icon/delete.png);
 }
 
+.icon.complete {
+    width: 15px;
+    height: 13px;
+    background: url(../images/icon/complete.png);
+}
+
+.icon.incomplete {
+    width: 13px;
+    height: 13px;
+    background: url(../images/icon/incomplete.png);
+}
+
 
 /* ==========================================================================
    Circle
@@ -419,7 +1292,7 @@
     display: inline-block;
     width: 15px;
     height: 15px;
-    font: 400 10px/15px 'Asap', Arial;
+    font: 400 10px/15px "Asap", Arial;
     text-align: center;
     color: #fff;
     border-radius: 100%;
@@ -460,6 +1333,111 @@
 
 
 /* ==========================================================================
+   Help
+   ========================================================================== */
+
+.help {
+    display: inline-block;
+    position: relative;
+    width: 10px;
+    height: 10px;
+    background: url(../images/help.png);
+    margin: 0 5px;
+    cursor: help;
+}
+
+.help .tooltip {
+    top: 22px;
+    right: -3px;
+    min-width: 70px;
+    white-space: nowrap;
+}
+
+.help:hover .tooltip {
+    visibility: visible;
+    filter: alpha(opacity=100);
+    opacity: 1;
+}
+
+
+/* ==========================================================================
+   Change
+   ========================================================================== */
+
+.change {
+    display: inline-block;
+    position: relative;
+}
+
+.change.active:after {
+    display: block;
+    position: absolute;
+    top: 19px;
+    right: 0;
+    content: "";
+    width: 10px;
+    height: 7px;
+    background: url(../images/selectbox-options-arrow-gray.png);
+    z-index: 9999999999999;
+}
+
+.change > a {
+    display: inline-block;
+    font: italic 12px/18px "Asap", Arial;
+    color: #969696;
+    padding: 0 15px 0 0;
+    background: url(../images/change-arrow.png) no-repeat right center;
+}
+
+.change .change-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: -8px;
+    font: 12px/20px "Asap", Arial;
+    max-height: 197px;
+    padding: 5px 0;
+    margin: 8px 0 0 0;
+    background: #ebecec;
+    -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    -moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 3px;
+    z-index: 9999999999999;
+}
+
+.change .change-options li {
+    padding: 0 10px;
+}
+
+.change .change-options li a {
+    display: block;
+    text-overflow: ellipsis;
+    padding: 7px 0 5px 0;
+    background: url(../images/selectbox-line.png) repeat-x left top;
+    overflow: hidden;
+}
+
+.change .change-options li:first-child a {
+    background: none;
+}
+
+.change .change-options li a:hover {
+    color: #47c2d2;
+}
+
+.change .change-options li a span {
+    display: none;
+}
+
+
+/* ==========================================================================
    Subnavigation
    ========================================================================== */
 
@@ -489,13 +1467,13 @@
     display: block;
     position: absolute;
     top: 0;
-    right: -62px;
-    width: 62px;
+    right: -65px;
+    width: 64px;
     height: 27px;
-    font: italic 12px/26px 'Asap', Arial;
+    font: italic 12px/26px "Asap", Arial;
     text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
     color: #fff;
-    padding: 0 0 0 38px;
+    padding: 0 0 0 36px;
     background: url(../images/subnavigation.png);
     -webkit-transition: right 200ms ease;
     transition: right 200ms ease;
@@ -545,7 +1523,7 @@
 
 .subnavigation li .icon.location.white.shadow {
     top: 4px;
-    left: 15px;
+    left: 14px;
     background-position: 0 -20px;
 }
 
@@ -556,7 +1534,7 @@
 
 .subnavigation li .icon.photo {
     top: 5px;
-    left: 12px;
+    left: 11px;
     background-position: 0 -16px;
 }
 
@@ -567,13 +1545,36 @@
 
 .subnavigation li .icon.availability {
     top: 5px;
-    left: 14px;
+    left: 13px;
     background-position: 0 -17px;
 }
 
 .subnavigation .current .icon.availability,
 .subnavigation li:hover .icon.availability {
     background-position: 0 0;
+}
+
+
+/* ==========================================================================
+   Select subpage
+   ========================================================================== */
+
+/**
+ * Default
+ */
+
+.select-subpage {
+    position: relative;
+}
+
+.select-subpage .dropdown {
+    position: absolute;
+    top: 20px;
+    right: 0;
+}
+
+.select-subpage .dropdown .selectboxit .selectboxit-text {
+    min-width: 100px;
 }
 
 
@@ -594,7 +1595,7 @@
     background: -o-linear-gradient(top, #4d4d4d 50%,#474747 50%);
     background: -ms-linear-gradient(top, #4d4d4d 50%,#474747 50%);
     background: linear-gradient(to bottom, #4d4d4d 50%,#474747 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4d4d4d', endColorstr='#474747',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#4d4d4d", endColorstr="#474747",GradientType=0);
     -webkit-box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4), 1px 1px 2px rgba(0,0,0,0.3);
     -moz-box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4), 1px 1px 2px rgba(0,0,0,0.3);
     box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4), 1px 1px 2px rgba(0,0,0,0.3);
@@ -608,17 +1609,28 @@
     background: -o-linear-gradient(top, #f1665e 50%,#e9635b 50%);
     background: -ms-linear-gradient(top, #f1665e 50%,#e9635b 50%);
     background: linear-gradient(to bottom, #f1665e 50%,#e9635b 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f1665e', endColorstr='#e9635b',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f1665e", endColorstr="#e9635b",GradientType=0);
+}
+
+.section.blue header {
+    background: -moz-linear-gradient(top, #47c2d2 50%, #45bccb 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#47c2d2), color-stop(50%,#45bccb));
+    background: -webkit-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
+    background: -o-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
+    background: -ms-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
+    background: linear-gradient(to bottom, #47c2d2 50%,#45bccb 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#47c2d2", endColorstr="#45bccb",GradientType=0);
 }
 
 .modal header *,
 .section header * {
-    font: italic 400 18px/30px 'Asap', Arial;
+    font: italic 400 18px/30px "Asap", Arial;
     text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
     color: #fff;
 }
 
-.section.alert header * {
+.section.alert header *,
+.section.blue header * {
     text-shadow: none;
 }
 
@@ -641,8 +1653,18 @@
 }
 
 .section.alert .content p {
-    font: 16px/28px 'Asap', Arial;
+    font: 16px/28px "Asap", Arial;
     color: #f1665e;
+}
+
+.section.blue .content p {
+    font: 16px/28px "Asap", Arial;
+    color: #4d4d4d;
+    padding: 0 0 20px 0;
+}
+
+.section.blue .content a {
+    text-decoration: underline;
 }
 
 
@@ -662,7 +1684,7 @@
 
 .box .boat {
     display: block;
-    font: italic 12px/20px 'Asap', Arial;
+    font: italic 12px/20px "Asap", Arial;
     padding: 6px;
     -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
@@ -674,8 +1696,23 @@
     background: #fff;
 }
 
+.box .boat.white:hover {
+    -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3), inset 0 0 0 3px #47c2d2;
+    -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3), inset 0 0 0 3px #47c2d2;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.3), inset 0 0 0 3px #47c2d2;
+}
+
 .box .boat.gray {
     background: #ebecec;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+.box .boat.gray:hover {
+    -webkit-box-shadow: inset 0 0 0 3px #47c2d2;
+    -moz-box-shadow: inset 0 0 0 3px #47c2d2;
+    box-shadow: inset 0 0 0 3px #47c2d2;
 }
 
 .box .boat figure {
@@ -719,6 +1756,52 @@
 
 .box .boat .right strong {
     font-size: 14px;
+    -webkit-transition: color 200ms ease;
+    transition: color 200ms ease;
+}
+
+.box .boat:hover .right strong {
+    color: #47c2d2;
+}
+
+.box .boat .icon.minus {
+    width: 17px;
+    height: 13px;
+    background: url(../images/icon/boat-minus.png);
+}
+
+.box .boat .icon.minus.black {
+    background: url(../images/icon/boat-minus-black.png);
+}
+
+.box .boat .icon.minus:hover {
+    background-position: 0 -13px;
+}
+
+.box .boat .icon.plus {
+    width: 17px;
+    height: 13px;
+    background: url(../images/icon/boat-plus.png);
+}
+
+.box .boat .icon.plus.black {
+    background: url(../images/icon/boat-plus-black.png);
+}
+
+.box .boat .icon.plus:hover {
+    background-position: 0 -13px;
+}
+
+.box .boat .icon .tooltip {
+    top: 25px;
+    right: 0;
+    white-space: nowrap;
+}
+
+.box .boat .icon:hover .tooltip {
+    visibility: visible;
+    filter: alpha(opacity=100);
+    opacity: 1;
 }
 
 
@@ -750,13 +1833,13 @@
     width: 14.28%;
 }
 
-.tabs.boat li {
+.tabs.charter.edit li {
     width: 25%;
 }
 
 .tabs li a {
     display: block;
-    font: italic 400 11px/30px 'Asap', Arial;
+    font: italic 400 11px/30px "Asap", Arial;
     color: #fff;
     padding: 0 0 0 7px;
     background: -moz-linear-gradient(top, #4d4d4d 50%, #474747 50%);
@@ -765,7 +1848,7 @@
     background: -o-linear-gradient(top, #4d4d4d 50%,#474747 50%);
     background: -ms-linear-gradient(top, #4d4d4d 50%,#474747 50%);
     background: linear-gradient(to bottom, #4d4d4d 50%,#474747 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4d4d4d', endColorstr='#474747',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#4d4d4d", endColorstr="#474747",GradientType=0);
     -webkit-box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4);
     -moz-box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4);
     box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4);
@@ -780,7 +1863,7 @@
     background: -o-linear-gradient(top, #47c2d2 50%,#44baca 50%);
     background: -ms-linear-gradient(top, #47c2d2 50%,#44baca 50%);
     background: linear-gradient(to bottom, #47c2d2 50%,#44baca 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#47c2d2', endColorstr='#44baca',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#47c2d2", endColorstr="#44baca",GradientType=0);
 }
 
 .tabs .current a,
@@ -792,7 +1875,7 @@
     background: -o-linear-gradient(top, #ffffff 50%,#fafafa 50%);
     background: -ms-linear-gradient(top, #ffffff 50%,#fafafa 50%);
     background: linear-gradient(to bottom, #ffffff 50%,#fafafa 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#fafafa',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff", endColorstr="#fafafa",GradientType=0);
 }
 
 .tabs .disabled a,
@@ -817,11 +1900,11 @@
 }
 
 .tabs .icon {
+    top: -1px;
     margin: 0 3px 0 0;
 }
 
 .tabs .icon.dashboard {
-    top: -1px;
     width: 18px;
     height: 20px;
     background: url(../images/tabs/dashboard.png);
@@ -832,7 +1915,6 @@
 }
 
 .tabs .icon.message {
-    top: -1px;
     width: 16px;
     height: 12px;
     margin-right: 6px;
@@ -844,7 +1926,6 @@
 }
 
 .tabs .icon.profile {
-    top: -1px;
     width: 19px;
     height: 18px;
     background: url(../images/tabs/profile.png);
@@ -855,7 +1936,6 @@
 }
 
 .tabs .icon.bookings {
-    top: -1px;
     width: 17px;
     height: 13px;
     background: url(../images/tabs/bookings.png);
@@ -866,7 +1946,6 @@
 }
 
 .tabs .icon.skills {
-    top: -1px;
     width: 17px;
     height: 17px;
     background: url(../images/tabs/skills.png);
@@ -877,7 +1956,6 @@
 }
 
 .tabs .icon.boats {
-    top: -1px;
     width: 22px;
     height: 11px;
     background: url(../images/tabs/boats.png);
@@ -888,7 +1966,6 @@
 }
 
 .tabs .icon.payments {
-    top: -1px;
     width: 9px;
     height: 16px;
     background: url(../images/tabs/payments.png);
@@ -899,7 +1976,6 @@
 }
 
 .tabs .icon.account {
-    top: -1px;
     width: 18px;
     height: 18px;
     background: url(../images/tabs/account.png);
@@ -909,10 +1985,106 @@
     background-position: 0 -18px;
 }
 
+.tabs .icon.overview {
+    width: 17px;
+    height: 16px;
+    background: url(../images/tabs/overview.png);
+}
+
+.tabs .current .icon.overview {
+    background-position: 0 -16px;
+}
+
+.tabs .icon.description {
+    width: 15px;
+    height: 16px;
+    background: url(../images/tabs/description.png);
+}
+
+.tabs .current .icon.description {
+    background-position: 0 -16px;
+}
+
+.tabs .icon.photos {
+    width: 17px;
+    height: 14px;
+    background: url(../images/tabs/photos.png);
+}
+
+.tabs .current .icon.description {
+    background-position: 0 -14px;
+}
+
+.tabs .icon.calendar {
+    width: 15px;
+    height: 15px;
+    background: url(../images/tabs/calendar.png);
+}
+
+.tabs .current .icon.calendar {
+    background-position: 0 -15px;
+}
+
 .tabs li .circle {
     position: absolute;
     top: -6px;
     right: -6px;
+}
+
+
+/* ==========================================================================
+   Filter
+   ========================================================================== */
+
+/**
+ * Filter
+ */
+
+.filter {
+    padding: 0 0 20px 0;
+    margin: 0 0 30px 0;
+    border-bottom: 1px solid #ebecec;
+}
+
+.filter > form > ul > li {
+    float: left;
+    height: 20px;
+    padding: 0 15px 10px 0;
+}
+
+.filter .selectboxit-text {
+    min-width: 50px;
+}
+
+.filter ul .submit {
+    padding-right: 0;
+}
+
+.filter .button.small {
+    height: 20px;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.filter input[type="text"] {
+    width: 115px;
+    height: 18px;
+    font: italic 12px/18px "Asap", Arial;
+    color: #969696;
+    padding: 0 5px;
+    border-radius: 5px;
+    border: 1px solid #ebecec;
+}
+
+.filter input[type="text"].date-picker {
+    width: 65px;
+    height: 20px;
+    font: italic 12px/20px "Asap", Arial;
+    color: #4d4d4d;
+    padding: 0 5px 0 25px;
+    background: url(../images/filter-calendar.png) no-repeat left 1px;
+    border-radius: 0;
+    border: 0;
 }
 
 
@@ -947,7 +2119,7 @@
     left: 0;
     right: 0;
     height: 30px;
-    font: italic 400 18px/30px 'Asap', Arial;
+    font: italic 400 18px/30px "Asap", Arial;
     text-overflow: ellipsis;
     color: #fff;
     padding: 0 10px;
@@ -1122,7 +2294,7 @@
     position: relative;
     width: 133px;
     font-style: italic;
-    font: italic 14px/14px 'Asap', Arial;
+    font: italic 14px/14px "Asap", Arial;
     padding: 5px 0;
 }
 
@@ -1246,7 +2418,7 @@
     top: 0;
     left: 0;
     width: 50px;
-    font: italic 11px/12px 'Asap', Arial;
+    font: italic 11px/12px "Asap", Arial;
     text-align: center;
 }
 
@@ -1301,7 +2473,7 @@
     position: absolute;
     top: 5px;
     left: -7px;
-    content: '';
+    content: "";
     width: 7px;
     height: 8px;
     background: url(../images/messages-arrow.png);
@@ -1358,7 +2530,7 @@
 }
 
 .messages .message .background .description {
-    font: italic 400 14px/16px 'Asap', Arial;
+    font: italic 400 14px/16px "Asap", Arial;
     padding: 0 0 5px 0;
 }
 
@@ -1367,7 +2539,7 @@
  */
 
 .messages .message header {
-    font: italic 400 14px/30px 'Asap', Arial;
+    font: italic 400 14px/30px "Asap", Arial;
     color: #fff;
     margin: -5px -15px 10px -15px;
     -webkit-box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4);
@@ -1382,7 +2554,7 @@
     background: -o-linear-gradient(top, #f1665e 50%,#e9635b 50%);
     background: -ms-linear-gradient(top, #f1665e 50%,#e9635b 50%);
     background: linear-gradient(to bottom, #f1665e 50%,#e9635b 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f1665e', endColorstr='#e9635b',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f1665e", endColorstr="#e9635b",GradientType=0);
 }
 
 .messages .message.orange header {
@@ -1392,7 +2564,7 @@
     background: -o-linear-gradient(top, #ff9922 50%,#f79421 50%);
     background: -ms-linear-gradient(top, #ff9922 50%,#f79421 50%);
     background: linear-gradient(to bottom, #ff9922 50%,#f79421 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff9922', endColorstr='#f79421',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff9922", endColorstr="#f79421",GradientType=0);
 }
 
 .messages .message.blue header {
@@ -1402,7 +2574,7 @@
     background: -o-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
     background: -ms-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
     background: linear-gradient(to bottom, #47c2d2 50%,#45bccb 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#47c2d2', endColorstr='#45bccb',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#47c2d2", endColorstr="#45bccb",GradientType=0);
 }
 
 /**
@@ -1410,7 +2582,7 @@
  */
 
 .messages .message .trip {
-    font: 12px/18px 'Asap', Arial;
+    font: 12px/18px "Asap", Arial;
     color: #969696;
     padding: 0 0 5px 0;
 }
@@ -1431,7 +2603,7 @@
  */
 
 .messages .message footer {
-    font: italic 11px/12px 'Asap', Arial;
+    font: italic 11px/12px "Asap", Arial;
 }
 
 .inbox .messages .message footer {
@@ -1448,7 +2620,7 @@
 
 .messages .message footer .left {
     float: left;
-    font: italic 11px/12px 'Asap', Arial;
+    font: italic 11px/12px "Asap", Arial;
 }
 
 .messages .message footer .right {
@@ -1524,6 +2696,85 @@
 
 
 /* ==========================================================================
+   Trips
+   ========================================================================== */
+
+/**
+ * Trip
+ */
+
+.trips .trip {
+    position: relative;
+    padding: 25px 0 0 0;
+    margin: 0 0 25px 0;
+    border-top: 1px solid #ebecec;
+}
+
+.trips .trip:first-child {
+    padding: 0;
+    border: 0;
+}
+
+.trips .trip .box {
+    float: left;
+    width: 230px;
+}
+
+.trips .trip .info {
+    position: absolute;
+    top: 25px;
+    left: 265px;
+    right: 0;
+    bottom: 0;
+    color: #909090;
+}
+
+.trips .trip:first-child .info {
+    top: 0;
+}
+
+.trips .trip .info h2,
+.trips .trip .info h3 {
+    font: italic 400 23px/23px "Asap", Arial;
+    padding: 0 0 10px 0;
+}
+
+.trips .trip .info .price {
+    display: block;
+    font: italic 700 23px/23px "Asap", Arial;
+    padding: 0 0 10px 0;
+}
+
+.trips .trip .info time {
+    display: block;
+    font-style: italic;
+    padding: 0 0 10px 0;
+}
+
+.trips .trip .info .buttons {
+    position: absolute;
+    left: 0;
+    right: -10px;
+    bottom: 0;
+}
+
+.trips .trip .info .buttons li {
+    float: left;
+    width: 25%;
+    padding: 0 10px 0 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.trips .trip .info .buttons li .button {
+    width: 100%;
+    text-align: center;
+    padding: 0;
+}
+
+
+/* ==========================================================================
    Pagination
    ========================================================================== */
 
@@ -1533,7 +2784,7 @@
 
 .pagination {
     clear: both;
-    font: italic 12px/15px 'Asap', Arial;
+    font: italic 12px/15px "Asap", Arial;
     text-align: right;
     padding: 10px 0;
     margin: 10px 0 0 0;
@@ -1592,6 +2843,10 @@
     text-decoration: none;
 }
 
+.pagination .results {
+    float: left;
+}
+
 
 /* ==========================================================================
    Modals
@@ -1612,23 +2867,54 @@
     cursor: pointer;
 }
 
-.button {
+/**
+ * Modal
+ */
+
+.modal {
+    display: none;
+    position: absolute;
+    top: 150px;
+    left: 50%;
+    width: 470px;
+    font: 12px/16px "Asap", Arial;
+    color: #969696;
+    margin: 0 0 0 -235px;
+    z-index: 9999;
+}
+
+.modal header .close {
+    display: block;
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    width: 16px;
+    height: 15px;
+    font: 0/0 a;
+    background: url(../images/close.png);
+}
+
+.modal header .close:hover {
+    background-position: 0 -15px;
+}
+
+.modal .content .button {
     -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
     -moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
     box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
 }
 
-.button:hover {
+.modal .content .button:hover {
     -webkit-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5);
     -moz-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5);
     box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5);
 }
 
-.button.facebook {
+.modal .content .button.facebook {
     position: relative;
 }
 
-.button.facebook span {
+.modal .content .button.facebook span {
     display: block;
     position: absolute;
     top: 6px;
@@ -1638,103 +2924,103 @@
     background: url(../images/button-facebook.png);
 }
 
-.table {
+.modal .content .table {
     display: table;
     width: 100%;
 }
 
-.table-cell {
+.modal .content .table-cell {
     display: table-cell;
     width: 40px;
 }
 
-.table-cell:first-child {
+.modal .content .table-cell:first-child {
     width: auto;
     padding: 0 1px 0 0;
 }
 
-.table-cell .button.gray {
+.modal .content .table-cell .button.gray {
     border-radius: 0 5px 5px 0;
 }
 
-.table-cell:first-child .button.gray {
+.modal .content .table-cell:first-child .button.gray {
     border-radius: 5px 0 0 5px;
 }
 
-.table:hover .button.gray {
+.modal .content .table:hover .button.gray {
     background: -moz-linear-gradient(top, #d3d4d4 50%, #c8c9c9 50%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#d3d4d4), color-stop(50%,#c8c9c9));
     background: -webkit-linear-gradient(top, #d3d4d4 50%,#c8c9c9 50%);
     background: -o-linear-gradient(top, #d3d4d4 50%,#c8c9c9 50%);
     background: -ms-linear-gradient(top, #d3d4d4 50%,#c8c9c9 50%);
     background: linear-gradient(to bottom, #d3d4d4 50%,#c8c9c9 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d3d4d4', endColorstr='#c8c9c9',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#d3d4d4", endColorstr="#c8c9c9",GradientType=0);
     -webkit-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5);
     -moz-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5);
     box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5);
 }
 
-.table .button.gray span {
+.modal .content .table .button.gray span {
     display: inline-block;
     width: 12px;
     height: 12px;
     background: url(../images/button-gray-arrow.png);
 }
 
-.table:hover .button.gray span {
+.modal .content .table:hover .button.gray span {
     background-position: 0 -12px;
 }
 
-.or {
+.modal .content .or {
     display: block;
-    font: italic 18px/44px 'Asap', Arial;
+    font: italic 18px/44px "Asap", Arial;
     text-align: center;
 }
 
-.invite {
+.modal .content .invite {
     color: #969696;
 }
 
-.invite:hover {
+.modal .content .invite:hover {
     color: #47c2d2;
 }
 
-.form .row .ui-checkbox {
+.modal .form .row .ui-checkbox {
     font-style: normal;
 }
 
-.form .row .ui-checkbox-checked {
+.modal .form .row .ui-checkbox-checked {
     color: #47c2d2;
 }
 
-.form .row span.ui-checkbox {
+.modal .form .row span.ui-checkbox {
     top: 0;
     width: 10px;
     height: 10px;
     background: url(../images/checkbox-modal.png) 0 0;
 }
 
-.form .row span.ui-checkbox.ui-checkbox-checked {
+.modal .form .row span.ui-checkbox.ui-checkbox-checked {
     background-position: 0 -10px;
 }
 
-a .icon.add {
+.modal .content a .icon.add {
     position: relative;
     top: -1px;
     margin: 0 3px 0 0;
 }
 
-a:hover .icon.add {
+.modal .content a:hover .icon.add {
     background-position: 0 -10px;
 }
 
-.expand {
+.modal .expand {
     display: none;
     padding: 25px 0 0 0;
     background: url(../images/register-arrow.png) no-repeat 95% 11px;
 }
 
-.expand .content {
+.modal .expand .content {
     border-radius: 5px;
 }
 
@@ -1749,7 +3035,7 @@ a:hover .icon.add {
 
 .tooltip {
     position: absolute;
-    font: italic 400 10px/12px 'Asap', Arial;
+    font: italic 400 10px/12px "Asap", Arial;
     text-align: left;
     text-shadow: none;
     color: #fff;
@@ -1769,20 +3055,8 @@ a:hover .icon.add {
     position: absolute;
     top: -7px;
     right: 4px;
-    content: '';
+    content: "";
     width: 8px;
     height: 7px;
     background: url(../images/tooltip-arrow.png);
-}
-
-
-
-
-.ui-dialog.blank  {
-    background: none;
-    border: none;
-}
-
-.ui-dialog.blank .ui-dialog-content {
-    padding: 0;
 }

@@ -31,7 +31,7 @@
 {% endblock %}
     
 {% block body %}
-<form id="search_form" class="form clearfix" action="{{ path('ZizooAddressBundle_locations') }}" method="get">
+<!--form id="search_form" class="form clearfix" action="{{ path('ZizooAddressBundle_locations') }}" method="get"-->
     
     <!-- start:search -->
     <div id="search" class="bar">
@@ -55,23 +55,24 @@
     </div>
     
     <!-- start:content -->
+
     <div id="content">
         <div class="container clearfix">
-            <div id="search-results">
+            <section id="results">
                 {% block search_results %}
                 {% endblock search_results %}
-            </div>
-            <div id="sidebar" class="right">
+            </section>
+            <aside id="filter">
                 {% block search_filter %}
                 {% endblock search_filter %}
-            </div>
+            </aside>
         </div>
         <div>
             {% block search_map %}
             {% endblock search_map %}
         </div>
     </div>
-</form>
+<!--/form-->
     
 
 {% endblock body %}
