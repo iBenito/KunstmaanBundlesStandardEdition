@@ -12,6 +12,14 @@ ZizooAdminBundle_User_Edit:
     pattern:  /users/{username}
     defaults: { _controller: ZizooAdminBundle:User:edit, username: null }
     
+ZizooAdminBundle_Charter:
+    pattern:  /charters/
+    defaults: { _controller: ZizooAdminBundle:Charter:index }
+
+ZizooAdminBundle_Charter_Edit:
+    pattern:  /charter/{charterId}
+    defaults: { _controller: ZizooAdminBundle:Charter:edit, charterId: null }
+    
 ZizooAdminBundle_Boat:
     pattern:  /boats/
     defaults: { _controller: ZizooAdminBundle:Boat:index }

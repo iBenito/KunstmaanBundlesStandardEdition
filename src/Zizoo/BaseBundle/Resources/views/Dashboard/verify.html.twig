@@ -1,0 +1,12 @@
+{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
+    
+{% block tabs %}
+{{ render(controller('ZizooBaseBundle:Dashboard:userTabs', { 'current': null })) }}
+{% endblock %}
+
+{% block content %}
+    <div class="content">
+	   
+    	{{ response|raw }}
+    </div>
+{% endblock %}

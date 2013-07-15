@@ -7,9 +7,9 @@
                 <span class="ui-icon ui-icon-folder-open" style="float:left"></span>
                 <span style="font-size:11px; font-family:Verdana">Open</span>
             </li>
-            <li id="open_user">
+            <li id="open_charter">
                 <span class="ui-icon ui-icon-folder-open" style="float:left"></span>
-                <span style="font-size:11px; font-family:Verdana" >Open user</span>
+                <span style="font-size:11px; font-family:Verdana" >Open charter</span>
             </li>
         </ul>
     </div>
@@ -18,8 +18,8 @@
 
     <script type="text/javascript">
 
-        function openUser(username){
-            window.location.href = '{{ path('ZizooAdminBundle_User_Edit', {username: null}) }}/'+username;
+        function openCharter(charterId){
+            window.location.href = '{{ path('ZizooAdminBundle_Charter_Edit', {charterId: null}) }}/'+charterId;
         }
 
         function openBoat(boatId){
@@ -40,10 +40,10 @@
                         var boatId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_boatsid');
                         openBoat(boatId);
                     },
-                    'open_user': function(trigger) {
+                    'open_charter': function(trigger) {
                         // trigger is the DOM element ("tr.jqgrow") which is triggered
-                        var userId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_boatsusername');
-                        openUser(userId);
+                        var charterId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_boatscharterId');
+                        openCharter(charterId);
                     }
                 },
                 onContextMenu: function(event/*, menu*/) {
