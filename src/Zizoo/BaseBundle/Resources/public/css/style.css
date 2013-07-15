@@ -1,5 +1,5 @@
-@import url('normalize.css');
-@import url('reusable.css');
+@import url("normalize.css");
+@import url("reusable.css");
 
 /**
        _____ ______
@@ -38,7 +38,7 @@ html {
 
 body {
     min-width: 320px;
-    font: 14px/22px 'Asap', Arial;
+    font: 14px/22px "Asap", Arial;
     color: #000;
     background: url(../images/pattern.png);
 }
@@ -79,7 +79,7 @@ a:hover {
     background: -o-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
     background: -ms-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
     background: linear-gradient(to bottom, #47c2d2 50%,#45bccb 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#47c2d2', endColorstr='#45bccb',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#47c2d2", endColorstr="#45bccb",GradientType=0);
     -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.5);
     -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.5);
     box-shadow: 0 1px 2px rgba(0,0,0,0.5);
@@ -91,7 +91,7 @@ a:hover {
     float: left;
     height: 40px;
     text-align: left;
-    font: italic 700 18px/20px 'Asap', Arial;
+    font: italic 700 18px/20px "Asap", Arial;
     text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
     vertical-align: top;
     color: #fff;
@@ -102,7 +102,7 @@ a:hover {
 
 #header .logo small {
     display: block;
-    font: italic 400 12px/12px 'Asap', Arial;
+    font: italic 400 12px/12px "Asap", Arial;
 }
 
 #header br {
@@ -111,31 +111,31 @@ a:hover {
 
 #header nav {
     float: right;
-    padding: 22px 0 0 0;
+    padding: 24px 0 0 0;
 }
 
-#header nav ul {
-    float: left;
+#header nav .menu {
+    display: inline-block;
 }
 
-#header nav ul li {
+#header nav .menu li {
     float: left;
     padding: 0 15px 0 0;
 }
 
-#header nav ul li:first-child {
+#header nav .menu li:first-child {
     padding: 0 15px 0 0;
     margin: 0 15px 0 0;
     background: url(../images/separator-how-it-works.png) no-repeat right center;
 }
 
-#header nav ul li a {
-    font: italic 700 12px/30px 'Asap', Arial;
+#header nav .menu li a {
+    font: italic 700 12px/26px "Asap", Arial;
     text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
     color: #fff;
 }
 
-#header nav ul li:first-child a {
+#header nav .menu li:first-child a {
     display: inline-block;
     font-style: normal;
     font-weight: 400;
@@ -146,18 +146,18 @@ a:hover {
     background: url(../images/header-how-it-works.png) no-repeat left center;
 }
 
-#header nav ul li a:hover {
+#header nav .menu li a:hover {
     text-shadow: 0 1px 1px rgba(255,255,255,0.5);
     color: #005a69;
 }
 
-#header nav ul li:first-child a:hover {
+#header nav .menu li:first-child a:hover {
     text-decoration: underline;
 }
 
 #header nav .button {
-    float: left;
     padding: 0 25px 0 20px;
+    margin: 0 0 0 10px;
 }
 
 #header nav .button span {
@@ -172,6 +172,10 @@ a:hover {
 
 #header nav .button:hover span {
     background-position: 0 -11px;
+}
+
+#header nav .dropdown {
+    text-align: left;
 }
 
 /**
@@ -191,12 +195,12 @@ a:hover {
     padding: 0;
 }
 
-#search input[type='text'] {
+#search input[type="text"] {
     position: relative;
     top: 2px;
     width: 90px;
     height: 20px;
-    font: 14px/20px 'Asap', Arial;
+    font: 14px/20px "Asap", Arial;
     color: #fff;
     padding: 0 5px;
     background: #333;
@@ -210,7 +214,7 @@ a:hover {
     border: 0;
 }
 
-#search .search input[type='text'] {
+#search .search input[type="text"] {
     top: 0;
     width: 280px;
     height: 25px;
@@ -221,25 +225,25 @@ a:hover {
     border-radius: 20px;
 }
 
-#search .search input[type='text']::-webkit-input-placeholder {
+#search .search input[type="text"]::-webkit-input-placeholder {
     font-style: italic;
     color: #929497;
     opacity: 1;
 }
 
-#search .search input[type='text']::-moz-placeholder {
+#search .search input[type="text"]::-moz-placeholder {
     font-style: italic;
     color: #929497;
     opacity: 1;
 }
 
-#search .search input[type='text']:-moz-placeholder {
+#search .search input[type="text"]:-moz-placeholder {
     font-style: italic;
     color: #929497;
     opacity: 1;
 }
 
-#search .search input[type='text']:-ms-input-placeholder {
+#search .search input[type="text"]:-ms-input-placeholder {
     font-style: italic;
     color: #929497;
     opacity: 1;
@@ -254,7 +258,6 @@ a:hover {
 #search .icon.hash {
     margin: 0 2px 0 0;
 }
-
 
 /**
  * Name
@@ -276,7 +279,7 @@ a:hover {
     left: 100px;
     bottom: -15px;
     width: 63px;
-    font: italic 12px/14px 'Asap', Arial;
+    font: italic 12px/14px "Asap", Arial;
     text-align: center;
     color: #fff;
     padding: 6px 0 0 0;
@@ -287,7 +290,7 @@ a:hover {
     position: absolute;
     left: 0;
     bottom: -12px;
-    content: '';
+    content: "";
     width: 63px;
     height: 12px;
     background: url(../images/flag-bottom.png);
@@ -317,7 +320,7 @@ a:hover {
 
 #name h1 {
     float: left;
-    font: italic 400 33px/40px 'Asap', Arial;
+    font: italic 400 33px/40px "Asap", Arial;
     padding: 0 0 0 175px;
 }
 
@@ -411,7 +414,7 @@ a:hover {
 }
 
 #slideshow .search h1 {
-    font: italic 400 33px/33px 'Asap', Arial;
+    font: italic 400 33px/33px "Asap", Arial;
     color: #fff;
     padding: 0 0 30px 0;
 }
@@ -426,21 +429,13 @@ a:hover {
     background: none;
 }
 
-#slideshow .search #zizoo_boat_search_location {
-    width: 100%;
-}
-
-#slideshow .search #zizoo_boat_search_location_chzn ul li {
-    
-}
-
-#slideshow .search input[type='text'] {
+#slideshow .search .where {
     width: 100%;
     height: 30px;
-    font: 14px/30px 'Asap', Arial;
+    font: 14px/30px "Asap", Arial;
     color: #000;
     padding: 0 10px 0 40px;
-    background: #fff url(../images/icon/calendar-black.png) no-repeat 10px center;
+    background: #fff url(../images/magnifier-big.png) no-repeat 10px center;
     border: 0;
     border-radius: 20px;
     -webkit-box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5), 0 1px 1px 1px rgba(255,255,255,0.2);
@@ -451,53 +446,37 @@ a:hover {
     box-sizing: border-box;
 }
 
-#slideshow .search input[type='number'] {
-    width: 100%;
-    height: 30px;
-    font: 14px/30px 'Asap', Arial;
-    color: #000;
-    padding: 0 10px 0 40px;
-    background: #fff url(../images/icon/hash-black.png) no-repeat 10px center;
-    border: 0;
-    border-radius: 20px;
-    -webkit-box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5), 0 1px 1px 1px rgba(255,255,255,0.2);
-    -moz-box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5), 0 1px 1px 1px rgba(255,255,255,0.2);
-    box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5), 0 1px 1px 1px rgba(255,255,255,0.2);
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-#slideshow .search input[type='text']::-webkit-input-placeholder {
+#slideshow .search .where::-webkit-input-placeholder {
     font-style: italic;
     color: #929497;
     opacity: 1;
 }
 
-#slideshow .search input[type='text']::-moz-placeholder {
+#slideshow .search .where::-moz-placeholder {
     font-style: italic;
     color: #929497;
     opacity: 1;
 }
 
-#slideshow .search input[type='text']:-moz-placeholder {
+#slideshow .search .where:-moz-placeholder {
     font-style: italic;
     color: #929497;
     opacity: 1;
 }
 
-#slideshow .search input[type='text']:-ms-input-placeholder {
+#slideshow .search .where:-ms-input-placeholder {
     font-style: italic;
     color: #929497;
     opacity: 1;
 }
 
-#slideshow .search ul.search_list {
+#slideshow .search ul {
     margin: 0 -10px 0 0;
 }
 
-#slideshow .search ul.search_list li {
+#slideshow .search ul li {
     float: left;
+    position: relative;
     width: 33.33%;
     padding: 0 10px 0 0;
     -webkit-box-sizing: border-box;
@@ -508,7 +487,7 @@ a:hover {
 #slideshow .search .button.white {
     width: 120px;
     text-align: left;
-    padding: 0 0 0 10px;
+    padding: 0 0 0 40px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -521,11 +500,13 @@ a:hover {
 }
 
 #slideshow .search .icon {
-    margin: 0 5px 0 0;
+    position: absolute;
+    top: 8px;
+    left: 8px;
 }
 
-#slideshow .search .icon.calendar {
-    top: -2px;
+#slideshow .search .icon.hash {
+    top: 9px;
 }
 
 #slideshow .bottom {
@@ -538,7 +519,7 @@ a:hover {
 
 #slideshow .bottom ul {
     float: right;
-    font: italic 11px/40px 'Asap', Arial;
+    font: italic 11px/40px "Asap", Arial;
     color: #fff;
 }
 
@@ -617,7 +598,7 @@ a:hover {
 }
 
 #how-it-works-short h2 {
-    font: 400 italic 33px/33px 'Asap', Arial;
+    font: 400 italic 33px/33px "Asap", Arial;
     text-shadow: 1px 1px 1px rgba(255,255,255,0.5);
     padding: 0 0 40px 0;
 }
@@ -653,7 +634,7 @@ a:hover {
 }
 
 #how-it-works-short .columns section h3 {
-    font: 400 italic 18px/20px 'Asap', Arial;
+    font: 400 italic 18px/20px "Asap", Arial;
     text-shadow: 1px 1px 1px rgba(255,255,255,0.5);
     padding: 0 0 10px 0;
 }
@@ -689,7 +670,7 @@ a:hover {
 }
 
 #inspire-me h3 {
-    font: italic 400 33px/60px 'Asap', Arial;
+    font: italic 400 33px/60px "Asap", Arial;
     text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
     color: #fff;
     margin: 0 0 40px 0;
@@ -699,7 +680,7 @@ a:hover {
     background: -o-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
     background: -ms-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
     background: linear-gradient(to bottom, #47c2d2 50%,#45bccb 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#47c2d2', endColorstr='#45bccb',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#47c2d2", endColorstr="#45bccb",GradientType=0);
     -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.3);
     -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.3);
     box-shadow: 0 1px 1px rgba(0,0,0,0.3);
@@ -722,7 +703,7 @@ a:hover {
     float: left;
     position: relative;
     width: 430px;
-    font: italic 16px/20px 'Asap', Arial;
+    font: italic 16px/20px "Asap", Arial;
     text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
     color: #fff;
     margin: 0 30px 30px 0;
@@ -759,7 +740,7 @@ a:hover {
 }
 
 #inspire-me .locations article .content h4 {
-    font: italic 400 33px/34px 'Asap', Arial;
+    font: italic 400 33px/34px "Asap", Arial;
 }
 
 #inspire-me .locations article .details {
@@ -826,12 +807,12 @@ a:hover {
 }
 
 #inspire-me .locations article .details .book h5 {
-    font: italic 400 16px/25px 'Asap', Arial;
+    font: italic 400 16px/25px "Asap", Arial;
 }
 
 #inspire-me .locations article .details .book h5 .price {
     display: block;
-    font: italic 700 23px/30px 'Asap', Arial;
+    font: italic 700 23px/30px "Asap", Arial;
 }
 
 #inspire-me .locations article .details .book .button {
@@ -850,7 +831,7 @@ a:hover {
 
 #inspire-me .locations .more {
     clear: both;
-    font: italic 14px/14px 'Asap', Arial;
+    font: italic 14px/14px "Asap", Arial;
     text-align: right;
     padding: 20px 0 0 0;
     margin: 0 30px 0 0;
@@ -886,7 +867,7 @@ a:hover {
 }
 
 #content .section .content h1 {
-    font: italic 400 33px/39px 'Asap', Arial;
+    font: italic 400 33px/39px "Asap", Arial;
 }
 
 /**
@@ -899,7 +880,7 @@ a:hover {
 }
 
 #how-it-works h2 {
-    font: italic 400 33px/39px 'Asap', Arial;
+    font: italic 400 33px/39px "Asap", Arial;
     padding: 15px 0 20px 0;
 }
 
@@ -912,7 +893,7 @@ a:hover {
 }
 
 #how-it-works .steps li h3 {
-    font: italic 400 18px/24px 'Asap', Arial;
+    font: italic 400 18px/24px "Asap", Arial;
     color: #47c2d2;
     padding: 0 0 10px 0;
 }
@@ -922,14 +903,18 @@ a:hover {
     top: 50%;
 }
 
-#how-it-works .steps.book li img {
+#how-it-works .steps li img {
     left: 95px;
     margin: -57px 0 0 0;
 }
 
-#how-it-works .steps.book li:first-child img {
+#how-it-works .steps li:first-child img {
     left: 70px;
     margin: -64px 0 0 0;
+}
+
+#how-it-works .tab {
+    display: none;
 }
 
 /**
@@ -937,12 +922,12 @@ a:hover {
  */
 
 #registration {
-    font: 12px/16px 'Asap', Arial;
+    font: 12px/16px "Asap", Arial;
     color: #969696;
 }
 
 #registration h2 {
-    font: italic 400 18px/18px 'Asap', Arial;
+    font: italic 400 18px/18px "Asap", Arial;
     color: #000;
     padding: 0 0 30px 0;
 }
@@ -979,7 +964,7 @@ a:hover {
 }
 
 #registration aside .steps li h3 {
-    font: italic 400 18px/24px 'Asap', Arial;
+    font: italic 400 18px/24px "Asap", Arial;
     color: #000;
     padding: 0 0 10px 0;
 }
@@ -1009,15 +994,19 @@ a:hover {
     font-size: 12px;
 }
 
-#overview .media {
+#overview .tabbed {
     position: relative;
-    padding: 10px 10px 15px 10px;
+    padding: 10px;
     margin: 0 0 30px 0;
     background: #fff;
     -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     border-radius: 5px;
+}
+
+#overview .media {
+    padding: 0 0 5px 0;
 }
 
 #overview .media img {
@@ -1111,6 +1100,14 @@ a:hover {
     font-style: italic;
 }
 
+#overview #map {
+    width: 100%;
+    height: 0;
+    padding: 0 0 65.5% 0;
+    margin: 0;
+    border: 0;
+}
+
 /**
  * Dashboard
  */
@@ -1135,13 +1132,29 @@ a:hover {
 }
 
 #dashboard h2 {
-    font: italic 400 18px/24px 'Asap', Arial;
+    font: italic 400 18px/24px "Asap", Arial;
     padding: 0 0 20px 0;
 }
 
 #dashboard .messages .message h2 {
-    font: 400 12px/20px 'Asap', Arial;
+    font: 400 12px/20px "Asap", Arial;
     padding: 0;
+}
+
+/**
+ * Dashboard intro
+ */
+
+#dashboard .intro {
+    font-size: 12px;
+    padding: 0 0 30px 0;
+    margin: 0 0 30px 0;
+    border-bottom: 1px solid #ebecec;
+}
+
+#dashboard .intro h1 {
+    margin: 0;
+    border: 0;
 }
 
 /**
@@ -1210,7 +1223,7 @@ a:hover {
 }
 
 #dashboard .upcoming .background {
-    font: 12px/18px 'Asap', Arial;
+    font: 12px/18px "Asap", Arial;
     color: #969696;
     padding: 10px;
     background: #ebecec;
@@ -1263,9 +1276,9 @@ a:hover {
     display: block;
     width: 100%;
     height: 120px;
-    font: 12px/20px 'Asap', Arial;
+    font: 12px/20px "Asap", Arial;
     color: #000;
-    padding: 5px 15px;
+    padding: 10px 15px;
     margin: 0 0 15px 0;
     background: #ebebeb;
     border: 0;
@@ -1294,7 +1307,7 @@ a:hover {
     background: -o-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
     background: -ms-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
     background: linear-gradient(to bottom, #47c2d2 50%,#45bccb 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#47c2d2', endColorstr='#45bccb',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#47c2d2", endColorstr="#45bccb",GradientType=0);
     -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
@@ -1303,14 +1316,268 @@ a:hover {
 
 #dashboard .earned .left {
     float: left;
-    font: italic 400 18px/30px 'Asap', Arial;
+    font: italic 400 18px/30px "Asap", Arial;
 }
 
 #dashboard .earned .right {
     float: right;
-    font: italic 700 30px/30px 'Asap', Arial;
+    font: italic 700 30px/30px "Asap", Arial;
     padding: 0 0 0 35px;
     background: url(../images/earned.png) no-repeat left center;
+}
+
+/**
+ * Dashboard trips
+ */
+
+#dashboard .trips .trip .info h2 {
+    font: italic 400 23px/23px "Asap", Arial;
+    padding: 0 0 10px 0;
+}
+
+#dashboard .trips.boats .trip .info h2 {
+    color: #000;
+}
+
+#dashboard .trips .trip .info .actions {
+    font-style: italic;
+}
+
+#dashboard .trips .trip .info .actions li {
+    float: left;
+    width: 30%;
+    text-align: right;
+}
+
+#dashboard .trips .trip .info .actions li:first-child {
+    width: 40%;
+    text-align: left;
+    color: #000;
+}
+
+#dashboard .trips .trip .info .actions .icon {
+    margin: 0 0 0 5px;
+}
+
+#dashboard .trips .trip .info .actions .toggle {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 20px;
+    vertical-align: middle;
+    margin: 0 0 0 5px;
+    background: url(../images/toggle.png);
+}
+
+#dashboard .trips .trip .info .actions .toggle.off {
+    background-position: 0 -20px;
+}
+
+#dashboard .trips .trip .info .actions .toggle .tooltip {
+    top: 30px;
+    right: 0;
+    min-width: 100px;
+}
+
+#dashboard .trips .trip .info .actions .toggle:hover .tooltip {
+    visibility: visible;
+    filter: alpha(opacity=100);
+    opacity: 1;
+}
+
+/**
+ * Dashboard responsive table
+ */
+
+#dashboard .responsive-table table {
+    width: 100%;
+    font: italic 12px/20px "Asap", Arial;
+    border: 1px solid #ebecec;
+}
+
+#dashboard .responsive-table table thead th {
+    font-weight: 400;
+    text-align: left;
+    color: #969696;
+    padding: 0 20px 0 5px;
+    background: #ebecec;
+    border-left: 1px solid #fff;
+}
+
+#dashboard .responsive-table table thead th:first-child {
+    border-left: 0;
+}
+
+#dashboard .responsive-table table thead .sort {
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position: 95% center;
+}
+
+#dashboard .responsive-table table thead .ascending {
+    background-image: url(../images/ascending-vertical.png);
+}
+
+#dashboard .responsive-table table thead .descending {
+    background-image: url(../images/descending-vertical.png);
+}
+
+#dashboard .responsive-table table tbody td {
+    padding: 5px 20px 5px 5px;
+    border-left: 1px solid #ebecec;
+    border-top: 1px solid #ebecec;
+}
+
+#dashboard .responsive-table table tbody td:first-child {
+    border-left: 0;
+}
+
+#dashboard .responsive-table table tbody .inquiry {
+    color: #47c2d2;
+}
+
+/**
+ * Dashboard availability calendar
+ */
+
+#dashboard #availability-calendar .ui-datepicker.ui-datepicker-inline {
+    max-width: 440px;
+}
+
+#dashboard #availability-calendar .ui-datepicker.ui-widget-content {
+    display: block;
+    padding: 0;
+    background: none;
+    border: 0;
+}
+
+#dashboard #availability-calendar .ui-datepicker > .ui-datepicker-header {
+    display: none;
+}
+
+#dashboard #availability-calendar .ui-datepicker-row-break {
+    padding: 0 0 10px 0;
+    border-bottom: 1px solid #ebecec;
+}
+
+#dashboard #availability-calendar .ui-datepicker-multi .ui-datepicker-group table {
+    width: 100%;
+    margin: 0;
+}
+
+#dashboard #availability-calendar .ui-datepicker .ui-datepicker-header {
+    height: auto;
+    font: italic 400 18px/24px "Asap", Arial;
+    text-align: left;
+    color: #000;
+    padding: 10px 0;
+    background: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+#dashboard #availability-calendar .ui-datepicker-multi .ui-datepicker-group {
+    float: none;
+}
+
+#dashboard #availability-calendar .ui-datepicker th {
+    height: 24px;
+    font: italic 400 15px/24px "Asap", Arial;
+    color: #969696;
+    padding: 1px;
+    background: -moz-linear-gradient(top, #ebecec 50%, #e4e5e5 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#ebecec), color-stop(50%,#e4e5e5));
+    background: -webkit-linear-gradient(top, #ebecec 50%,#e4e5e5 50%);
+    background: -o-linear-gradient(top, #ebecec 50%,#e4e5e5 50%);
+    background: -ms-linear-gradient(top, #ebecec 50%,#e4e5e5 50%);
+    background: linear-gradient(to bottom, #ebecec 50%,#e4e5e5 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ebecec", endColorstr="#e4e5e5",GradientType=0);
+    border-left: 1px solid #fff;
+}
+
+#dashboard #availability-calendar .ui-datepicker td {
+    width: 14.28%;
+    padding: 1px;
+}
+
+#dashboard #availability-calendar .ui-datepicker td a.ui-state-default,
+#dashboard #availability-calendar .ui-datepicker td span.day_available_default,
+#dashboard #availability-calendar .ui-datepicker td span.day_available,
+#dashboard #availability-calendar .ui-datepicker td span.day_reserved {
+    display: block;
+    position: relative;
+    min-height: 40px;
+    font: italic 12px/14px "Asap", Arial;
+    text-align: left;
+    color: #fff;
+    padding: 4px;
+    background: #47c2d2;
+    border: 3px solid #47c2d2;
+    -webkit-transition: color 200ms ease, border 200ms ease, background-color 200ms ease;
+    transition: color 200ms ease, border 200ms ease, background-color 200ms ease;
+}
+
+#dashboard #availability-calendar .ui-datepicker td span.day_available_default,
+#dashboard #availability-calendar .ui-datepicker td span.day_available {
+    border-color: #005a69;
+}
+
+#dashboard #availability-calendar .ui-datepicker td a.day_reserved,
+#dashboard #availability-calendar .ui-datepicker td span.day_reserved {
+    background: #f1665e;
+    border-color: #f1665e;
+}
+
+#dashboard #availability-calendar .ui-datepicker td a.day_available_default:hover,
+#dashboard #availability-calendar .ui-datepicker td a.day_available:hover {
+    border-color: #005a69;
+}
+
+#dashboard #availability-calendar .ui-datepicker td a.ui-state-active {
+    background: #005a69;
+    border-color: #005a69;
+}
+
+#dashboard #availability-calendar .ui-datepicker td span.ui-datepicker-other-month {
+    display: none;
+    background: none;
+    border-color: transparent;
+}
+
+#dashboard #availability-calendar .ui-datepicker td .day_price {
+    position: absolute;
+    left: 4px;
+    bottom: 4px;
+    font-weight: 700;
+    text-align: left;
+    padding: 0;
+    border: 0;
+}
+
+/**
+ * Confirmation
+ */
+
+#confirmation h2 {
+    font: italic 400 33px/39px "Asap", Arial;
+    padding: 15px 0 20px 0;
+}
+
+#confirmation h2 strong {
+    font-weight: 700;
+}
+
+#confirmation .entry {
+    color: #4d4d4d;
+    padding: 20px 0 0 0;
+    margin: 0 0 30px 0;
+    border-top: 1px solid #ebecec;
+    border-bottom: 1px solid #ebecec;
+}
+
+#confirmation .entry p {
+    padding: 0 0 30px 0;
 }
 
 /**
@@ -1335,7 +1602,7 @@ a:hover {
  */
 
 #sidebar .price {
-    font: italic 18px/20px 'Asap', Arial;
+    font: italic 18px/20px "Asap", Arial;
 }
 
 #sidebar .price table {
@@ -1396,9 +1663,10 @@ a:hover {
 
 #sidebar .summary ul li .field {
     display: inline-block;
-    min-width: 80px;
+    width: 90px;
     height: 20px;
-    line-height: 20px;
+    font: 14px/20px "Asap", Arial;
+    color: #000;
     padding: 0 5px;
     background: #ebecec;
     border: 1px solid #bcbcbc;
@@ -1416,7 +1684,7 @@ a:hover {
  */
 
 #sidebar .similiar h3 {
-    font: italic 400 18px/20px 'Asap', Arial;
+    font: italic 400 18px/20px "Asap", Arial;
     padding: 0 0 15px 0;
 }
 
@@ -1444,7 +1712,7 @@ a:hover {
  */
 
 #sidebar .avatar h4 {
-    font: italic 400 14px/22px 'Asap', Arial;
+    font: italic 400 14px/22px "Asap", Arial;
     padding: 0 0 5px 0;
 }
 
@@ -1486,14 +1754,14 @@ a:hover {
  */
 
 #sidebar .verifications h4 {
-    font: italic 400 14px/22px 'Asap', Arial;
+    font: italic 400 14px/22px "Asap", Arial;
     padding: 0 0 10px 0;
 }
 
 #sidebar .verifications ul li {
     position: relative;
     height: 36px;
-    font: italic 14px/36px 'Asap', Arial;
+    font: italic 14px/36px "Asap", Arial;
     color: #fff;
     padding: 0 0 0 55px;
     margin: 0 0 15px 0;
@@ -1545,6 +1813,769 @@ a:hover {
 
 #sidebar .verifications ul .twitter span:first-child {
     background-image: url(../images/verifications-twitter.png);
+}
+
+/**
+ * Results
+ */
+
+#results {
+    float: left;
+    width: 710px;
+    padding: 0 0 20px 0;
+}
+
+/**
+ * View
+ */
+
+#view {
+    position: relative;
+    font: 12px/26px "Asap", Arial;
+    color: #000;
+    padding: 7px 20px;
+    background: -moz-linear-gradient(top, #e1e2e2 50%, #dadbdb 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#e1e2e2), color-stop(50%,#dadbdb));
+    background: -webkit-linear-gradient(top, #e1e2e2 50%,#dadbdb 50%);
+    background: -o-linear-gradient(top, #e1e2e2 50%,#dadbdb 50%);
+    background: -ms-linear-gradient(top, #e1e2e2 50%,#dadbdb 50%);
+    background: linear-gradient(to bottom, #e1e2e2 50%,#dadbdb 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e1e2e2", endColorstr="#dadbdb",GradientType=0);
+    -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    border-radius: 5px;
+}
+
+#view .left {
+    float: left;
+}
+
+#view .right {
+    float: right;
+}
+
+#view .right ul {
+    float: left;
+}
+
+#view .right .show > li {
+    float: left;
+    padding: 0 20px 0 0;
+}
+
+#view .right .show li .selectboxit-container {
+    vertical-align: middle;
+    margin: 0 0 0 5px;
+}
+
+#view .right .show .sort .selectboxit-container .selectboxit-text {
+    min-width: 60px;
+}
+
+#view .right .view li {
+    float: left;
+}
+
+#view .right .view li:first-child {
+    padding: 0 10px 0 0;
+}
+
+#view .right .view li a {
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+}
+
+#view .right .view li .grid {
+    width: 24px;
+    height: 18px;
+    background: url(../images/view-grid.png);
+}
+
+#view .right .view .current .grid {
+    background-position: 0 -18px;
+}
+
+#view .right .view li .list {
+    width: 24px;
+    height: 16px;
+    background: url(../images/view-list.png);
+}
+
+#view .right .view .current .list {
+    background-position: 0 -16px;
+}
+
+#view .right .view li a .tooltip {
+    top: 22px;
+    right: 0;
+    white-space: nowrap;
+}
+
+#view .right .view li a:hover .tooltip {
+    visibility: visible;
+    filter: alpha(opacity=100);
+    opacity: 1;
+}
+
+/**
+ * All
+ */
+
+#all {
+    padding: 30px 0 0 0;
+}
+
+/**
+ * Grid
+ */
+
+#grid {
+    margin: 0 -10px 0 0;
+}
+
+#grid .box {
+    float: left;
+    width: 33.33%;
+    padding: 0 10px 10px 0;
+}
+
+/**
+ * List
+ */
+
+#list {
+    display: none;
+}
+
+#list .box {
+    margin: 0 0 10px 0;
+}
+
+#list .box .boat {
+    line-height: 20px;
+    color: #939598;
+    padding: 10px;
+}
+
+#list .box .boat figure {
+    float: left;
+    width: 19%;
+}
+
+#list .box .boat figure img {
+    margin: 0;
+}
+
+#list .box .boat .details {
+    float: left;
+    width: 76%;
+    margin: 0 2% 0 3%;
+}
+
+#list .box .boat .details .header {
+    padding: 0 0 2px 0;
+    margin: 0 0 2px 0;
+    border-bottom: 1px solid #ebecec;
+}
+
+#list .box .boat .details .header li {
+    color: #000;
+    float: left;
+    line-height: 20px;
+}
+
+#list .box .boat .details .header li:first-child {
+    width: 40%;
+    padding: 0 2% 0 0;
+}
+
+#list .box .boat .details .header li .icon {
+    margin: 0 3px 0 0;
+}
+
+#list .box .boat .details .header .reviews {
+    float: right;
+    color: #939598;
+}
+
+#list .box .boat .details .header li .title {
+    font: italic 400 18px/20px "Asap", Arial;
+    -webkit-transition: color 200ms ease;
+    transition: color 200ms ease;
+}
+
+#list .box:hover .boat .details .header li .title {
+    color: #47c2d2;
+}
+
+#list .box .boat .details .left {
+    padding: 0;
+}
+
+#list .box .boat .details .right {
+    text-align: right;
+    padding: 0;
+}
+
+#list .box .boat .details .right strong {
+    display: block;
+    font: italic 700 23px/23px "Asap", Arial;
+    color: #000;
+    margin: -2px 0;
+}
+
+#list .box:hover .boat .details .right strong {
+    color: #47c2d2;
+}
+
+/**
+ * Filter
+ */
+
+#filter {
+    float: right;
+    width: 190px;
+    padding: 0 0 30px 0;
+}
+
+#filter .box {
+    font: 12px/16px "Asap", Arial;
+    padding: 15px 15px 10px 15px;
+    margin: 0 0 15px 0;
+    background: #fff;
+    -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    border-radius: 5px;
+}
+
+#filter .box h3 {
+    font: italic 400 14px/20px "Asap", Arial;
+}
+
+#filter .box h4 {
+    font: italic 400 12px/18px "Asap", Arial;
+    padding: 0 0 5px 0;
+}
+
+#filter .form .advanced {
+    padding: 17px 0 0 0;
+    background: url(../images/sidebar-separator.png) repeat-x left 2px;
+}
+
+#filter .form .block {
+    padding: 10px 0 0 0;
+    margin: 10px 0 0 0;
+    border-top: 1px solid #ebecec;
+    border-bottom: 0;
+}
+
+#filter .form .row {
+    min-height: 16px;
+    margin: 0 0 5px 0;
+}
+
+#filter .form .row .ui-checkbox {
+    font-style: normal;
+}
+
+#filter .form .row .ui-checkbox-checked {
+    color: #47c2d2;
+}
+
+#filter .form .row span.ui-checkbox {
+    top: 1px;
+    width: 10px;
+    height: 10px;
+    background: url(../images/checkbox-modal.png) 0 0;
+}
+
+#filter .form .row span.ui-checkbox.ui-checkbox-checked {
+    background-position: 0 -10px;
+}
+
+#filter .form .selectboxit-container .selectboxit-text {
+    min-width: 30px;
+}
+
+#filter .form .slider .input-wrap {
+    position: relative;
+    float: left;
+    width: 40%;
+}
+
+#filter .form .slider input[type="text"] {
+    float: left;
+    width: 40%;
+    height: 17px;
+    font: italic 10px/15px "Asap", Arial;
+    text-align: center;
+    color: #333;
+    padding: 0 5px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 1px solid #ebecec;
+}
+
+#filter .form .slider .input-wrap input[type="text"] {
+    float: none;
+    width: 100%;
+    padding: 0 20px 0 0;
+}
+
+#filter .form .slider .input-wrap span {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    height: 15px;
+    font: italic 10px/15px "Asap", Arial;
+    color: #969696;
+    padding: 0 5px;
+    background: #fff;
+    border-left: 1px solid #ebecec;
+    border-radius: 0 5px 5px 0;
+}
+
+#filter .form .slider .to {
+    display: block;
+    float: left;
+    width: 20%;
+    text-align: center;
+    font: 10px/17px "Asap", Arial;
+    color: #969696;
+}
+
+#filter .form .ui-slider {
+    position: relative;
+    height: 6px;
+    margin: 15px 0 10px 0;
+    background: #ebebeb;
+    -webkit-box-shadow: inset 1px 1px 1px rgba(0,0,0,0.2);
+    -moz-box-shadow: inset 1px 1px 1px rgba(0,0,0,0.2);
+    box-shadow: inset 1px 1px 1px rgba(0,0,0,0.2);
+    border: 0;
+    border-radius: 2px;
+}
+
+#filter .form .ui-slider .ui-slider-range {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background: #46c2d2;
+    -webkit-box-shadow: inset 1px 1px 1px rgba(0,0,0,0.2);
+    -moz-box-shadow: inset 1px 1px 1px rgba(0,0,0,0.2);
+    box-shadow: inset 1px 1px 1px rgba(0,0,0,0.2);
+    border: 0;
+    border-radius: 2px;
+    z-index: 1;
+}
+
+#filter .form .ui-slider .ui-slider-handle {
+    position: absolute;
+    top: -2px;
+    width: 11px;
+    height: 11px;
+    margin: 0 0 0 -5px;
+    background: #005a69;
+    border: 0;
+    border-radius: 100%;
+    z-index: 2;
+}
+
+#filter .form .ui-slider .ui-slider-handle:nth-child(2) {
+    background: url(../images/slider-from.png);
+}
+
+#filter .form .ui-slider .ui-slider-handle:nth-child(3) {
+    background: url(../images/slider-to.png);
+}
+
+#filter .expand {
+    display: none;
+}
+
+#filter .more {
+    display: inline-block;
+    font: italic 12px/18px "Asap", Arial;
+    color: #969696;
+    padding: 0 15px 0 0;
+    margin: 10px 0 0 0;
+    background: url(../images/change-arrow.png) no-repeat right center;
+}
+
+#filter .button {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 0;
+}
+
+/**
+ * Map
+ */
+
+#map {
+    width: 100%;
+    height: 280px;
+    margin: 0 0 40px 0;
+    border-top: 5px solid #4d4d4d;
+}
+
+/**
+ * Details
+ */
+
+#details h2 {
+    font: italic 400 33px/39px "Asap", Arial;
+    padding: 15px 0 20px 0;
+}
+
+#details .trips {
+    padding: 0 0 30px 0;
+    margin: 0 0 15px 0;
+    border-bottom: 1px solid #ebecec;
+}
+
+#details .trips .trip {
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+#details .trips .trip .info {
+    top: 0;
+}
+
+#details .trips .trip .info .overall {
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    color: #000;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+#details .trip-table {
+    padding: 0 0 10px 0;
+    margin: 0 0 15px 0;
+    border-bottom: 1px solid #ebecec;
+}
+
+#details .trip-table .column {
+    float: right;
+    width: 45%;
+}
+
+#details .trip-table .column:first-child {
+    float: left;
+}
+
+#details .trip-table .column .table {
+    padding: 20px 0 0 0;
+    margin: 0 0 20px 0;
+    border-top: 1px solid #000;
+}
+
+#details .trip-table .column .table:first-child {
+    padding-top: 0;
+    border: 0;
+}
+
+#details .trip-table table {
+    width: 100%;
+}
+
+#details .trip-table table td {
+    font-style: italic;
+    text-align: right;
+    vertical-align: top;
+    padding: 2px 0 2px 15px;
+    background-repeat: no-repeat;
+    background-position: left 9px;
+}
+
+#details .trip-table table td:first-child {
+    text-align: left;
+}
+
+#details .trip-table table .available {
+    background-image: url(../images/table-available.png);
+}
+
+#details .trip-table table .unavailable {
+    background-image: url(../images/table-unavailable.png);
+}
+
+#details .trip-table table .link {
+    background-image: url(../images/table-link.png);
+}
+
+#details .trip-table table .link a {
+    color: #969696;
+}
+
+#details .trip-table table .link a:hover {
+    color: #47c2d2;
+}
+
+#details .trip-table table .total {
+    font-size: 18px;
+    color: #47c2d2;
+}
+
+#details .include {
+    padding: 0 120px 30px 0;
+    margin: 0 0 15px 0;
+    border-bottom: 1px solid #ebecec;
+}
+
+#details .include .messages {
+    padding: 10px 0 0 0;
+}
+
+#details .include textarea {
+    display: block;
+    width: 100%;
+    height: 130px;
+    font: 12px/20px "Asap", Arial;
+    color: #000;
+    padding: 10px 15px;
+    margin: 0 0 15px 0;
+    background: #ebebeb;
+    border: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+    border-radius: 5px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+}
+
+#details .include textarea.subject {
+    height: 50px;
+    margin: 0 0 15px 0;
+}
+
+#details .payment {
+    padding: 0 0 30px 0;
+    margin: 0 0 15px 0;
+    border-bottom: 1px solid #ebecec;
+}
+
+#details .payment h3 {
+    font: italic 400 18px/24px "Asap", Arial;
+    padding: 0 0 20px 0;
+}
+
+#details .payment .left {
+    float: left;
+    width: 50%;
+}
+
+#details .payment .right {
+    float: right;
+    width: 45%;
+    padding: 277px 0 0 0;
+}
+
+#details .payment .details {
+    padding: 0 0 10px 0;
+}
+
+#details .payment .right .row {
+    min-height: auto;
+    margin-bottom: 20px;
+}
+
+#details .payment .right .row:first-child {
+    margin-bottom: 10px;
+}
+
+#details .payment .right .options {
+    padding: 20px 0 0 0;
+    border-top: 1px solid #ebecec;
+    border-radius: 3px;
+}
+
+#details .payment .right .options .selectboxit-container {
+    width: 100%;
+}
+
+#details .payment .right .options .selectboxit-container .selectboxit-text {
+    position: absolute;
+    float: none;
+    top: 0;
+    left: 0;
+    right: 20px;
+}
+
+#details .payment .right .options .selectboxit-container .selectboxit-arrow-container {
+    float: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#details .payment-options {
+    display: none;
+    position: relative;
+    padding: 20px 30px 10px 30px;
+    background: #ebecec;
+    -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    -moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    border-radius: 5px;
+}
+
+#details .payment-options:before {
+    display: block;
+    position: absolute;
+    top: -7px;
+    right: 8px;
+    content: "";
+    width: 10px;
+    height: 7px;
+    background: url(../images/selectbox-options-arrow-gray.png);
+}
+
+#details .payment-options .row input[type="text"],
+#details .payment-options .row input[type="email"],
+#details .payment-options .row input[type="password"],
+#details .payment-options .row textarea {
+    background: #fff;
+}
+
+#details .payment-options .row input[type="text"].date-picker {
+    background: #fff url(../images/payment-options-calendar.png) no-repeat right center;
+}
+
+#details .payment-options .row .selectboxit-container .selectboxit.selectboxit-open:after {
+    background: url(../images/selectbox-options-arrow-white.png);
+}
+
+#details .payment-options .row .selectboxit-container .selectboxit .selectboxit-text {
+    background: #fff;
+}
+
+#details .payment-options .row .selectboxit-container .selectboxit .selectboxit-arrow-container {
+    background: #fff;
+}
+
+#details .payment-options .row .selectboxit-container .selectboxit-options {
+    background: #fff;
+}
+
+#details .payment-options .right {
+    padding-top: 44px;
+}
+
+#details .payment-options .right .information {
+    min-height: 262px;
+    font: italic 12px/18px "Asap", Arial;
+    color: #fff;
+    padding: 15px;
+    background: #4d4d4d;
+    border-radius: 5px;
+}
+
+#details .payment-options #bank .right .information {
+    min-height: 200px;
+}
+
+#details .payment-options .right .information p {
+    padding: 0 0 20px 0;
+}
+
+#details .payment-options table {
+    width: 100%;
+    margin: 0 0 10px 0;
+}
+
+#details .payment-options table td {
+    font: italic 700 18px/30px "Asap", Arial;
+    color: #000;
+    vertical-align: top;
+    padding: 5px;
+    background: url(../images/sidebar-separator.png) repeat-x left top;
+}
+
+#details .payment-options table td:first-child {
+    font-weight: 400;
+    color: #969696;
+}
+
+#details .payment-options table tr:first-child td {
+    background: none;
+}
+
+#details .payment-options #bank {
+    display: none;
+}
+
+#details .payment-options #credit-card {
+    display: none;
+}
+
+#details .payment-options.instalment {
+    margin: 30px 0 0 0;
+}
+
+#details .payment-options.instalment .right {
+    padding-top: 0;
+}
+
+#details .payment-options.instalment h4 {
+    font: italic 18px/24px "Asap", Arial;
+    text-transform: uppercase;
+}
+
+#details .payment-options.instalment p {
+    padding: 0 0 10px 0;
+}
+
+#details .payment-options.instalment p span {
+    font: italic 700 18px/24px "Asap", Arial;
+    color: #47c2d2;
+}
+
+#details .policies {
+    padding: 0 0 20px 0;
+    margin: 0 0 15px 0;
+    border-bottom: 1px solid #ebecec;
+}
+
+#details .policies ul li {
+    padding: 0 0 0 15px;
+    background: url(../images/table-link.png) no-repeat left 7px;
+}
+
+#details .policies ul li a {
+    color: #969696;
+}
+
+#details .policies ul li a:hover {
+    color: #47c2d2;
+}
+
+#details .book-it {
+    width: 50%;
+    padding: 20px 0 0 0;
+    margin: 0 auto;
+}
+
+#details .book-it .button {
+    margin: 10px 0 0 0;
+}
+
+#details .book-it label a:hover {
+    color: #47c2d2;
 }
 
 /**
@@ -1614,24 +2645,4 @@ a:hover {
     font-size: 11px;
     line-height: 16px;
     color: #fff;
-}
-
-
-
-
-/**
-*       Locations
-*/
-
-#search #search-filter-hidden {
-    display: none;
-}
-
-#search-results {
-    width: 700px;
-    float: left;
-}
-
-#search-filter {
-    width: 200px;
 }
