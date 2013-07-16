@@ -1,25 +1,9 @@
 {# src/Zizoo/UserBundle/Resources/views/Form/fields.html.twig #}  
 
-{% block zizoo_change_email_widget %}
-{% spaceless %}
-    {% set type = type|default('email') %}
-    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
-{% endspaceless %}
-{% endblock zizoo_change_email_widget %}
-
 {% block zizoo_change_email_label %}
 {% spaceless %}
     {% if label is not sameas(false) %}
-        {% if not compound %}
-            {% set label_attr = label_attr|merge({'for': id}) %}
-        {% endif %}
-        {% if required %}
-            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
-        {% endif %}
-        {% if label is empty %}
-            {% set label = name|humanize %}
-        {% endif %}
-        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain) }}</label>
+        {{ block('form_label') }}
         <script type="text/javascript">
             $(document).ready(function(){
                 $('label[for="{{id}}"]').click(function(){

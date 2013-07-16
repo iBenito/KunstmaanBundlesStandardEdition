@@ -1,3 +1,5 @@
+@import url("form_div.css");
+
 /* ==========================================================================
    Reusable
    ========================================================================== */
@@ -359,7 +361,7 @@
     font: 12px/20px "Asap", Arial;
     max-height: 197px;
     padding: 5px 0;
-    margin: 15px 0 0 0;
+    margin: 0 0 0 0 !important;
     -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
     -moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
     box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
@@ -374,7 +376,7 @@
 }
 
 .selectboxit-container .selectboxit-options li {
-    padding: 0 10px;
+    padding: 0 15px;
 }
 
 .selectboxit-container .selectboxit-options li a {
@@ -537,7 +539,15 @@
 .form .row {
     position: relative;
     min-height: 36px;
-    margin: 0 0 15px 0;
+    margin: 15px 0 0 0;
+}
+
+.form .row:first-child {
+    margin-top: 0;
+}
+
+.form .row:last-child {
+    margin-bottom: 15px;
 }
 
 .form .row.disabled {
@@ -557,120 +567,136 @@
     margin-right: -120px;
 }
 
-.form .row .label {
+.form .row label.root {
     position: absolute;
     top: 0;
     left: 0;
-    width: 145px;
+    width: 140px;
+    max-width: 140px;
     height: 100%;
-    font: italic 14px/36px "Asap", Arial;
+    font: italic 14px/36px 'Asap', Arial;
     text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
     color: #fff;
     padding: 0 0 0 10px;
     background: #4d4d4d;
     border-radius: 5px 0 0 5px;
-    z-index: 2;
+    z-index: 1002;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+    overflow: auto;
 }
 
-.form .row .label .icon {
+
+.form .row label.root span {
     display: block;
     float: left;
-    width: 30px;
+    width: 26px;
     height: 36px;
-    margin: 0 8px 0 0;
+    margin: 0 10px 0 0;
     background-repeat: no-repeat;
     background-position: right center;
 }
 
-.form .row .label.first_name .icon {
+.form .row label.first_name .icon {
     background-image: url(../images/label/name.png);
 }
 
-.form .row .label.last_name .icon {
+.form .row label.last_name .icon {
     background-image: url(../images/label/surname.png);
 }
 
-.form .row .label.email .icon {
+.form .row label.email .icon {
     background-image: url(../images/label/email.png);
 }
 
-.form .row .label.email_confirm .icon {
+.form .row label.email_confirm .icon {
     background-image: url(../images/label/email-confirm.png);
 }
 
-.form .row .label.password .icon {
+.form .row label.password .icon {
     background-image: url(../images/label/password.png);
 }
 
-.form .row .label.charter .icon {
+.form .row label.charter .icon {
     background-image: url(../images/label/charter.png);
 }
 
-.form .row .label.location .icon {
+.form .row label.location .icon {
     background-image: url(../images/label/location.png);
 }
 
-.form .row .label.phone .icon {
+.form .row label.phone .icon {
     background-image: url(../images/label/phone.png);
 }
 
-.form .row .label.photo .icon {
+.form .row label.photo .icon {
     background-image: url(../images/label/photo.png);
 }
 
-.form .row .label.address .icon {
+.form .row label.address .icon {
     background-image: url(../images/label/address.png);
 }
 
-.form .row .label.languages .icon {
+.form .row label.languages .icon {
     background-image: url(../images/label/languages.png);
 }
 
-.form .row .label.description .icon {
+.form .row label.description .icon {
     background-image: url(../images/label/description.png);
 }
 
-.form .row .label.country .icon {
+.form .row label.country .icon {
     background-image: url(../images/label/country.png);
 }
 
-.form .row .label.postal_code .icon {
+.form .row label.postal_code .icon {
     background-image: url(../images/label/postal-code.png);
 }
 
-.form .row .label.credit_card .icon {
+.form .row label.credit_card .icon {
     background-image: url(../images/label/credit-card.png);
 }
 
-.form .row .label .help .tooltip {
+.form .row label .help .tooltip {
     width: 140px;
     white-space: normal;
 }
+
+.form .row .row-content.root {
+    margin-left: 140px;
+}
+
+.form .row .row-content.no-margin {
+    margin-left: 0;
+}
+
+.form .row .row-content.root  ul {
+    margin: 5px 15px;
+}
+
+.form .row .row-content ul li input {
+    margin-right: 5px;
+}
+
 
 .form .row input[type="text"],
 .form .row input[type="email"],
 .form .row input[type="password"],
 .form .row textarea {
     display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    font: italic 14px/36px "Asap", Arial;
+    width: 100%;
+    min-height: 36px;
+    font: italic 14px/36px 'Asap', Arial;
     text-overflow: ellipsis;
     color: #000;
-    padding: 0 15px 0 155px;
+    padding: 0 15px 0 15px;
     background: #ebebeb;
     border: 0;
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
     -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
     box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
-    border-radius: 5px;
-    z-index: 1;
+    border-radius: 0 5px 5px 0;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -685,6 +711,35 @@
     padding: 8px 15px 8px 155px;
     resize: vertical;
 }
+
+
+.form .row-zizoo_number_nullable input[type='text'] {
+    border-radius: 5px;
+}
+
+.form .row-errors-container {
+    background: url("../images/error-arrow.png") no-repeat scroll 5% 1px transparent;
+    padding: 10px 0 0;
+}
+
+.form .general-errors .row_errors-container {
+    background: none;
+    padding: 0;
+}
+
+.form .row-errors {
+    background-color: white;
+    border: 1px solid grey;
+    padding: 5px;
+    color: red;
+    font-weight: bold;
+    
+    
+    border-radius: 5px;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+
 
 .form .row.error input[type="text"],
 .form .row.error input[type="email"],
@@ -945,10 +1000,6 @@
 
 .form .row .selectboxit-container {
     display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
     min-width: 250px;
     height: 100%;
 }
@@ -963,22 +1014,18 @@
 }
 
 .form .row .selectboxit-container .selectboxit .selectboxit-text {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 36px;
     float: none;
     height: 36px;
     font: italic 14px/36px "Asap", Arial;
     text-overflow: ellipsis;
     color: #000;
-    padding: 0 15px 0 155px;
+    padding: 0 15px;
     background: #ebebeb;
     border: 0;
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
     -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
     box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
-    border-radius: 5px 0 0 5px;
+    border-radius: 0 5px 5px 0;
     z-index: 1;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -1005,7 +1052,7 @@
 }
 
 .form .row .selectboxit-container .selectboxit-options {
-    left: 160px;
+    
     margin: 10px 0 0 0;
     background: #ebecec;
 }
@@ -2040,12 +2087,13 @@
  * Filter
  */
 
+ /**
 .filter {
     padding: 0 0 20px 0;
     margin: 0 0 30px 0;
     border-bottom: 1px solid #ebecec;
 }
-
+*/
 .filter > form > ul > li {
     float: left;
     height: 20px;

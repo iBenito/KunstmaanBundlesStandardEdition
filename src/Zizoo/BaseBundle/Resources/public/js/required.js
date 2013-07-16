@@ -54,7 +54,7 @@ $(document).ready(function() {
      * Selectbox
      */
 
-    $("select").selectBoxIt();
+    $("select:not([no-select-box-it])").selectBoxIt();
 
 
     /**

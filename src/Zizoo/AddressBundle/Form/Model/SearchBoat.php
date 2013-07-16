@@ -9,6 +9,7 @@ class SearchBoat
     protected $location;
     
     protected $page;
+    protected $page_size;
    
     protected $reservation_from;
     protected $reservation_to;
@@ -44,6 +45,17 @@ class SearchBoat
         return $this;
     }
     
+    public function getPageSize()
+    {
+        return $this->page_size;
+    }
+    
+    public function setPageSize($size)
+    {
+        $this->page_size = $size;
+        return $this;
+    }
+    
     public function getReservationFrom()
     {
         return $this->reservation_from;
@@ -76,18 +88,6 @@ class SearchBoat
         $this->num_guests = $num;
         return $this;
     }
-    
-    public function setFilter($filter)
-    {
-        $this->filter = $filter;
-        return $this;
-    }
-    
-    public function getFilter()
-    {
-        return $this->filter;
-    }
-    
     
 }
 

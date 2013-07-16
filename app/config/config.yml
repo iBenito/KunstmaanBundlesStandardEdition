@@ -24,12 +24,13 @@ twig:
     form:
         resources:
             #- form_table_layout.html.twig
+            
             - ZizooAddressBundle:Form:Div/fields.html.twig
-            - ZizooBaseBundle:Form:Div/fields.html.twig
             - ZizooBoatBundle:Form:Div/fields.html.twig
             - ZizooBookingBundle:Form:Div/fields.html.twig
             - ZizooMediaBundle:Form:Div/fields.html.twig
             - ZizooUserBundle:Form:Div/fields.html.twig
+            - ZizooBaseBundle:Form:Div/fields.html.twig
             
 
 # Assetic Configuration

@@ -219,3 +219,64 @@
     </script>
 {% endspaceless %}
 {% endblock zizoo_terms_label %}
+    
+{% block zizoo_number_range_widget %}
+{% spaceless %}
+    <div class="slider">
+        <div class="clearfix">
+            {% if options is not null %}
+                <div class="input-wrap">
+                    {{ form_widget(form.value_from)}}
+                </div>
+                <span class="to">to</span>
+                <div class="input-wrap">
+                    {{ form_widget(form.value_to)}}
+                </div>
+            {% else %}
+                {{ form_widget(form.value_from)}}
+                <span class="to">to</span>
+                {{ form_widget(form.value_to)}}
+            {% endif %}
+        </div>
+        <div id="{{ id }}_slider"></div>
+    </div>
+    {% if options is not null %}
+        <div class="change">
+            <a href="#">{{ options['title'] }}</a>
+            <ul class="change-options clearfix">
+                {% for key,value in options['values'] %}
+                <li><a href="#">{{ value }} <span>{{ key }}</span></a></li>
+                {% endfor %}
+            </ul>
+            <input type="hidden" class="change-value">
+        </div>
+    {% endif %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            if ($('#{{ form.value_from.vars.id }}').val()==''){
+                $('#{{ form.value_from.vars.id }}').val('{{ min }}');
+            }
+            if ($('#{{ form.value_to.vars.id }}').val()==''){
+                $('#{{ form.value_to.vars.id }}').val('{{ max }}');
+            }
+            $('#{{ id }}_slider').slider({
+                range: true,
+                min: {{ min }},
+                max: {{ max }},
+                values: [ {{ min }}, {{ max }} ],
+                slide: function( event, ui ) {
+                    $('#{{ form.value_from.vars.id }}').val(ui.values[ 0 ]);
+                    $('#{{ form.value_to.vars.id }}').val(ui.values[ 1 ]);
+                    //$( "#length_text" ).html(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+                },
+                stop: function( event, ui ){
+                    {% if callback is not null %}
+                        {{ callback }}
+                    {% endif %}
+                }
+            });
+        });
+    </script>
+{% endspaceless %}
+{% endblock zizoo_number_range_widget %}
+    

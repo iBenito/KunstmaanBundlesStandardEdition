@@ -6,6 +6,7 @@ use Zizoo\BoatBundle\Entity\Price;
 use Zizoo\CharterBundle\Entity\Charter;
 use Zizoo\BoatBundle\Extensions\DoctrineExtensions\CustomWalker\SortableNullsWalker;
 use Zizoo\AddressBundle\Form\Model\SearchBoat;
+use Zizoo\AddressBundle\Form\Model\FilterBoat;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -56,7 +57,7 @@ class BoatRepository extends EntityRepository
      * @return Doctrine\ORM\AbstractQuery[] Results
      * @author Alex Fuckert <alexf83@gmail.com>
      */
-    public function searchBoats(SearchBoat $searchBoat)
+    public function searchBoats(SearchBoat $searchBoat, FilterBoat $filterBoat= null)
     {
         // Join boat, image, address, country and reservation
         $qb = $this->createQueryBuilder('boat')
@@ -95,51 +96,50 @@ class BoatRepository extends EntityRepository
             $firstWhere = false;
         }
         
-        $filter = $searchBoat->getFilter();
-        if ($filter){
+        if ($filterBoat){
             // Optionally restrict by boat length
-            if ($filter->getLengthFrom()){
+            if ($filterBoat->getLengthFrom()){
                 if ($firstWhere){
                     $qb->where('boat.length >= :length_from');
                 } else {
                     $qb->andWhere('boat.length >= :length_from');
                 }
-                $qb->setParameter('length_from', $filter->getLengthFrom());
+                $qb->setParameter('length_from', $filterBoat->getLengthFrom());
                 $firstWhere = false;
             }
-            if ($filter->getLengthTo()){
+            if ($filterBoat->getLengthTo()){
                 if ($firstWhere){
                     $qb->where('boat.length <= :length_to');
                 } else {
                     $qb->andWhere('boat.length <= :length_to');
                 }
-                $qb->setParameter('length_to', $filter->getLengthTo());
+                $qb->setParameter('length_to', $filterBoat->getLengthTo());
                 $firstWhere = false;
             }
 
             // Optionally restrict by number of cabins
-            if ($filter->getNumCabinsFrom()){
+            if ($filterBoat->getNumCabinsFrom()){
                 if ($firstWhere){
                     $qb->where('boat.cabins >= :num_cabins_from');
                 } else {
                     $qb->andWhere('boat.cabins >= :num_cabins_from');
                 }
-                $qb->setParameter('num_cabins_from', $filter->getNumCabinsFrom());
+                $qb->setParameter('num_cabins_from', $filterBoat->getNumCabinsFrom());
                 $firstWhere = false;
             }
-            if ($filter->getNumCabinsTo()){
+            if ($filterBoat->getNumCabinsTo()){
                 if ($firstWhere){
                     $qb->where('boat.cabins <= :num_cabins_to');
                 } else {
                     $qb->andWhere('boat.cabins <= :num_cabins_to');
                 }
-                $qb->setParameter('num_cabins_to', $filter->getNumCabinsTo());
+                $qb->setParameter('num_cabins_to', $filterBoat->getNumCabinsTo());
                 $firstWhere = false;
             }
 
             // Optionally restrict by boat type
-            if ($filter->boatTypeSelected()){           
-                $boatTypes = $filter->getBoatType();
+            if ($filterBoat->boatTypeSelected()){           
+                $boatTypes = $filterBoat->getBoatType();
                 $boatTypeIds = array();
                 foreach ($boatTypes as $boatType){
                     $boatTypeIds[] = $boatType->getId();
@@ -155,8 +155,8 @@ class BoatRepository extends EntityRepository
             }
             
             // Optionally restrict by equipment
-            if ($filter->equipmentSelected()){           
-                $equipment = $filter->getEquipment();
+            if ($filterBoat->equipmentSelected()){           
+                $equipment = $filterBoat->getEquipment();
                 $equipmentIds = array();
                 foreach ($equipment as $e){
                     $equipmentIds[] = $e->getId();
@@ -172,7 +172,7 @@ class BoatRepository extends EntityRepository
             }
             
             // Optionally restrict by price
-            if ($filter->getPriceFrom()){
+            if ($filterBoat->getPriceFrom()){
                 if ($firstWhere){
                     if ($searchBoat->getReservationFrom() && $searchBoat->getReservationTo()){
                         $qb->where('price.price >= :price_from AND price.available >= :res_from AND price.available < :res_to');
@@ -190,10 +190,10 @@ class BoatRepository extends EntityRepository
                         $qb->andWhere('price.price >= :price_from OR boat.defaultPrice >= :price_from');
                     }
                 }
-                $qb->setParameter('price_from', (float)$filter->getPriceFrom());
+                $qb->setParameter('price_from', (float)$filterBoat->getPriceFrom());
                 $firstWhere = false;
             }
-            if ($filter->getPriceTo()){
+            if ($filterBoat->getPriceTo()){
                 if ($firstWhere){
                     if ($searchBoat->getReservationFrom() && $searchBoat->getReservationTo()){
                         $qb->where('price.price <= :price_to AND price.available >= :res_from AND price.available < :res_to');
@@ -211,7 +211,7 @@ class BoatRepository extends EntityRepository
                         $qb->andWhere('price.price <= :price_to OR boat.defaultPrice <= :price_to');
                     }
                 }
-                $qb->setParameter('price_to', (float)$filter->getPriceTo());
+                $qb->setParameter('price_to', (float)$filterBoat->getPriceTo());
                 $firstWhere = false;
             }
         }
@@ -235,6 +235,186 @@ class BoatRepository extends EntityRepository
                             'reservation.id' => SortableNullsWalker::NULLS_LAST,
                         ))
                   ->getResult();
+    }
+    
+    
+    public function searchBoatsQuery(SearchBoat $searchBoat, FilterBoat $filterBoat= null)
+    {
+        // Join boat, image, address, country and reservation
+        $qb = $this->createQueryBuilder('boat')
+                   ->select('boat, image, address, country, reservation, price, boat_type, equipment')
+                   ->leftJoin('boat.image', 'image')
+                   ->leftJoin('boat.address', 'address')
+                   ->leftJoin('boat.reservation', 'reservation')
+                   ->leftJoin('boat.price', 'price')
+                   ->leftJoin('boat.address', 'boat_address')
+                   ->leftJoin('address.country', 'country')
+                   ->leftJoin('boat.boatType', 'boat_type')
+                   ->leftJoin('boat.equipment', 'equipment');
+        
+        // Optionally search by boat location or boat availability location
+        $firstWhere = true;
+        if ($searchBoat->getLocation()){
+            $qb->where('address.locality = :search')
+               ->orWhere('address.subLocality = :search')
+               ->orWhere('address.state = :search')
+               ->orWhere('address.province = :search')
+               ->orWhere('country.printableName = :search')
+               ->setParameter('search', $searchBoat->getLocation());
+            $firstWhere = false;
+        }
+        
+        // Optionally restrict by boat type
+        
+        // Optionally restrict by number of guests
+        if ($searchBoat->getNumGuests()){
+            if ($firstWhere){
+                $qb->where('boat.nr_guests >= :num_guests');
+            } else {
+                $qb->andWhere('boat.nr_guests >= :num_guests');
+            }
+            $qb->setParameter('num_guests', $searchBoat->getNumGuests());
+            $firstWhere = false;
+        }
+        
+        if ($filterBoat){
+            // Optionally restrict by boat length
+            if ($filterBoat->getLengthFrom()){
+                if ($firstWhere){
+                    $qb->where('boat.length >= :length_from');
+                } else {
+                    $qb->andWhere('boat.length >= :length_from');
+                }
+                $qb->setParameter('length_from', $filterBoat->getLengthFrom());
+                $firstWhere = false;
+            }
+            if ($filterBoat->getLengthTo()){
+                if ($firstWhere){
+                    $qb->where('boat.length <= :length_to');
+                } else {
+                    $qb->andWhere('boat.length <= :length_to');
+                }
+                $qb->setParameter('length_to', $filterBoat->getLengthTo());
+                $firstWhere = false;
+            }
+
+            // Optionally restrict by number of cabins
+            if ($filterBoat->getNumCabinsFrom()){
+                if ($firstWhere){
+                    $qb->where('boat.cabins >= :num_cabins_from');
+                } else {
+                    $qb->andWhere('boat.cabins >= :num_cabins_from');
+                }
+                $qb->setParameter('num_cabins_from', $filterBoat->getNumCabinsFrom());
+                $firstWhere = false;
+            }
+            if ($filterBoat->getNumCabinsTo()){
+                if ($firstWhere){
+                    $qb->where('boat.cabins <= :num_cabins_to');
+                } else {
+                    $qb->andWhere('boat.cabins <= :num_cabins_to');
+                }
+                $qb->setParameter('num_cabins_to', $filterBoat->getNumCabinsTo());
+                $firstWhere = false;
+            }
+
+            // Optionally restrict by boat type
+            if ($filterBoat->boatTypeSelected()){           
+                $boatTypes = $filterBoat->getBoatType();
+                $boatTypeIds = array();
+                foreach ($boatTypes as $boatType){
+                    $boatTypeIds[] = $boatType->getId();
+                }
+                if ($firstWhere){
+                    $qb->where('boat.boatType IN (:boat_types)');
+                } else {
+                    $qb->andWhere('boat.boatType IN (:boat_types)');
+                }
+                $qb->setParameter('boat_types', $boatTypeIds);
+                $firstWhere = false;
+
+            }
+            
+            // Optionally restrict by equipment
+            if ($filterBoat->equipmentSelected()){           
+                $equipment = $filterBoat->getEquipment();
+                $equipmentIds = array();
+                foreach ($equipment as $e){
+                    $equipmentIds[] = $e->getId();
+                }
+                if ($firstWhere){
+                    $qb->where('equipment.id IN (:e)');
+                } else {
+                    $qb->andWhere('equipment.id IN (:e)');
+                }
+                $qb->setParameter('e', $equipmentIds);
+                $firstWhere = false;
+
+            }
+            
+            // Optionally restrict by price
+            if ($filterBoat->getPriceFrom()){
+                if ($firstWhere){
+                    if ($searchBoat->getReservationFrom() && $searchBoat->getReservationTo()){
+                        $qb->where('price.price >= :price_from AND price.available >= :res_from AND price.available < :res_to');
+                        $qb->setParameter('res_from', $searchBoat->getReservationFrom());
+                        $qb->setParameter('res_to', $searchBoat->getReservationTo());
+                    } else {
+                        $qb->where('price.price >= :price_from OR boat.defaultPrice >= :price_from');
+                    }
+                } else {
+                    if ($searchBoat->getReservationFrom() && $searchBoat->getReservationTo()){
+                        $qb->andWhere('price.price >= :price_from AND price.available >= :res_from AND price.available < :res_to');
+                        $qb->setParameter('res_from', $searchBoat->getReservationFrom());
+                        $qb->setParameter('res_to', $searchBoat->getReservationTo());
+                    } else {
+                        $qb->andWhere('price.price >= :price_from OR boat.defaultPrice >= :price_from');
+                    }
+                }
+                $qb->setParameter('price_from', (float)$filterBoat->getPriceFrom());
+                $firstWhere = false;
+            }
+            if ($filterBoat->getPriceTo()){
+                if ($firstWhere){
+                    if ($searchBoat->getReservationFrom() && $searchBoat->getReservationTo()){
+                        $qb->where('price.price <= :price_to AND price.available >= :res_from AND price.available < :res_to');
+                        $qb->setParameter('res_from', $searchBoat->getReservationFrom());
+                        $qb->setParameter('res_to', $searchBoat->getReservationTo());
+                    } else {
+                        $qb->where('price.price <= :price_to OR boat.defaultPrice <= :price_to');
+                    }
+                } else {
+                    if ($searchBoat->getReservationFrom() && $searchBoat->getReservationTo()){
+                        $qb->andWhere('price.price <= :price_to AND price.available >= :res_from AND price.available < :res_to');
+                        $qb->setParameter('res_from', $searchBoat->getReservationFrom());
+                        $qb->setParameter('res_to', $searchBoat->getReservationTo());
+                    } else {
+                        $qb->andWhere('price.price <= :price_to OR boat.defaultPrice <= :price_to');
+                    }
+                }
+                $qb->setParameter('price_to', (float)$filterBoat->getPriceTo());
+                $firstWhere = false;
+            }
+        }
+        
+        if ($firstWhere){
+            $qb->where('boat.active = true');
+            $qb->andWhere('boat.deleted IS NULL');
+            $firstWhere = false;
+        } else {
+            $qb->andWhere('boat.active = true');
+            $qb->andWhere('boat.deleted IS NULL');
+        }
+        
+        $qb->addOrderBy('reservation.id', 'asc');
+
+        
+        return $qb->getQuery()
+                  ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'Zizoo\BoatBundle\Extensions\DoctrineExtensions\CustomWalker\SortableNullsWalker')
+                  ->setHint('SortableNullsWalker.fields',
+                        array(
+                            'reservation.id' => SortableNullsWalker::NULLS_LAST,
+                        ));
     }
     
     

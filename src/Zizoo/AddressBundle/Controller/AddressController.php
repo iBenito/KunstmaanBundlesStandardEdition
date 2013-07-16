@@ -27,8 +27,9 @@ class AddressController extends Controller
      * @param \Symfony\Component\HttpFoundation\Request $request    Used to check if AJAX request
      * @author Alex Fuckert <alexf83@gmail.com>
      */
-    public function locationsAction(Request $request){       
-        $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat(), array('filter' => true, 'label' => array('value' => false)));
+    public function locationsAction(Request $request){      
+        $form       = $this->createForm('zizoo_boat_search', new SearchBoat(), array('label' => array('value' => false)));
+        $filterForm = $this->createForm('zizoo_boat_filter', null, array('callback' => 'updateSearch(1);'));
         
         $form->bind($request);
         $searchBoat = $form->getData();
@@ -43,15 +44,15 @@ class AddressController extends Controller
             $searchBoat->setPage(1);
         }
         
-        $pageSize   = $request->query->get('page_size', '9');
+        $filterForm->bind($request);
+        $filterBoat = $filterForm->getData();
+        
+        $pageSize   = $request->query->get('page_size', '1');
 
         $em = $this->getDoctrine()
                    ->getManager();
-        
-        $minMaxBoatValues   = $em->getRepository('ZizooBoatBundle:Boat')->getMaxBoatValues();
-        $minMaxPrice        = $em->getRepository('ZizooBoatBundle:Price')->getMinimumAndMaximumPrice();
-        
-        $availableBoats = $em->getRepository('ZizooBoatBundle:Boat')->searchBoats($searchBoat);
+                        
+        $availableBoats = $em->getRepository('ZizooBoatBundle:Boat')->searchBoats($searchBoat, $filterBoat);
         $numAvailableBoats = count($availableBoats);
         $numPages = floor($numAvailableBoats / $pageSize);
         if ($numAvailableBoats % $pageSize > 0){
@@ -64,11 +65,8 @@ class AddressController extends Controller
                 'page'              => $searchBoat->getPage(),
                 'page_size'         => $pageSize,
                 'num_pages'         => $numPages,                
-                'max_length'        => $minMaxBoatValues['max_length'],
-                'max_cabins'        => $minMaxBoatValues['max_cabins'],
-                'min_price'         => $minMaxBoatValues['min_lowest_price']?$minMaxBoatValues['min_lowest_price']:1,
-                'max_price'         => $minMaxBoatValues['max_highest_price']?$minMaxBoatValues['max_highest_price']:10000,
-                'form'              => $form->createView()
+                'form'              => $form->createView(),
+                'filter_form'       => $filterForm->createView()
             ));
         } else {
             return $this->render('ZizooAddressBundle:Address:locations.html.twig', array(
@@ -76,11 +74,8 @@ class AddressController extends Controller
                 'page'              => $searchBoat->getPage(),
                 'page_size'         => $pageSize,
                 'num_pages'         => $numPages,
-                'max_length'        => $minMaxBoatValues['max_length'],
-                'max_cabins'        => $minMaxBoatValues['max_cabins'],
-                'min_price'         => $minMaxBoatValues['min_lowest_price']?$minMaxBoatValues['min_lowest_price']:1,
-                'max_price'         => $minMaxBoatValues['max_highest_price']?$minMaxBoatValues['max_highest_price']:10000,
-                'form'              => $form->createView()
+                'form'              => $form->createView(),
+                'filter_form'       => $filterForm->createView()
             ));
         }
         

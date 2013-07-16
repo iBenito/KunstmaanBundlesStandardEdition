@@ -1,4 +1,5 @@
 {# src/Zizoo/AddressBundle/Resources/views/Form/fields.html.twig #}
+
 {% block zizoo_unique_locations_widget %}
 {% spaceless %}
     {% if expanded %}
@@ -22,7 +23,7 @@
 
 {% block zizoo_unique_locations_widget_collapsed %}
 {% spaceless %}
-    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %} no-select-box-it>
         {% if empty_value is not none %}
             <option value="">{{ empty_value|trans({}, translation_domain) }}</option>
         {% endif %}
@@ -189,4 +190,40 @@
     </script>
 {% endif %}
 {% endblock zizoo_address_widget %}
-
+    
+{% block zizoo_boat_filter_row %}
+{% spaceless %}
+    <div id="{{ child.vars.id }}_container" class="box">
+        <h3>{{ form_label(child) }}</h3>
+        {% set form_type = child.vars.block_prefixes|parentBlockPrefix %}
+        <div class="block">
+            {% if form_type == 'zizoo_number_range' %}
+                {{ form_widget(child) }}
+            {% else %}
+                <div class="row">
+                    {{ form_widget(child) }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock zizoo_boat_filter_row %}
+    
+{% block zizoo_boat_filter_widget %}
+{% spaceless %}
+    <div id="{{ id }}">
+    {% for child in form %}
+        {{ block('zizoo_boat_filter_row') }}
+    {% endfor %}
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            {% if callback is not null %}
+            $('#{{ id }} input[type="checkbox"]').change(function(){
+                {{ callback }}
+            });
+            {% endif %}
+        });
+    </script>
+{% endspaceless %}
+{% endblock zizoo_boat_filter_widget %}

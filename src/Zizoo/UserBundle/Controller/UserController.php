@@ -294,7 +294,7 @@ class UserController extends Controller
      */
     public function accountSettingsAction(Request $request){
         $user = $this->getUser();
-        $form = $this->createForm(new AccountSettingsType());
+        $form = $this->createForm(new AccountSettingsType(), null, array('label' => false));
         
         // If submit
         if ($request->isMethod('POST')) {

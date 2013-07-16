@@ -195,7 +195,9 @@ a:hover {
     padding: 0;
 }
 
-#search input[type="text"] {
+#search input[type="text"],
+#search input[type="number"]
+{
     position: relative;
     top: 2px;
     width: 90px;
@@ -217,6 +219,17 @@ a:hover {
 #search .search input[type="text"] {
     top: 0;
     width: 280px;
+    height: 25px;
+    line-height: 25px;
+    color: #000;
+    padding: 0 10px 0 35px;
+    background: #fff url(../images/magnifier-small.png) no-repeat 10px center;
+    border-radius: 20px;
+}
+
+.chzn-search input[type="text"] {
+    top: 0;
+    width: 100%;
     height: 25px;
     line-height: 25px;
     color: #000;
@@ -429,6 +442,10 @@ a:hover {
     background: none;
 }
 
+#zizoo_boat_search_location {
+    width: 100%;
+}
+
 #slideshow .search .where {
     width: 100%;
     height: 30px;
@@ -470,11 +487,11 @@ a:hover {
     opacity: 1;
 }
 
-#slideshow .search ul {
+#slideshow .search ul.search_list {
     margin: 0 -10px 0 0;
 }
 
-#slideshow .search ul li {
+#slideshow .search ul.search_list li {
     float: left;
     position: relative;
     width: 33.33%;
@@ -2060,53 +2077,53 @@ a:hover {
     padding: 0 0 5px 0;
 }
 
-#filter .form .advanced {
+.form #filter .advanced {
     padding: 17px 0 0 0;
     background: url(../images/sidebar-separator.png) repeat-x left 2px;
 }
 
-#filter .form .block {
+.form #filter .block {
     padding: 10px 0 0 0;
     margin: 10px 0 0 0;
     border-top: 1px solid #ebecec;
     border-bottom: 0;
 }
 
-#filter .form .row {
+.form #filter .row {
     min-height: 16px;
     margin: 0 0 5px 0;
 }
 
-#filter .form .row .ui-checkbox {
+.form #filter .row .ui-checkbox {
     font-style: normal;
 }
 
-#filter .form .row .ui-checkbox-checked {
+.form #filter .row .ui-checkbox-checked {
     color: #47c2d2;
 }
 
-#filter .form .row span.ui-checkbox {
+.form #filter .row span.ui-checkbox {
     top: 1px;
     width: 10px;
     height: 10px;
     background: url(../images/checkbox-modal.png) 0 0;
 }
 
-#filter .form .row span.ui-checkbox.ui-checkbox-checked {
+.form #filter .row span.ui-checkbox.ui-checkbox-checked {
     background-position: 0 -10px;
 }
 
-#filter .form .selectboxit-container .selectboxit-text {
+.form #filter .selectboxit-container .selectboxit-text {
     min-width: 30px;
 }
 
-#filter .form .slider .input-wrap {
+.form #filter .slider .input-wrap {
     position: relative;
     float: left;
     width: 40%;
 }
 
-#filter .form .slider input[type="text"] {
+.form #filter .slider input[type="text"] {
     float: left;
     width: 40%;
     height: 17px;
@@ -2121,13 +2138,13 @@ a:hover {
     border: 1px solid #ebecec;
 }
 
-#filter .form .slider .input-wrap input[type="text"] {
+.form #filter .slider .input-wrap input[type="text"] {
     float: none;
     width: 100%;
     padding: 0 20px 0 0;
 }
 
-#filter .form .slider .input-wrap span {
+.form #filter .slider .input-wrap span {
     position: absolute;
     top: 1px;
     right: 1px;
@@ -2140,7 +2157,7 @@ a:hover {
     border-radius: 0 5px 5px 0;
 }
 
-#filter .form .slider .to {
+.form #filter .slider .to {
     display: block;
     float: left;
     width: 20%;
@@ -2149,7 +2166,7 @@ a:hover {
     color: #969696;
 }
 
-#filter .form .ui-slider {
+.form #filter .ui-slider {
     position: relative;
     height: 6px;
     margin: 15px 0 10px 0;
@@ -2161,7 +2178,7 @@ a:hover {
     border-radius: 2px;
 }
 
-#filter .form .ui-slider .ui-slider-range {
+.form #filter .ui-slider .ui-slider-range {
     position: absolute;
     top: 0;
     height: 100%;
@@ -2174,7 +2191,7 @@ a:hover {
     z-index: 1;
 }
 
-#filter .form .ui-slider .ui-slider-handle {
+.form #filter .ui-slider .ui-slider-handle {
     position: absolute;
     top: -2px;
     width: 11px;
@@ -2186,11 +2203,11 @@ a:hover {
     z-index: 2;
 }
 
-#filter .form .ui-slider .ui-slider-handle:nth-child(2) {
+.form #filter .ui-slider .ui-slider-handle:nth-child(2) {
     background: url(../images/slider-from.png);
 }
 
-#filter .form .ui-slider .ui-slider-handle:nth-child(3) {
+.form #filter .ui-slider .ui-slider-handle:nth-child(3) {
     background: url(../images/slider-to.png);
 }
 

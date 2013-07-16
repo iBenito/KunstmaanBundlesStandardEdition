@@ -45,3 +45,8 @@ services:
         class: Zizoo\AddressBundle\Form\Extension\AddressTypeExtension
         tags:
             - { name: form.type_extension, alias: zizoo_address }
+            
+    zizoo_address.filter_boat_type_extension:
+        class: Zizoo\AddressBundle\Form\Extension\FilterBoatTypeExtension
+        tags:
+            - { name: form.type_extension, alias: zizoo_boat_filter }

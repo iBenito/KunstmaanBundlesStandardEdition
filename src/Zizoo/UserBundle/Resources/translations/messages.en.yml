@@ -19,3 +19,5 @@ zizoo_user.label.new_password_repeat: Repeat new password
 zizoo_user.friends_invited: has been invited!
 
 zizoo_user.friend_already_exists: is already a Zizoo user!
+
+zizoo_user.label.change_email: New Email

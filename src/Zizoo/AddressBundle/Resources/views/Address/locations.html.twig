@@ -24,72 +24,33 @@
 {% block search_results %}
 
     <div id="all">
-        <div class="tabbed">
-            {% include "ZizooAddressBundle:Address:boats_grid.html.twig" with {'page': page, 'page_size': page_size } %}
-            {% include "ZizooAddressBundle:Address:boats_list.html.twig" with {'page': page, 'page_size': page_size } %}
-        </div>
+        {% include "ZizooAddressBundle:Address:locations_boats.html.twig" with {'pagination': page, 'page_size': page_size } %}
     </div>
     
 {% endblock search_results %}
     
 {% block search_filter %}
-    <form class="form">
-        <div class="box">
-            <h3>Boat Type</h3>
-            <div class="block">
-                <div class="row">
-                    <label><input type="checkbox"> Yacht</label>
-                </div>
-                <div class="row">
-                    <label><input type="checkbox"> Sail Boat</label>
-                </div>
-                <div class="row">
-                    <label><input type="checkbox" checked="checked"> Motor Boat</label>
-                </div>
-                <div class="row">
-                    <label><input type="checkbox"> Catamaran</label>
-                </div>
+    
+    <div class="box">
+        <h3>Boat Type</h3>
+        <div class="block">
+            <div class="row">
+                <label><input type="checkbox"> Yacht</label>
+            </div>
+            <div class="row">
+                <label><input type="checkbox"> Sail Boat</label>
+            </div>
+            <div class="row">
+                <label><input type="checkbox" checked="checked"> Motor Boat</label>
+            </div>
+            <div class="row">
+                <label><input type="checkbox"> Catamaran</label>
             </div>
         </div>
-    </form>
-
-
-
-
-
-
-
-
-
-    <div id="search-filter" style="display: none">
-        <div id="boat_type_filter">
-        {{ form_row(form.filter.boat_type) }}
-        </div>
-        <div id="length_filter">
-            <label for="length_text">Boat Length:</label>
-            <div id="length_text">1 - {{ max_length }}</div>
-            <div id="length_slider"></div>
-        </div>
-        <div id="price_filter">
-            <label for="price_text">Price:</label>
-            <div id="price_text">1 - {{ max_price }}</div>
-            <div id="price_slider"></div>
-        </div>
-        <div id="num_cabins_filter">
-            <label for="num_cabins_text">Number of cabins:</label>
-            <div id="num_cabins_text">1 - {{ max_cabins }}</div>
-            <div id="num_cabins_slider"></div>
-        </div>
-        <div id="equipment_filter">
-            {{ form_row(form.filter.equipment) }}
-        </div>
-        {{ form_widget(form.filter.length_from) }}
-        {{ form_widget(form.filter.length_from) }}
-        {{ form_widget(form.filter.length_to) }}
-        {{ form_widget(form.filter.num_cabins_from) }}
-        {{ form_widget(form.filter.num_cabins_to) }}
-        {{ form_widget(form.filter.price_from) }}
-        {{ form_widget(form.filter.price_to) }}
+    </div>
+   
+    <div id="filter-controls" >
+        {{ form_widget(filter_form) }}
     </div>
     
     <script type="text/javascript">
@@ -97,12 +58,12 @@
         function doBlock(block){
             if (block){
                 $('#map').block({ message: null }); 
-                $('#boats').block({ message: null }); 
-                $('#search-filter').block({ message: null });
+                $('#all').block({ message: null }); 
+                $('#filter-controls').block({ message: null });
             } else {
                 $('#map').unblock();
-                $('#boats').unblock();
-                $('#search-filter').unblock();
+                $('#all').unblock();
+                $('#filter-controls').unblock();
             }
         }
 
@@ -126,7 +87,7 @@
                 url: $('#search_form').attr('search_form'),
                 data:$('#search_form').serialize(),
                 success: function(data, textStatus, XHR){
-                    $('#boats').html(data);
+                    $('#all').html(data);
                     if(val==null){
                         map.setCenter(center);
                         map.setZoom(zoom);
@@ -142,65 +103,11 @@
 
         $(document).ready(function(){
 
-            $( "#length_slider" ).slider({
-                range: true,
-                min: 1,
-                max: {{ max_length }},
-                values: [ 1, {{ max_length }} ],
-                slide: function( event, ui ) {
-                    $( "#zizoo_boat_search_filter_length_from" ).val(ui.values[ 0 ]);
-                    $( "#zizoo_boat_search_filter_length_to" ).val(ui.values[ 1 ]);
-                    $( "#length_text" ).html(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
-                },
-                stop: function( event, ui ){
-                    updateSearch(1);
-                }
-            });
-
-            $( "#num_cabins_slider" ).slider({
-                range: true,
-                min: 1,
-                max: {{ max_cabins }},
-                values: [ 1, {{ max_cabins }} ],
-                slide: function( event, ui ) {
-                    $( "#zizoo_boat_search_filter_num_cabins_from" ).val(ui.values[ 0 ]);
-                    $( "#zizoo_boat_search_filter_num_cabins_to" ).val(ui.values[ 1 ]);
-                    $( "#num_cabins_text" ).html(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
-                },
-                stop: function( event, ui ){
-                    updateSearch(1);
-                }
-            });
-
-            $( "#price_slider" ).slider({
-                range: true,
-                min: 1,
-                max: {{ max_price }},
-                values: [ 1, {{ max_price }} ],
-                slide: function( event, ui ) {
-                    $( "#zizoo_boat_search_filter_price_from" ).val(ui.values[ 0 ]);
-                    $( "#zizoo_boat_search_filter_price_to" ).val(ui.values[ 1 ]);
-                    $( "#price_text" ).html(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
-                },
-                stop: function( event, ui ){
-                    updateSearch(1);
-                }
-            });
-
-
-            $('#boat_type_filter input[type="checkbox"]').change(function(){
-                updateSearch(1);
-            });
-
-            $('#equipment_filter input[type="checkbox"]').change(function(){
-                updateSearch(1);
-            });
-
             $( "#zizoo_boat_search_reservation_from" ).attr('placeholder', 'From');
             $( "#zizoo_boat_search_reservation_to" ).attr('placeholder', 'Until');
             $( "#zizoo_boat_search_num_guests" ).attr('placeholder', 'Number of people');
 
-            $('#search-filter').show();
+            $('#filter-controls').show();
         });
 
     </script>
