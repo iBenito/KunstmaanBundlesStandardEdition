@@ -15,13 +15,15 @@ class ReservationRangeType extends AbstractType
                                                         'by_reference'  => false,
                                                         'widget'        => 'single_text',
                                                         'format'        => 'dd/MM/yyyy',
-                                                        'attr'          => array('autocomplete' => 'off')));
+                                                        
+                                                        'attr'          => array('autocomplete' => 'off', 'placeholder' => 'From')));
         
         $builder->add('reservation_to', 'date', array('required'        => false,
                                                         'by_reference'  => false,
                                                         'widget'        => 'single_text',
                                                         'format'        => 'dd/MM/yyyy',
-                                                        'attr'          => array('autocomplete' => 'off')));
+                                                        
+                                                        'attr'          => array('autocomplete' => 'off', 'placeholder' => 'Until')));
           
     }
 

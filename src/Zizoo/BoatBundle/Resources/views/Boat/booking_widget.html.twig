@@ -1,43 +1,81 @@
 <div id="booking_widget">
     <form id="availability_form" action="{{ url }}" method="get">
         
-        <table id="booking_price_container">
-            <tr>
-                <td>Price</td>
-                <td>{{ book_boat|BookBoat_price(subtotal)|raw}}</td>
-            </tr>
-            {% if boat.crewOptional == true %}
-            <tr>
-                <td>{{ form_widget(form.crew) }} Crew {{ form_errors(form.crew) }}</td>
-                <td>{{ book_boat|BookBoat_price(crew_price)|raw}}</td>
-            </tr>
-            {% endif %}
-            <tr>
-                <td>Total</td>
-                <td>{{ book_boat|BookBoat_price(total)|raw}}</td>
-            </tr>
-        </table>
+        <!-- start:price -->
+        <div class="price">
+            <table id="booking_price_container">
+                <tbody>
+                    <tr>
+                        <td>Price</td>
+                        <td>{{ book_boat|BookBoat_price(subtotal)|raw}}</td>
+                    </tr>
+                    {% if boat.crewOptional == true %}
+                    <tr>
+                        <td>{{ form_widget(form.crew) }} Crew {{ form_errors(form.crew) }}</td>
+                        <td>{{ book_boat|BookBoat_price(crew_price)|raw}}</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>Total</td>
+                        <td>{{ book_boat|BookBoat_price(total)|raw}}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <!-- end:price -->
         
         <input type="hidden" name="url" value="{{ url }}" />
         <input type="hidden" name="ajax_url" value="{{ ajax_url }}" />
         
-        {{ form_widget(form) }}
-            
-        <noscript>
-            <button type="submit">Calculate</button>
-        </noscript>
+        <!-- start:summary -->
+        <div class="summary">
+            <ul class="clearfix">
+                <li>
+                    <span class="icon calendar black"></span>
+                    <span class="field">{{ form_widget(form.reservation_range.reservation_from) }}</span>
+                </li>
+                <li>
+                    <span class="icon calendar black"></span>
+                    <span class="field">{{ form_widget(form.reservation_range.reservation_to) }}</span>
+                </li>
+                {% if form.reservation_range.vars.errors|length > 0 %}
+                <li>
+                    {{ form_errors(form.reservation_range) }}
+                </li>
+                {% endif %}
+                <li>
+                    <span class="icon hash black"></span>
+                    <span class="field">{{ form_widget(form.num_guests) }}</span>
+                    {% if form.num_guests.vars.errors|length > 0 %}
+                        {{ form_errors(form.num_guests) }}
+                    {% endif %}
+                </li>
+            </ul>
+            <noscript>
+                <!--<button type="submit" class="button orange big" title="Book it">Calculate</button>-->
+                <button type="submit" class="button orange big" title="Book it">Calculate</button>
+            </noscript>
+        </div>
+        <!-- end:summary -->  
     </form>
-    {% if valid == true %}
+    {% if valid == true and false==true %}
         <form id="booking_form" action="{{ book_url }}" method="get">
             <input name="zizoo_boat_book[reservation_from]" type="hidden" value="{{ form.vars.value.reservationRange.reservationFrom is empty ? "" : form.vars.value.reservationRange.reservationFrom|date }}" autocomplete="off" />
             <input name="zizoo_boat_book[reservation_to]" type="hidden" value="{{ form.vars.value.reservationRange.reservationTo is empty ? "" : form.vars.value.reservationRange.reservationTo|date }}" autocomplete="off" />
             <input name="zizoo_boat_book[num_guests]" type="hidden" value="{{ form.vars.value.numGuests }}" />
-            <button type="submit" id="book_btn">Book It</button>
+            <button type="submit" id="book_btn" class="button orange big" title="Book it">Book It</button>
         </form>
     {% else %}
-        <button type="button" id="book_btn" disabled="disabled">Book It</button>
+        <!--<button type="button" id="book_btn" disabled="disabled" class="button orange big" title="Book it">Book It</button>-->
+        <button type="button" id="book_btn" disabled="disabled" class="button orange big" title="Book it">Book It</button>
     {% endif %}
-        
+              
+    <div id="coming_soon" style="display: none">
+        <h2>Hold tight!</h2>
+        <p>Booking functionality is coming soon!</p>
+    </div>
 </div>
 
 <style type="text/css">
@@ -50,6 +88,18 @@
     var bookingWidgetPriceDates         = {{ boat|priceDates(prices)|raw }};
     var bookingWidgetDefaultAllowed     = {{ boat.defaultPrice is not null ? 'true' : 'false' }};
     var bookingWidgetDefaultPrice       = {{ boat.defaultPrice is not null ? boat.defaultPrice : 'null' }};
+    
+    function openComingSoonDialog(){
+        $('#login_inner_ajax').dialog({
+            modal: true,
+            closeOnEscape: false,
+            resizable: false,
+            width: 470,
+            maxWidth: 470,
+            fluid: true,
+            title: 'Login'
+        });
+    }
     
     function reloadWidget(){
         var dateFrom    = $('#zizoo_boat_book_reservation_range_reservation_from').datepick('getDate');
@@ -66,7 +116,7 @@
             url: '{{ ajax_url }}',
             data: $('#availability_form').serialize(),
             success: function (data, textStatus, jqXHR){
-                $('#booking_widget').html(data);
+                $('#booking_widget').innerHTML = data;
                 $('#booking_widget').unblock();
             }
         });

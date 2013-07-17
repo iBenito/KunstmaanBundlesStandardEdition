@@ -930,7 +930,7 @@ class Boat extends BaseEntity
     
     public function setNumCrew($numCrew)
     {
-        $this->numCrew = $numCrew;
+        $this->numCrew = (int)$numCrew;
         return $this;
     }
     

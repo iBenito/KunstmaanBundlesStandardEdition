@@ -27,6 +27,10 @@
             {% endif %}
         {% endif %}
 
+        {% if label['help'] is defined %}
+            {% set help = '<a class="help" href="#"><span class="tooltip">' ~ label['help'] ~ '</span></a>' %}
+        {% endif %}
+
         {% if label['value'] is defined %}
             {% set label = label['value'] %}
         {% endif %}
@@ -34,7 +38,7 @@
         {% if label is empty %}
             {% set label = name|humanize %}
         {% endif %}
-        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}><span class="icon"></span>{{ label|trans({}, translation_domain) }}</label>
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}><span class="icon"></span>{{ label|trans({}, translation_domain) }}{% if help is defined %}{{ help|raw }}{% endif %}</label>
     {% endif %}
 {% endspaceless %}
 {% endblock form_label %}

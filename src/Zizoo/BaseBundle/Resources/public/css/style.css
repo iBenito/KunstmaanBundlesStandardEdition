@@ -1653,7 +1653,7 @@ a:hover {
  * Sidebar summary
  */
 
-#sidebar .summary {
+#sidebar #booking_widget {
     padding: 10px 0 17px 0;
     margin: 0 0 30px 0;
     background: url(../images/sidebar-separator.png) repeat-x left bottom;
@@ -1678,7 +1678,7 @@ a:hover {
     margin-right: 7px;
 }
 
-#sidebar .summary ul li .field {
+#sidebar .summary ul li .field input {
     display: inline-block;
     width: 90px;
     height: 20px;
