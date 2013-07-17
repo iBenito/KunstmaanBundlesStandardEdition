@@ -276,6 +276,16 @@ class BoatRepository extends EntityRepository
         }
         
         if ($filterBoat){
+            // Optionally restrict by skippered only
+            if ($filterBoat->getCrew()){
+                if ($firstWhere){
+                    $qb->where('boat.crewOptional = false');
+                } else {
+                    $qb->andWhere('boat.crewOptional = false');
+                }
+                $firstWhere = false;
+            }
+            
             // Optionally restrict by boat length
             if ($filterBoat->getLengthFrom()){
                 if ($firstWhere){
@@ -374,10 +384,14 @@ class BoatRepository extends EntityRepository
         if ($firstWhere){
             $qb->where('boat.active = true');
             $qb->andWhere('boat.deleted IS NULL');
+            $qb->andWhere('boat.lowestPrice IS NOT NULL');
+            $qb->andWhere('boat.highestPrice IS NOT NULL');
             $firstWhere = false;
         } else {
             $qb->andWhere('boat.active = true');
             $qb->andWhere('boat.deleted IS NULL');
+            $qb->andWhere('boat.lowestPrice IS NOT NULL');
+            $qb->andWhere('boat.highestPrice IS NOT NULL');
         }
         
         if ($orderBy=='price'){

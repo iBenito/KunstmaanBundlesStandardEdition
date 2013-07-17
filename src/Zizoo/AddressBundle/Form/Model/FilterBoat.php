@@ -5,6 +5,8 @@ class FilterBoat
 {
     protected $boat_type;
   
+    protected $crew;
+    
     protected $length_from;
     protected $length_to;
     
@@ -25,6 +27,17 @@ class FilterBoat
     public function setBoatType($type)
     {
         $this->boat_type = $type;
+        return $this;
+    }
+    
+    public function getCrew()
+    {
+        return count($this->crew)>0;
+    }
+    
+    public function setCrew($crew)
+    {
+        $this->crew = $crew;
         return $this;
     }
     

@@ -68,6 +68,7 @@
                     <a href="#" class="arrow prev ir" title="Previous">Previous</a>
                     <div class="thumbs">
                         <ul class="clearfix">
+                            <!--
                             <li><a href="images/temp/media/full1.jpg"><img src="images/temp/media/thumb1.jpg" alt=""></a></li>
                             <li><a href="images/temp/media/full2.png"><img src="images/temp/media/thumb2.png" alt=""></a></li>
                             <li><a href="images/temp/media/full3.png"><img src="images/temp/media/thumb3.png" alt=""></a></li>
@@ -79,6 +80,7 @@
                             <li><a href="images/temp/media/full7.png"><img src="images/temp/media/thumb7.png" alt=""></a></li>
                             <li><a href="images/temp/media/full6.png"><img src="images/temp/media/thumb6.png" alt=""></a></li>
                             <li><a href="images/temp/media/full5.png"><img src="images/temp/media/thumb5.png" alt=""></a></li>
+                            -->
                         </ul>
                     </div>
                     <a href="#" class="arrow next ir" title="Next">Next</a>
@@ -189,53 +191,16 @@
             <!-- start:sidebar -->
             <aside id="sidebar" class="right clearfix">
 
-                <!-- start:price -->
-                <div class="price">
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td>Price</td>
-                                <td>20,000 &euro;</td>
-                            </tr>
-                            <tr>
-                                <td>Crew</td>
-                                <td>500 &euro;</td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td>Total</td>
-                                <td>20,500 &euro;</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                <!-- end:price -->
-
-                <!-- start:summary -->
-                <div class="summary">
-                    <ul class="clearfix">
-                        <li>
-                            <span class="icon calendar black"></span>
-                            <span class="field">01/31/2013</span>
-                        </li>
-                        <li>
-                            <span class="icon calendar black"></span>
-                            <span class="field">02/07/2013</span>
-                        </li>
-                        <li>
-                            <span class="icon hash black"></span>
-                            <span class="field">5 Guests</span>
-                        </li>
-                    </ul>
-                    <a href="" class="button orange big" title="Book it">Book it</a>
-                </div>
-                <!-- end:summary -->
+                {% render controller('ZizooBoatBundle:Boat:bookingWidget', {id: boat.id, request:request, reservations: reservations, prices: prices}) %}
 
                 <!-- start:avatar -->
                 <div class="avatar">
                     <figure>
-                        <img src="images/default/avatar-user.png" alt="Avatar">
+                        {% if boat.charter.logo is not null %}
+                            <img src="{{ asset(charter.logo|pictureWebPath) }}" alt="{{ charter.charterName }}" class="large" id="logo_img" />
+                        {% else %}
+                            <img src="{{ asset('bundles/zizoobase/images/default/avatar-user.png'|imagine_filter('thumb_190x_')) }}" alt="Charter logo not set" id="logo_img" />
+                        {% endif %}
                         <figcaption>
                             {{ boat.charter.charterName }}
                         </figcaption>

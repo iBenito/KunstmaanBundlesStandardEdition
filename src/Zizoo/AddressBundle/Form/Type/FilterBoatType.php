@@ -26,7 +26,16 @@ class FilterBoatType extends AbstractType
                                                     'property'  => 'name',
                                                     'label'     => array(   'value' => 'Boat Type',
                                                                             'class' => 'filter')));
-        
+        $builder->add('crew', 'choice', array(
+                                                'choices'   => array('skippered' => 'Only Skippered'),
+                                                'required'  => false,
+                                                'expanded'  => true,
+                                                'multiple'  => true,
+                                                'label'     => array(   'value' => 'Crew',
+                                                                        'class' => 'filter',
+                                                                        'help'  => ' Shows boats that have skipper <br/>included option provided ')
+        ));
+      
         $builder->add('length', 'zizoo_number_range', array(    'label'                 => 'Boat Length',
                                                                 'required'              => false,
                                                                 'from_property_path'    => 'lengthFrom',

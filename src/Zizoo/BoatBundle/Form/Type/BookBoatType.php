@@ -25,7 +25,7 @@ class BookBoatType extends AbstractType
         
         $builder->add('num_guests', 'integer', array('required'         => false,
                                                         'by_reference'  => false,
-                                                        'attr'          => array('autocomplete' => 'off')));
+                                                        'attr'          => array('autocomplete' => 'off', 'placeholder' => 'Guests')));
         
         $subscriber = new BookBoatSubscriber($builder->getFormFactory(), $this->container);
         $builder->addEventSubscriber($subscriber);
