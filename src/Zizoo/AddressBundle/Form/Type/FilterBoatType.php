@@ -27,7 +27,8 @@ class FilterBoatType extends AbstractType
                                                     'label'     => array(   'value' => 'Boat Type',
                                                                             'class' => 'filter')));
         
-        $builder->add('length', 'zizoo_number_range', array(    'required'              => false,
+        $builder->add('length', 'zizoo_number_range', array(    'label'                 => 'Boat Length',
+                                                                'required'              => false,
                                                                 'from_property_path'    => 'lengthFrom',
                                                                 'to_property_path'      => 'lengthTo',
                                                                 'min'                   => 1,
@@ -35,19 +36,22 @@ class FilterBoatType extends AbstractType
                                                                 'callback'              => $options['callback'],
                                                                 'data_class'            => 'Zizoo\AddressBundle\Form\Model\FilterBoat'));
 
-        $builder->add('cabins', 'zizoo_number_range', array(    'required'              => false,
+        $builder->add('cabins', 'zizoo_number_range', array(    'label'                 => 'Number of Cabins',
+                                                                'required'              => false,
                                                                 'from_property_path'    => 'numCabinsFrom',
                                                                 'to_property_path'      => 'numCabinsTo',
                                                                 'min'                   => 1,
                                                                 'max'                   => $minMaxBoatValues['max_cabins'],
                                                                 'callback'              => $options['callback'],
                                                                 'data_class'            => 'Zizoo\AddressBundle\Form\Model\FilterBoat'));
-        
-        $builder->add('price', 'zizoo_number_range', array(     'required'              => false,
+        $minPrice = number_format($minMaxBoatValues['min_lowest_price']?$minMaxBoatValues['min_lowest_price']:1, 2, '.', '');
+        $maxPrice = number_format($minMaxBoatValues['max_highest_price']?$minMaxBoatValues['max_highest_price']:10000, 2, '.', '');
+        $builder->add('price', 'zizoo_number_range', array(     'label'                 => 'Price per Day',
+                                                                'required'              => false,
                                                                 'from_property_path'    => 'priceFrom',
                                                                 'to_property_path'      => 'priceTo',
-                                                                'min'                   => $minMaxBoatValues['min_lowest_price']?$minMaxBoatValues['min_lowest_price']:1,
-                                                                'max'                   => $minMaxBoatValues['max_highest_price']?$minMaxBoatValues['max_highest_price']:10000,
+                                                                'min'                   => $minPrice,
+                                                                'max'                   => $maxPrice,
                                                                 'callback'              => $options['callback'],
                                                                 'data_class'            => 'Zizoo\AddressBundle\Form\Model\FilterBoat'));
 

@@ -24,35 +24,17 @@
 {% block search_results %}
 
     <div id="all">
-        {% include "ZizooAddressBundle:Address:locations_boats.html.twig" with {'pagination': page, 'page_size': page_size } %}
+        {% include "ZizooAddressBundle:Address:locations_boats.html.twig" with {'pagination': pagination } %}
     </div>
     
 {% endblock search_results %}
     
 {% block search_filter %}
     
-    <div class="box">
-        <h3>Boat Type</h3>
-        <div class="block">
-            <div class="row">
-                <label><input type="checkbox"> Yacht</label>
-            </div>
-            <div class="row">
-                <label><input type="checkbox"> Sail Boat</label>
-            </div>
-            <div class="row">
-                <label><input type="checkbox" checked="checked"> Motor Boat</label>
-            </div>
-            <div class="row">
-                <label><input type="checkbox"> Catamaran</label>
-            </div>
-        </div>
-    </div>
-   
     <div id="filter-controls" >
         {{ form_widget(filter_form) }}
     </div>
-    
+        
     <script type="text/javascript">
         
         function doBlock(block){
@@ -60,16 +42,18 @@
                 $('#map').block({ message: null }); 
                 $('#all').block({ message: null }); 
                 $('#filter-controls').block({ message: null });
+                $('#search').block({ message: null });
             } else {
                 $('#map').unblock();
                 $('#all').unblock();
                 $('#filter-controls').unblock();
+                $('#search').unblock();
             }
         }
 
-        function updateSearch(page){
+        function updateSearch(url){
             doBlock(true);
-            $('#search_form #zizoo_boat_search_page').val(page);
+            //$('#search_form #zizoo_boat_search_page').val(page);
 
             var index   = $('#zizoo_boat_search_location :selected').index();
             var type    = null;
@@ -82,10 +66,11 @@
                 val  = $('#zizoo_boat_search_location').val();
             }
 
+            var urlToUse = url != null ? url : '{{ path('ZizooAddressBundle_locations') }}';
+            urlToUse += '?'+$('#search_form').serialize();
             $.ajax({
                 type: 'get', 
-                url: $('#search_form').attr('search_form'),
-                data:$('#search_form').serialize(),
+                url: urlToUse,
                 success: function(data, textStatus, XHR){
                     $('#all').html(data);
                     if(val==null){
@@ -95,6 +80,12 @@
                         codeAddress(search);
                         map.setZoom(5);
                     }
+                    $('#view_style').hide();
+                    window.history.pushState('string', 'title', urlToUse);
+                    $("#all select:not([no-select-box-it])").selectBoxIt();
+                    doBlock(false);
+                },
+                error: function(data, textStatus, XHR){
                     doBlock(false);
                 }
             });
@@ -106,6 +97,28 @@
             $( "#zizoo_boat_search_reservation_from" ).attr('placeholder', 'From');
             $( "#zizoo_boat_search_reservation_to" ).attr('placeholder', 'Until');
             $( "#zizoo_boat_search_num_guests" ).attr('placeholder', 'Number of people');
+
+            $('#all').delegate('#results-navigation a', 'click', function(){
+                updateSearch($(this).attr('href'));
+                return false;
+            });
+            
+            $('#view_style').hide();
+            
+            $('#all').delegate('#view select[name="page_size"]', 'change', function(){
+                updateSearch();
+            });
+            
+            $('#all').delegate('#view select[name="order_by"]', 'change', function(){
+                updateSearch();
+            });
+            
+            $('#all').delegate("#view .view a", 'click', function() {
+                $('#view_style').val($(this).attr('class'));
+                $(this).parent().addClass("current").siblings().removeClass("current");
+                $("#all .tabbed > div").eq($(this).parent().index()).show().siblings().hide();
+                return false;
+            });
 
             $('#filter-controls').show();
         });

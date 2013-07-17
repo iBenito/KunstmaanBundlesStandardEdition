@@ -8,8 +8,8 @@
         <nav class="clearfix">
             <ul class="menu clearfix">
                 <li><a href="{{ path('ZizooBaseBundle_how') }}" title="How it Works">How it Works</a></li>
-                <li><a href="#" id="register_link" title="Register">Register</a></li>
-                <li><a href="#" id="login_link" title="Login">Login</a></li>
+                <li><a href="{{ path('ZizooUserBundle_register') }}" id="register_link" title="Register">Register</a></li>
+                <li><a href="{{ path('ZizooUserBundle_login') }}" id="login_link" title="Login">Login</a></li>
             </ul>
             <a href="{{ path('ZizooBaseBundle_Dashboard_CharterNewBoat') }}" class="button orange add" title="List Your Boats"><span></span> List Your Boats</a>
         </nav>

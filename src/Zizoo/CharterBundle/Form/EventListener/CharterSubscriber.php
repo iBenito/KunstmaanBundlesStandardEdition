@@ -50,7 +50,7 @@ class CharterSubscriber implements EventSubscriberInterface
         $config     = $form->getConfig();
         $options    = $config->getOptions();
         
-        $form->add('charter_name', 'text', array('label' => 'zizoo_charter.label.charter_name', 'property_path' => 'charterName'));
+        $form->add('charter_name', 'text', array('label' => array('value' => 'zizoo_charter.label.charter_name', 'class' => 'charter'), 'property_path' => 'charterName'));
         //$form->add('charter_number', 'text', array('label' => 'zizoo_charter.label.charter_number', 'property_path' => 'charterNumber'));
         $form->add('charter_address', 'zizoo_address', array('label'             => false, 
                                                                 'property_path'     => 'address',
@@ -59,14 +59,14 @@ class CharterSubscriber implements EventSubscriberInterface
                                                                 'map_show'          => $options['map_show'],
                                                                 'map_update'        => $options['map_update'],
                                                                 'map_drag'          => $options['map_drag']));
-        $form->add('charter_phone', 'text', array('label' => 'zizoo_charter.label.charter_phone', 'property_path' => 'phone'));
+        $form->add('charter_phone', 'text', array('label' => array('value' => 'zizoo_charter.label.charter_phone', 'class' => 'phone'), 'property_path' => 'phone'));
         
         // check if the product object is "new"
         // If you didn't pass any data to the form, the data is "null".
         // This should be considered a new "Product"
         if ($charter && $charter->getId()) {
             $form->add('logo', 'zizoo_media', array(    'property_path'     => 'logo',
-                                                        'label'             => 'Logo',
+                                                        'label' => array('value' => 'zizoo_charter.label.charter_logo', 'class' => 'photo'),
                                                         'file_path'         => 'webPath',
                                                         'aspect_ratio'      => 1.48,
                                                         'crop_js'           => 'logoCrop',
@@ -82,7 +82,7 @@ class CharterSubscriber implements EventSubscriberInterface
                                                       'data_class'        => 'Zizoo\CharterBundle\Entity\CharterLogo'
                                                     ))
             ->add('description', 'textarea', array('required'       => true,
-                                                    'label'         => 'Description',
+                                                    'label' => array('value' => 'zizoo_charter.label.charter_description', 'class' => 'description'),
                                                     'property_path' => 'about'));
         }
     }

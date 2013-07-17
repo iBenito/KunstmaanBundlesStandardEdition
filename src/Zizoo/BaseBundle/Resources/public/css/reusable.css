@@ -707,7 +707,7 @@
     width: 100%;
     min-height: 110px;
     line-height: 20px;
-    padding: 8px 15px 8px 155px;
+    padding: 8px 15px 8px 15px;
     resize: vertical;
 }
 
@@ -1879,7 +1879,7 @@
     width: 14.28%;
 }
 
-.tabs.charter.edit li {
+.tabs.boat li {
     width: 25%;
 }
 
@@ -2826,6 +2826,25 @@
    ========================================================================== */
 
 /**
+ * Pagination info
+ */
+ 
+.pagination-container {
+    position: relative;
+}
+
+.pagination-container .pagination-info {
+    position: absolute;
+    left: 0;
+    margin: 10px 0 0;
+    font: italic 12px/15px "Asap",Arial;
+} 
+
+.pagination-container .pagination-info .page-size {
+    margin-left: 20px;
+}
+
+/**
  * Pagination
  */
 
@@ -3032,7 +3051,7 @@ a:hover .icon.add {
 
 .expand {
     display: none;
-    padding: 25px 0 0 0;
+    padding: 0;
     background: url(../images/register-arrow.png) no-repeat 95% 11px;
 }
 
@@ -3081,6 +3100,7 @@ a:hover .icon.add {
 .ui-dialog.blank  {
     background: none;
     border: none;
+    box-shadow: none;
 }
 
 .ui-dialog.blank .ui-dialog-content {

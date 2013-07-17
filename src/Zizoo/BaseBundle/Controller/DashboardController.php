@@ -490,14 +490,14 @@ class DashboardController extends Controller {
      *
      * @return Response
      */
-    public function charterBoatsAction($listing_status)
+    public function charterBoatsAction($page)
     {
         $request    = $this->getRequest();
         
         $params = $request->query->all();
         $params['routes'] = $this->boatRoutes;
         
-        $response   = $this->forward('ZizooCharterBundle:Charter:boats', array('listing_status' => $listing_status), $params);
+        $response   = $this->forward('ZizooCharterBundle:Charter:boats', array('page' => $page), $params);
         
         if ($response->isRedirect()){
             return $this->redirect($response->headers->get('Location'));

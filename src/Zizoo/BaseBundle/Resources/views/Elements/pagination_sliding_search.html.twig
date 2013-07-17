@@ -1,0 +1,35 @@
+<div class="left">
+    {{ totalCount }} Matches Found
+</div>
+<div class="right clearfix">
+    <ul class="show clearfix">
+        <li>
+            Show Results:
+            <select class="white" name="page_size">
+                {% for key,val in page_sizes %}
+                <option value="{{ key }}" {% if key == numItemsPerPage %}selected="selected"{% endif %}>{{ val }}</option>
+                {% endfor %}
+            </select>
+        </li>
+        <li class="sort">
+            Sort by:
+            <select class="white" name="order_by">
+                {% for key,val in order_options %}
+                <option value="{{ key }}" {% if key == order_by %}selected="selected"{% endif %}>{{ val }}</option>
+                {% endfor %}
+            </select>
+        </li>
+    </ul>
+    <select id="view_style" name="view_style" no-select-box-it="no-select-box-it">
+        <option value="grid" {% if view == 'grid' %}selected="selected"{% endif %}>Grid</option>
+        <option value="list" {% if view == 'list' %}selected="selected"{% endif %}>List</option>
+    </select>
+    <ul class="view clearfix">
+        <li {% if view == 'grid' %}class="current"{% endif %}>
+            <a href="#" class="grid"><span class="tooltip">Grid View</span></a>
+        </li>
+        <li {% if view == 'list' %}class="current"{% endif %}>
+            <a href="#" class="list"><span class="tooltip">List View</span></a>
+        </li>
+    </ul>
+</div>

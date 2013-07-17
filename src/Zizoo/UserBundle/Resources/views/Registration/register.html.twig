@@ -72,7 +72,7 @@
             <div class="register_email_container expand">
                 <div class="register_email">
                     
-                    <form class="form register_form" action="{{ path('ZizooUserBundle_register')}}" method="post" {{ form_enctype(form) }} class="register_form">
+                    <form class="form register_form" action="{{ path('ZizooUserBundle_register')}}" method="post" {{ form_enctype(form) }} class="register_form form">
                         {{ form_errors(form) }}
                             
                         {{ form_row(form.profile.first_name) }}

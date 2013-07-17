@@ -136,6 +136,7 @@
                             }
                             return false;
                         });
+                        $('#login_inner_ajax input[type="radio"], #login_inner_ajax input[type="checkbox"]').checkBox();
                         $('#login_inner_ajax').unblock();
                     } else {
                         getLoginWidget();
@@ -158,6 +159,7 @@
                             window.open($(this).attr('href'), 'Login with Facebook', "height=200,width=200");
                             return false;
                         });
+                        $('#login_inner_ajax input[type="radio"], #login_inner_ajax input[type="checkbox"]').checkBox();
                         openLoginDialog();
                         $.unblockUI();
                     },
@@ -191,6 +193,7 @@
                         });
                         return false;
                      });
+                    $('#register_inner_ajax input[type="radio"], #register_inner_ajax input[type="checkbox"]').checkBox();
                     $('#register_inner_ajax').unblock();
                 }
             });
@@ -217,6 +220,7 @@
                             });
                             return false;
                          });
+                         $('#register_inner_ajax input[type="radio"], #register_inner_ajax input[type="checkbox"]').checkBox();
                         openRegisterDialog();
                         $.unblockUI();
                     },
@@ -243,7 +247,7 @@
                     if (register.length>0){
                         $('#facebook_register_inner_ajax').html(register);
                         $('#facebook_register_inner_ajax').unblock();
-                        
+                        $('#facebook_register_inner_ajax input[type="radio"], #facebook_register_inner_ajax input[type="checkbox"]').checkBox();
                         var status = $('#facebook_register_inner_ajax').find('#status').val();
                         if (status=='success' || status=='merged'){
                             getLoginWidget();

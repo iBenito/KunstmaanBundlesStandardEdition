@@ -22,7 +22,7 @@ class AddressType extends AbstractType
                                                     'property_path' => 'addressLine2',
                                                     'required'  => false))
             ->add('postcode', 'text', array('label' => array( 'value' => 'zizoo_address.label.postcode',
-                                                                'class' => 'location'),
+                                                                'class' => 'postal_code'),
                                             'property_path' => 'postcode'))
             ->add('locality', 'text', array('label' => array( 'value' => 'zizoo_address.label.locality',
                                                                     'class' => 'location'),
@@ -38,7 +38,7 @@ class AddressType extends AbstractType
                                                     ->orderBy('c.order, c.printableName', 'ASC');
                                             },
                                             'label'     => array(   'value' => 'zizoo_address.label.country',
-                                                                    'class' => 'location'),
+                                                                    'class' => 'country'),
                                             'property_path' => 'country'
                                         ))
             ->add('lat', 'hidden', array(   'required'  => false,

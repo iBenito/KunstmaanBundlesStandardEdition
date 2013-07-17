@@ -238,7 +238,7 @@
                 {{ form_widget(form.value_to)}}
             {% endif %}
         </div>
-        <div id="{{ id }}_slider"></div>
+        <div id="{{ id }}_slider" class="zizoo-slider" reset="{{ id }}_reset"></div>
     </div>
     {% if options is not null %}
         <div class="change">
@@ -252,22 +252,43 @@
         </div>
     {% endif %}
     <script type="text/javascript">
+        var {{ id }}_initialVal0;
+        var {{ id }}_initialVal1;
+        
+        function {{ id }}_reset(){
+            $('#{{ id }}_slider').slider('values', 0, {{ min }});
+            $('#{{ id }}_slider').slider('values', 1, {{ max }});
+            $('#{{ form.value_from.vars.id }}').val({{ min }});
+            $('#{{ form.value_to.vars.id }}').val({{ max }});
+        }
+        
         $(document).ready(function(){
+            {{ id }}_initialVal0 = {{ min }};
+            {{ id }}_initialVal1 = {{ max }};
             if ($('#{{ form.value_from.vars.id }}').val()==''){
                 $('#{{ form.value_from.vars.id }}').val('{{ min }}');
+            } else {
+                {{ id }}_initialVal0 = $('#{{ form.value_from.vars.id }}').val();
             }
             if ($('#{{ form.value_to.vars.id }}').val()==''){
                 $('#{{ form.value_to.vars.id }}').val('{{ max }}');
+            } else {
+                {{ id }}_initialVal1 = $('#{{ form.value_to.vars.id }}').val();
             }
+            $('#{{ form.value_from.vars.id }}').change(function(){
+                $('#{{ id }}_slider').slider('values', 0, $(this).val());
+            });
+            $('#{{ form.value_to.vars.id }}').change(function(){
+                $('#{{ id }}_slider').slider('values', 1, $(this).val());
+            });
             $('#{{ id }}_slider').slider({
                 range: true,
                 min: {{ min }},
                 max: {{ max }},
-                values: [ {{ min }}, {{ max }} ],
+                values: [ {{ id }}_initialVal0, {{ id }}_initialVal1 ],
                 slide: function( event, ui ) {
                     $('#{{ form.value_from.vars.id }}').val(ui.values[ 0 ]);
                     $('#{{ form.value_to.vars.id }}').val(ui.values[ 1 ]);
-                    //$( "#length_text" ).html(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
                 },
                 stop: function( event, ui ){
                     {% if callback is not null %}

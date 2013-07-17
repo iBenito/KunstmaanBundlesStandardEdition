@@ -29,7 +29,7 @@ class AddressController extends Controller
      */
     public function locationsAction(Request $request){      
         $form       = $this->createForm('zizoo_boat_search', new SearchBoat(), array('label' => array('value' => false)));
-        $filterForm = $this->createForm('zizoo_boat_filter', null, array('callback' => 'updateSearch(1);'));
+        $filterForm = $this->createForm('zizoo_boat_filter', null, array('callback' => 'updateSearch();'));
         
         $form->bind($request);
         $searchBoat = $form->getData();
@@ -47,35 +47,52 @@ class AddressController extends Controller
         $filterForm->bind($request);
         $filterBoat = $filterForm->getData();
         
-        $pageSize   = $request->query->get('page_size', '1');
-
         $em = $this->getDoctrine()
                    ->getManager();
                         
-        $availableBoats = $em->getRepository('ZizooBoatBundle:Boat')->searchBoats($searchBoat, $filterBoat);
-        $numAvailableBoats = count($availableBoats);
-        $numPages = floor($numAvailableBoats / $pageSize);
-        if ($numAvailableBoats % $pageSize > 0){
-            $numPages++;
-        }
-
+        $page       = $request->attributes->get('page', 1);
+        if (!$page) $page = $request->query->get('page', 1);
+        $pageSize   = $request->query->get('page_size', 1);
+        $view       = $request->query->get('view_style', 'grid');
+        $orderBy    = $request->query->get('order_by', 'date');
+        
+        $query = $em->getRepository('ZizooBoatBundle:Boat')->searchBoatsQuery($searchBoat, $filterBoat, $orderBy);
+        
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $page/*page number*/,
+            $pageSize/*limit per page*/
+        );
+        $pagination->setCustomParameters(array(
+            'view'          => $view,
+            'order_options' => array(
+                                        'date'  => 'Date',
+                                        'price' => 'Price'
+                                    ),
+            'order_by'      => $orderBy,
+            'page_sizes'    => array(
+                                        '1'    => '1',
+                                        '10'    => '10',
+                                        '20'    => '20',
+                                        '50'    => '50',
+                                        '100'   => '100'
+                                    )
+        ));
+        
         if ($request->isXmlHttpRequest()){
             return $this->render('ZizooAddressBundle:Address:locations_boats.html.twig', array(
-                'boats'             => $availableBoats,
-                'page'              => $searchBoat->getPage(),
-                'page_size'         => $pageSize,
-                'num_pages'         => $numPages,                
+                'pagination'        => $pagination,         
                 'form'              => $form->createView(),
-                'filter_form'       => $filterForm->createView()
+                'filter_form'       => $filterForm->createView(),
+                'view'              => $view
             ));
         } else {
             return $this->render('ZizooAddressBundle:Address:locations.html.twig', array(
-                'boats'             => $availableBoats,
-                'page'              => $searchBoat->getPage(),
-                'page_size'         => $pageSize,
-                'num_pages'         => $numPages,
+                'pagination'        => $pagination,
                 'form'              => $form->createView(),
-                'filter_form'       => $filterForm->createView()
+                'filter_form'       => $filterForm->createView(),
+                'view'              => $view
             ));
         }
         

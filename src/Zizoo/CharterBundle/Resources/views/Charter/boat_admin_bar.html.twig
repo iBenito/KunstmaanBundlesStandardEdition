@@ -2,7 +2,11 @@
     <div class="box">
         <a href="" class="boat gray clearfix">
             <figure>
+                {% if boat.image.first != false %}
+                <img src="{{ boat.image.first.path }}" alt="" />
+                {% else %}
                 <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg') }}" alt="">
+                {% endif %}
                 <figcaption class="clearfix">
                     {{ boat.name }} <span class="icon plus"></span>
                 </figcaption>
@@ -11,7 +15,7 @@
                 ?? Reviews
             </div>
             <div class="right">
-                from <strong>{{ boat.lowestPrice|number_format(0, '.', ',') }} &euro;</strong>
+                from <strong>{{ boat.lowestPrice|number_format(2) }} &euro;</strong>
             </div>
         </a>
     </div>
@@ -27,16 +31,16 @@
             <li>
                 <form>
                     <input type="hidden" name="boat_id" value="{{ boat.id }}" />
-                    <input type="hidden" name="active" />
-                    <span class="text">Active</span> <a href="#" class="toggle {% if not boat.active %} off{% endif %}"></a>
+                    <input type="hidden" name="active" value="{{ boat.active }}" />
+                    <a href="#" class="toggle {% if not boat.active %} off{% endif %}"></a>
                 </form>
             </li>
         </ul>
         <ul class="buttons clearfix">
-            <li><a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" target="_blank" class="button blue medium">View</a></li>
-            <li><a href="{{ path('ZizooBoatBundle_Boat_Edit', {id: boat.id}) }}" target="_blank" class="button blue medium">Edit</a></li>
-            <li><a href="{{ path('ZizooBoatBundle_Boat_EditPrice', {id: boat.id}) }}" target="_blank" class="button blue medium">Calendar</a></li>
-            <li><a href="{{ path('ZizooBoatBundle_Boat_Delete', {id: boat.id}) }}" target="_blank" class="button blue medium">
+            <li><a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" class="button blue medium">View</a></li>
+            <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterEditBoat', {id: boat.id}) }}" class="button blue medium">Edit</a></li>
+            <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterEditPriceBoat', {id: boat.id}) }}" class="button blue medium">Calendar</a></li>
+            <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterDeleteBoat', {id: boat.id}) }}" class="button blue medium">
                 {% if boat.deleted is null %}Delete{% else %}Undelete{% endif %}
             </a></li>
         </ul>

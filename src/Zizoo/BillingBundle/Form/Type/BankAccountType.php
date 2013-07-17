@@ -17,7 +17,7 @@ class BankAccountType extends AbstractType
 
         $builder->add('account_owner', 'text', array(   'required'      => true,
                                                         'property_path' => 'accountOwner',
-                                                        'label'         => 'Account Owner',
+                                                        'label'         => array('value' => 'Account Owner', 'class' => 'charter'),
                                                         'attr'          => array('autocomplete' => 'off')));
         
         $builder->add('bank_name', 'text', array(   'required'      => true,
@@ -26,6 +26,7 @@ class BankAccountType extends AbstractType
                                                     'attr'          => array('autocomplete' => 'off')));
         
         $builder->add('country', 'entity', array(
+                                            'label'         => array('value' => 'Country', 'class' => 'country'),
                                             'class' => 'ZizooAddressBundle:Country',
                                             'query_builder' => function(EntityRepository $er) {
                                                 return $er->createQueryBuilder('c')

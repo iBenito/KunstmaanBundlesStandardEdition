@@ -50,14 +50,9 @@ class BoatRepository extends EntityRepository
     
     /**
      * 
-     * @param string $search      Optional location search value
-     * @param string $resFrom     Optional date from
-     * @param string $resTo       Optional date until
-     * @param string $numGuests   Optional number of guests
-     * @return Doctrine\ORM\AbstractQuery[] Results
      * @author Alex Fuckert <alexf83@gmail.com>
      */
-    public function searchBoats(SearchBoat $searchBoat, FilterBoat $filterBoat= null)
+    public function searchBoats(SearchBoat $searchBoat, FilterBoat $filterBoat=null, $orderBy)
     {
         // Join boat, image, address, country and reservation
         $qb = $this->createQueryBuilder('boat')
@@ -225,8 +220,11 @@ class BoatRepository extends EntityRepository
             $qb->andWhere('boat.deleted IS NULL');
         }
         
-        $qb->addOrderBy('reservation.id', 'asc');
-
+        if ($orderBy=='price'){
+            $qb->addOrderBy('boat.lowestPrice', 'asc');
+        } else {
+            $qb->addOrderBy('boat.created', 'desc');
+        }
         
         return $qb->getQuery()
                   ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'Zizoo\BoatBundle\Extensions\DoctrineExtensions\CustomWalker\SortableNullsWalker')
@@ -238,7 +236,7 @@ class BoatRepository extends EntityRepository
     }
     
     
-    public function searchBoatsQuery(SearchBoat $searchBoat, FilterBoat $filterBoat= null)
+    public function searchBoatsQuery(SearchBoat $searchBoat, FilterBoat $filterBoat=null, $orderBy)
     {
         // Join boat, image, address, country and reservation
         $qb = $this->createQueryBuilder('boat')
@@ -355,44 +353,20 @@ class BoatRepository extends EntityRepository
             // Optionally restrict by price
             if ($filterBoat->getPriceFrom()){
                 if ($firstWhere){
-                    if ($searchBoat->getReservationFrom() && $searchBoat->getReservationTo()){
-                        $qb->where('price.price >= :price_from AND price.available >= :res_from AND price.available < :res_to');
-                        $qb->setParameter('res_from', $searchBoat->getReservationFrom());
-                        $qb->setParameter('res_to', $searchBoat->getReservationTo());
-                    } else {
-                        $qb->where('price.price >= :price_from OR boat.defaultPrice >= :price_from');
-                    }
+                    $qb->where('boat.lowestPrice >= :price_from');
                 } else {
-                    if ($searchBoat->getReservationFrom() && $searchBoat->getReservationTo()){
-                        $qb->andWhere('price.price >= :price_from AND price.available >= :res_from AND price.available < :res_to');
-                        $qb->setParameter('res_from', $searchBoat->getReservationFrom());
-                        $qb->setParameter('res_to', $searchBoat->getReservationTo());
-                    } else {
-                        $qb->andWhere('price.price >= :price_from OR boat.defaultPrice >= :price_from');
-                    }
+                    $qb->andWhere('boat.lowestPrice >= :price_from');
                 }
-                $qb->setParameter('price_from', (float)$filterBoat->getPriceFrom());
+                $qb->setParameter('price_from', $filterBoat->getPriceFrom());
                 $firstWhere = false;
             }
             if ($filterBoat->getPriceTo()){
                 if ($firstWhere){
-                    if ($searchBoat->getReservationFrom() && $searchBoat->getReservationTo()){
-                        $qb->where('price.price <= :price_to AND price.available >= :res_from AND price.available < :res_to');
-                        $qb->setParameter('res_from', $searchBoat->getReservationFrom());
-                        $qb->setParameter('res_to', $searchBoat->getReservationTo());
-                    } else {
-                        $qb->where('price.price <= :price_to OR boat.defaultPrice <= :price_to');
-                    }
+                    $qb->where('boat.highestPrice <= :price_to');
                 } else {
-                    if ($searchBoat->getReservationFrom() && $searchBoat->getReservationTo()){
-                        $qb->andWhere('price.price <= :price_to AND price.available >= :res_from AND price.available < :res_to');
-                        $qb->setParameter('res_from', $searchBoat->getReservationFrom());
-                        $qb->setParameter('res_to', $searchBoat->getReservationTo());
-                    } else {
-                        $qb->andWhere('price.price <= :price_to OR boat.defaultPrice <= :price_to');
-                    }
+                    $qb->andWhere('boat.highestPrice <= :price_to');
                 }
-                $qb->setParameter('price_to', (float)$filterBoat->getPriceTo());
+                $qb->setParameter('price_to', $filterBoat->getPriceTo());
                 $firstWhere = false;
             }
         }
@@ -406,7 +380,11 @@ class BoatRepository extends EntityRepository
             $qb->andWhere('boat.deleted IS NULL');
         }
         
-        $qb->addOrderBy('reservation.id', 'asc');
+        if ($orderBy=='price'){
+            $qb->addOrderBy('boat.lowestPrice', 'asc');
+        } else {
+            $qb->addOrderBy('boat.created', 'desc');
+        }
 
         
         return $qb->getQuery()

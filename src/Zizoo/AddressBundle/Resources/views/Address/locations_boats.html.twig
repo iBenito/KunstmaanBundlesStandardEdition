@@ -1,13 +1,18 @@
-<div class="tabbed">
-    <div class="paging_div">
-        {% if num_pages > 1 %}
-            <ul id="paging">
-            {% for i in range(1, num_pages) %}
-                <li class="{{ i }}"><a href="{{ path('ZizooAddressBundle_locations') }}?zizoo_boat_search[page]={{ i }}&zizoo_boat_search[location]={{ form.vars.value.location }}&zizoo_boat_search[reservation_from]={{ form.vars.value.reservationFrom is empty ? "" : form.vars.value.reservationFrom|date }}&zizoo_boat_search[reservation_to]={{ form.vars.value.reservationTo is empty ? "" : form.vars.value.reservationTo|date }}&zizoo_boat_search[num_guests]={{ form.vars.value.numGuests }}">Page {{ i }}</a></li>
-            {% endfor %}
-            </ul>
-        {% endif %}
+<div>
+    
+    <!-- start:view -->
+    <div id="view" class="clearfix">
+        {{ pagination.setTemplate('ZizooBaseBundle:Elements:pagination_sliding_search.html.twig') }}
+        {{ knp_pagination_render(pagination) }}
     </div>
-{% include "ZizooAddressBundle:Address:boats_grid.html.twig" with {'page': page, 'page_size': page_size } %}
-{% include "ZizooAddressBundle:Address:boats_list.html.twig" with {'page': page, 'page_size': page_size } %}
+    <!-- end:view -->
+                
+    <div class="tabbed">
+    {% include "ZizooAddressBundle:Address:boats_grid.html.twig" with {'pagination': pagination } %}
+    {% include "ZizooAddressBundle:Address:boats_list.html.twig" with {'pagination': pagination } %}
+    </div>
+    <div id="results-navigation">
+    {{ pagination.setTemplate('ZizooBaseBundle:Elements:pagination_sliding.html.twig') }}
+    {{ knp_pagination_render(pagination) }}
+    </div>
 </div>

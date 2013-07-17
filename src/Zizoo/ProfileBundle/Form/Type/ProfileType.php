@@ -24,7 +24,7 @@ class ProfileType extends AbstractType
         $builder
             ->add('firstName', 'text', array('label' => array('value' => 'zizoo_profile.label.first_name', 'class' => 'first_name')))
             ->add('lastName', 'text', array('label' => array('value' => 'zizoo_profile.label.last_name', 'class' => 'last_name')))
-            ->add('about', 'textarea', array('label' => array('value' => 'zizoo_profile.label.about', 'class' => 'about')))
+            ->add('about', 'textarea', array('label' => array('value' => 'zizoo_profile.label.about', 'class' => 'description')))
             ->add('phone', 'text', array(
                                             'attr'  => array('oninvalid'=>"setCustomValidity('Please enter a valid Phone Number')"),
                                             'label' => array('value' => 'zizoo_profile.label.phone', 'class' => 'phone')))
@@ -32,10 +32,11 @@ class ProfileType extends AbstractType
                 'class' => 'ZizooAddressBundle:Language',
                 'multiple'  => true,
                 'attr'  => array('title'=>'select'),
-                'property' => 'name',))
+                'property' => 'name',
+                'label' => array('value' => 'zizoo_profile.label.languages', 'class' => 'languages')))
             ->add('avatar', 'zizoo_media_collection', array(    'type'              => 'zizoo_media',
                                                                 'property_path'     => 'avatar',
-                                                                'label'             => 'Avatar',
+                                                                'label'             => array('value' => 'zizoo_profile.label.avatar', 'class' => 'photo'),
                                                                 'file_path'         => 'webPath',
                                                                 'aspect_ratio'      => 1.48,
                                                                 'crop_js'           => 'avatarCrop',

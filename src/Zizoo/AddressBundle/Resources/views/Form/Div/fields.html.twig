@@ -200,7 +200,8 @@
             {% if form_type == 'zizoo_number_range' %}
                 {{ form_widget(child) }}
             {% else %}
-                <div class="row">
+                {% set default_class = child.vars.block_prefixes|parentBlockPrefix %}
+                <div class="row {{ default_class }}">
                     {{ form_widget(child) }}
                 </div>
             {% endif %}
@@ -212,9 +213,10 @@
 {% block zizoo_boat_filter_widget %}
 {% spaceless %}
     <div id="{{ id }}">
-    {% for child in form %}
-        {{ block('zizoo_boat_filter_row') }}
-    {% endfor %}
+        {% for child in form %}
+            {{ block('zizoo_boat_filter_row') }}
+        {% endfor %}
+        <button class="button blue small" type="reset" id="{{ id }}_reset_filters_btn">Reset Filters</button>
     </div>
     <script type="text/javascript">
         $(document).ready(function(){
@@ -223,6 +225,38 @@
                 {{ callback }}
             });
             {% endif %}
+            
+            $('#{{ id }}_reset_filters_btn').click(function(){
+                $('#{{ id }} input[type="checkbox"]:checked').checkBox('toggle');
+                $('#{{ id }} .zizoo-slider').each(function(index,el){
+                    var reset = $(el).attr('reset');
+                    console.log(reset);
+                    eval(reset+'()');
+                });
+                {% if callback is not null %}
+                {{ callback }}
+                {% endif %}
+            });
+            
+            {% set num_list_items_to_show = 3 %}
+            
+            {% for child in form %}
+                {% if child.children|length > num_list_items_to_show %}
+                    $('#{{ child.vars.id }} ul').addClass('show').after('<ul id="{{ child.vars.id }}_expand" class="expand"></ul>');
+                    $('#{{ child.vars.id }} ul.show li:gt({{ num_list_items_to_show }})').each(function(index,el){
+                        var c = $(el).children('input[type="checkbox"]');
+                        if (!$(c).attr('checked')){
+                            $(this).appendTo('#{{ child.vars.id }}_expand');
+                        }
+                    });
+                    $('#{{ child.vars.id }}_expand').after('<a href="#" id="{{ child.vars.id }}_more" class="more">View More</a>');
+                    $("#{{ child.vars.id }}_more").click(function() {
+                        $("#{{ child.vars.id }}_expand").slideToggle(200);
+                        $(this).text($(this).text() == 'View More' ? 'Show Less' : 'View More');
+                        return false;
+                    });
+                {% endif %}
+            {% endfor %}
         });
     </script>
 {% endspaceless %}

@@ -14,10 +14,11 @@ class AccountSettingsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('password', 'password', array('label'         => 'zizoo_user.label.current_password',
+        $builder->add('password', 'password', array('label'         => array('value' => 'zizoo_user.label.current_password', 'class' => 'password'),
                                                     'property_path' => 'password'));
         
-        $builder->add('new_email', new UserNewEmailType(), array(   'label'             => 'zizoo_user.label.change_email',
+        $builder->add('new_email', new UserNewEmailType(), array(   'label'             => array('value' => 'zizoo_user.label.change_email',
+                                                                                                'class' => 'email'),
                                                                     'property_path'     => 'newEmail'));
         
         $builder->add('new_password', new UserNewPasswordType(), array( 'label'         => false,

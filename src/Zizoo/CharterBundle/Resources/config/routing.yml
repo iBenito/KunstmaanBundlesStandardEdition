@@ -49,11 +49,11 @@ ZizooCharterBundle_Charter_Edit:
         _method:  GET|POST
         
 ZizooCharterBundle_Charter_Boats:
-    pattern:  /account/boats/{listing_status}/view
-    defaults: { _controller: ZizooCharterBundle:Charter:boats, listing_status: all }
+    pattern:  /account/boats/view/{page}
+    defaults: { _controller: ZizooCharterBundle:Charter:boats, page: 1 }
     requirements:
         _method:  GET
-        listing_status:  active|incomplete|hidden|all
+        page: \d+
         
 ZizooCharterBundle_Charter_PayoutSettings:
     pattern:  /account/payout_settings/view

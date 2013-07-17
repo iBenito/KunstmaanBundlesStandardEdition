@@ -70,11 +70,12 @@ $(document).ready(function() {
    Results
    ========================================================================== */
 
-   $("#view .view a").click(function() {
-       $(this).parent().addClass("current").siblings().removeClass("current");
-       $("#all .tabbed > div").eq($(this).parent().index()).show().siblings().hide();
-       return false;
-   });
+    // Moved this to ZizooAddressBundle:Resources:views:Elements:pagination_sliding_boats.html.twig
+//   $("#view .view a").click(function() {
+//       $(this).parent().addClass("current").siblings().removeClass("current");
+//       $("#all .tabbed > div").eq($(this).parent().index()).show().siblings().hide();
+//       return false;
+//   });
 
 
 /* ==========================================================================
@@ -94,91 +95,93 @@ $(document).ready(function() {
    Datepicker / sample
    ========================================================================== */
 
+    /**** Datepickers are created where they are needed */
+
     // Reset position of datepicker on resize
-    var resizeTimer = null;
-    $(window).resize(function() {
-
-        // Hide datepicker
-        var field = $(document.activeElement);
-        field.datepicker('hide');
-
-        // Show datepicker after 300ms after resize
-        if (resizeTimer) clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function() {
-            if (field.is('.hasDatepicker')) {
-                field.datepicker('hide').datepicker('show');
-            }
-        }, 300);
-    });
-
-    // Search start date
-    $("#search .date-picker.start").datepicker({
-        dateFormat: "yy-mm-dd",
-        onClose: function(selectedDate) {
-            $("#search .date-picker.end").datepicker("option", "minDate", selectedDate);
-        }
-    });
-
-    // Search end date
-    $("#search .date-picker.end").datepicker({
-        dateFormat: "yy-mm-dd",
-        onClose: function(selectedDate) {
-            $("#search .date-picker.start").datepicker("option", "maxDate", selectedDate);
-        }
-    });
-
-    // Summary start date
-    $(".summary .date-picker.start").datepicker({
-        dateFormat: "yy-mm-dd",
-        onClose: function(selectedDate) {
-            $(".summary .date-picker.end").datepicker("option", "minDate", selectedDate);
-        }
-    });
-
-    // Summary end date
-    $(".summary .date-picker.end").datepicker({
-        dateFormat: "yy-mm-dd",
-        onClose: function(selectedDate) {
-            $(".summary .date-picker.start").datepicker("option", "maxDate", selectedDate);
-        }
-    });
-
-    // Filter start date
-    $(".filter .date-picker.start").datepicker({
-        dateFormat: "yy-mm-dd",
-        onClose: function(selectedDate) {
-            $(".filter .date-picker.end").datepicker("option", "minDate", selectedDate);
-        }
-    });
-
-    // Filter end date
-    $(".filter .date-picker.end").datepicker({
-        dateFormat: "yy-mm-dd",
-        onClose: function(selectedDate) {
-            $(".filter .date-picker.start").datepicker("option", "maxDate", selectedDate);
-        }
-    });
-
-    // Filter end date
-    $(".payment-options .date-picker").datepicker({
-        dateFormat: "yy-mm-dd"
-    });
-
-    // Slideshow start date
-    $("#slideshow .date-picker.start").datepicker({
-        dateFormat: "yy-mm-dd",
-        onClose: function(selectedDate) {
-            $("#slideshow .date-picker.end").datepicker("option", "minDate", selectedDate);
-        }
-    });
-
-    // Slideshow end date
-    $("#slideshow .date-picker.end").datepicker({
-        dateFormat: "yy-mm-dd",
-        onClose: function(selectedDate) {
-            $("#slideshow .date-picker.start").datepicker("option", "maxDate", selectedDate);
-        }
-    });
+//    var resizeTimer = null;
+//    $(window).resize(function() {
+//
+//        // Hide datepicker
+//        var field = $(document.activeElement);
+//        field.datepicker('hide');
+//
+//        // Show datepicker after 300ms after resize
+//        if (resizeTimer) clearTimeout(resizeTimer);
+//        resizeTimer = setTimeout(function() {
+//            if (field.is('.hasDatepicker')) {
+//                field.datepicker('hide').datepicker('show');
+//            }
+//        }, 300);
+//    });
+//
+//    // Search start date
+//    $("#search .date-picker.start").datepicker({
+//        dateFormat: "yy-mm-dd",
+//        onClose: function(selectedDate) {
+//            $("#search .date-picker.end").datepicker("option", "minDate", selectedDate);
+//        }
+//    });
+//
+//    // Search end date
+//    $("#search .date-picker.end").datepicker({
+//        dateFormat: "yy-mm-dd",
+//        onClose: function(selectedDate) {
+//            $("#search .date-picker.start").datepicker("option", "maxDate", selectedDate);
+//        }
+//    });
+//
+//    // Summary start date
+//    $(".summary .date-picker.start").datepicker({
+//        dateFormat: "yy-mm-dd",
+//        onClose: function(selectedDate) {
+//            $(".summary .date-picker.end").datepicker("option", "minDate", selectedDate);
+//        }
+//    });
+//
+//    // Summary end date
+//    $(".summary .date-picker.end").datepicker({
+//        dateFormat: "yy-mm-dd",
+//        onClose: function(selectedDate) {
+//            $(".summary .date-picker.start").datepicker("option", "maxDate", selectedDate);
+//        }
+//    });
+//
+//    // Filter start date
+//    $(".filter .date-picker.start").datepicker({
+//        dateFormat: "yy-mm-dd",
+//        onClose: function(selectedDate) {
+//            $(".filter .date-picker.end").datepicker("option", "minDate", selectedDate);
+//        }
+//    });
+//
+//    // Filter end date
+//    $(".filter .date-picker.end").datepicker({
+//        dateFormat: "yy-mm-dd",
+//        onClose: function(selectedDate) {
+//            $(".filter .date-picker.start").datepicker("option", "maxDate", selectedDate);
+//        }
+//    });
+//
+//    // Filter end date
+//    $(".payment-options .date-picker").datepicker({
+//        dateFormat: "yy-mm-dd"
+//    });
+//
+//    // Slideshow start date
+//    $("#slideshow .date-picker.start").datepicker({
+//        dateFormat: "yy-mm-dd",
+//        onClose: function(selectedDate) {
+//            $("#slideshow .date-picker.end").datepicker("option", "minDate", selectedDate);
+//        }
+//    });
+//
+//    // Slideshow end date
+//    $("#slideshow .date-picker.end").datepicker({
+//        dateFormat: "yy-mm-dd",
+//        onClose: function(selectedDate) {
+//            $("#slideshow .date-picker.start").datepicker("option", "maxDate", selectedDate);
+//        }
+//    });
 
 
 /* ==========================================================================
@@ -222,23 +225,23 @@ $(document).ready(function() {
      * Toggle
      */
 
-    $(".toggle").click(function() {
-
-        // Check if toggle is disabled
-        if ($(this).is(":not(.disable)")) {
-
-            // Toggle class off
-            $(this).toggleClass("off");
-
-            // Check if off class is added
-            if ($(this).hasClass("off")) {
-                $(this).prev(".text").text($(this).prev(".text").text() == 'Hidden' ? 'Active' : 'Hidden');
-            } else {
-                $(this).prev(".text").text($(this).prev(".text").text() == 'Active' ? 'Hidden' : 'Active');
-            }
-        }
-        return false;
-    });
+//    $(".toggle").click(function() {
+//
+//        // Check if toggle is disabled
+//        if ($(this).is(":not(.disable)")) {
+//
+//            // Toggle class off
+//            $(this).toggleClass("off");
+//
+//            // Check if off class is added
+//            if ($(this).hasClass("off")) {
+//                $(this).prev(".text").text($(this).prev(".text").text() == 'Hidden' ? 'Active' : 'Hidden');
+//            } else {
+//                $(this).prev(".text").text($(this).prev(".text").text() == 'Active' ? 'Hidden' : 'Active');
+//            }
+//        }
+//        return false;
+//    });
 
 
 /* ==========================================================================
@@ -417,55 +420,55 @@ $(document).ready(function() {
    ========================================================================== */
 
     // More
-    $("#filter .more").click(function() {
-        $(this).prev(".expand").slideToggle(200);
-        $(this).text($(this).text() == 'View More' ? 'Show Less' : 'View More');
-        return false;
-    });
+//    $("#filter .more").click(function() {
+//        $(this).prev(".expand").slideToggle(200);
+//        $(this).text($(this).text() == 'View More' ? 'Show Less' : 'View More');
+//        return false;
+//    });
 
-    // Length slider
-    $("#length-slider").slider({
-        range: true,
-        min: 0,
-        max: 300,
-        values: [0, 300],
-        slide: function(event, ui) {
-            $("#length-from").val(ui.values[ 0 ]);
-            $("#length-to").val(ui.values[ 1 ]);
-        }
-    });
-    $("#length-from").val($("#length-slider").slider("values", 0));
-    $("#length-to").val($("#length-slider").slider("values", 1));
-
-
-    // Price slider
-    $("#price-slider").slider({
-        range: true,
-        min: 0,
-        max: 100000,
-        values: [0, 100000],
-        slide: function(event, ui) {
-            $("#price-from").val(ui.values[ 0 ]);
-            $("#price-to").val(ui.values[ 1 ]);
-        }
-    });
-    $("#price-from").val($("#price-slider").slider("values", 0));
-    $("#price-to").val($("#price-slider").slider("values", 1));
-
-
-    // Year slider
-    $("#year-slider").slider({
-        range: true,
-        min: 1990,
-        max: 2013,
-        values: [1990, 2013],
-        slide: function(event, ui) {
-            $("#year-from").val(ui.values[ 0 ]);
-            $("#year-to").val(ui.values[ 1 ]);
-        }
-    });
-    $("#year-from").val($("#year-slider").slider("values", 0));
-    $("#year-to").val($("#year-slider").slider("values", 1));
+//    // Length slider
+//    $("#length-slider").slider({
+//        range: true,
+//        min: 0,
+//        max: 300,
+//        values: [0, 300],
+//        slide: function(event, ui) {
+//            $("#length-from").val(ui.values[ 0 ]);
+//            $("#length-to").val(ui.values[ 1 ]);
+//        }
+//    });
+//    $("#length-from").val($("#length-slider").slider("values", 0));
+//    $("#length-to").val($("#length-slider").slider("values", 1));
+//
+//
+//    // Price slider
+//    $("#price-slider").slider({
+//        range: true,
+//        min: 0,
+//        max: 100000,
+//        values: [0, 100000],
+//        slide: function(event, ui) {
+//            $("#price-from").val(ui.values[ 0 ]);
+//            $("#price-to").val(ui.values[ 1 ]);
+//        }
+//    });
+//    $("#price-from").val($("#price-slider").slider("values", 0));
+//    $("#price-to").val($("#price-slider").slider("values", 1));
+//
+//
+//    // Year slider
+//    $("#year-slider").slider({
+//        range: true,
+//        min: 1990,
+//        max: 2013,
+//        values: [1990, 2013],
+//        slide: function(event, ui) {
+//            $("#year-from").val(ui.values[ 0 ]);
+//            $("#year-to").val(ui.values[ 1 ]);
+//        }
+//    });
+//    $("#year-from").val($("#year-slider").slider("values", 0));
+//    $("#year-to").val($("#year-slider").slider("values", 1));
 
 
 /* ==========================================================================

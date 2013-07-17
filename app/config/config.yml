@@ -106,6 +106,6 @@ fos_message:
         handler:            zizoo_message.reply_form.handler
         model:              Zizoo\MessageBundle\Form\Model\ReplyMessage
 
-knp_paginator:
-    template:
-        pagination: ZizooBaseBundle:Elements:pagination_sliding.html.twig
+#knp_paginator:
+#    template:
+#        pagination: ZizooBaseBundle:Elements:pagination_sliding.html.twig

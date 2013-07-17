@@ -77,7 +77,7 @@ $(document).ready(function(){
         beforeShow: clearBtnFnc1,
         onChangeMonthYear: clearBtnFnc2,
         onClose: function( selectedDate ) {
-            $( "#reservation_to" ).datepicker( "option", "minDate", selectedDate );
+            $( "#zizoo_boat_search_reservation_to" ).datepicker( "option", "minDate", selectedDate );
         }
     });
     $( "#zizoo_boat_search_reservation_to" ).datepicker({
@@ -96,7 +96,7 @@ $(document).ready(function(){
     
    
     $('#search_form').on('submit', function(){
-        updateSearch(1);
+        updateSearch();
         return false;
     });
 

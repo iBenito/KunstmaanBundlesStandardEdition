@@ -14,39 +14,44 @@
         {% endfor %}
 
         <!-- start:filter -->
-        <div id="filter" class="filter">
-            <form method="get" id="filter_form">
+        <div id="boat-filter" class="filter">
+            <form method="get" id="filter_form" action="{{ routes['complete_route'] }}">
                 <ul class="clearfix">
-                    
-                    <!--label for="sort">Sort by</label>
-                    <select name="sort" id="sort" autocomplete="off">
-                        <option value="b.id"{% if pagination.isSorted('b.id') %} selected="selected"{% endif %}>Id</option>
-                        <option value="b.name"{% if pagination.isSorted('b.name') %} selected="selected"{% endif %}>Name</option>
-                    </select>
-                    <label for="direction">Direction</label>
-                    <select name="direction" id="direction" autocomplete="off">
-                        <option value="asc"{% if direction=='asc' %} selected="selected"{% endif %}>Ascending</option>
-                        <option value="desc"{% if direction =='desc' %} selected="selected"{% endif %}>Descending</option>
-                    </select-->
-
-                    <div id="page_size_container">
-                        <label for="page_size">Boats per page:</label>
-                        <select name="page_size" id="page_size_select" autocomplete="off">
-                            <option value="1" {% if page_size==1 %}selected="selected" {% endif %}>1</option>
-                            <option value="5" {% if page_size==5 %}selected="selected" {% endif %}>5</option>
-                            <option value="10" {% if page_size==10 %}selected="selected" {% endif %}>10</option>
-                            <option value="25" {% if page_size==25 %}selected="selected" {% endif %}>25</option>
-                            <option value="50" {% if page_size==50 %}selected="selected" {% endif %}>50</option>
-                        </select>
-                    </div>
-
-
                     <li>
-                        <input type="text" name="boat_name" placeholder="Boat Name" {% if search_boat_name %}value="{{ search_boat_name }}{% endif %}" />
+                        <select name="sort" id="sort" autocomplete="off" class="gray small">
+                            <option value="b.id"{% if pagination.isSorted('b.id') %} selected="selected"{% endif %}>Id</option>
+                            <option value="b.name"{% if pagination.isSorted('b.name') %} selected="selected"{% endif %}>Name</option>
+                        </select>
                     </li>
                     <li>
-                        <select class="gray small" name="boat_type" autocomplete="off">
-                            <option value="">All</option>
+                        <select name="direction" id="direction" autocomplete="off" class="gray small">
+                            <option value="asc"{% if direction=='asc' %} selected="selected"{% endif %}>Ascending</option>
+                            <option value="desc"{% if direction =='desc' %} selected="selected"{% endif %}>Descending</option>
+                        </select>
+                    </li>
+                </ul>
+                <ul class="clearfix">
+                    <li>
+                        <label for="page_size">Show Boats:</label>
+                        <select class="gray small" name="page_size" id="page_size">
+                            {% for key,val in page_sizes %}
+                            <option value="{{ key }}" {% if key == page_size %}selected="selected"{% endif %}>{{ val }}</option>
+                            {% endfor %}
+                        </select>
+                    </li>
+                </ul>
+                <ul class="clearfix">
+                    <li><input type="text" name="boat_name" placeholder="Boat Name" {% if search_boat_name %}value="{{ search_boat_name }}"{% endif %} /></li>
+                    <li>
+                         <select name="listing_status" id="listing_status" class="gray small">
+                            {% for key, status in listing_statuses %}
+                                <option value="{{ key }}" {% if key==listing_status %}selected="selected"{% endif %}>{{ status }}</option>
+                            {% endfor %}
+                        </select>
+                    </li>
+                    <li>
+                        <select name="boat_type" autocomplete="off" class="gray small">
+                            <option value="">All Types</option>
                             {% for boat_type in boat_types %}
                                 <option value="{{ boat_type.id }}" {% if search_boat_type==boat_type.id %}selected="selected"{% endif %}>{{ boat_type.name }}</option>
                             {% endfor %}
@@ -76,6 +81,7 @@
         {# display navigation #}
         <div id="navigation_container">
             <div id="navigation">
+                {{ pagination.setTemplate('ZizooBaseBundle:Elements:pagination_sliding_charter_boats.html.twig') }}
                 {{ knp_pagination_render(pagination) }}
             </div>
         </div>
@@ -91,44 +97,25 @@
                 if (block){
                     $('#navigation_container').block({ message: null }); 
                     $('#boats').block({ message: null }); 
-                    $('#filter').block({ message: null });
+                    $('#boat-filter').block({ message: null });
                 } else {
                     $('#navigation_container').unblock();
                     $('#boats').unblock();
-                    $('#filter').unblock();
+                    $('#boat-filter').unblock();
                 }
             }
 
-            function loadPage(page){
-                $('#page_'+page).find('.toggle').each(function(){
-                    $(this).click(function(){
-                        doBlock(true);
-
-                        var form = $(this).parent('form');
-                        $('input[name=active]', form).val( $(this).hasClass("off") ? 0 : 1 );
-                        
-                        $.ajax({
-                            type: 'post',
-                            url: '{{ path('ZizooBoatBundle_Boat_Active') }}',
-                            data: $(this).parent('form').serialize()+'&'+$('#filter_form').serialize()+$.param(routes),
-                            success: function(data, textStatus, XHR){
-                                doBlock(false);
-                            }
-                        });
-                    });
+            function setupActiveToggle(){
+                $('#boats .toggle').zToggle({
+                    text_off:       'Hidden',
+                    text_on:        'Active',
+                    onToggle:       activeToggle
                 });
             }
 
             function setupFilter(){
 
-                $('#navigation_container').prepend($('#page_size_container'));
-                $('#filter_form').append('<input id="page_size" name="page_size" type="hidden" />');
-                $('#page_size_select').change(function(){
-                    $('#page_size').val($(this).val());
-                    $('#filter_form').submit();
-                });
-                 $('#page_size').val($('#page_size_select').val());
-
+                
                 $('#filter_form').submit(function(){
                     doBlock(true);
                     $.ajax({
@@ -139,12 +126,28 @@
                             var newUrl = $(data).find('#boats .request_uri').val();
                             $('#boats').html($(data).find('#boats'));
                             $('#navigation').html($(data).find('#navigation'));
-                            loadPage(newPage);
+                            
+                            setupActiveToggle();
+                            
                             window.history.pushState('string', 'title', newUrl);
                             doBlock(false);
                         }
                     });
                     return false;
+                });
+            }
+            
+            function activeToggle(active, toggle){
+                $(toggle).parent('form').children('input[name="active"]').val(active);
+                
+                doBlock(true);
+                $.ajax({
+                    type: 'post',
+                    url: '{{ path('ZizooBoatBundle_Boat_Active') }}',
+                    data: $(toggle).parent('form').serialize()+'&'+$('#filter_form').serialize()+$.param(routes),
+                    success: function(data, textStatus, XHR){
+                        doBlock(false);
+                    }
                 });
             }
 
@@ -156,6 +159,8 @@
 
                 setupFilter();
 
+                setupActiveToggle();
+
                 $('#navigation').delegate('a', 'click', function(){
                     doBlock(true);
                     var newUrl = $(this).attr('href');
@@ -163,11 +168,10 @@
                         type: 'get', 
                         url: newUrl,
                         success: function(data, textStatus, XHR){
-                            var newPage = $(data).find('#boats .page_num').val();
                             $('#boats').html($(data).find('#boats'));
                             $('#navigation').html($(data).find('#navigation'));
-                            loadPage(newPage);
                             window.history.pushState('string', 'title', newUrl);
+                            setupActiveToggle();
                             doBlock(false);
                         },
                         failure: function(data, textStatus, XHR){
@@ -176,8 +180,6 @@
                     });
                     return false;
                 });
-
-                loadPage({{ page }});
 
             });
 

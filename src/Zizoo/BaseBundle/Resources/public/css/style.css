@@ -1862,6 +1862,7 @@ a:hover {
     -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     border-radius: 5px;
+    margin: 0 0 30px 0;
 }
 
 #view .left {
@@ -1941,13 +1942,17 @@ a:hover {
  */
 
 #all {
-    padding: 30px 0 0 0;
+    padding: 0;
 }
 
 /**
  * Grid
  */
 
+#grid.hidden {
+    display: none;
+}
+ 
 #grid {
     margin: 0 -10px 0 0;
 }
@@ -1962,7 +1967,7 @@ a:hover {
  * List
  */
 
-#list {
+#list.hidden {
     display: none;
 }
 
@@ -2662,4 +2667,11 @@ a:hover {
     font-size: 11px;
     line-height: 16px;
     color: #fff;
+}
+
+
+
+
+.register_email_container {
+    padding: 25px 0 0 0;
 }

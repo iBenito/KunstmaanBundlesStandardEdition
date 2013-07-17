@@ -71,13 +71,14 @@ class CharterController extends Controller
             return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
         }
         
+        $routes = $request->query->get('routes');
+        
         $sort               = $request->query->get('sort', 'b.id');
         $dir                = $request->query->get('direction', 'desc');
         $searchBoatName     = $request->query->get('boat_name', null);
         $searchBoatType     = $request->query->get('boat_type', null);
-        $showDeleted        = $request->query->get('show_deleted', false);
-        $page               = $request->query->get('page', 1);
-        $pageSize           = $request->query->get('page_size', 5);
+        $page               = $request->attributes->get('page', 1);
+        $pageSize           = $request->query->get('page_size', 1);
         $listing_status     = $request->query->get('listing_status');
                 
         $em    = $this->getDoctrine()->getManager();
@@ -112,11 +113,23 @@ class CharterController extends Controller
         $query = $em->createQuery($dql);
 
         $paginator  = $this->get('knp_paginator');
-        $pagination = $paginator->paginate(
-            $query,
-            $page/*page number*/,
-            $pageSize/*limit per page*/
-        );
+        try {
+            $pagination = $paginator->paginate(
+                $query,
+                $page/*page number*/,
+                $pageSize/*limit per page*/
+            );
+        } catch (\Exception $e){
+            return $this->redirect($this->generateUrl($routes['complete_route']));
+        }
+        
+        $page_sizes = array(
+                                        '1'    => '1',
+                                        '10'    => '10',
+                                        '20'    => '20',
+                                        '50'    => '50',
+                                        '100'   => '100'
+                                    );
         
         $routes = $request->query->get('routes');
         
@@ -132,15 +145,16 @@ class CharterController extends Controller
             'pagination'        => $pagination,
             'direction'         => $dir,
             'sort'              => $sort,
-            'page'              => $page,
-            'page_size'         => $pageSize,
             'request_uri'       => $request->getSchemeAndHttpHost().$request->getRequestUri(),
             'search_boat_name'  => $searchBoatName,
             'search_boat_type'  => $searchBoatType,
             'boat_types'        => $em->getRepository('ZizooBoatBundle:BoatType')->findAll(),
             'routes'            => $routes,
             'listing_status'    => $listing_status,
-            'listing_statuses'  => $listingStatuses
+            'listing_statuses'  => $listingStatuses,
+            'page_sizes'        => $page_sizes,
+            'page'              => $page,
+            'page_size'         => $pageSize
         ));
     }
     
