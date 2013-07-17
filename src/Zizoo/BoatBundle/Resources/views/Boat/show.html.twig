@@ -48,10 +48,10 @@
         <div class="container clearfix">
 
             <!-- start:subnavigation -->
-            <ul class="subnavigation clearfix">
-                <li><a href="" title="Photos"><span class="icon photo"></span> Photos</a></li>
-                <li class="current"><a href="" title="Location"><span class="icon location white shadow"></span> Location</a></li>
-                <li><a href="" title="Availability"><span class="icon availability"></span> Availability</a></li>
+            <ul class="subnavigation overview clearfix">
+                <li class="current"><a href="#" title="Photos"><span class="icon photo"></span> Photos</a></li>
+                <li><a href="#" title="Location"><span class="icon location white shadow"></span> Location</a></li>
+                <li><a href="#" title="Availability"><span class="icon availability"></span> Availability</a></li>
             </ul>
             <!-- end:subnavigation -->
 
@@ -59,38 +59,42 @@
             <!-- start:overview -->
             <div id="overview">
 
-                <!-- start:media -->
-                <div class="media" style="display:none;">
-                    <div class="full">
-                        <img src="images/temp/media/full1.jpg" alt="">
+                <!-- start:tabbed -->
+                <div class="tabbed">
+                    <div class="tab" style="display: block;">
+                        <!-- start:media -->
+                        <div class="media">
+                            <div class="full">
+                                <img src="{{ asset(boat.image.first|pictureWebPath) }}" alt="">
+                            </div>
+
+                            <a href="#" class="arrow prev ir" title="Previous">Previous</a>
+                            <div class="thumbs">
+                                <ul class="clearfix">
+                                    {% for image in boat.image %}
+                                        <li><a href="{{ asset(image|pictureWebPath) }}"><img src="{{ asset(image|pictureWebPath) }}" alt=""></a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <a href="#" class="arrow next ir" title="Next">Next</a>
+                        </div>
+                        <!-- end:media -->
                     </div>
 
-                    <a href="#" class="arrow prev ir" title="Previous">Previous</a>
-                    <div class="thumbs">
-                        <ul class="clearfix">
-                            <li><a href="images/temp/media/full1.jpg"><img src="images/temp/media/thumb1.jpg" alt=""></a></li>
-                            <li><a href="images/temp/media/full2.png"><img src="images/temp/media/thumb2.png" alt=""></a></li>
-                            <li><a href="images/temp/media/full3.png"><img src="images/temp/media/thumb3.png" alt=""></a></li>
-                            <li><a href="images/temp/media/full4.png"><img src="images/temp/media/thumb4.png" alt=""></a></li>
-                            <li><a href="images/temp/media/full5.png"><img src="images/temp/media/thumb5.png" alt=""></a></li>
-                            <li><a href="images/temp/media/full6.png"><img src="images/temp/media/thumb6.png" alt=""></a></li>
-                            <li><a href="images/temp/media/full7.png"><img src="images/temp/media/thumb7.png" alt=""></a></li>
-                            <li><a href="images/temp/media/full8.png"><img src="images/temp/media/thumb8.png" alt=""></a></li>
-                            <li><a href="images/temp/media/full7.png"><img src="images/temp/media/thumb7.png" alt=""></a></li>
-                            <li><a href="images/temp/media/full6.png"><img src="images/temp/media/thumb6.png" alt=""></a></li>
-                            <li><a href="images/temp/media/full5.png"><img src="images/temp/media/thumb5.png" alt=""></a></li>
-                        </ul>
+                    <div class="tab" style="display: block;">
+                        <!-- start:map -->
+                        {#{{ google_map_container(map) }}#}
+                        {{ google_map_js(map) }}
+                        <!-- end:map -->
                     </div>
-                    <a href="#" class="arrow next ir" title="Next">Next</a>
-                </div>
-                <!-- end:media -->
 
-                <!-- start:media -->
-                <div class="media">
-                     {{ google_map_container(map) }}
+                    <div class="tab" style="display: block;">
+                        <!-- start:availability -->
+                            <div id="calendar" class=""></div>
+                        <!-- end:availability -->
+                    </div>
                 </div>
-                {{ google_map_js(map) }}
-                <!-- end:media -->
+                <!-- end:tabbed -->
 
                 <!-- start:description -->
                 <section class="section">
