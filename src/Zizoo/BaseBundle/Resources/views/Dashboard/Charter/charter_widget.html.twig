@@ -6,7 +6,7 @@
         {% if charter.logo is not null %}
             <img src="{{ asset(charter.logo|pictureWebPath) }}" alt="{{ charter.charterName }}" class="large" id="logo_img" />
         {% else %}
-            <img alt="Charter logo not set" style="display: none" id="logo_img">
+            <img src="{{ asset('bundles/zizoobase/images/default/avatar-user.png'|imagine_filter('thumb_190x_')) }}" alt="Charter logo not set" id="logo_img" />
         {% endif %}
         <figcaption>
             {{ charter.charterName }}
