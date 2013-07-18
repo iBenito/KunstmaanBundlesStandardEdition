@@ -490,7 +490,8 @@ class MessageController extends BaseController
         ));
     }
     
-    public function markReadAction($threadId, $read){
+    public function markReadAction($threadId, $read)
+    {
         $user       = $this->container->get('security.context')->getToken()->getUser();
         $request    = $this->container->get('request');
         $ajax       = $request->isXmlHttpRequest();
@@ -505,7 +506,7 @@ class MessageController extends BaseController
             return $this->redirect($this->generateUrl('fos_message_inbox'));
         }
     }
-
+    
     /**
      * Gets the provider service
      *

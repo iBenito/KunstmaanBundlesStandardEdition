@@ -185,15 +185,14 @@
                     url: $(toggle).parent('form').attr('action'),
                     data: $(toggle).parent('form').serialize()+'&'+$('#filter_form').serialize()+$.param(routes),
                     dataType: 'json',
-                    success: function(data, textStatus, XHR){
-                        var json = $.parseJSON(data.responseText);
-                        $(toggle).zToggle('setState', json.boatActive, false);
+                    success: function(json, textStatus, XHR){
+                        $(toggle).zToggle('setState', json.boat_active, false);
                         setView(toggle, json);
                         doBlock(false);
                     },
                     error: function(data, textStatus, XHR){
                         var json = $.parseJSON(data.responseText);
-                        $(toggle).zToggle('setState', json.boatActive, false);
+                        $(toggle).zToggle('setState', json.boat_active, false);
                         setView(toggle, json)
                         fillActiveError(json);
                         openActiveErrorPopup();

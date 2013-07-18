@@ -12,7 +12,7 @@
                 <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg') }}" alt="">
                 {% endif %}
                 <figcaption class="clearfix">
-                    {{ boat.name }} <span class="icon plus"></span>
+                    {% if boat.name is not null %}{{ boat.name }}{% else %}{{ boat.created|date }}{% endif %}<span class="icon plus"></span>
                 </figcaption>
             </figure>
             <div class="left">
@@ -24,7 +24,7 @@
         </a>
     </div>
     <div class="info">
-        <h2>{{ boat.title }}</h2>
+        <h2>{% if boat.title is not null %}{{ boat.title }}{% else %}{{ boat.created|date }}{% endif %}</h2>
         <ul class="actions clearfix">
             <li>{{ boat.address.locality }}, {{ boat.address.country }}</li>
             {% if boat.complete %}
@@ -47,7 +47,7 @@
         </ul>
         <ul class="buttons clearfix">
             {% if boat.active %}
-                <li><a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" class="button blue medium">View</a></li>
+                <li><a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" class="button blue medium view_btn">View</a></li>
             {% else %}
                 <li><a href="#" class="button disabled medium">View</a></li>
             {% endif %}

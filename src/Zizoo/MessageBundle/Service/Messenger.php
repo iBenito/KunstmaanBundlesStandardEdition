@@ -27,14 +27,19 @@ class Messenger {
     public function sendNotificationMessageEmail(Profile $from, Profile $to, Message $message){
         $messageLink = $this->container->get('router')->generate('fos_message_inbox', array('messageId' => $message->getId()), true);
         $twig = $this->container->get('twig');
-        $template = $twig->loadTemplate('ZizooMessageBundle:Email:new_message.html.twig');
+        $templateHtml   = $twig->loadTemplate('ZizooMessageBundle:Email:new_message.html.twig');
+        $templateTxt    = $twig->loadTemplate('ZizooMessageBundle:Email:new_message.txt.twig');
+        
         $context = array(   'link'      => $messageLink,
                             'sender'    => $from,
                             'recipient' => $to,
                             'message'   => $message);
-        $subject = $template->renderBlock('subject', $context);
-        $textBody = $template->renderBlock('body_text', $context);
-        $htmlBody = $template->renderBlock('body_html', $context);
+        
+        
+        $subject = $templateHtml->renderBlock('subject', $context);
+        
+        $textBody = $templateTxt->render($context);
+        $htmlBody = $templateHtml->render($context);
 
         $email = \Swift_Message::newInstance()
             ->setSubject($subject)

@@ -740,7 +740,7 @@ class Boat extends BaseEntity
      */
     public function getDefaultPrice()
     {
-        return $this->defaultPrice;
+        return (float)$this->defaultPrice;
     }
     
     /**
@@ -763,7 +763,7 @@ class Boat extends BaseEntity
      */
     public function getLowestPrice()
     {
-        return $this->lowestPrice;
+        return (float)$this->lowestPrice;
     }
     
     /**
@@ -786,7 +786,7 @@ class Boat extends BaseEntity
      */
     public function getHighestPrice()
     {
-        return $this->highestPrice;
+        return (float)$this->highestPrice;
     }
     
     /**
@@ -930,7 +930,7 @@ class Boat extends BaseEntity
     
     public function getCrewPrice()
     {
-        return $this->crewPrice;
+        return (float)$this->crewPrice;
     }
     
     public function setNumCrew($numCrew)

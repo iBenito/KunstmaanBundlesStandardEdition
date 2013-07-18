@@ -18,6 +18,14 @@ ZizooMessageBundle_Message_Inbox:
     pattern: /view
     defaults: { _controller: ZizooMessageBundle:Message:inbox }
     
+ZizooMessageBundle_Email_EmailTest:
+    pattern: /email-test
+    defaults: { _controller: ZizooMessageBundle:Email:emailTest }
+    
+ZizooMessageBundle_Email_EmailTest2:
+    pattern: /email-test2
+    defaults: { _controller: ZizooMessageBundle:Email:emailTest2 }
+    
 fos_message:
     resource: "@FOSMessageBundle/Resources/config/routing.xml"
     prefix: /

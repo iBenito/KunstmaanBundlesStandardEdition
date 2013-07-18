@@ -11,6 +11,7 @@ class BaseExtension extends \Twig_Extension
             'displayAmount'         => new \Twig_Filter_Method($this, 'displayAmount'),
             'parentBlockPrefix'     => new \Twig_Filter_Method($this, 'parentBlockPrefix'),
             'rootLabel'             => new \Twig_Filter_Method($this, 'rootLabel'),
+            'absoluteAsset'         => new \Twig_Filter_Method($this, 'absoluteAsset'),
         );
     }
 
@@ -45,6 +46,11 @@ class BaseExtension extends \Twig_Extension
             return $class . ' root';
         }
     }
+    public function absoluteAsset($url, $request)
+    {
+        return $request->getScheme() . '://' . $request->getHost() . $url;
+    }
+    
    
     public function getName()
     {

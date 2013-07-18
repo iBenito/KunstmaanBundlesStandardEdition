@@ -97,7 +97,7 @@ class CharterController extends Controller
         
         switch ($listing_status) {
             case "incomplete":
-                $dql .= " AND b.status = 0";
+                $dql .= " AND b.complete = 0";
                 break;
             case "hidden":
                 $dql .= " AND b.active = 0";

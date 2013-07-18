@@ -70,6 +70,8 @@ $.widget( "ui.zToggle", {
             if ($(this.element).attr('disabled')!=null) return false;
             
             if (state != this.state) this._toggle(null, doCallback);
+            
+            return this.state;
           
         },
 

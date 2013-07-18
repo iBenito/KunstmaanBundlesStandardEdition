@@ -172,7 +172,7 @@ class AddressController extends Controller
     
     public function searchBarAction($filter=false)
     {
-        $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat(), array('filter' => $filter));
+        $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat(), array());
         
         $a = $form->createView();
         
