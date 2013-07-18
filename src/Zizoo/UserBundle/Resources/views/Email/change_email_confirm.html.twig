@@ -1,9 +1,9 @@
+{% extends 'ZizooMessageBundle:Email:email_base.txt.twig' %}
+
 {% block subject %}
 Confirm Zizoo change email
 {% endblock %}
-{% block body_text %}
-Please confirm your new email address at: {{link}}
-{% endblock %}
+
 {% block body_html %}
 <p>Please confirm your new email address: <a href="{{link}}">confirm</a></p>
 {% endblock %}
