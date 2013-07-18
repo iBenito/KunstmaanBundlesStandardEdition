@@ -1,9 +1,13 @@
 <article class="trip clearfix">
     <div class="box">
-        <a href="" class="boat gray clearfix">
+        {% if boat.active %}
+            <a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" class="boat gray clearfix">
+        {% else %}
+            <a href="#" class="boat disabled clearfix">
+        {% endif %}
             <figure>
                 {% if boat.image.first != false %}
-                <img src="{{ boat.image.first.path }}" alt="" />
+                <img src="{{ asset(boat.image.first|pictureWebPath|imagine_filter('thumb_190x_')) }}" alt="" />
                 {% else %}
                 <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg') }}" alt="">
                 {% endif %}
@@ -42,7 +46,11 @@
             </li>
         </ul>
         <ul class="buttons clearfix">
-            <li><a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" class="button blue medium view_btn">View</a></li>
+            {% if boat.active %}
+                <li><a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" class="button blue medium">View</a></li>
+            {% else %}
+                <li><a href="#" class="button disabled medium">View</a></li>
+            {% endif %}
             <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterEditBoat', {id: boat.id}) }}" class="button blue medium">Edit</a></li>
             <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterEditPriceBoat', {id: boat.id}) }}" class="button blue medium">Calendar</a></li>
             <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterDeleteBoat', {id: boat.id}) }}" class="button blue medium">

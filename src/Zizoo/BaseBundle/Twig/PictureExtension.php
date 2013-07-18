@@ -12,9 +12,9 @@ class PictureExtension extends \Twig_Extension
         );
     }
 
-    public function webPath($avatar)
+    public function webPath($picture)
     {
-        return $avatar->getWebPath();
+        return $picture->getWebPath();
     }
 
     public function getName()

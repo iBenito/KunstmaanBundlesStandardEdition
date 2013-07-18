@@ -223,6 +223,20 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#d3d4d4", endColorstr="#c8c9c9",GradientType=0);
 }
 
+.button.disabled {
+    pointer-events: none;
+    cursor: default;
+    text-shadow: 1px 1px 1px rgba(255,255,255,0.4);
+    color: #999;
+    background: -moz-linear-gradient(top, #ebecec 50%, #dfe0e0 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#ebecec), color-stop(50%,#dfe0e0));
+    background: -webkit-linear-gradient(top, #ebecec 50%,#dfe0e0 50%);
+    background: -o-linear-gradient(top, #ebecec 50%,#dfe0e0 50%);
+    background: -ms-linear-gradient(top, #ebecec 50%,#dfe0e0 50%);
+    background: linear-gradient(to bottom, #ebecec 50%,#dfe0e0 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ebecec", endColorstr="#dfe0e0",GradientType=0);
+}
+
 .button.facebook {
     text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
     color: #fff;
@@ -1759,6 +1773,15 @@
     -webkit-box-shadow: inset 0 0 0 3px #47c2d2;
     -moz-box-shadow: inset 0 0 0 3px #47c2d2;
     box-shadow: inset 0 0 0 3px #47c2d2;
+}
+
+.box .boat.disabled {
+    pointer-events: none;
+    cursor: default;
+    background: #ebecec;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
 }
 
 .box .boat figure {
