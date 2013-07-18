@@ -112,7 +112,7 @@ class ProfileController extends Controller
                     $avatar->getId().'.'.$avatar->getPath()
                 );
 
-                return new JSONResponse(array('message' => 'Your avatar has been uploaded successfully', 'id' => $avatar->getId()));
+                return new JsonResponse(array('message' => 'Your avatar has been uploaded successfully', 'id' => $avatar->getId()));
             } else {
                 $errorArr = array();
                 for ($i=0; $i<$numProfileErrors; $i++){

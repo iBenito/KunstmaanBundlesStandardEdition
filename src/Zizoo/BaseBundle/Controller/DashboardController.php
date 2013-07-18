@@ -3,6 +3,7 @@
 namespace Zizoo\BaseBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\DBAL\DBALException;
 
@@ -25,7 +26,8 @@ class DashboardController extends Controller {
                             'calendar_route'            => 'ZizooBaseBundle_Dashboard_CharterEditPriceBoat',
                             'confirm_route'             => 'ZizooBaseBundle_Dashboard_CharterConfirmPriceBoat',
                             'complete_route'            => 'ZizooBaseBundle_Dashboard_CharterBoats',
-                            'delete_route'              => 'ZizooBaseBundle_Dashboard_CharterDeleteBoat'
+                            'delete_route'              => 'ZizooBaseBundle_Dashboard_CharterDeleteBoat',
+                            'active_route'              => 'ZizooBaseBundle_Dashboard_CharterActiveBoat'
                             );
     private $verifyRoutes   = array('verify_facebook_route'      => 'ZizooBaseBundle_Dashboard_VerifyFacebook',
                                     'unverify_facebook_route'    => 'ZizooBaseBundle_Dashboard_UnverifyFacebook');
@@ -535,12 +537,16 @@ class DashboardController extends Controller {
         }
         
         $user = $this->getUser();
-        $charter = $user->getCharter();
-        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_boat.html.twig', array(
-            'title'     => 'Add Boat',
-            'current'   => 'boats',
-            'response'  => $response->getContent()
-        ));
+        
+        if ($response instanceof JsonResponse) {
+            return $response;
+        } else {
+            return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_boat.html.twig', array(
+                'title'     => 'Add Boat',
+                'current'   => 'boats',
+                'response'  => $response->getContent()
+            ), $response);
+        }
     }
     
     

@@ -1,0 +1,22 @@
+{% block content %}
+    {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['active_route'], 'routes': routes }  %}
+
+    <div class="content">
+        <input type="hidden" class="boat_active" value="{{ boat.active }}" />
+        {% if errors|length == 0 %}
+            <p>Boat {% if boat.active %}active{% else %}hidden{% endif %}</p>
+        {% else %}
+            <div class="errors">
+                <p>Boat could not be activated because:</p>
+                {% for validation_group,validation_group_errors in errors %}
+                    <ul>
+                        {% for validation_group_error in validation_group_errors %}
+                            <li>{{ validation_group_error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}

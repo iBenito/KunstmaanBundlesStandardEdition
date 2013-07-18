@@ -191,6 +191,11 @@ class Boat extends BaseEntity
      */
     protected $crewOptional;
 
+    /**
+     * @ORM\Column(name="complete", type="boolean")
+     */
+    protected $complete;
+    
     
     public function __construct(BoatAddress $boatAddress = null)
     {
@@ -950,6 +955,17 @@ class Boat extends BaseEntity
         return $this->crewOptional;
     }
     
+    public function setComplete($complete)
+    {
+        $this->complete = $complete;
+        return $this;
+    }
+    
+    public function getComplete()
+    {
+        return $this->complete;
+    }
+    
     public function updateLowestAndHighestPrice()
     {
         $lowestPrice    = null;
@@ -1011,20 +1027,5 @@ class Boat extends BaseEntity
         }
     }
     
-    /**
-    * @ORM\preUpdate
-    */
-    public function preUpdate()
-    {
-        $this->updateLowestAndHighestPrice();
-    }
-    
-    /**
-    * @ORM\PrePersist
-    */
-    public function prePersist()
-    {
-        $this->updateLowestAndHighestPrice();
-    }
-
+   
 }

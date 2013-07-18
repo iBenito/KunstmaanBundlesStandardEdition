@@ -1,5 +1,5 @@
 parameters:
-#    zizoo_boat.example.class: Zizoo\BoatBundle\Example
+    zizoo_boat.completeness_validation_groups: [boat_edit, boat_details, boat_photos]
 
 services:
     # TWIG EXTENSIONS
@@ -85,6 +85,14 @@ services:
             - { name: validator.constraint_validator, alias: validator.boat_validator }
 
    # LISTENERS
+    zizoo_boat_boat_listener:
+        class: Zizoo\BoatBundle\EventListener\BoatListener
+        arguments:
+            container:      "@service_container"
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+            - { name: doctrine.event_listener, event: preUpdate }
+            
     zizoo_boat_price_listener:
         class: Zizoo\BoatBundle\EventListener\PriceListener
         arguments:

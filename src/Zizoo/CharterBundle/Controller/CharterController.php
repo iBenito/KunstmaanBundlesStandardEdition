@@ -831,7 +831,7 @@ class CharterController extends Controller
                     $logo->getId().'.'.$logo->getPath()
                 );
 
-                return new JSONResponse(array('message' => 'Your logo has been uploaded successfully', 'id' => $logo->getId()));
+                return new JsonResponse(array('message' => 'Your logo has been uploaded successfully', 'id' => $logo->getId()));
             } else {
                 $errorArr = array();
                 for ($i=0; $i<$numCharterErrors; $i++){

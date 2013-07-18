@@ -86,6 +86,9 @@
             </div>
         </div>
 
+        <div id="active_error_popup" style="display: none">
+        </div>
+        
         <style type="text/css">
 
         </style>
@@ -137,15 +140,63 @@
                 });
             }
             
+            function openActiveErrorPopup(){
+                $('#active_error_popup').dialog({
+                    modal: true,
+                    closeOnEscape: false,
+                    resizable: false,
+                    width: 470,
+                    maxWidth: 470,
+                    fluid: true,
+                    title: 'Error'
+                });
+            }
+
+            function closeActiveErrorPopup(){
+                $('#active_error_popup').dialog('close');
+            }
+            
+            function fillActiveError(json){
+                $('#active_error_popup').html('');
+                var h = json.boat_active == true ? 'Boat was activated, but errors occurred:' : 'Boat could not be actived because:';
+                $('#active_error_popup').append('<h2>'+h+'</h2>')
+                $.each(json.errors, function(val_group, val_group_errors) {
+                    $('#active_error_popup').append('<ul id="error_'+val_group+'"></ul>')
+                    $.each(val_group_errors, function(index, val_group_error) {
+                        $('#active_error_popup #error_'+val_group).append('<li>'+val_group_error+'</li>');
+                    });
+                });
+            }
+            
+            function setView(toggle, json){
+                var viewButton = $(toggle).parents('.actions').siblings('.buttons').find('.view_btn');
+                if (json.boat_active==true){
+                    $(viewButton).removeClass('disabled');
+                } else {
+                    $(viewButton).addClass('disabled');
+                }
+            }
+            
             function activeToggle(active, toggle){
-                $(toggle).parent('form').children('input[name="active"]').val(active);
-                
+
                 doBlock(true);
                 $.ajax({
                     type: 'post',
-                    url: '{{ path('ZizooBoatBundle_Boat_Active') }}',
+                    url: $(toggle).parent('form').attr('action'),
                     data: $(toggle).parent('form').serialize()+'&'+$('#filter_form').serialize()+$.param(routes),
+                    dataType: 'json',
                     success: function(data, textStatus, XHR){
+                        var json = $.parseJSON(data.responseText);
+                        $(toggle).zToggle('setState', json.boatActive, false);
+                        setView(toggle, json);
+                        doBlock(false);
+                    },
+                    error: function(data, textStatus, XHR){
+                        var json = $.parseJSON(data.responseText);
+                        $(toggle).zToggle('setState', json.boatActive, false);
+                        setView(toggle, json)
+                        fillActiveError(json);
+                        openActiveErrorPopup();
                         doBlock(false);
                     }
                 });

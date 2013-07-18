@@ -177,5 +177,30 @@ class BoatService {
         }
     }
     
+    public function boatCompleteValidate(Boat $boat)
+    {
+        $errors = array();
+        
+        if (!$this->container->hasParameter('zizoo_boat.completeness_validation_groups')){
+            $validationGroups = 'Default';
+        } else {
+            $validationGroups = $this->container->getParameter('zizoo_boat.completeness_validation_groups');
+        }
+        
+        $validator = $this->container->get('validator');
+        foreach ($validationGroups as $validationGroup){
+            $validationGroupErrors = $validator->validate($boat, $validationGroup);
+            $numValidationGroupErrors = $validationGroupErrors->count();
+            if ($numValidationGroupErrors>0){
+                $errors[$validationGroup] = array();
+                for ($i=0; $i<$numValidationGroupErrors; $i++){
+                    $errors[$validationGroup][] = $validationGroupErrors->get($i)->getMessage();
+                }
+            }
+        }
+        
+        return $errors;
+    }
+    
 }
 ?>
