@@ -34,7 +34,7 @@
                 </div>
             </div>
             {% endif %}
-            <h1>{{ boat.title }} <span>{{ boat.address.locality }}, {{ boat.address.country }}/Year: ????</span></h1>
+            <h1>{{ boat.title }} <span>{{ boat.address.locality }}, {{ boat.address.country }}/Year: {{ boat.year }}</span></h1>
             <ul class="social">
                 <li><a href="" class="facebook" title="Facebook"></a></li>
                 <li><a href="" class="twitter" title="Twitter"></a></li>
@@ -49,12 +49,11 @@
 
             <!-- start:subnavigation -->
             <ul class="subnavigation overview clearfix">
-                <li class="current"><a href="#" title="Photos"><span class="icon photo"></span> Photos</a></li>
-                <li><a href="#" title="Location"><span class="icon location white shadow"></span> Location</a></li>
+                <li class="current"><a href="#" title="Location"><span class="icon location white shadow"></span> Location</a></li>
+                <li><a href="#" title="Photos"><span class="icon photo"></span> Photos</a></li>
                 <li><a href="#" title="Availability"><span class="icon availability"></span> Availability</a></li>
             </ul>
             <!-- end:subnavigation -->
-
 
             <!-- start:overview -->
             <div id="overview">
@@ -63,6 +62,12 @@
                 <div class="tabbed">
 
                     <div class="tab" style="display: block;">
+                        <!-- start:map -->
+                        {{ google_map_container(map) }}
+                        <!-- end:map -->
+                    </div>
+
+                    <div class="tab" style="display: none;">
                         <!-- start:media -->
                         <div class="media">
                             <div class="full">
@@ -80,12 +85,6 @@
                             <a href="#" class="arrow next ir" title="Next">Next</a>
                         </div>
                         <!-- end:media -->
-                    </div>
-
-                    <div class="tab" style="display: none;">
-                        <!-- start:map -->
-                        {{ google_map_container(map) }}
-                        <!-- end:map -->
                     </div>
 
                     <div class="tab" style="display: none;">
@@ -117,7 +116,7 @@
                     <div class="content">
                         <div class="columns clearfix">
                             <ul>
-                                <li><strong>Year:</strong> ????.</li>
+                                <li><strong>Year:</strong> {{ boat.year }}</li>
                                 <li><strong>Length Over All:</strong> {{ boat.length }} m</li>
                                 <li><strong>Hull Material:</strong> ??</li>
                                 <li><strong>Beam:</strong> ?,?? m</li>
@@ -227,5 +226,7 @@
         var STATUS_SELF                 = {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_SELF') }};
         var STATUS_HOLD                 = {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') }};
     </script>
+
+    {{ google_map_js(map) }}
 
 {% endblock %}
