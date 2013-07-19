@@ -57,10 +57,10 @@ function setupCalendar(){
         }
     });
 
-    $('#calendar').datepick({ 
+    $('#calendar').datepick({
         rangeSelect: false,
         changeMonth: false,
-        monthsToShow: [2,1],
+        monthsToShow: [1,1],
         onDate: $.datepick.zizoo_availability,
         renderer: $.datepick.themeRollerRenderer
     });
@@ -69,13 +69,4 @@ function setupCalendar(){
 
 $(document).ready(function(){
     setupCalendar();
-
-    $( "#boat-tabs a" ).click(function(){
-        var tabId = $(this).attr('href');
-        $('.tabs .tab').removeClass('current');
-        $('.tabs '+tabId).addClass('current');
-        return false;
-    });
-
-
 });

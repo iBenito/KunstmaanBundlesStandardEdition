@@ -13,12 +13,7 @@
         </figcaption>
     </figure>
     <section class="completeness">
-        <h4>Profile Completeness <span class="icon cross"></span></h4>
-        <ul class="clearfix">
-            <li class="complete"><span>1</span></li>
-            <li><span>2</span></li>
-            <li><span>3</span></li>
-        </ul>
+        {{ completeness|completeness }}
     </section>
     <a href="{{ path('ZizooBaseBundle_Dashboard_CharterNewBoat') }}" class="button orange big" title="List Boats">List Boats</a>
 </div>

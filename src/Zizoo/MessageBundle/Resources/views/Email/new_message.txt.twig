@@ -1,0 +1,11 @@
+{% extends 'ZizooMessageBundle:Email:email_base.txt.twig' %}
+
+{% block subject %}
+You have received a new message from {{sender.user.username}}
+{% endblock %}
+{% block body_text %}
+Dear {{recipient.user.username}}, {{sender.user.username}} has sent you a private message:
+{{message.body}}
+
+You can view the message here: {{ link }}
+{% endblock %}

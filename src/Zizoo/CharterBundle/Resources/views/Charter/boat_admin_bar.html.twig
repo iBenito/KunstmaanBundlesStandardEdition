@@ -1,14 +1,18 @@
 <article class="trip clearfix">
     <div class="box">
-        <a href="" class="boat gray clearfix">
+        {% if boat.active %}
+            <a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" class="boat gray clearfix">
+        {% else %}
+            <a href="#" class="boat disabled clearfix">
+        {% endif %}
             <figure>
                 {% if boat.image.first != false %}
-                <img src="{{ boat.image.first.path }}" alt="" />
+                <img src="{{ asset(boat.image.first|pictureWebPath|imagine_filter('thumb_190x_')) }}" alt="" />
                 {% else %}
                 <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg') }}" alt="">
                 {% endif %}
                 <figcaption class="clearfix">
-                    {{ boat.name }} <span class="icon plus"></span>
+                    {% if boat.name is not null %}{{ boat.name }}{% else %}{{ boat.created|date }}{% endif %}<span class="icon plus"></span>
                 </figcaption>
             </figure>
             <div class="left">
@@ -20,24 +24,33 @@
         </a>
     </div>
     <div class="info">
-        <h2>{{ boat.title }}</h2>
+        <h2>{% if boat.title is not null %}{{ boat.title }}{% else %}{{ boat.created|date }}{% endif %}</h2>
         <ul class="actions clearfix">
             <li>{{ boat.address.locality }}, {{ boat.address.country }}</li>
-            {% if boat.status %}
+            {% if boat.complete %}
                 <li>Complete <span class="icon complete"></span></li>
             {% else %}
                 <li>Incomplete <span class="icon incomplete"></span></li>
             {% endif %}
             <li>
-                <form>
-                    <input type="hidden" name="boat_id" value="{{ boat.id }}" />
-                    <input type="hidden" name="active" value="{{ boat.active }}" />
+                <form action="{{ path('ZizooBaseBundle_Dashboard_CharterActiveBoat', {id: boat.id}) }}">
+                    <input type="hidden" name="active" value="{% if boat.active %}false{% else %}true{% endif %}" />
                     <a href="#" class="toggle {% if not boat.active %} off{% endif %}"></a>
+                    <noscript>
+                        {% for route in routes %}
+                            <input type="hidden" name="routes[]" value="{{ route }}" />
+                        {% endfor %}
+                        <button type="submit">{% if boat.active %}Hide{% else %}Activate{% endif %}</button>
+                    </noscript>
                 </form>
             </li>
         </ul>
         <ul class="buttons clearfix">
-            <li><a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" class="button blue medium">View</a></li>
+            {% if boat.active %}
+                <li><a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" class="button blue medium view_btn">View</a></li>
+            {% else %}
+                <li><a href="#" class="button disabled medium">View</a></li>
+            {% endif %}
             <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterEditBoat', {id: boat.id}) }}" class="button blue medium">Edit</a></li>
             <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterEditPriceBoat', {id: boat.id}) }}" class="button blue medium">Calendar</a></li>
             <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterDeleteBoat', {id: boat.id}) }}" class="button blue medium">

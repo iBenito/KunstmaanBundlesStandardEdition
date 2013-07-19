@@ -97,7 +97,7 @@ class CharterController extends Controller
         
         switch ($listing_status) {
             case "incomplete":
-                $dql .= " AND b.status = 0";
+                $dql .= " AND b.complete = 0";
                 break;
             case "hidden":
                 $dql .= " AND b.active = 0";
@@ -930,7 +930,7 @@ class CharterController extends Controller
                     $logo->getId().'.'.$logo->getPath()
                 );
 
-                return new JSONResponse(array('message' => 'Your logo has been uploaded successfully', 'id' => $logo->getId()));
+                return new JsonResponse(array('message' => 'Your logo has been uploaded successfully', 'id' => $logo->getId()));
             } else {
                 $errorArr = array();
                 for ($i=0; $i<$numCharterErrors; $i++){

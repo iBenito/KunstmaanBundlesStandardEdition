@@ -1,0 +1,195 @@
+/* Based on The MailChimp Reset INLINE: Yes. */  
+/* Client-specific Styles */
+#outlook a {padding:0;} /* Force Outlook to provide a "view in browser" menu link. */
+body{width:100% !important; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; margin:0; padding:0;} 
+/* Prevent Webkit and Windows Mobile platforms from changing default font sizes.*/ 
+.ExternalClass {width:100%;} /* Force Hotmail to display emails at full width */  
+.ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;}
+/* Forces Hotmail to display normal line spacing.  More on that: http://www.emailonacid.com/forum/viewthread/43/ */ 
+#backgroundTable {margin:0; padding:0; width:100% !important; line-height: 100% !important;}
+/* End reset */
+
+/* Some sensible defaults for images
+Bring inline: Yes. */
+img {outline:none; text-decoration:none; -ms-interpolation-mode: bicubic;} 
+a img {border:none;} 
+.image_fix {display:block;}
+
+/* Yahoo paragraph fix
+Bring inline: Yes. */
+p {margin: 1em 0;}
+
+/* Hotmail header color reset
+Bring inline: Yes. */
+h1, h2, h3, h4, h5, h6 {color: black !important;}
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {color: blue !important;}
+
+h1 a:active, h2 a:active,  h3 a:active, h4 a:active, h5 a:active, h6 a:active {
+color: red !important; /* Preferably not the same color as the normal header link color.  There is limited support for psuedo classes in email clients, this was added just for good measure. */
+}
+
+h1 a:visited, h2 a:visited,  h3 a:visited, h4 a:visited, h5 a:visited, h6 a:visited {
+color: purple !important; /* Preferably not the same color as the normal header link color. There is limited support for psuedo classes in email clients, this was added just for good measure. */
+}
+
+/* Outlook 07, 10 Padding issue fix
+Bring inline: No.*/
+table td {border-collapse: collapse;}
+
+/* Remove spacing around Outlook 07, 10 tables
+Bring inline: Yes */
+table { border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt; }
+
+/* Styling your links has become much simpler with the new Yahoo.  In fact, it falls in line with the main credo of styling in email and make sure to bring your styles inline.  Your link colors will be uniform across clients when brought inline.
+Bring inline: Yes. */
+a {
+    text-decoration: none;
+}
+
+
+/***************************************************
+****************************************************
+MOBILE TARGETING
+****************************************************
+***************************************************/
+@media only screen and (max-device-width: 480px) {
+        /* Part one of controlling phone number linking for mobile. */
+        a[href^="tel"], a[href^="sms"] {
+                                text-decoration: none;
+                                color: blue; /* or whatever your want */
+                                pointer-events: none;
+                                cursor: default;
+                        }
+
+        .mobile_link a[href^="tel"], .mobile_link a[href^="sms"] {
+                                text-decoration: default;
+                                color: orange !important;
+                                pointer-events: auto;
+                                cursor: default;
+                        }
+
+}
+
+/* More Specific Targeting */
+
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+/* You guessed it, ipad (tablets, smaller screens, etc) */
+        /* repeating for the ipad */
+        a[href^="tel"], a[href^="sms"] {
+                                text-decoration: none;
+                                color: blue; /* or whatever your want */
+                                pointer-events: none;
+                                cursor: default;
+                        }
+
+        .mobile_link a[href^="tel"], .mobile_link a[href^="sms"] {
+                                text-decoration: default;
+                                color: orange !important;
+                                pointer-events: auto;
+                                cursor: default;
+                        }
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2) {
+/* Put your iPhone 4g styles in here */ 
+}
+
+/* Android targeting */
+@media only screen and (-webkit-device-pixel-ratio:.75){
+/* Put CSS for low density (ldpi) Android layouts in here */
+}
+@media only screen and (-webkit-device-pixel-ratio:1){
+/* Put CSS for medium density (mdpi) Android layouts in here */
+}
+@media only screen and (-webkit-device-pixel-ratio:1.5){
+/* Put CSS for high density (hdpi) Android layouts in here */
+}
+/* end Android targeting */
+
+
+/* start zizoo */
+html {
+    height: 100%;
+}
+
+#backgroundTable {
+    height: 100%;
+    height: 100%;
+}
+
+#backgroundTableHeader {
+    background: linear-gradient(to bottom, #47C2D2 50%, #45BCCB 50%) repeat scroll 0 0 transparent;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    height: 75px;
+}
+
+body {
+    height: 100%;
+    color: #000000;
+    font: 14px/22px "Asap",Arial;
+    background: url('../../zizoobase/images/pattern.png') repeat scroll 0 0 transparent;
+}
+
+ #backgroundTableHeader .logo {
+    background: url('../../zizoobase/images/zizoo.png') no-repeat scroll left center transparent;
+    color: #FFFFFF;
+    display: inline-block;
+    float: left;
+    font: italic 700 18px/20px "Asap",Arial;
+    height: 40px;
+    margin: 15px 0;
+    padding: 5px 0 0 200px;
+    text-align: left;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+    vertical-align: top;
+}
+
+.logo small {
+    display: block;
+    font: italic 400 12px/12px "Asap",Arial;
+}
+
+#container {
+    padding: 40px 0 20px 0;
+}
+
+#header {
+    background: linear-gradient(to bottom, #4D4D4D 50%, #474747 50%) repeat scroll 0 0 transparent;
+    border-radius: 5px 5px 0 0;
+    box-shadow: 1px 1px 1px rgba(255, 255, 255, 0.4) inset, 1px 1px 2px rgba(0, 0, 0, 0.3);
+    padding: 0 15px;
+    color: #FFFFFF;
+    font: italic 400 18px/30px "Asap",Arial;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.content {
+    margin: 0 0 30px;
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}
+
+#backgroundTableFooter {
+    background: linear-gradient(to bottom, #47C2D2 50%, #45BCCB 50%) repeat scroll 0 0 transparent;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    height: 75px;
+}
+
+#backgroundTableFooter .logo {
+    background: url('../../zizoobase/images/zizoo-footer.png') repeat scroll 0 0 transparent;
+    display: block;
+    float: left;
+    height: 28px;
+    width: 116px;
+}
+
+
+/* end zizoo */

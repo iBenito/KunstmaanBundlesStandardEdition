@@ -218,3 +218,9 @@ ZizooBaseBundle_Dashboard_CharterDeleteBoat:
         _method:  GET|POST
         id: \d+
         
+ZizooBaseBundle_Dashboard_CharterActiveBoat:
+    pattern:  /charter/account/dashboard/boat/{id}/active
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBoat, boat_controller: ZizooBoatBundle:Boat:active }
+    requirements:
+        _method:  GET|POST
+        id: \d+

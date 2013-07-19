@@ -45,27 +45,28 @@ class BoatController extends Controller
         }
         
         $map = $this->get('ivory_google_map.map');
+        $map->setHtmlContainerId('map');
         $map->setAsync(true);
         $map->setAutoZoom(false);
         $boatAddress = $boat->getAddress();
         if ($boatAddress->getLat() && $boatAddress->getLng()){
             $map->setCenter($boatAddress->getLat(), $boatAddress->getLng(), true);
         }
-        $map->setMapOption('zoom', 4);
+        $map->setMapOption('zoom', 6);
         $map->setMapOption('disableDefaultUI', true);
         $map->setMapOption('zoomControl', true);
         $map->setStylesheetOptions(array(
-            'width' => '610px',
-            'height' => '395px'
+            'width' => '100%',
+            'height' => '0'
         ));
-        
+
         if ($boatAddress->getLat() && $boatAddress->getLng()){
             $marker = $this->get('ivory_google_map.marker');
             $marker->setPosition($boatAddress->getLat(), $boatAddress->getLng(), true);
             $marker->setOption('title', $boat->getName());
             $marker->setOption('clickable', true);
-            $marker->setIcon('http://www.incrediblue.com/assets/map-pin.png');
-            
+            $marker->setIcon($this->container->get('templating.helper.assets')->getUrl('/bundles/zizoobase/images/google-maps-marker.png'));
+
             /** info window
             * 
 
@@ -486,7 +487,7 @@ class BoatController extends Controller
                     $image->getId().'.'.$image->getPath()
                 );
 
-                return new JSONResponse(array('message' => 'Your image has been uploaded successfully', 'id' => $image->getId()));
+                return new JsonResponse(array('message' => 'Your image has been uploaded successfully', 'id' => $image->getId()));
             } else {
                 $errorArr = array();
                 for ($i=0; $i<$numBoatErrors; $i++){
@@ -788,7 +789,6 @@ class BoatController extends Controller
     /**
      * Activate/hide a specific boat
      * 
-     * @return Response
      */
     public function activeAction($id=null)
     {
@@ -796,24 +796,45 @@ class BoatController extends Controller
         $boatService        = $this->container->get('boat_service');
         $user               = $this->getUser();
         $charter            = $user->getCharter();
+        $em                 = $this->getDoctrine()->getEntityManager();
         
-        if (!$id) $id       = $request->request->get('boat_id', null);
-        $active             = $request->request->get('active', false)=='true';
+        if (!$id) $id       = $request->get('boat_id', null);
+        $active             = $request->get('active', false)=='true';
                 
         $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
-        //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
         if (!$boat || !$charter->getUsers()->contains($user)){
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
         
-        $boat->setActive($active);
-        $em = $this->getDoctrine()->getEntityManager();
-        $em->persist($boat);
-        $em->flush();
+        $response = new JSONResponse();
         
-        $listing_status = $request->request->get('listing_status');
+        $completeErrors = $boatService->boatCompleteValidate($boat);
+        if ( ($active === true && count($completeErrors) == 0) || $active !== true){
+            $boat->setActive($active);
+            $em->persist($boat);
+            $em->flush();
+        } else {
+            $response->setStatusCode(400);
+        }
         
-        return $this->forward('ZizooCharterBundle:Charter:boats', array('listing_status' => $listing_status), $request->request->all());
+        $response->setData(array(
+            'boat_id'       => $boat->getId(),
+            'boat_active'   => $boat->getActive(),
+            'errors'        => $completeErrors
+        ));
+        
+        $routes = $request->get('routes');
+ 
+        if (true){
+            return $response;
+        } else {
+            return $this->render('ZizooBoatBundle:Boat:active.html.twig', array(
+                'boat'              => $boat,
+                'errors'            => $completeErrors,
+                'routes'            => $routes
+            ));
+        }
+        
     }
     
 

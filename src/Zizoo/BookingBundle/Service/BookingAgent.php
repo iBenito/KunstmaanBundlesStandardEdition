@@ -14,6 +14,7 @@ use Zizoo\BoatBundle\Form\Model\BookBoat;
 
 use Zizoo\UserBundle\Entity\User;
 
+use Symfony\Component\DependencyInjection\Container;
 
 class BookingAgent {
     
@@ -286,6 +287,9 @@ class BookingAgent {
     
     public function makeBooking(User $user, BookingForm $bookingForm, $price, BookBoat $bookBoat, Boat $boat)
     {
+        if (!$this->container->hasParameter('zizoo_booking.allow_bookings') || $this->container->getParameter('zizoo_booking.allow_bookings') !== true){
+            throw new InvalidBookingException('Bookings are currently not possible');
+        }
         $booking = null;
         $paymentMethod = $bookingForm->getPaymentMethod();
         if ($paymentMethod->getId()=='credit_card'){

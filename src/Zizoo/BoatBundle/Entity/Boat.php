@@ -63,6 +63,11 @@ class Boat extends BaseEntity
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
+    protected $year;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
     protected $length;
     
     /**
@@ -191,6 +196,11 @@ class Boat extends BaseEntity
      */
     protected $crewOptional;
 
+    /**
+     * @ORM\Column(name="complete", type="boolean")
+     */
+    protected $complete;
+    
     
     public function __construct(BoatAddress $boatAddress = null)
     {
@@ -352,6 +362,29 @@ class Boat extends BaseEntity
     }
 
     /**
+     * Set year
+     *
+     * @param integer $year
+     * @return Boat
+     */
+    public function setYear($year)
+    {
+        $this->year = $year;
+    
+        return $this;
+    }
+
+    /**
+     * Get year
+     *
+     * @return integer 
+     */
+    public function getYear()
+    {
+        return $this->year;
+    }
+
+    /**
      * Set length
      *
      * @param integer $length
@@ -360,14 +393,14 @@ class Boat extends BaseEntity
     public function setLength($length)
     {
         $this->length = $length;
-    
+
         return $this;
     }
 
     /**
      * Get length
      *
-     * @return integer 
+     * @return integer
      */
     public function getLength()
     {
@@ -735,7 +768,7 @@ class Boat extends BaseEntity
      */
     public function getDefaultPrice()
     {
-        return $this->defaultPrice;
+        return (float)$this->defaultPrice;
     }
     
     /**
@@ -758,7 +791,7 @@ class Boat extends BaseEntity
      */
     public function getLowestPrice()
     {
-        return $this->lowestPrice;
+        return (float)$this->lowestPrice;
     }
     
     /**
@@ -781,7 +814,7 @@ class Boat extends BaseEntity
      */
     public function getHighestPrice()
     {
-        return $this->highestPrice;
+        return (float)$this->highestPrice;
     }
     
     /**
@@ -925,7 +958,7 @@ class Boat extends BaseEntity
     
     public function getCrewPrice()
     {
-        return $this->crewPrice;
+        return (float)$this->crewPrice;
     }
     
     public function setNumCrew($numCrew)
@@ -948,6 +981,17 @@ class Boat extends BaseEntity
     public function getCrewOptional()
     {
         return $this->crewOptional;
+    }
+    
+    public function setComplete($complete)
+    {
+        $this->complete = $complete;
+        return $this;
+    }
+    
+    public function getComplete()
+    {
+        return $this->complete;
     }
     
     public function updateLowestAndHighestPrice()
@@ -1011,20 +1055,5 @@ class Boat extends BaseEntity
         }
     }
     
-    /**
-    * @ORM\preUpdate
-    */
-    public function preUpdate()
-    {
-        $this->updateLowestAndHighestPrice();
-    }
-    
-    /**
-    * @ORM\PrePersist
-    */
-    public function prePersist()
-    {
-        $this->updateLowestAndHighestPrice();
-    }
-
+   
 }

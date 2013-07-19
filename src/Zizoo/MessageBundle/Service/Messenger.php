@@ -27,14 +27,19 @@ class Messenger {
     public function sendNotificationMessageEmail(Profile $from, Profile $to, Message $message){
         $messageLink = $this->container->get('router')->generate('fos_message_inbox', array('messageId' => $message->getId()), true);
         $twig = $this->container->get('twig');
-        $template = $twig->loadTemplate('ZizooMessageBundle:Email:new_message.html.twig');
+        $templateHtml   = $twig->loadTemplate('ZizooMessageBundle:Email:new_message.html.twig');
+        $templateTxt    = $twig->loadTemplate('ZizooMessageBundle:Email:new_message.txt.twig');
+        
         $context = array(   'link'      => $messageLink,
                             'sender'    => $from,
                             'recipient' => $to,
                             'message'   => $message);
-        $subject = $template->renderBlock('subject', $context);
-        $textBody = $template->renderBlock('body_text', $context);
-        $htmlBody = $template->renderBlock('body_html', $context);
+        
+        
+        $subject = $templateHtml->renderBlock('subject', $context);
+        
+        $textBody = $templateTxt->render($context);
+        $htmlBody = $templateHtml->render($context);
 
         $email = \Swift_Message::newInstance()
             ->setSubject($subject)
@@ -54,11 +59,13 @@ class Messenger {
     public function sendNotificationBookingEmail(User $to, Reservation $reservation){
         $bookingLink = $this->container->get('router')->generate('ZizooBookingBundle_view_booking', array('id' => $reservation->getId()), true);
         $twig = $this->container->get('twig');
-        $template = $twig->loadTemplate('ZizooBookingBundle:Email:new_booking.html.twig');
+        $templateHtml   = $twig->loadTemplate('ZizooMessageBundle:Email:new_booking.html.twig');
+        $templateTxt    = $twig->loadTemplate('ZizooMessageBundle:Email:new_booking.txt.twig');
+        
         $context = array(   'bookingLink'      => $bookingLink );
-        $subject = $template->renderBlock('subject', $context);
-        $textBody = $template->renderBlock('body_text', $context);
-        $htmlBody = $template->renderBlock('body_html', $context);
+        $subject = $templateHtml->renderBlock('subject', $context);
+        $textBody = $templateHtml->render($context);
+        $htmlBody = $templateTxt->render($context);
 
         $email = \Swift_Message::newInstance()
             ->setSubject($subject)
@@ -79,14 +86,17 @@ class Messenger {
     public function sendInvitationEmail($to, User $from){
         $inviteLink = $this->container->get('router')->generate('ZizooUserBundle_register', array('email' => $to), true);
         $twig = $this->container->get('twig');
-        $template = $twig->loadTemplate('ZizooUserBundle:Email:invite.html.twig');
+
+        $templateHtml   = $twig->loadTemplate('ZizooUserBundle:Email:invite.html.twig');
+        $templateTxt    = $twig->loadTemplate('ZizooUserBundle:Email:invite.txt.twig');
         
         $context = array(   'link'      => $inviteLink,
                             'sender'    => $from);
         
-        $subject = $template->renderBlock('subject', $context);
-        $textBody = $template->renderBlock('body_text', $context);
-        $htmlBody = $template->renderBlock('body_html', $context);
+        $subject = $templateHtml->renderBlock('subject', $context);
+        
+        $textBody = $templateTxt->render($context);
+        $htmlBody = $templateHtml->render($context);
 
         $email = \Swift_Message::newInstance()
             ->setSubject($subject)
@@ -140,12 +150,20 @@ class Messenger {
         $confirmRoute = $isCharter?'ZizooCharterBundle_Registration_confirm':'ZizooUserBundle_confirm';
         $activationLink = $this->container->get('router')->generate($confirmRoute, array('token' => $user->getConfirmationToken(), 'email' => $user->getEmail()), true);
         $twig = $this->container->get('twig');
-        $templateLocation = $isCharter?'ZizooUserBundle:Email:confirm_charter.html.twig':'ZizooUserBundle:Email:confirm.html.twig';
-        $template = $twig->loadTemplate($templateLocation);
+        
+        $templateHtmlLocation = $isCharter?'ZizooUserBundle:Email:confirm_charter.html.twig':'ZizooUserBundle:Email:confirm.html.twig';
+        $templateTxtLocation = $isCharter?'ZizooUserBundle:Email:confirm_charter.txt.twig':'ZizooUserBundle:Email:confirm.txt.twig';
+        
+        $templateHtml   = $twig->loadTemplate($templateHtmlLocation);
+        $templateTxt    = $twig->loadTemplate($templateTxtLocation);
+        
+     
         $context = array('link' => $activationLink);
-        $subject = $template->renderBlock('subject', $context);
-        $textBody = $template->renderBlock('body_text', $context);
-        $htmlBody = $template->renderBlock('body_html', $context);
+        
+        $subject = $templateHtml->renderBlock('subject', $context);
+        
+        $textBody = $templateTxt->render($context);
+        $htmlBody = $templateHtml->render($context);
 
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
@@ -170,15 +188,17 @@ class Messenger {
      * @author Alex Fuckert <alexf83@gmail.com>
      */
     public function sendChangeEmailConfirmationEmail(User $user){
-        $isCharter = $user->getCharter()!=null;
         $activationLink = $this->container->get('router')->generate('ZizooUserBundle_change_email_confirm', array('token' => $user->getChangeEmailToken(), 'email' => $user->getEmail()), true);
         $twig = $this->container->get('twig');
-        $templateLocation = 'ZizooUserBundle:Email:change_email_confirm.html.twig';
-        $template = $twig->loadTemplate($templateLocation);
+        
+        $templateHtml   = $twig->loadTemplate('ZizooUserBundle:Email:change_email_confirm.html.twig');
+        $templateTxt    = $twig->loadTemplate('ZizooUserBundle:Email:change_email_confirm.txt.twig');
+        
         $context = array('link' => $activationLink);
-        $subject = $template->renderBlock('subject', $context);
-        $textBody = $template->renderBlock('body_text', $context);
-        $htmlBody = $template->renderBlock('body_html', $context);
+        $subject = $templateHtml->renderBlock('subject', $context);
+        
+        $textBody = $templateTxt->render($context);
+        $htmlBody = $templateHtml->render($context);
 
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
@@ -204,11 +224,16 @@ class Messenger {
     public function sendForgotPasswordEmail(User $user){
         $passwordLink = $this->container->get('router')->generate('ZizooUserBundle_reset_password', array('token' => $user->getConfirmationToken(), 'email' => $user->getEmail()), true);
         $twig = $this->container->get('twig');
-        $template = $twig->loadTemplate('ZizooUserBundle:Email:password_confirm.html.twig');
+
+        $templateHtml   = $twig->loadTemplate('ZizooUserBundle:Email:password_confirm.html.twig');
+        $templateTxt    = $twig->loadTemplate('ZizooUserBundle:Email:password_confirm.txt.twig');
+        
         $context = array('link' => $passwordLink);
-        $subject = $template->renderBlock('subject', $context);
-        $textBody = $template->renderBlock('body_text', $context);
-        $htmlBody = $template->renderBlock('body_html', $context);
+        
+        $subject = $templateHtml->renderBlock('subject', $context);
+        
+        $textBody = $templateTxt->render($context);
+        $htmlBody = $templateHtml->render($context);
 
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
@@ -233,11 +258,16 @@ class Messenger {
      */
     public function sendNewPasswordEmail(User $user, $pass){
         $twig = $this->container->get('twig');
-        $template = $twig->loadTemplate('ZizooUserBundle:Email:password_new.html.twig');
+
+        $templateHtml   = $twig->loadTemplate('ZizooUserBundle:Email:password_new.html.twig');
+        $templateTxt    = $twig->loadTemplate('ZizooUserBundle:Email:password_new.txt.twig');
+        
         $context = array('pass' => $pass);
-        $subject = $template->renderBlock('subject', $context);
-        $textBody = $template->renderBlock('body_text', $context);
-        $htmlBody = $template->renderBlock('body_html', $context);
+        
+        $subject = $templateHtml->renderBlock('subject', $context);
+        
+        $textBody = $templateTxt->render($context);
+        $htmlBody = $templateHtml->render($context);
 
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)

@@ -11,6 +11,8 @@ class BaseExtension extends \Twig_Extension
             'displayAmount'         => new \Twig_Filter_Method($this, 'displayAmount'),
             'parentBlockPrefix'     => new \Twig_Filter_Method($this, 'parentBlockPrefix'),
             'rootLabel'             => new \Twig_Filter_Method($this, 'rootLabel'),
+            'absoluteAsset'         => new \Twig_Filter_Method($this, 'absoluteAsset'),
+            'completeness'          => new \Twig_Filter_Method($this, 'completeness'),
         );
     }
 
@@ -44,6 +46,35 @@ class BaseExtension extends \Twig_Extension
         } else {
             return $class . ' root';
         }
+    }
+    public function absoluteAsset($url, $request)
+    {
+        return $request->getScheme() . '://' . $request->getHost() . $url;
+    }
+
+    private function completenessLevel($completeness, $level)
+    {
+        $class = $completeness >= $level ? ' class="complete"':'';
+        return '<li'.$class.'><span>'.$level.'</span></li>'.PHP_EOL;
+    }
+
+    public function completeness($completeness, $max = 3)
+    {
+        $output = array();
+
+        $output[] = '<h4>Profile Completeness'.PHP_EOL;
+        if ($completeness <= $max){
+            $output[] = '<span class="icon cross"></span>'.PHP_EOL;
+        }
+        $output[] = '</h4>'.PHP_EOL;
+        $output[] = '<ul class="clearfix">'.PHP_EOL;
+
+        for ($level=1; $level<=$max; $level++){
+            $output[] = $this->completenessLevel($completeness, $level);
+        }
+        $output[] = '</ul>'.PHP_EOL;
+
+        echo implode('', $output);
     }
    
     public function getName()

@@ -47,7 +47,8 @@ $.widget( "ui.zToggle", {
             }
         },
 
-	_toggle: function() {
+	_toggle: function(e, doCallback) {
+            if (doCallback == undefined) doCallback = true;
             
             if ($(this.element).attr('disabled')!=null) return false;
             
@@ -57,12 +58,22 @@ $.widget( "ui.zToggle", {
             $(this.textElement).text(this._getText());
 
 
-            if (typeof(this.options.onToggle) == 'function'){
+            if (typeof(this.options.onToggle) == 'function' && doCallback == true){
                 this.options.onToggle(this.state, this.element);
             }
             
             return false;
 	},
+        
+        setState: function(state, doCallback){
+          
+            if ($(this.element).attr('disabled')!=null) return false;
+            
+            if (state != this.state) this._toggle(null, doCallback);
+            
+            return this.state;
+          
+        },
 
 	_setOptions: function( options ) {
 

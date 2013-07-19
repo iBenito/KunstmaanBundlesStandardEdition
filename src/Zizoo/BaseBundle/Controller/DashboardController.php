@@ -3,6 +3,7 @@
 namespace Zizoo\BaseBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\DBAL\DBALException;
 
@@ -25,27 +26,35 @@ class DashboardController extends Controller {
                             'calendar_route'            => 'ZizooBaseBundle_Dashboard_CharterEditPriceBoat',
                             'confirm_route'             => 'ZizooBaseBundle_Dashboard_CharterConfirmPriceBoat',
                             'complete_route'            => 'ZizooBaseBundle_Dashboard_CharterBoats',
-                            'delete_route'              => 'ZizooBaseBundle_Dashboard_CharterDeleteBoat'
+                            'delete_route'              => 'ZizooBaseBundle_Dashboard_CharterDeleteBoat',
+                            'active_route'              => 'ZizooBaseBundle_Dashboard_CharterActiveBoat'
                             );
     private $verifyRoutes   = array('verify_facebook_route'      => 'ZizooBaseBundle_Dashboard_VerifyFacebook',
                                     'unverify_facebook_route'    => 'ZizooBaseBundle_Dashboard_UnverifyFacebook');
     
     private function widgetCharterAction($charter, $route)
     {
+        $charterService = $this->container->get('zizoo_charter_charter_service');
+        $charterCompleteness = $charterService->getCompleteness($charter);
+
         return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_widget.html.twig', array(
-            'charter'   => $charter,
-            'route'     => $route,
+            'charter'       => $charter,
+            'completeness'  => $charterCompleteness,
+            'route'         => $route,
         ));
     }
     
     private function widgetUserAction($user, $route)
     {
         $facebook       = $this->get('facebook');
+        $profileService = $this->container->get('profile_service');
+        $profileCompleteness = $profileService->getCompleteness($user->getProfile());
 
         return $this->render('ZizooBaseBundle:Dashboard:user_widget.html.twig', array(
-            'user'      => $user,
-            'route'     => $route,
-            'facebook'  => $facebook
+            'user'          => $user,
+            'completeness'  => $profileCompleteness,
+            'route'         => $route,
+            'facebook'      => $facebook
         ));
     }
     
@@ -452,9 +461,9 @@ class DashboardController extends Controller {
             'response'  => $response->getContent()
         ));
     }
-    
-    
-    
+
+
+
     /**
      * Display charter add boat 
      *
@@ -535,12 +544,16 @@ class DashboardController extends Controller {
         }
         
         $user = $this->getUser();
-        $charter = $user->getCharter();
-        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_boat.html.twig', array(
-            'title'     => 'Add Boat',
-            'current'   => 'boats',
-            'response'  => $response->getContent()
-        ));
+        
+        if ($response instanceof JsonResponse) {
+            return $response;
+        } else {
+            return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_boat.html.twig', array(
+                'title'     => 'Add Boat',
+                'current'   => 'boats',
+                'response'  => $response->getContent()
+            ), $response);
+        }
     }
     
     
