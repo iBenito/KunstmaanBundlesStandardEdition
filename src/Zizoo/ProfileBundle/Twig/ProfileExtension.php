@@ -24,11 +24,8 @@ class ProfileExtension extends \Twig_Extension
     {
         return array(
             'threadDisplay'         => new \Twig_Filter_Method($this, 'threadDisplay'),
-            'profileCompleteness'   => new \Twig_Filter_Method($this, 'profileCompleteness'),
         );
     }
-    
-    
 
     public function threadDisplay($message, $profile){
         if ($message->getSenderProfile()->getId()==$profile->getId()){
@@ -43,29 +40,7 @@ class ProfileExtension extends \Twig_Extension
             }
         }
     }
-    
-    private function profileCompletenessLevel($profileCompleteness, $level)
-    {
-        $class = $profileCompleteness >= $level ? ' class="complete"':'';
-        return "<li$class><span>$level</span></li>";
-    }
-    
-    public function profileCompleteness(Profile $profile)
-    {
-        $profileService = $this->container->get('profile_service');
-        $profileCompleteness = $profileService->getCompleteness($profile);
-        ?>
-        <h4>Profile Completeness <?php if ($profileCompleteness <= ProfileService::MAX_PROFILE_COMPLETENESS){ ?><span class="icon cross"></span><?php } ?></h4>
-        <ul class="clearfix">
-            <?php 
-            for ($i=1; $i<=ProfileService::MAX_PROFILE_COMPLETENESS; $i++){
-                echo $this->profileCompletenessLevel($profileCompleteness, $i);
-            }
-            ?>
-        </ul>
-        <?php
-    }
-    
+
     public function getName()
     {
         return 'profile_extension';

@@ -34,20 +34,27 @@ class DashboardController extends Controller {
     
     private function widgetCharterAction($charter, $route)
     {
+        $charterService = $this->container->get('zizoo_charter_charter_service');
+        $charterCompleteness = $charterService->getCompleteness($charter);
+
         return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_widget.html.twig', array(
-            'charter'   => $charter,
-            'route'     => $route,
+            'charter'       => $charter,
+            'completeness'  => $charterCompleteness,
+            'route'         => $route,
         ));
     }
     
     private function widgetUserAction($user, $route)
     {
         $facebook       = $this->get('facebook');
+        $profileService = $this->container->get('profile_service');
+        $profileCompleteness = $profileService->getCompleteness($user->getProfile());
 
         return $this->render('ZizooBaseBundle:Dashboard:user_widget.html.twig', array(
-            'user'      => $user,
-            'route'     => $route,
-            'facebook'  => $facebook
+            'user'          => $user,
+            'completeness'  => $profileCompleteness,
+            'route'         => $route,
+            'facebook'      => $facebook
         ));
     }
     
@@ -454,9 +461,9 @@ class DashboardController extends Controller {
             'response'  => $response->getContent()
         ));
     }
-    
-    
-    
+
+
+
     /**
      * Display charter add boat 
      *

@@ -84,10 +84,7 @@
 
                     <div class="tab" style="display: none;">
                         <!-- start:map -->
-                        <div class="media">
-                            {{ google_map_container(map) }}
-                        </div>
-                        {{ google_map_js(map) }}
+                        {{ google_map_container(map) }}
                         <!-- end:map -->
                     </div>
 
@@ -220,5 +217,15 @@
         </div>
     </div>
     <!-- end:content -->
-    
+
+    <script type="text/javascript">
+        var availabilityReservedDates   = {{ boat|reservedDates(reservations)|raw }};
+        var availabilityPriceDates      = {{ boat|priceDates(prices)|raw }};
+        var availabilityDefaultAllowed  = {{ boat.defaultPrice is not null ? 'true' : 'false' }};
+        var availabilityDefaultPrice    = {{ boat.defaultPrice is not null ? boat.defaultPrice : 'null' }};
+        var STATUS_ACCEPTED             = {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') }};
+        var STATUS_SELF                 = {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_SELF') }};
+        var STATUS_HOLD                 = {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') }};
+    </script>
+
 {% endblock %}
