@@ -10,6 +10,8 @@ use Doctrine\ORM\EntityManager;
 
 class CharterService
 {
+    const MAX_CHARTER_COMPLETENESS = 3;
+
     private $em;
     private $container;
     
@@ -39,6 +41,27 @@ class CharterService
         $this->em->persist($billingUser);
         
         if ($flush) $this->em->flush();
+    }
+
+    public function getCompleteness(\Zizoo\CharterBundle\Entity\Charter $charter)
+    {
+        $completeness = 0;
+
+        // check completeness against validation rules
+        $validator = $this->container->get('validator');
+        for($level = 1; $level <= self::MAX_CHARTER_COMPLETENESS; $level++)
+        {
+            $validationGroup = 'CompletenessLevel'.$level;
+            $errors = $validator->validate($charter, array($validationGroup));
+            if(!$errors->count()){
+                $completeness++;
+            }
+        }
+        //Verification
+//        if($profile->faceBookVerified()&&$profile->twitterVerified()&&$profile->phoneVerified()){
+//            $completeness++;
+//        }
+        return $completeness;
     }
 
 }

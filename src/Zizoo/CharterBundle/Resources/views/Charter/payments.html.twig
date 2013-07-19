@@ -1,9 +1,17 @@
-
-{% block dashboard_page_title %}My Payments{% endblock %}
-
 {% block stylesheets %}
-    <link href="{{ asset('bundles/zizoojqgridcustom/css/ui.jqgrid.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/zizoojqgridcustom/css/ui.jqgrid-custom.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/custom_combobox.css') }}" type="text/css" rel="stylesheet" />
+
+    <style type="text/css">
+
+        .dataTables_length {
+            display: none;
+        }
+
+        .dataTables_filter {
+            display: none;
+        }
+    </style>
 {% endblock %}
     
 {% block javascripts %}
@@ -13,6 +21,106 @@
     <script type="text/javascript" src="{{ asset('bundles/zizoojqgridcustom/js/jquery.jqGrid.src.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/zizoojqgridcustom/js/jquery.contextmenu-ui.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/custom_combobox.js') }}"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
+    <script src="{{ asset('bundles/zizoobase/js/zizoo-datatables.js') }}"></script>
+
+    <script>
+
+        $.fn.dataTableExt.afnFiltering.push(
+            function( oSettings, aData, iDataIndex ) {
+                var iFini = $("#custom_filter input[name=start_date]").val();
+                var iFfin = $("#custom_filter input[name=end_date]").val();
+                
+                var iDateCol = 3;
+                 
+                iFini=iFini.substring(0,4) + iFini.substring(5,7)+ iFini.substring(8,10);
+                iFfin=iFfin.substring(0,4) + iFfin.substring(5,7)+ iFfin.substring(8,10);      
+                 
+                var datofini=aData[iDateCol].substring(0,4) + aData[iDateCol].substring(5,7)+ aData[iDateCol].substring(8,10);
+                 
+                if ( iFini == "" && iFfin == "" )
+                {
+                    return true;
+                }
+                else if ( iFini <= datofini && iFfin == "")
+                {
+                    return true;
+                }
+                else if ( iFfin >= datofini && iFini == "")
+                {
+                    return true;
+                }
+                else if (iFini <= datofini && iFfin >= datofini)
+                {
+                    return true;
+                }
+                return false;
+            }
+        );
+
+        $.fn.dataTableExt.afnFiltering.push(
+            function( oSettings, aData, iDataIndex ) {
+                var filter = $("#custom_filter input[name=booking]").val();
+                var value = aData[0];
+                
+                if(filter == "")
+                    return true;
+
+                if(value.toLowerCase().indexOf(filter.toLowerCase()) >= 0)
+                    return true;
+
+                return false;
+            }
+        );
+
+        $.fn.dataTableExt.afnFiltering.push(
+            function( oSettings, aData, iDataIndex ) {
+                var filter = $("#custom_filter input[name=boat]").val();
+                var value = aData[1];
+                
+                if(filter == "")
+                    return true;
+
+                if(value.toLowerCase().indexOf(filter.toLowerCase()) >= 0)
+                    return true;
+
+                return false;
+            }
+        );
+
+        $.fn.dataTableExt.afnFiltering.push(
+            function( oSettings, aData, iDataIndex ) {
+                var filter = $("#custom_filter input[name=guest]").val();
+                var value = aData[2];
+                
+                if(filter == "")
+                    return true;
+
+                if(value.toLowerCase().indexOf(filter.toLowerCase()) >= 0)
+                    return true;
+
+                return false;
+            }
+        );
+
+        $(document).ready(function() {
+
+            $('#table_payments').dataTable({
+                "sPaginationType": "zizo_pagination",
+                
+                "bInfo": false
+                
+            });
+
+            var oTable = $('#table_payments').dataTable();
+             
+            /* Add event listeners to the two range filtering inputs */
+            $("#custom_filter input").change( function() { oTable.fnDraw(); } );
+            $("#custom_filter input").keyup( function() { oTable.fnDraw(); } );
+        } );
+
+    </script>
+
 {% endblock %}
 
 {% block content %}
@@ -29,7 +137,167 @@
         </div>
     {% endfor %}
 
-    {{jqgrid(grid)}}
+    <!-- start:filter -->
+    <div id="custom_filter" class="filter">
+        <form action="#">
+            <ul class="clearfix">
+                <li><input name="booking" type="text" placeholder="Booking"></li>
+                <li><input name="boat" type="text" placeholder="Boat"></li>
+                <li><input name="guest" type="text" placeholder="Guest"></li>
+
+                <li><input name="start_date" type="text" class="date-picker start" value="2013-07-09" ></li>
+                <li><input name="end_date" type="text" class="date-picker end" value="2013-07-10" ></li>
+            </ul>
+        </form>
+    </div>
+    <!-- end:filter -->
+
+    <!-- start:table -->
+    <div class="responsive-table clearfix">
+        <table id="table_payments">
+            <thead>
+                <tr>
+                    <th>Booking</th>
+                    <th>Boat</th>
+                    <th>Guest</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Received</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Z00354</td>
+                    <td>Princess 01/31/2013</td>
+                    <td>Daddo</td>
+                    <td>2013-07-05</td>
+                    <td>6200 &euro;</td>
+                    <td>1900 &euro;</td>
+                </tr>
+                <tr>
+                    <td>Z00354</td>
+                    <td>Princess 01/31/2013</td>
+                    <td>Haddo</td>
+                    <td>2013-07-05</td>
+                    <td>6200 &euro;</td>
+                    <td>1900 &euro;</td>
+                </tr>
+                <tr>
+                    <td>Z00354</td>
+                    <td>Princess 01/31/2013</td>
+                    <td>Haddo</td>
+                    <td>2013-07-05</td>
+                    <td>6200 &euro;</td>
+                    <td>1900 &euro;</td>
+                </tr>
+                <tr>
+                    <td>Z00354</td>
+                    <td>Princess 01/31/2013</td>
+                    <td>Haddo</td>
+                    <td>2013-07-05</td>
+                    <td>6200 &euro;</td>
+                    <td>1900 &euro;</td>
+                </tr>
+                <tr>
+                    <td>Z00354</td>
+                    <td>Princess 01/31/2013</td>
+                    <td>Haddo</td>
+                    <td>2013-07-05</td>
+                    <td>6200 &euro;</td>
+                    <td>1900 &euro;</td>
+                </tr>
+                <tr>
+                    <td>Z00354</td>
+                    <td>Princess 01/31/2013</td>
+                    <td>Haddo</td>
+                    <td>2013-07-05</td>
+                    <td>6200 &euro;</td>
+                    <td>1900 &euro;</td>
+                </tr>
+                <tr>
+                    <td>Z00354</td>
+                    <td>Princess 01/31/2013</td>
+                    <td>Haddo</td>
+                    <td>2013-07-05</td>
+                    <td>6200 &euro;</td>
+                    <td>1900 &euro;</td>
+                </tr>
+                <tr>
+                    <td>Z00354</td>
+                    <td>Princess 01/31/2013</td>
+                    <td>Haddo</td>
+                    <td>2013-07-05</td>
+                    <td>6200 &euro;</td>
+                    <td>1900 &euro;</td>
+                </tr>
+                <tr>
+                    <td>Z00354</td>
+                    <td>Princess 01/31/2013</td>
+                    <td>Haddo</td>
+                    <td>2013-07-05</td>
+                    <td>6200 &euro;</td>
+                    <td>1900 &euro;</td>
+                </tr>
+                <tr>
+                    <td>Z00354</td>
+                    <td>Princess 01/31/2013</td>
+                    <td>Haddo</td>
+                    <td>2013-07-05</td>
+                    <td>6200 &euro;</td>
+                    <td>1900 &euro;</td>
+                </tr>
+                <tr>
+                    <td>Z00354</td>
+                    <td>Princess 01/31/2013</td>
+                    <td>Haddo</td>
+                    <td>2013-07-05</td>
+                    <td>6200 &euro;</td>
+                    <td>1900 &euro;</td>
+                </tr>
+                <tr>
+                    <td>Z00354</td>
+                    <td>Princess 01/31/2013</td>
+                    <td>Haddo</td>
+                    <td>2013-07-05</td>
+                    <td>6200 &euro;</td>
+                    <td>1900 &euro;</td>
+                </tr>
+                <tr>
+                    <td>Z00354</td>
+                    <td>Princess 01/31/2013</td>
+                    <td>Haddo</td>
+                    <td>2013-07-05</td>
+                    <td>6200 &euro;</td>
+                    <td>1900 &euro;</td>
+                </tr>
+                <tr>
+                    <td>Z00354</td>
+                    <td>Princess 01/31/2013</td>
+                    <td>Haddo</td>
+                    <td>2013-07-05</td>
+                    <td>6200 &euro;</td>
+                    <td>1900 &euro;</td>
+                </tr>
+                <tr>
+                    <td>Z00354</td>
+                    <td>Princess 01/31/2013</td>
+                    <td>Haddo</td>
+                    <td>2013-07-05</td>
+                    <td>6200 &euro;</td>
+                    <td>1900 &euro;</td>
+                </tr>
+                <tr>
+                    <td>Z00354</td>
+                    <td>Princess 01/31/2013</td>
+                    <td>Haddo</td>
+                    <td>2013-07-05</td>
+                    <td>6200 &euro;</td>
+                    <td>1900 &euro;</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- end:table -->
     
     <div class="contextMenu" id="contextMenu" style="display: none">
         <ul style="width: 400px">
@@ -42,17 +310,7 @@
                 <span style="font-size:11px; font-family:Verdana" >View guest profile</span>
             </li>
         </ul>
-    </div>
-         
-    <style type="text/css">
-        .ui-jqgrid-titlebar {
-            display: none;
-        }
-        
-        ul.ui-menu li .ui-icon {
-            position: static;
-        }
-    </style>
+    </div>        
     
     <script type="text/javascript">
 
@@ -133,7 +391,6 @@
         
         function loadComplete(){
             setupContextMenu(this);
-            
             
             $('#gview_{{ grid.name }} .ui-search-toolbar .zizoo_combobox').each(function(index,el){
                 $(el).combobox({    select: function(val, option){ 

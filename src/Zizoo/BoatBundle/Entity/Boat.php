@@ -63,6 +63,11 @@ class Boat extends BaseEntity
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
+    protected $year;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
     protected $length;
     
     /**
@@ -357,6 +362,29 @@ class Boat extends BaseEntity
     }
 
     /**
+     * Set year
+     *
+     * @param integer $year
+     * @return Boat
+     */
+    public function setYear($year)
+    {
+        $this->year = $year;
+    
+        return $this;
+    }
+
+    /**
+     * Get year
+     *
+     * @return integer 
+     */
+    public function getYear()
+    {
+        return $this->year;
+    }
+
+    /**
      * Set length
      *
      * @param integer $length
@@ -365,14 +393,14 @@ class Boat extends BaseEntity
     public function setLength($length)
     {
         $this->length = $length;
-    
+
         return $this;
     }
 
     /**
      * Get length
      *
-     * @return integer 
+     * @return integer
      */
     public function getLength()
     {

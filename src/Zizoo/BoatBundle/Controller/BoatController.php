@@ -47,27 +47,28 @@ class BoatController extends Controller
         }
         
         $map = $this->get('ivory_google_map.map');
+        $map->setHtmlContainerId('map');
         $map->setAsync(true);
         $map->setAutoZoom(false);
         $boatAddress = $boat->getAddress();
         if ($boatAddress->getLat() && $boatAddress->getLng()){
             $map->setCenter($boatAddress->getLat(), $boatAddress->getLng(), true);
         }
-        $map->setMapOption('zoom', 4);
+        $map->setMapOption('zoom', 6);
         $map->setMapOption('disableDefaultUI', true);
         $map->setMapOption('zoomControl', true);
         $map->setStylesheetOptions(array(
-            'width' => '610px',
-            'height' => '395px'
+            'width' => '100%',
+            'height' => '0'
         ));
-        
+
         if ($boatAddress->getLat() && $boatAddress->getLng()){
             $marker = $this->get('ivory_google_map.marker');
             $marker->setPosition($boatAddress->getLat(), $boatAddress->getLng(), true);
             $marker->setOption('title', $boat->getName());
             $marker->setOption('clickable', true);
-            $marker->setIcon('http://www.incrediblue.com/assets/map-pin.png');
-            
+            $marker->setIcon($this->container->get('templating.helper.assets')->getUrl('/bundles/zizoobase/images/google-maps-marker.png'));
+
             /** info window
             * 
 

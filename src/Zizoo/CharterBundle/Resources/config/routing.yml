@@ -96,3 +96,15 @@ ZizooCharterBundle_Charter_GetLogo:
     defaults: { _controller: ZizooCharterBundle:Charter:getLogo }
     requirements:
         _method:  GET
+
+ZizooCharterBundle_Charter_PaymentsJson:
+    pattern:  /payment_data
+    defaults: { _controller: ZizooCharterBundle:Charter:paymentsJson }
+    requirements:
+        _method:  GET
+
+ZizooCharterBundle_Charter_BookingsJson:
+    pattern:  /bookings_data
+    defaults: { _controller: ZizooCharterBundle:Charter:bookingsJson }
+    requirements:
+        _method:  GET

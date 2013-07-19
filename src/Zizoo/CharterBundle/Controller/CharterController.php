@@ -339,10 +339,59 @@ class CharterController extends Controller
         
         if (!$charter) {
             return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
+        }        
+    }
+
+    public function bookingsJsonAction() {
+         $user       = $this->getUser();
+        $charter    = $user->getCharter();
+        
+        if (!$charter) {
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
         }
-        
-        
-        
+
+        //MANDATORY
+        $em = $this->getDoctrine()->getManager();
+
+        $qb = $em->createQueryBuilder()->from('ZizooReservationBundle:Reservation', 'reservation')
+                                        ->leftJoin('reservation.booking', 'booking')
+                                        ->leftJoin('reservation.boat', 'boat')
+                                        ->leftJoin('boat.charter', 'charter')
+                                        ->leftJoin('reservation.guest', 'guest')
+                                        ->select('reservation.id as reservation_id, 
+                                                    boat.id as boat_id, 
+                                                    boat.name as boat_name, 
+                                                    reservation.created as created,
+                                                    reservation.check_in as check_in, 
+                                                    reservation.check_out as check_out, 
+                                                    guest.id as guest_id,
+                                                    guest.username as guest_username,
+                                                    reservation.status as reservation_status,
+                                                    reservation.hours_to_respond as hours_to_respond,
+                                                    reservation
+                                                    ')
+                                        ->where('charter.id = :charter_id')
+                                        ->setParameter('charter_id', $charter->getId())
+                                        ->groupBy('reservation.id')
+                                        ;
+        $cursor = $qb->getQuery()->execute();
+
+        $result = array("aaData" => array());
+        foreach ($cursor as $payment) { // queries for all users and data is held internally
+            $row = array(
+                $payment["reservation_id"],
+                $payment["boat_name"],
+                $payment["guest_username"],
+                'TODO',
+                'TODO',
+                'TODO',
+                $payment["reservation_status"],
+                $payment["hours_to_respond"]
+                );
+            array_push($result["aaData"], $row);
+        }
+
+        return new JsonResponse($result);
     }
     
     /**
@@ -562,8 +611,56 @@ class CharterController extends Controller
             throw \Exception('Invalid query');
         }
     }
-    
-    
+
+
+    public function paymentsJsonAction() {
+         $user       = $this->getUser();
+        $charter    = $user->getCharter();
+        
+        if (!$charter) {
+            return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
+        }
+
+        //MANDATORY
+        $em = $this->getDoctrine()->getManager();
+
+        $qb = $em->createQueryBuilder()->from('ZizooBookingBundle:Booking', 'booking')
+                                        ->leftJoin('booking.reservation', 'reservation')
+                                        ->leftJoin('booking.payment', 'payment')
+                                        ->leftJoin('reservation.boat', 'boat')
+                                        ->leftJoin('boat.charter', 'charter')
+                                        ->leftJoin('reservation.guest', 'guest')
+                                        ->select('reservation.id as reservation_id, 
+                                                    boat.id as boat_id, 
+                                                    boat.name as boat_name, 
+                                                    booking.created as created,
+                                                    booking.cost as cost, 
+                                                    SUM(payment.amount) as payment_total, 
+                                                    guest.id as guest_id,
+                                                    guest.username as guest_username,
+                                                    booking
+                                                    ')
+                                        ->where('charter.id = :charter_id')
+                                        ->setParameter('charter_id', $charter->getId())
+                                        ->groupBy('reservation.id')
+                                        ;
+        $cursor = $qb->getQuery()->execute();
+
+        $result = array("aaData" => array());
+        foreach ($cursor as $payment) { // queries for all users and data is held internally
+            $row = array(
+                $payment["reservation_id"],
+                $payment["boat_name"],
+                $payment["guest_username"],
+                'TODO',
+                $payment["cost"],
+                $payment["payment_total"]
+                );
+            array_push($result["aaData"], $row);
+        }
+
+        return new JsonResponse($result);
+    }
     
     /**
      * @Template()
@@ -591,6 +688,7 @@ class CharterController extends Controller
                                                     'root' => 'rows'
                                             )
                          ));
+        
         $grid->setRouteForced($router->generate('ZizooCharterBundle_Charter_Payments'));
         $grid->setHideIfEmpty(false);
 
@@ -645,7 +743,7 @@ class CharterController extends Controller
             $boatOptions[$boat->getName()] = $boat->getName();
         }
         $grid->addColumn('Boat Id', array('name' => 'boat_id', 'jsonmap' => 'cell.1', 'index' => 'boat.id', 'hidden' => true, 'width' => '0', 'sortable' => false, 'search' => false));
-        $grid->addColumn('Boat', array('name' => 'boat_name', 'jsonmap' => 'cell.2', 'index' => 'boat.name', 'width' => '150', 'sortable' => true, 'search' => true, 'searchoptions' => array('dataInit' => 'function(elem){ createBoatSearch(elem); }')));
+        $grid->addColumn('Boat', array('name' => 'boat_name', 'jsonmap' => 'cell.2', 'index' => 'boat.name', 'width' => '150', 'sortable' => false, 'search' => false, 'searchoptions' => array('dataInit' => 'function(elem){ createBoatSearch(elem); }')));
         
         $grid->addColumn('Created', array('name' => 'created', 'jsonmap' => 'cell.3.date', 'index' => 'booking.created', 'width' => '100', 'formatter' => 'date', 'formatoptions' => array( 'srcformat' => 'Y-m-d H:i:s', 'newformat' => 'd/m/Y' ), 'datepicker' => true, 'sortable' => true, 'search' => true));
 
@@ -659,7 +757,8 @@ class CharterController extends Controller
                                         'boatOptions'       => $boatOptions,
                                         'guestOptions'      => $guestOptions,
                                         'loadComplete'      => 'loadComplete',
-                                        'extraJS'           => $extraJS));
+                                        'extraJS'           => $extraJS,
+                                        'filterCallback' => 'filterCallback'));
         
         
        return $grid->render();
