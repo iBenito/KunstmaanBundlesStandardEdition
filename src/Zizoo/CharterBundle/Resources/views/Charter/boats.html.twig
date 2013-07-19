@@ -170,10 +170,13 @@
             
             function setView(toggle, json){
                 var viewButton = $(toggle).parents('.actions').siblings('.buttons').find('.view_btn');
+                var box = $(toggle).parents('.trip').children('.box').children('a');
                 if (json.boat_active==true){
                     $(viewButton).removeClass('disabled');
+                    $(box).removeClass('disabled');
                 } else {
                     $(viewButton).addClass('disabled');
+                    $(box).addClass('disabled');
                 }
             }
             

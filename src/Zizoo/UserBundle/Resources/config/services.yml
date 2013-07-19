@@ -44,3 +44,9 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: validator.invite_single_validator }
             
+    zizoo_user.account_settings_validator:
+        class: Zizoo\UserBundle\Validator\Constraints\AccountSettingsValidator
+        arguments: ["@service_container"]
+        tags:
+            - { name: validator.constraint_validator, alias: validator.account_settings_validator }
+            

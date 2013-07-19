@@ -83,6 +83,11 @@ services:
         class: Zizoo\BoatBundle\Validator\Constraints\BoatValidator
         tags:
             - { name: validator.constraint_validator, alias: validator.boat_validator }
+            
+    zizoo_boat.availability_validator:
+        class: Zizoo\BoatBundle\Validator\Constraints\AvailabilityValidator
+        tags:
+            - { name: validator.constraint_validator, alias: validator.availability_validator }
 
    # LISTENERS
     zizoo_boat_boat_listener:

@@ -79,3 +79,67 @@
     </script>
 {% endspaceless %}
 {% endblock zizoo_boat_crew_widget %}
+    
+    
+{% block zizoo_boat_availability_widget %}
+{% spaceless %}
+    <div id="{{ id }}-dates" class="clearfix">
+        <div class="step from">
+            <!--<div class="availability-hinter">Select a starting date from the calendar</div>-->
+            <div id="availability-setter-dates-from">
+                {{ form_widget(form.reservation_range.reservation_from) }}
+                {% if form.reservation_range.reservation_from.vars.errors|length > 0 %}
+                    {{ form_errors(form.reservation_range.reservation_from) }}
+                {% endif %}
+            </div>
+        </div>
+        <div class="step tp">
+            <!--<div class="availability-hinter">Select a starting date from the calendar</div>-->
+            <div id="availability-setter-dates-tp">
+                {{ form_widget(form.reservation_range.reservation_to) }}
+                {% if form.reservation_range.reservation_to.vars.errors|length > 0 %}
+                    {{ form_errors(form.reservation_range.reservation_to) }}
+                {% endif %}
+            </div>
+        </div>
+        {% if form.reservation_range.vars.errors|length > 0 %}
+        {{ form_errors(form.reservation_range) }}
+        {% endif %}
+    
+    </div>
+    
+    <div id="{{ id }}-type" class="clearfix row">
+        <div class="step type">
+            {{ form_widget(form.type) }}
+            {% if form.type.vars.errors|length > 0 %}
+                {{ form_errors(form.type) }}
+            {% endif %}
+        </div>
+    </div>
+    
+    <div id="{{ id }}-price" class="clearfix">
+        <div class="step price">
+            <div class="clearfix">
+                <div class="input-wrap">
+                    {{ form_widget(form.price) }}
+                    <span>&euro;</span>
+                </div>
+            </div>
+            {% if form.price.vars.errors|length > 0 %}
+                {{ form_errors(form.price) }}
+            {% endif %}
+        </div>
+    </div>
+    
+    {{ form_rest(form) }}
+    {{ form_errors(form) }}
+    
+    <div id="{{ id }}-buttons" class="clearfix">
+        <div class="step set">
+            <button class="button blue large" type="submit">Set</button>
+        </div>
+
+    </div>
+{% endspaceless %}
+{% endblock zizoo_boat_availability_widget %}
+    

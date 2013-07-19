@@ -2,6 +2,19 @@ Zizoo\BoatBundle\Form\Model\BookBoat:
     constraints:
         - Zizoo\BoatBundle\Validator\Constraints\BookBoat: ~
         
+Zizoo\BoatBundle\Form\Model\Availability:
+    constraints:
+        - Zizoo\BoatBundle\Validator\Constraints\Availability: ~
+        
+Zizoo\BoatBundle\Form\Model\ReservationRange:
+    properties:
+        reservation_from:
+            - Date: ~
+            - NotNull: ~
+            
+        reservation_to:
+            - Date: ~
+            - NotNull: ~
 
 Zizoo\BoatBundle\Entity\Boat:
     constraints:

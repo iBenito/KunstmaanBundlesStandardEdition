@@ -6,8 +6,10 @@ use Zizoo\AddressBundle\Entity\BoatAddress;
 use Zizoo\BoatBundle\Form\Type\BoatDetailsType;
 use Zizoo\BoatBundle\Form\Type\BookBoatType;
 use Zizoo\BoatBundle\Form\Type\ConfirmBoatPriceType;
+use Zizoo\BoatBundle\Form\Type\AvailabilityType;
 use Zizoo\BoatBundle\Form\Model\BookBoat;
 use Zizoo\BoatBundle\Form\Model\ConfirmBoatPrice;
+use Zizoo\BoatBundle\Form\Model\Availability;
 use Zizoo\ReservationBundle\Entity\Reservation;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -554,6 +556,8 @@ class BoatController extends Controller
         if ($step){
             $session->set('step', 'four');
         }
+
+        $availabilityForm = $this->createForm(new AvailabilityType($this->container), null, array('boat' => $boat, 'label' => 'f'));
         
         $routes = $request->query->get('routes');
         
@@ -561,55 +565,68 @@ class BoatController extends Controller
         $prices         = $boat->getPrice();
     
         if ($request->isMethod('post')){
-            $fromStr    = $request->request->get('date_from', null);
-            $toStr      = $request->request->get('date_to', null);
-            $p          = $request->request->get('price', null);
-            $from       = new \DateTime($fromStr);
-            $to         = new \DateTime($toStr);
-            $confirmed  = $request->request->get('confirmed', false)=='true';
+            $availabilityForm->bind($request);
             
-            $type               = $request->request->get('type', 'availability');
-            
-            $overlapRequestedReservations   = $this->getDoctrine()->getRepository('ZizooReservationBundle:Reservation')->getReservations($charter, null, $boat, $from, $to, array(Reservation::STATUS_REQUESTED));
-            $overlapExternalReservations    = $this->getDoctrine()->getRepository('ZizooReservationBundle:Reservation')->getReservations($charter, null, $boat, $from, $to, array(Reservation::STATUS_SELF));
-            if (count($overlapRequestedReservations)>0 || count($overlapExternalReservations)>0){
+            if ($availabilityForm->isValid()){
+                $availability = $availabilityForm->getData();
 
-                if (!$confirmed){
-                    
-                    $requestedIds = array();
-                    foreach ($overlapRequestedReservations as $overlapRequestedReservation){
-                        $requestedIds[] = $overlapRequestedReservation->getId();
-                    }
+                $range = $availability->getReservationRange();
+                
+                $from = $range->getReservationFrom();
+                $to   = $range->getReservationTo();
+                
+                $overlapRequestedReservations   = $this->getDoctrine()->getRepository('ZizooReservationBundle:Reservation')->getReservations($charter, null, $boat, $from, $to, array(Reservation::STATUS_REQUESTED));
+                $overlapExternalReservations    = $this->getDoctrine()->getRepository('ZizooReservationBundle:Reservation')->getReservations($charter, null, $boat, $from, $to, array(Reservation::STATUS_SELF));
+                if (count($overlapRequestedReservations)>0 || count($overlapExternalReservations)>0){
 
-                    $externalIds = array();
-                    foreach ($overlapExternalReservations as $overlapExternalReservation){
-                        $externalIds[] = $overlapExternalReservation->getId();
+                    if (!$availability->getConfirmed()){
+
+                        $requestedIds = array();
+                        foreach ($overlapRequestedReservations as $overlapRequestedReservation){
+                            $requestedIds[] = $overlapRequestedReservation->getId();
+                        }
+
+                        $externalIds = array();
+                        foreach ($overlapExternalReservations as $overlapExternalReservation){
+                            $externalIds[] = $overlapExternalReservation->getId();
+                        }
+
+                        $params = $request->query->all();
+                        $params['price'] = array(
+                            'requested_reservations'    => $requestedIds,
+                            'external_reservations'     => $externalIds,
+                            'from'                      => $from->format('m/d/Y'),
+                            'to'                        => $to->format('m/d/Y'),
+                            'price'                     => $availability->getPrice(),
+                            'type'                      => $availability->getType()
+                        );
+                        
+                        $session->set('overlap_'.$id, array('requested_reservations' => $requestedIds, 'external_reservations' => $externalIds, 'from' => $from, 'to' => $to, 'price' => $availability->getPrice(), 'type' => $availability->getType()));
+                        return $this->redirect($this->generateUrl($routes['confirm_route'], array('id' => $id), $params));
                     }
-                    
-                    $session->set('overlap_'.$id, array('requested_reservations' => $requestedIds, 'external_reservations' => $externalIds, 'from' => $fromStr, 'to' => $toStr, 'price' => $p, 'type' => $type));
-                    return $this->redirect($this->generateUrl($routes['confirm_route'], array('id' => $id), $request->query->all()));
+                }
+
+                if ($availability->getType()=='availability' || $availability->getType()=='default'){
+
+                    try {
+                        $default = $availability->getType()=='default';
+                        $boatService->addPrice($boat, $from, $to, $availability->getPrice(), $default, true);
+                    } catch (InvalidPriceException $e){
+                        $this->container->get('session')->getFlashBag()->add('error', $e->getMessage());
+                    } catch (DBALException $e){
+                        $this->container->get('session')->getFlashBag()->add('error', 'Something went wrong');
+                    }
+                    return $this->redirect($this->generateUrl($routes['calendar_route'], array('id' => $id), $request->query->all()));
+                } else if ($availability->getType()=='unavailability'){
+                    try {
+                        $reservationAgent->makeReservationForSelf($boat, $from, $to, true);
+                    } catch (InvalidReservationException $e){
+                        $this->container->get('session')->getFlashBag()->add('error', $e->getMessage());
+                    }
+                    return $this->redirect($this->generateUrl($routes['calendar_route'], array('id' => $id), $request->query->all()));
                 }
             }
             
-            if ($type=='availability' || $type=='default'){
-               
-                try {
-                    $default = $type=='default';
-                    $boatService->addPrice($boat, $from, $to, $p, $default, true);
-                } catch (InvalidPriceException $e){
-                    $this->container->get('session')->getFlashBag()->add('error', $e->getMessage());
-                } catch (DBALException $e){
-                    $this->container->get('session')->getFlashBag()->add('error', 'Something went wrong');
-                }
-                return $this->redirect($this->generateUrl($routes['calendar_route'], array('id' => $id), $request->query->all()));
-            } else if ($type=='unavailability'){
-                try {
-                    $reservationAgent->makeReservationForSelf($boat, $from, $to, true);
-                } catch (InvalidReservationException $e){
-                    $this->container->get('session')->getFlashBag()->add('error', $e->getMessage());
-                }
-                return $this->redirect($this->generateUrl($routes['calendar_route'], array('id' => $id), $request->query->all()));
-            }
         }
         
         $session->remove('overlap_'.$id);
@@ -618,7 +635,8 @@ class BoatController extends Controller
             'boat'              => $boat,
             'reservations'      => $reservations,
             'prices'            => $prices,
-            'routes'            => $routes
+            'routes'            => $routes,
+            'form'              => $availabilityForm->createView()
         ));
     }
 
@@ -730,8 +748,16 @@ class BoatController extends Controller
             return $this->redirect($this->generateUrl($routes['calendar_route'], array('id' => $id), $request->query->all()));
         }
         
-        $requestedIds   = $overlap['requested_reservations'];
-        $externalIds    = $overlap['external_reservations'];
+        $confirmPrice = $request->query->get('confirm_price');
+        
+        $availabilty = new Availability();
+        $availabilty->setBoat($boat);
+        $availabilty->setConfirm(true);
+        
+        $availabilityForm = $this->createForm(new \Zizoo\BoatBundle\Form\Type\AvailabilityType($this->container), $availabilty, array('boat' => $boat, 'label' => 'f'));
+        
+        $requestedIds   = $confirmPrice['requested_reservations'];
+        $externalIds    = $confirmPrice['external_reservations'];
         
         if (count($requestedIds)==0 && count($externalIds)==0){
             return $this->redirect($this->generateUrl($routes['calendar_route'], array('id' => $id), $request->query->all()));
@@ -776,10 +802,10 @@ class BoatController extends Controller
             'form'                              => $form->createView(),
             'overlap_requested_reservations'    => $overlapRequestedReservations,
             'overlap_external_reservations'     => $overlapExternalReservations,
-            'from'                              => $overlap['from'],
-            'to'                                => $overlap['to'],
-            'price'                             => $overlap['price'],
-            'type'                              => $overlap['type'],
+            'from'                              => $confirmPrice['from'],
+            'to'                                => $confirmPrice['to'],
+            'price'                             => $confirmPrice['price'],
+            'type'                              => $confirmPrice['type'],
             'routes'                            => $routes
         ));
     }
@@ -835,6 +861,6 @@ class BoatController extends Controller
         }
         
     }
-    
+
 
 }

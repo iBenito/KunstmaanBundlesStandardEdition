@@ -16,7 +16,8 @@ class UserNewEmailType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver) 
     {
-        $resolver->setDefaults(array(   'data_class' => 'Zizoo\UserBundle\Form\Model\UserNewEmail',
+        $resolver->setDefaults(array(   'data_class'    => 'Zizoo\UserBundle\Form\Model\UserNewEmail',
+                                        'label'         => 'Email',
                                         'validation_groups' => function(FormInterface $form) {
                                             $data = $form->getParent()->getData();
                                             if ($data->getPassword()!='' && $data->getNewEmail()!='') {

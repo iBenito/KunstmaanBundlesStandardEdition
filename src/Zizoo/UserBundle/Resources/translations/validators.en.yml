@@ -6,6 +6,7 @@ zizoo_user.error.username_min_length: "Your username must have at least {{ limit
 zizoo_user.error.email_not_blank: "You must enter your email address."
 zizoo_user.error.password_not_blank: "You must enter a password"
 zizoo_user.error.password_min_length: "Your password must have at least {{ limit }} characters.|Your password must have at least {{ limit }} characters."
+zizoo_user.error.current_password_not_blank: "You must enter your current password"
 
 zizoo_user.error.password_mismatch: "The password fields must match."
 

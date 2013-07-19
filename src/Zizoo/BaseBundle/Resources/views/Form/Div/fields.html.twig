@@ -46,7 +46,8 @@
 {% block form_errors %}
 {% spaceless %}
     {% if errors|length > 0 %}
-    <div class="row-errors-container">
+    {% set default_class = form|rootLabel('') %}
+    <div class="row-errors-container {{ default_class }}">
         <div class="row-errors">
             <ul>
                 {% for error in errors %}
@@ -65,7 +66,7 @@
     
     {% set default_class = form|rootLabel(default_class) %}
     
-    <div class="row">
+    <div class="row {{ default_class }}{% if errors|length > 0 %} error{% endif %}">
         {{ form_label(form) }}
         {% set actual_label = label %}
         {% if label is not sameas(false) %}
@@ -106,7 +107,18 @@
         {{ form_label(form) }}
         </div>
     </div>
-    {{ form_errors(form) }}
+    {% if errors|length > 0 %}
+    {% set default_class = form|rootLabel('') %}
+    <div class="row-errors-container {{ default_class }} no-margin">
+        <div class="row-errors">
+            <ul>
+                {% for error in errors %}
+                    <li>{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
 {% endspaceless %}
 {% endblock checkbox_row %}
         

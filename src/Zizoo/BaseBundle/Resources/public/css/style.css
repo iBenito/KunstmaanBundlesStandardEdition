@@ -1457,6 +1457,10 @@ a:hover {
  * Dashboard availability calendar
  */
 
+#dashboard #availability-calendar .ui-datepicker {
+    box-shadow: none;
+}
+ 
 #dashboard #availability-calendar .ui-datepicker.ui-datepicker-inline {
     max-width: 440px;
 }
@@ -1469,7 +1473,7 @@ a:hover {
 }
 
 #dashboard #availability-calendar .ui-datepicker > .ui-datepicker-header {
-    display: none;
+    /*display: none;*/
 }
 
 #dashboard #availability-calendar .ui-datepicker-row-break {
@@ -1492,7 +1496,10 @@ a:hover {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
+    border: none;
 }
+
+
 
 #dashboard #availability-calendar .ui-datepicker-multi .ui-datepicker-group {
     float: none;
@@ -1521,7 +1528,8 @@ a:hover {
 #dashboard #availability-calendar .ui-datepicker td a.ui-state-default,
 #dashboard #availability-calendar .ui-datepicker td span.day_available_default,
 #dashboard #availability-calendar .ui-datepicker td span.day_available,
-#dashboard #availability-calendar .ui-datepicker td span.day_reserved {
+#dashboard #availability-calendar .ui-datepicker td span.day_reserved,
+#dashboard #availability-calendar .ui-datepicker td span.day_booked {
     display: block;
     position: relative;
     min-height: 40px;
@@ -1540,15 +1548,27 @@ a:hover {
     border-color: #005a69;
 }
 
+#dashboard #availability-calendar .ui-datepicker td a.day_available_default:hover,
+#dashboard #availability-calendar .ui-datepicker td a.day_available:hover {
+    border-color: #005a69;
+}
+
 #dashboard #availability-calendar .ui-datepicker td a.day_reserved,
 #dashboard #availability-calendar .ui-datepicker td span.day_reserved {
     background: #f1665e;
     border-color: #f1665e;
 }
 
-#dashboard #availability-calendar .ui-datepicker td a.day_available_default:hover,
-#dashboard #availability-calendar .ui-datepicker td a.day_available:hover {
-    border-color: #005a69;
+#dashboard #availability-calendar .ui-datepicker td a.day_requested,
+#dashboard #availability-calendar .ui-datepicker td span.day_requested {
+    background: orange;
+    border-color: orange;
+}
+
+#dashboard #availability-calendar .ui-datepicker td a.day_booked,
+#dashboard #availability-calendar .ui-datepicker td span.day_booked {
+    background: red;
+    border-color: red;
 }
 
 #dashboard #availability-calendar .ui-datepicker td a.ui-state-active {
@@ -1571,6 +1591,157 @@ a:hover {
     padding: 0;
     border: 0;
 }
+
+
+#dashboard #availability-calendar .day_price_icon {
+    position: absolute;
+    top: 0;
+    right: 0px;
+}
+
+#dashboard .content {
+    position: relative;
+}
+
+#dashboard #availability-sidebar {
+    top: 60px;
+    right: 30px;
+    width: 200px;
+    position: absolute;
+}
+
+#dashboard #availability-setter {
+    font: italic 12px/14px "Asap",Arial;
+    margin-bottom: 50px;
+}
+
+#dashboard #availability-setter #zizoo_boat_availability-dates {
+    margin-bottom: 5px;
+}
+
+
+#dashboard #availability-setter .step 
+{
+    /*opacity: 0.5;*/
+}
+
+#dashboard #availability-setter .step.current {
+    opacity: 1;
+}
+
+#dashboard #availability-setter #zizoo_boat_availability-dates input {
+    width: 100%;
+    padding: 0 0 0 0;
+    width: 100%;
+    -moz-box-sizing: border-box;
+    border: 1px solid #EBECEC;
+    border-radius: 5px 5px 5px 5px;
+    color: #333333;
+    font: italic 16px/28px "Asap",Arial;
+    height: 30px;
+    text-align: center;
+}
+
+#dashboard #availability-setter #zizoo_boat_availability-type {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+#dashboard #availability-setter #zizoo_boat_availability-type #typeSelectBoxItText {
+    width: 150px;
+}
+
+#dashboard #availability-setter .input-wrap {
+    position: relative;
+    float: left;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+#dashboard #availability-setter .input-wrap input {
+    float: none;
+    padding: 0 20px 0 0;
+    width: 100%;
+    -moz-box-sizing: border-box;
+    border: 1px solid #EBECEC;
+    border-radius: 5px 5px 5px 5px;
+    color: #333333;
+    font: italic 16px/28px "Asap",Arial;
+    height: 30px;
+    text-align: center;
+}
+
+#dashboard #availability-setter .input-wrap span {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-left: 1px solid #EBECEC;
+    border-radius: 0 5px 5px 0;
+    color: #969696;
+    font: italic 16px/28px "Asap",Arial;
+    height: 28px;
+    padding: 0 5px;
+    position: absolute;
+    right: 1px;
+    top: 1px;
+}
+
+#dashboard #availability-setter #zizoo_boat_availability-buttons {
+    
+}
+
+#dashboard #availability-setter #zizoo_boat_availability-buttons button {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+#dashboard #availability-legend .key {
+    background: none repeat scroll 0 0;
+    border: 3px solid;
+    display: block;
+    min-height: 40px;
+    min-width: 60px;
+    padding: 4px;
+    position: relative;
+}
+
+#dashboard #availability-legend .key .day_price {
+    bottom: 4px;
+    font-weight: 700;
+    left: 4px;
+    padding: 0;
+    position: absolute;
+    text-align: left;
+}
+
+#dashboard #availability-legend .key .day_price_icon {
+    position: absolute;
+    right: 4px;
+    top: 2px;
+}
+
+#dashboard #availability-legend #availability-legend-available {
+    background-color: #47C2D2;
+    border-color: #47C2D2;
+    color: #FFFFFF;
+}
+
+#dashboard #availability-legend #availability-legend-requested {
+    background-color: orange;
+    border-color: orange;
+    color: #FFFFFF;
+}
+
+#dashboard #availability-legend #availability-legend-booked {
+    background-color: red;
+    border-color: red;
+    color: #FFFFFF;
+}
+
+#dashboard #availability-legend #availability-legend-unavailable {
+    background-color: #F1665E;
+    border-color: #F1665E;
+    color: #FFFFFF;
+}
+
 
 /**
  * Confirmation

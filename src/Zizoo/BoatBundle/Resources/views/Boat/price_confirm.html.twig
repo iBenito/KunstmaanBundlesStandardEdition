@@ -1,17 +1,16 @@
-{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
-    
+
 {% block dashboard_page_title %}Boats{% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-{% endblock %}
-    
+
 {% block stylesheets %}
-    {{ parent() }}
+
     <link href="{{ asset('bundles/zizooboat/css/boat.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
-{% block content %}
+    {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['calendar_route'], 'routes': routes }  %}
+
+    
+<div class="content availability">
     <h3>{{ boat.name }}</h3>
     <p>{{ boat.title }}</p>
     
@@ -35,8 +34,8 @@
     
     <form action="{{ path(routes['confirm_route'], {id: boat.id}) }}" method="post">
         {{ form_widget(form) }}
-        <input name="date_from" id="date_from" type="hidden" value="{{ from }}" />
-        <input name="date_to" id="date_to" type="hidden" value="{{ to }}" />
+        <input name="date_from" id="date_from" type="hidden" value="{{ from|date }}" />
+        <input name="date_to" id="date_to" type="hidden" value="{{ to|date }}" />
         <input name="price" type="hidden" value="{{ price }}" />
         <input name="confirmed" type="hidden" value="true" />
         <input name="type" type="hidden" value="{{ type }}" />
@@ -54,4 +53,4 @@
         
         
     </script>
-{% endblock %}
+</div>

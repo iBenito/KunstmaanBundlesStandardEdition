@@ -303,50 +303,41 @@ class UserController extends Controller
             
             $accountSettings = $form->getData();
             if ($form->isValid()) {
-                $encoder = new MessageDigestPasswordEncoder('sha512', true, 10);
-                $allegedCurrentPassword = $encoder->encodePassword($accountSettings->getPassword(), $user->getSalt());
-                if ($allegedCurrentPassword==$user->getPassword()){
-                    
-                    $newEmail = $accountSettings->getNewEmail();
-                    if ($newEmail!=null && $newEmail!=$user->getEmail()){
-                        
-                        $existingUser = $this->getDoctrine()->getRepository('ZizooUserBundle:User')->findOneByEmail($newEmail);
-                        if ($existingUser){
-                            $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.error.email_taken'));
-                            return $this->redirect($this->generateUrl($request->query->get('redirect_route')));
-                        }
-                        
-                        $userService    = $this->get('zizoo_user_user_service');
-                        $messenger      = $this->get('messenger');
-                        $userService->changeEmail($user, $newEmail);
-                        $messenger->sendChangeEmailConfirmationEmail($user);
-                        $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.message.email_changed', array('%email%' => $newEmail)));
-                    }
-                    
-                    $newPassword = $accountSettings->getNewPassword();
-                    if ($newPassword->getPassword()!=null){
-                        
-                        $user->setPassword($encoder->encodePassword($newPassword->getPassword(), $user->getSalt()));
-                        
-                        $em = $this->getDoctrine()
-                                   ->getManager();
-                        $em->persist($user);
-                        $em->flush();
+                
+                $newEmail = $accountSettings->getNewEmail();
+                if ($newEmail!=null && $newEmail!=$user->getEmail()){
 
-                        
-                        $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.message.password_changed'));
-                        
-                        
+                    $existingUser = $this->getDoctrine()->getRepository('ZizooUserBundle:User')->findOneByEmail($newEmail);
+                    if ($existingUser){
+                        $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.error.email_taken'));
+                        return $this->redirect($this->generateUrl($request->query->get('redirect_route')));
                     }
-                    
-                    return $this->redirect($this->generateUrl($request->query->get('redirect_route')));
-                    
 
-                } else {
-                    $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.message.account_settings_not_changed'));
-                    return $this->redirect($this->generateUrl($request->query->get('redirect_route')));
-                    
+                    $userService    = $this->get('zizoo_user_user_service');
+                    $messenger      = $this->get('messenger');
+                    $userService->changeEmail($user, $newEmail);
+                    $messenger->sendChangeEmailConfirmationEmail($user);
+                    $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.message.email_changed', array('%email%' => $newEmail)));
                 }
+
+                $newPassword = $accountSettings->getNewPassword();
+                if ($newPassword->getPassword()!=null){
+
+                    $user->setPassword($encoder->encodePassword($newPassword->getPassword(), $user->getSalt()));
+
+                    $em = $this->getDoctrine()
+                               ->getManager();
+                    $em->persist($user);
+                    $em->flush();
+
+
+                    $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.message.password_changed'));
+
+
+                }
+
+                return $this->redirect($this->generateUrl($request->query->get('redirect_route')));
+
             }
    
         } else {

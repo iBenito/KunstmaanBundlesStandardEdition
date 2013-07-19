@@ -584,20 +584,23 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 140px;
-    max-width: 140px;
+    
+    min-width: 140px;
     height: 100%;
     font: italic 14px/36px 'Asap', Arial;
     text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
     color: #fff;
-    padding: 0 0 0 10px;
+    padding: 0 10px 0 10px;
     background: #4d4d4d;
     border-radius: 5px 0 0 5px;
     z-index: 1002;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    overflow: auto;
+}
+
+.form .row label.root:hover {
+    z-index: 1004;
 }
 
 
@@ -606,7 +609,7 @@
     float: left;
     width: 26px;
     height: 36px;
-    margin: 0 10px 0 0;
+    margin: 0 4px 0 0;
     background-repeat: no-repeat;
     background-position: right center;
 }
@@ -678,6 +681,8 @@
 
 .form .row .row-content.root {
     margin-left: 140px;
+    position: relative;
+    z-index: 1003;
 }
 
 .form .row .row-content.no-margin {
@@ -732,7 +737,16 @@
 
 .form .row-errors-container {
     background: url("../images/error-arrow.png") no-repeat scroll 5% 1px transparent;
+    background: url("../images/error-arrow.png") no-repeat scroll 5% 1px transparent;
     padding: 10px 0 0;
+}
+
+.form .row-errors-container.root {
+    margin-left: 140px;
+}
+
+.form .row-errors-container.root.no-margin {
+    margin-left: 0;
 }
 
 .form .general-errors .row_errors-container {
@@ -2788,6 +2802,7 @@
 .trips .trip .box {
     float: left;
     width: 230px;
+    min-height: 153px;
 }
 
 .trips .trip .info {

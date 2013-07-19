@@ -80,7 +80,8 @@
                         {{ form_row(form.profile.last_name) }}
                         
                             
-                        <div class="row">
+                        {% set error_class = form.user.username.vars.errors|length > 0 ? ' error' : '' %}
+                        <div class="row{{ error_class }}">
                             {{ form_label(form.user.username) }}
                             <div class="row-content root">
                             {{ form_widget(form.user.username) }}
@@ -97,8 +98,8 @@
                             </div>
                         {% endif %}
                         
- 
-                        <div class="row">
+                        {% set error_class = form.user.email.vars.errors|length > 0 ? ' error' : '' %}
+                        <div class="row{{ error_class }}">
                             {{ form_label(form.user.email) }}
                             <div class="row-content root">
                             {{ form_widget(form.user.email) }}
@@ -116,7 +117,8 @@
                         {% endif %}
                             
                             
-                        <div class="row">
+                        {% set error_class = form.user.password.password.vars.errors|length > 0 ? ' error' : '' %}
+                        <div class="row{{ error_class }}">
                             {{ form_label(form.user.password.password) }}
                             <div class="row-content root">
                             {{ form_widget(form.user.password.password) }}
@@ -124,7 +126,8 @@
                         </div>
                         {{ form_errors(form.user.password.password) }}
                             
-                        <div class="row">
+                        {% set error_class = form.user.password.confirm.vars.errors|length > 0 ? ' error' : '' %}
+                        <div class="row{{ error_class }}">
                             {{ form_label(form.user.password.confirm) }}
                             <div class="row-content root">
                             {{ form_widget(form.user.password.confirm) }}
