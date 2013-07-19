@@ -6,12 +6,6 @@
     <div id="content">
         <div class="container clearfix">
 
-            <!-- start:sidebar -->
-            <aside id="sidebar" class="left clearfix">
-                {% render controller('ZizooBaseBundle:Dashboard:widget', {route: app.request.attributes.get('_route'), showUser: app.request.query.get('show_user')}) %}
-            </aside>
-            <!-- end:sidebar -->
-
             <!-- start:dashboard -->
             <div id="dashboard">
 
@@ -24,6 +18,12 @@
                 <!-- end:section -->
             </div>
             <!-- end:dashboard -->
+
+            <!-- start:sidebar -->
+            <aside id="sidebar" class="left clearfix">
+                {% render controller('ZizooBaseBundle:Dashboard:widget', {route: app.request.attributes.get('_route'), showUser: app.request.query.get('show_user')}) %}
+            </aside>
+            <!-- end:sidebar -->
         </div>
     </div>
     <!-- end:content -->
