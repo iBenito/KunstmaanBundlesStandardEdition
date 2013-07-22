@@ -49,8 +49,8 @@
 
             <!-- start:subnavigation -->
             <ul class="subnavigation overview clearfix">
-                <li class="current"><a href="#" title="Location"><span class="icon location white shadow"></span> Location</a></li>
-                <li><a href="#" title="Photos"><span class="icon photo"></span> Photos</a></li>
+                <li class="current"><a href="#" title="Photos"><span class="icon photo"></span> Photos</a></li>
+                <li><a href="#" title="Location"><span class="icon location white shadow"></span> Location</a></li>
                 <li><a href="#" title="Availability"><span class="icon availability"></span> Availability</a></li>
             </ul>
             <!-- end:subnavigation -->
@@ -62,12 +62,6 @@
                 <div class="tabbed">
 
                     <div class="tab" style="display: block;">
-                        <!-- start:map -->
-                        {{ google_map_container(map) }}
-                        <!-- end:map -->
-                    </div>
-
-                    <div class="tab" style="display: none;">
                         <!-- start:media -->
                         <div class="media">
                             <div class="full">
@@ -85,6 +79,12 @@
                             <a href="#" class="arrow next ir" title="Next">Next</a>
                         </div>
                         <!-- end:media -->
+                    </div>
+
+                    <div class="tab" style="display: none;">
+                        <!-- start:map -->
+                        {{ google_map_container(map) }}
+                        <!-- end:map -->
                     </div>
 
                     <div class="tab" style="display: none;">
@@ -225,6 +225,7 @@
         var STATUS_ACCEPTED             = {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') }};
         var STATUS_SELF                 = {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_SELF') }};
         var STATUS_HOLD                 = {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') }};
+
     </script>
 
     {{ google_map_js(map) }}

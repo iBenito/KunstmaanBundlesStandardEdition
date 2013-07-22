@@ -72,7 +72,7 @@
 #overview #calendar .ui-datepicker td a.ui-state-default,
 #overview #calendar .ui-datepicker td span.day_available_default,
 #overview #calendar .ui-datepicker td span.day_available,
-#overview #calendar .ui-datepicker td span.day_reserved {
+#overview #calendar .ui-datepicker td span.day_unavailable {
     display: block;
     position: relative;
     min-height: 40px;
@@ -91,8 +91,8 @@
     border-color: #005a69;
 }
 
-#overview #calendar .ui-datepicker td a.day_reserved,
-#overview #calendar .ui-datepicker td span.day_reserved {
+#overview #calendar .ui-datepicker td a.day_unavailable,
+#overview #calendar .ui-datepicker td span.day_unavailable {
     background: #f1665e;
     border-color: #f1665e;
 }
