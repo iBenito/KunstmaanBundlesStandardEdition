@@ -9,7 +9,7 @@
 }
 
 #overview #calendar .ui-datepicker.ui-datepicker-inline {
-    max-width: 440px;
+    max-width: 100%;
 }
 
 #overview #calendar .ui-datepicker.ui-widget-content {
@@ -20,7 +20,7 @@
 }
 
 #overview #calendar .ui-datepicker > .ui-datepicker-header {
-    display: none;
+    display: block;
 }
 
 #overview #calendar .ui-datepicker-row-break {
