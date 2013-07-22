@@ -6,3 +6,7 @@
 /nbproject
 /vendor
 /web/bundles
+
+
+.DS_Store
+Thumbs.db
