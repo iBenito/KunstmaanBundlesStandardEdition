@@ -162,7 +162,7 @@ class BoatController extends Controller
         if ($boatBookArr && array_key_exists('crew', $boatBookArr)) $crew = $boatBookArr['crew']=='true';
         $bookBoat = new BookBoat($id, $crew);
                 
-        $form = $this->createForm('zizoo_boat_book', $bookBoat, array());
+        $form = $this->createForm('zizoo_boat_book', $bookBoat, array('label' => '.'));
         if ($request->isMethod('post') || $this->allParametersSet($request)){
             $form->bind($request);
             $bookBoat = $form->getData();

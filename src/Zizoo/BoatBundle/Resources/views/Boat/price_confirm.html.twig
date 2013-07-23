@@ -2,12 +2,7 @@
 {% block dashboard_page_title %}Boats{% endblock %}
 
 
-{% block stylesheets %}
-
-    <link href="{{ asset('bundles/zizooboat/css/boat.css') }}" type="text/css" rel="stylesheet" />
-{% endblock %}
-
-    {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['calendar_route'], 'routes': routes }  %}
+{% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['calendar_route'], 'routes': routes }  %}
 
     
 <div class="content availability">

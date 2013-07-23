@@ -1496,6 +1496,9 @@ a:hover {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
+}
+
+#dashboard #availability-calendar .ui-datepicker .ui-datepicker-row-break .ui-datepicker-header {
     border: none;
 }
 
@@ -1551,6 +1554,29 @@ a:hover {
     position: absolute;
     top: 0;
     right: 0px;
+}
+
+#dashboard #availability-calendar .ui-datepicker-cmd-prev {
+    float: left;
+    height: auto;
+    margin-left: 1%;
+    position: static;
+    width: 30%;
+}
+
+#dashboard #availability-calendar .ui-datepicker-cmd-current, .ui-datepicker-cmd-today {
+    float: left;
+    text-align: center;
+    width: 37%;
+}
+
+#dashboard #availability-calendar .ui-datepicker-cmd-next {
+    float: right;
+    height: auto;
+    margin-right: 1%;
+    position: static;
+    text-align: right;
+    width: 30%;
 }
 
 #dashboard .content {

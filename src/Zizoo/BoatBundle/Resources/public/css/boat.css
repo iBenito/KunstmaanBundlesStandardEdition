@@ -1,6 +1,6 @@
 #overview #calendar {
-    width: 100%;
-    max-width: 100%;
+    width: 440px;
+    max-width: 440px;
 }
 
 #overview #calendar .ui-datepicker-inline {
@@ -17,6 +17,10 @@
     padding: 0;
     background: none;
     border: 0;
+}
+
+#overview #calendar .ui-datepicker .ui-datepicker-row-break .ui-datepicker-header {
+    border: none;
 }
 
 #overview #calendar .ui-datepicker > .ui-datepicker-header {
@@ -45,7 +49,7 @@
     box-shadow: none;
 }
 
-#overview #calendar .ui-datepicker-multi .ui-datepicker-group {
+#overview #calendar .ui-datepicker-group {
     float: none;
 }
 
@@ -69,10 +73,11 @@
     padding: 1px;
 }
 
-#overview #calendar .ui-datepicker td a.ui-state-default,
-#overview #calendar .ui-datepicker td span.day_available_default,
-#overview #calendar .ui-datepicker td span.day_available,
-#overview #calendar .ui-datepicker td span.day_unavailable {
+#overview #calendar .ui-datepicker td > a, #overview #calendar .ui-datepicker td > span {
+    background-image: url('/bundles/zizooboat/images/sprite.png');
+    border: none !important;
+    background-repeat: no-repeat;
+
     display: block;
     position: relative;
     min-height: 40px;
@@ -80,26 +85,123 @@
     text-align: left;
     color: #fff;
     padding: 4px;
-    background: #47c2d2;
+    /*background: #47c2d2;*/
     border: 3px solid #47c2d2;
     -webkit-transition: color 200ms ease, border 200ms ease, background-color 200ms ease;
     transition: color 200ms ease, border 200ms ease, background-color 200ms ease;
+
 }
 
-#overview #calendar .ui-datepicker td span.day_available_default,
-#overview #calendar .ui-datepicker td span.day_available {
-    border-color: #005a69;
+/**** FULL DAYS ****/
+        
+#overview #calendar .ui-datepicker td .day_available {
+    background-position: 0 -197px;
 }
 
-#overview #calendar .ui-datepicker td a.day_unavailable,
-#overview #calendar .ui-datepicker td span.day_unavailable {
-    background: #f1665e;
-    border-color: #f1665e;
+#overview #calendar .ui-datepicker td .day_reserved {
+    background-position: -62px -197px;
 }
 
-#overview #calendar .ui-datepicker td a.day_available_default:hover,
-#overview #calendar .ui-datepicker td a.day_available:hover {
-    border-color: #005a69;
+#overview #calendar .ui-datepicker td .day_requested {
+    background-position: -124px -197px;
+}
+
+#overview #calendar .ui-datepicker td .day_unavailable {
+    background-position: -187px -197px;
+}
+
+#overview #calendar .ui-datepicker td .day_booked {
+    background-position: -249px -197px;
+}
+
+
+/** Available - ? transitions */
+#overview #calendar .ui-datepicker td .day_available-day_reserved {
+    background-position: 0 0;
+}
+
+#overview #calendar .ui-datepicker td .day_available-day_requested {
+    background: 0 -49px;
+}
+
+#overview #calendar .ui-datepicker td .day_available-day_unavailable {
+    background-position:  0 -99px;
+}
+
+#overview #calendar .ui-datepicker td .day_available-day_booked {
+    background-position: 0 -148px;
+}
+
+
+/** Reserved - ? transitions */
+#overview #calendar .ui-datepicker td .day_reserved-day_available {
+    background-position: -62px 0;
+}
+
+#overview #calendar .ui-datepicker td .day_reserved-day_requested {
+    background: -62px -49px;
+}
+
+#overview #calendar .ui-datepicker td .day_reserved-day_unavailable {
+    background-position:  -62px -99px;
+}
+
+#overview #calendar .ui-datepicker td .day_reserved-day_booked {
+    background-position: -62px -148px;
+}
+
+
+/** Requested - ? transitions */
+#overview #calendar .ui-datepicker td .day_requested-day_available {
+    background-position: -124px 0;
+}
+
+#overview #calendar .ui-datepicker td .day_requested-day_reserved {
+    background: -124px -49px;
+}
+
+#overview #calendar .ui-datepicker td .day_requested-day_unavailable {
+    background-position:  -124px -99px;
+}
+
+#overview #calendar .ui-datepicker td .day_requested-day_booked {
+    background-position: -124px -148px;
+}
+
+
+/** Unavailable - ? transitions */
+#overview #calendar .ui-datepicker td .day_unavailable-day_available {
+    background-position: -187px 0;
+}
+
+#overview #calendar .ui-datepicker td .day_unavailable-day_reserved {
+    background: -187px -49px;
+}
+
+#overview #calendar .ui-datepicker td .day_unavailable-day_requested {
+    background-position:  -187px -99px;
+}
+
+#overview #calendar .ui-datepicker td .day_unavailable-day_booked {
+    background-position: -187px -148px;
+}
+
+
+/** Booked - ? transitions */
+#overview #calendar .ui-datepicker td .day_booked-day_available {
+    background-position: -249px 0;
+}
+
+#overview #calendar .ui-datepicker td .day_booked-day_reserved {
+    background: -249px -49px;
+}
+
+#overview #calendar .ui-datepicker td .day_booked-day_requested {
+    background-position:  -249px -99px;
+}
+
+#overview #calendar .ui-datepicker td .day_booked-day_unavailable {
+    background-position: -249px -148px;
 }
 
 #overview #calendar .ui-datepicker td a.ui-state-active {
@@ -121,4 +223,57 @@
     text-align: left;
     padding: 0;
     border: 0;
+}
+
+
+#calendar-container {
+    position: relative;
+}
+
+#availability-sidebar {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 150px;
+}
+
+#availability-legend #availability-legend-available {
+    background-color: #47C2D2;
+    border-color: #47C2D2;
+    color: #FFFFFF;
+}
+
+#availability-legend .key {
+    background: none repeat scroll 0 0 transparent;
+    border: 3px solid;
+    display: block;
+    min-height: 40px;
+    min-width: 60px;
+    padding: 4px;
+    position: relative;
+}
+
+#availability-legend .key .day_price_icon {
+    position: absolute;
+    right: 4px;
+    top: 2px;
+}
+
+#availability-legend .key .day_price {
+    bottom: 4px;
+    font-weight: 700;
+    left: 4px;
+    padding: 0;
+    position: absolute;
+    text-align: left;
+}
+
+#availability-legend #availability-legend-available {
+    color: #FFFFFF;
+}
+
+#availability-legend #availability-legend-booked {
+    background-color: red;
+    border-color: red;
+    color: #FFFFFF;
 }
