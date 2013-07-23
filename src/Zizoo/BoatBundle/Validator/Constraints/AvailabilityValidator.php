@@ -36,6 +36,13 @@ class AvailabilityValidator extends ConstraintValidator
         if ($type == 'availability' && $price === null){
             $this->context->addViolationAt('price', $constraint->messagePrice, array(), null);
         }
+        
+        $overlappingReservationsRequests    = $availabilty->getOverlappingReservationRequests();
+        $overlappingExternalRequests        = $availabilty->getOverlappingExternalReservations();
+        $confirmed                          = $availabilty->getConfirm();
+        if ($confirmed == false && ( count($overlappingExternalRequests)>0 || count($overlappingReservationsRequests)>0) ){
+            $this->context->addViolationAt('deny_reservation', $constraint->messageOverlap, array(), null);
+        }
     }
 }
 ?>

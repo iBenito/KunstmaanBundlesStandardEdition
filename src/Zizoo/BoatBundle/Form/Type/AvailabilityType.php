@@ -2,6 +2,10 @@
 
 namespace Zizoo\BoatBundle\Form\Type;
 
+use Zizoo\BoatBundle\Form\EventListener\AvailabilitySubscriber;
+
+use Zizoo\ReservationBundle\Form\EventListener\AddDenyReservationSubscriber;
+
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,6 +23,7 @@ class AvailabilityType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        
         $builder->add('reservation_range', new ReservationRangeType(), array(   'required'          => true, 
                                                                                 'label'             => false,
                                                                                 'from_placeholder'  => 'From dd/mm/yyyy',
@@ -29,7 +34,7 @@ class AvailabilityType extends AbstractType
         $choices = array(
                 'availability'      => 'Available',
                 'default'           => $boat->getHasDefaultPrice() ? 'Default ('.$boat->getDefaultPrice().' €)' : 'Default (unavailable)',
-                'unavailability'    => 'Unavailable'
+                'unavailability'    => 'Self-Reserve'
             );
         $builder->add('type', 'choice', array(
                                                 'choices'   => $choices,
@@ -38,12 +43,16 @@ class AvailabilityType extends AbstractType
                                                 'multiple'  => false,
                                                 'label'     => false
         ));
-        
-        $builder->add('confirmed', 'hidden');
-        
+                
         $builder->add('price', 'number', array('label'      => false,
                                                 'required'  => true,
                                                 'attr'      => array('placeholder' => 'Price per day')));
+        
+        $builder->addEventSubscriber(new AvailabilitySubscriber($this->container));
+        
+        $builder->add('confirm', 'checkbox', array(
+                                                'required'  => true,
+                                                'label'     => 'Confirm'));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

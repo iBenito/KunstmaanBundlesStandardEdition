@@ -17,14 +17,19 @@ class Availability
     
     protected $price;
     
-    protected $confirmed;
+    protected $denyReservation;
+    protected $overlappingReservationRequests;
+    protected $overlappingExternalReservations;
+    
+    protected $overlap;
+    protected $confirm;
  
     public function __construct(Boat $boat=null) {
         $this->boat  = $boat;
     }
     
     public function getBoat(){
-        return $this->boat_id;
+        return $this->boat;
     }
     
     
@@ -62,15 +67,59 @@ class Availability
         return $this->price;
     }
     
-    public function setConfirmed($confirmed)
+    public function setDenyReservation(DenyReservation $denyReservation)
     {
-        $this->confirmed = $confirmed;
+        $this->denyReservation = $denyReservation;
         return $this;
     }
     
-    public function getConfirmed()
+    public function getDenyReservation()
     {
-        return $this->confirmed;
+        return $this->denyReservation;
+    }
+    
+    public function setOverlappingExternalReservations($reservations)
+    {
+        $this->overlappingExternalReservations = $reservations;
+        return $this;
+    }
+    
+    public function getOverlappingExternalReservations()
+    {
+        return $this->overlappingExternalReservations;
+    }
+    
+    public function setOverlappingReservationRequests($reservations)
+    {
+        $this->overlappingReservationRequests = $reservations;
+        return $this;
+    }
+    
+    public function getOverlappingReservationRequests()
+    {
+        return $this->overlappingReservationRequests;
+    }
+    
+    public function setConfirm($confirm)
+    {
+        $this->confirm = $confirm;
+        return $this;
+    }
+    
+    public function getConfirm()
+    {
+        return $this->confirm;
+    }
+    
+    public function setOverlap($overlap)
+    {
+        $this->overlap = $overlap;
+        return $this;
+    }
+    
+    public function getOverlap()
+    {
+        return $this->overlap;
     }
 }
 

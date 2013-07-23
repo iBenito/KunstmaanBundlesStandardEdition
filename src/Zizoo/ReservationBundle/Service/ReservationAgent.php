@@ -46,11 +46,13 @@ class ReservationAgent {
         return $thread;
     }
     
-    public function getReservation($boat, $from, $to)
+    public function getReservation($boat, $fromOrig, $toOrig)
     {
-        if (!$from || !$to) return null;
-        $from->setTime(0,0,0);
-        $to->setTime(23,59,59);
+        if (!$fromOrig || !$toOrig) return null;
+        $from   = clone $fromOrig;
+        $to     = clone $toOrig;
+        $from->setTime(12,0,0);
+        $to->setTime(11,59,59);
         $reservations = $boat->getReservation();
         foreach ($reservations as $reservation){
             if ($reservation->getStatus()!=Reservation::STATUS_ACCEPTED && $reservation->getStatus()!=Reservation::STATUS_SELF && $reservation->getStatus()!=Reservation::STATUS_HOLD) continue;
@@ -87,9 +89,8 @@ class ReservationAgent {
     
     private function makeReservationWithStatus($boat, $from, $to, $numGuests, $cost, User $guest, $status, $hoursToRespond=null, $flush=false)
     {
-        $from->setTime(0,0,0);
-        $to->setTime(23,59,59);
-        
+        $from->setTime(12,0,0);
+        $to->setTime(11,59,59);
         $reservation = new Reservation();
         $reservation->setCheckIn($from);
         $reservation->setCheckOut($to);
@@ -186,11 +187,13 @@ class ReservationAgent {
     }   
       
 
-    public function available(Boat $boat, $from, $to)
+    public function available(Boat $boat, $fromOrig, $toOrig)
     {
-        if (!$from || !$to) return false;
-        $from->setTime(0,0,0);
-        $to->setTime(00,00,00);
+        if (!$fromOrig || !$toOrig) return false;
+        $from   = clone $fromOrig;
+        $to     = clone $toOrig;
+        $from->setTime(12,0,0);
+        $to->setTime(11,59,59);
         
         $totalSetPrice  = $this->em->getRepository('ZizooBoatBundle:Price')->getTotalSetPrice($boat, $from, $to);
         
@@ -208,8 +211,8 @@ class ReservationAgent {
         //if (!$boat->getCrewOptional() && !$includeCrew) throw new InvalidReservationException('Boat must be booked with crew');
         
         if (!$from || !$to) return null;
-        $from = $from->setTime(0,0,0);
-        $to = $to->setTime(0,0,0);
+        $from = $from->setTime(11,0,0);
+        $to = $to->setTime(12,59,59);
         
         $totalSetPrice  = $this->em->getRepository('ZizooBoatBundle:Price')->getTotalSetPrice($boat, $from, $to);
         

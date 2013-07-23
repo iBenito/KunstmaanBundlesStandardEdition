@@ -1525,52 +1525,6 @@ a:hover {
     padding: 1px;
 }
 
-#dashboard #availability-calendar .ui-datepicker td a.ui-state-default,
-#dashboard #availability-calendar .ui-datepicker td span.day_available_default,
-#dashboard #availability-calendar .ui-datepicker td span.day_available,
-#dashboard #availability-calendar .ui-datepicker td span.day_reserved,
-#dashboard #availability-calendar .ui-datepicker td span.day_booked {
-    display: block;
-    position: relative;
-    min-height: 40px;
-    font: italic 12px/14px "Asap", Arial;
-    text-align: left;
-    color: #fff;
-    padding: 4px;
-    background: #47c2d2;
-    border: 3px solid #47c2d2;
-    -webkit-transition: color 200ms ease, border 200ms ease, background-color 200ms ease;
-    transition: color 200ms ease, border 200ms ease, background-color 200ms ease;
-}
-
-#dashboard #availability-calendar .ui-datepicker td span.day_available_default,
-#dashboard #availability-calendar .ui-datepicker td span.day_available {
-    border-color: #005a69;
-}
-
-#dashboard #availability-calendar .ui-datepicker td a.day_available_default:hover,
-#dashboard #availability-calendar .ui-datepicker td a.day_available:hover {
-    border-color: #005a69;
-}
-
-#dashboard #availability-calendar .ui-datepicker td a.day_reserved,
-#dashboard #availability-calendar .ui-datepicker td span.day_reserved {
-    background: #f1665e;
-    border-color: #f1665e;
-}
-
-#dashboard #availability-calendar .ui-datepicker td a.day_requested,
-#dashboard #availability-calendar .ui-datepicker td span.day_requested {
-    background: orange;
-    border-color: orange;
-}
-
-#dashboard #availability-calendar .ui-datepicker td a.day_booked,
-#dashboard #availability-calendar .ui-datepicker td span.day_booked {
-    background: red;
-    border-color: red;
-}
-
 #dashboard #availability-calendar .ui-datepicker td a.ui-state-active {
     background: #005a69;
     border-color: #005a69;
@@ -1727,6 +1681,12 @@ a:hover {
 #dashboard #availability-legend #availability-legend-requested {
     background-color: orange;
     border-color: orange;
+    color: #FFFFFF;
+}
+
+#dashboard #availability-legend #availability-legend-reserved {
+    background-color: #DAA520;
+    border-color: #DAA520;
     color: #FFFFFF;
 }
 

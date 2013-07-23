@@ -19,7 +19,7 @@ class AcceptReservationType extends AbstractType
     {
         $builder
             ->addEventSubscriber(new AddDenyReservationSubscriber())
-            ->add('accept_message', 'textarea', array('property_path' => 'acceptMessage'));
+            ->add('accept_message', 'textarea', array('property_path' => 'acceptMessage', 'label' => false, 'attr' => array('placeholder' => 'Accept message')));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

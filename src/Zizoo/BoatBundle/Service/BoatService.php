@@ -79,8 +79,8 @@ class BoatService {
     public function getPrice($boat, $from, $to)
     {
         if (!$from || !$to) return false;
-        $from->setTime(0,0,0);
-        $to->setTime(23,59,59);
+        $from->setTime(12,0,0);
+        $to->setTime(11,59,59);
         $prices = $boat->getPrice();
         foreach ($prices as $price){
             $availableFrom  = $price->getAvailableFrom();

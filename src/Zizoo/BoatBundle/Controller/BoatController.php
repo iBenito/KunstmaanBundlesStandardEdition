@@ -558,7 +558,8 @@ class BoatController extends Controller
             $session->set('step', 'four');
         }
 
-        $availabilityForm = $this->createForm(new AvailabilityType($this->container), null, array('boat' => $boat, 'label' => 'f'));
+        $availability = new Availability($boat);
+        $availabilityForm = $this->createForm('zizoo_boat_availability', $availability, array('boat' => $boat, 'label' => 'f'));
         
         $routes = $request->query->get('routes');
         
@@ -569,46 +570,28 @@ class BoatController extends Controller
             $availabilityForm->bind($request);
             
             if ($availabilityForm->isValid()){
-                $availability = $availabilityForm->getData();
-
-                $range = $availability->getReservationRange();
+                $availability                   = $availabilityForm->getData();
+                $reservationRange               = $availability->getReservationRange();
+                $from                           = $reservationRange->getReservationFrom();
+                $to                             = $reservationRange->getReservationTo();
+                $overlapRequestedReservations   = $availability->getOverlappingReservationRequests();
+                $overlapExternalReservations    = $availability->getOverlappingExternalReservations();
                 
-                $from = $range->getReservationFrom();
-                $to   = $range->getReservationTo();
-                
-                $overlapRequestedReservations   = $this->getDoctrine()->getRepository('ZizooReservationBundle:Reservation')->getReservations($charter, null, $boat, $from, $to, array(Reservation::STATUS_REQUESTED));
-                $overlapExternalReservations    = $this->getDoctrine()->getRepository('ZizooReservationBundle:Reservation')->getReservations($charter, null, $boat, $from, $to, array(Reservation::STATUS_SELF));
-                if (count($overlapRequestedReservations)>0 || count($overlapExternalReservations)>0){
+                if ($availability->getConfirm()!==null){
+                    $em = $this->getDoctrine()->getManager();
+                    $reservationAgent = $this->get('zizoo_reservation_reservation_agent');
+                    foreach ($overlapRequestedReservations as $overlapRequestedReservation){
+                        $reservationAgent->denyReservation($overlapRequestedReservation);
+                    }
 
-                    if (!$availability->getConfirmed()){
-
-                        $requestedIds = array();
-                        foreach ($overlapRequestedReservations as $overlapRequestedReservation){
-                            $requestedIds[] = $overlapRequestedReservation->getId();
-                        }
-
-                        $externalIds = array();
-                        foreach ($overlapExternalReservations as $overlapExternalReservation){
-                            $externalIds[] = $overlapExternalReservation->getId();
-                        }
-
-                        $params = $request->query->all();
-                        $params['price'] = array(
-                            'requested_reservations'    => $requestedIds,
-                            'external_reservations'     => $externalIds,
-                            'from'                      => $from->format('m/d/Y'),
-                            'to'                        => $to->format('m/d/Y'),
-                            'price'                     => $availability->getPrice(),
-                            'type'                      => $availability->getType()
-                        );
-                        
-                        $session->set('overlap_'.$id, array('requested_reservations' => $requestedIds, 'external_reservations' => $externalIds, 'from' => $from, 'to' => $to, 'price' => $availability->getPrice(), 'type' => $availability->getType()));
-                        return $this->redirect($this->generateUrl($routes['confirm_route'], array('id' => $id), $params));
+                    foreach ($overlapExternalReservations as $overlapExternalReservation){
+                        $overlapExternalReservation->setBoat(null);
+                        $boat->removeReservation($overlapExternalReservation);
+                        $em->remove($overlapExternalReservation);
                     }
                 }
 
                 if ($availability->getType()=='availability' || $availability->getType()=='default'){
-
                     try {
                         $default = $availability->getType()=='default';
                         $boatService->addPrice($boat, $from, $to, $availability->getPrice(), $default, true);
@@ -629,8 +612,6 @@ class BoatController extends Controller
             }
             
         }
-        
-        $session->remove('overlap_'.$id);
         
         return $this->render('ZizooBoatBundle:Boat:edit_price.html.twig', array(
             'boat'              => $boat,

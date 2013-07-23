@@ -13,6 +13,7 @@ class Availability extends Constraint
     public $messageSelectType   = 'zizoo_boat.error.availability_select_type';
     public $messageInvalidType  = 'zizoo_boat.error.availability_invalid_type';
     public $messagePrice        = 'zizoo_boat.error.availability_price';
+    public $messageOverlap      = 'zizoo_boat.error.availability_overlap';
     
     public function validatedBy()
     {

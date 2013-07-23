@@ -39,20 +39,49 @@ class BoatExtension extends \Twig_Extension
         return $reservationAgent->available($boat, $from, $to) && !$reservationAgent->reservationExists($boat, $from, $to);
     }
     
+    private function dayState(Reservation $reservation, $date)
+    {
+        //$date->format()
+    }
+    
     public function reservedDatesWithBookings($boat, $reservations)
     {
         $arr = array();
         foreach ($reservations as $reservation){
             $booking = $reservation->getBooking();
             $from   = clone $reservation->getCheckIn();
-            $to     = $reservation->getCheckOut();
+            $to     = clone $reservation->getCheckOut();
+            $from->setTime(0,0,0);
+            $to->setTime(23,59,59);
             
-            do {
-                //$arr[] = array($from->format('Y'), $from->format('m'), $from->format('d'), $reservation->getStatus(), $reservation->getId(), ($booking!=null?$booking->getId():null));
-                $arr[$from->format('Y')][$from->format('m')][$from->format('d')] = array($reservation->getStatus(), $reservation->getId(), ($booking!=null?$booking->getId():null));
-                
+            $arr[$from->format('Y')][$from->format('m')][$from->format('d')][] = array(
+                $reservation->getStatus(), 
+                $reservation->getId(), 
+                ($booking!=null?$booking->getId():null),
+                'start'
+                );
+            $from = $from->modify('+1 day');
+            
+            while ($from <= $to){
+                //$arr[$from->format('Y')][$from->format('m')][$from->format('d')] = array($reservation->getStatus(), $reservation->getId(), ($booking!=null?$booking->getId():null));
+                $arr[$from->format('Y')][$from->format('m')][$from->format('d')][] = array(
+                    $reservation->getStatus(), 
+                    $reservation->getId(), 
+                    ($booking!=null?$booking->getId():null),
+                    null
+                );
                 $from = $from->modify('+1 day');
-            } while ($from < $to);
+            } 
+            $from = $from->modify('-1 day');
+            $arr[$from->format('Y')][$from->format('m')][$from->format('d')] = array();
+            $arr[$from->format('Y')][$from->format('m')][$from->format('d')][] = array(
+                $reservation->getStatus(), 
+                $reservation->getId(), 
+                ($booking!=null?$booking->getId():null),
+                'end'
+            );
+            
+
         }
         return json_encode($arr);
     }

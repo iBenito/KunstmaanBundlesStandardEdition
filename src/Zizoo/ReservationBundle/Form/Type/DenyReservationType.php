@@ -16,13 +16,14 @@ class DenyReservationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('deny_message', 'textarea', array('property_path' => 'denyMessage'));
+            ->add('deny_message', 'textarea', array('property_path' => 'denyMessage', 'label' => false, 'attr' => array('placeholder' => 'Deny message')));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'  => 'Zizoo\ReservationBundle\Form\Model\DenyReservation',
+            'data_class'            => 'Zizoo\ReservationBundle\Form\Model\DenyReservation',
+            'cascade_validation'    => false
         ));
     }
 

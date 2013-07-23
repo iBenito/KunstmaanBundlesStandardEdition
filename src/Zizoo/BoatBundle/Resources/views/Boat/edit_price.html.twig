@@ -42,6 +42,139 @@
         <a href="{{ path(routes['complete_route']) }}">Complete</a>
     {% endif %}
     
+    <style type="text/css">
+
+            
+        #dashboard #availability-calendar .ui-datepicker td > a, #dashboard #availability-calendar .ui-datepicker td > span {
+            background-image: url('{{ asset('bundles/zizooboat/images/sprite.png') }}');
+            border: none !important;
+            background-repeat: no-repeat;
+            
+            display: block;
+            position: relative;
+            min-height: 40px;
+            font: italic 12px/14px "Asap", Arial;
+            text-align: left;
+            color: #fff;
+            padding: 4px;
+            /*background: #47c2d2;*/
+            border: 3px solid #47c2d2;
+            -webkit-transition: color 200ms ease, border 200ms ease, background-color 200ms ease;
+            transition: color 200ms ease, border 200ms ease, background-color 200ms ease;
+            
+        }
+        /**** FULL DAYS ****/
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_available {
+            background-position: 0 -197px;
+        }
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_reserved {
+            background-position: -62px -197px;
+        }
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_requested {
+            background-position: -124px -197px;
+        }
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_unavailable {
+            background-position: -187px -197px;
+        }
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_booked {
+            background-position: -249px -197px;
+        }
+        
+        
+        /** Available - ? transitions */
+        #dashboard #availability-calendar .ui-datepicker td .day_available-day_reserved {
+            background-position: 0 0;
+        }
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_available-day_requested {
+            background: 0 -49px;
+        }
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_available-day_unavailable {
+            background-position:  0 -99px;
+        }
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_available-day_booked {
+            background-position: 0 -148px;
+        }
+        
+        
+        /** Reserved - ? transitions */
+        #dashboard #availability-calendar .ui-datepicker td .day_reserved-day_available {
+            background-position: -62px 0;
+        }
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_reserved-day_requested {
+            background: -62px -49px;
+        }
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_reserved-day_unavailable {
+            background-position:  -62px -99px;
+        }
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_reserved-day_booked {
+            background-position: -62px -148px;
+        }
+        
+        
+        /** Requested - ? transitions */
+        #dashboard #availability-calendar .ui-datepicker td .day_requested-day_available {
+            background-position: -124px 0;
+        }
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_requested-day_reserved {
+            background: -124px -49px;
+        }
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_requested-day_unavailable {
+            background-position:  -124px -99px;
+        }
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_requested-day_booked {
+            background-position: -124px -148px;
+        }
+        
+        
+        /** Unavailable - ? transitions */
+        #dashboard #availability-calendar .ui-datepicker td .day_unavailable-day_available {
+            background-position: -187px 0;
+        }
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_unavailable-day_reserved {
+            background: -187px -49px;
+        }
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_unavailable-day_requested {
+            background-position:  -187px -99px;
+        }
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_unavailable-day_booked {
+            background-position: -187px -148px;
+        }
+        
+        
+        /** Booked - ? transitions */
+        #dashboard #availability-calendar .ui-datepicker td .day_booked-day_available {
+            background-position: -249px 0;
+        }
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_booked-day_reserved {
+            background: -249px -49px;
+        }
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_booked-day_requested {
+            background-position:  -249px -99px;
+        }
+        
+        #dashboard #availability-calendar .ui-datepicker td .day_booked-day_unavailable {
+            background-position: -249px -148px;
+        }
+    </style>
 
     <script type="text/javascript">
         var lastSelectedDates;
@@ -81,6 +214,7 @@
                 } else {
                     setHinter('to');
                     $('#zizoo_boat_availability_reservation_range_reservation_from').val(dates[0].getDateFormatted() + '/' + (dates[0].getMonthFormatted()) + '/' + dates[0].getFullYear());
+                    {{ form.vars.id }}_reset();
                 }
                 if (numClicks>1) numClicks = 0;
             } 
@@ -92,10 +226,36 @@
 
         function defaultDate(day){
             if (availabilityDefaultAllowed){
-                return {selectable: true, dateClass: 'day_available_default', title: '&euro; ' + availabilityDefaultPrice + ' (Default price)', content: day + '{{ day_available_icon|raw }}<span class="day_price">&euro;' + availabilityDefaultPrice + '*</span>'};
+                return {selectable: true, dateClass: 'day_available', title: '&euro; ' + availabilityDefaultPrice + ' (Default price)', content: day + '<span class="day_price">&euro;' + availabilityDefaultPrice + '*</span>'};
             } else {
-                return {selectable: true, dateClass: 'day_unavailable', title: 'Unavailable', content: day + '{{ day_unavailable_icon|raw }}<span class="day_price_icon">&#10008;</span>'};
+                return {selectable: true, dateClass: 'day_unavailable', title: 'Unavailable', content: day + ''};
             }
+        }
+        
+        function defaultDateClass(day){
+            if (availabilityDefaultAllowed){
+                return 'day_available';
+            } else {
+                return 'day_unavailable';
+            }
+        }
+        
+        function combinedDateClasses(dayStates, numStates){
+            var arr = [], p, i = 0;
+            for (dayStateId in dayStates){
+                var dayState = dayStates[dayStateId];
+                var suffix = dayState['suffix'];
+                if (dayState!=null && suffix!=null && numStates==1){
+                    if (suffix=='start'){
+                        arr[i++] = (availabilityDefaultAllowed?'day_available':'day_unavailable') + '-' + dayState['reservation_state'];
+                    } else {
+                        arr[i++] = dayState['reservation_state'] + '-' + (availabilityDefaultAllowed?'day_available':'day_unavailable');
+                    }
+                } else {
+                    arr[i++] = dayState['reservation_state'];
+                }
+            }
+            return arr.join('-');
         }
 
         function setupCalendar(){
@@ -125,11 +285,11 @@
 
             $.extend($.datepick, {
                 zizoo_availability: function(date) {
-                    var reservedDate    = null;
+                    var reservedDates    = null;
                     var priceDate       = null;
 
                     if (dateExists(availabilityReservedDates, date.getFullYear(), date.getMonthFormatted(), date.getDateFormatted())){
-                        reservedDate = availabilityReservedDates[date.getFullYear()][date.getMonthFormatted()][date.getDateFormatted()];
+                        reservedDates = availabilityReservedDates[date.getFullYear()][date.getMonthFormatted()][date.getDateFormatted()];
                     }
 
                     if (dateExists(availabilityPriceDates, date.getFullYear(), date.getMonthFormatted(), date.getDateFormatted())){
@@ -137,30 +297,56 @@
                     }
 
                     if (priceDate){
-                        if (reservedDate){
-                            if (reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') }} || reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') }}){
-                                return {selectable: false, dateClass: 'day_booked', title: 'Booked', content: date.getDateFormatted() + '{{ day_unavailable_icon|raw }}<span class="day_price">&euro;'+priceDate[0]+'</span><input type="hidden" class="reservation_id" value="'+reservedDate[1]+'" /><input type="hidden" class="type" value="booked" />'};
-                            } else if (reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_SELF') }}){
-                                return {selectable: true, dateClass: 'day_reserved', title: 'Reserved', content: date.getDateFormatted() + '{{ day_reserved_icon|raw }}<span class="day_price">&euro;' + priceDate[0] + '</span><input type="hidden" class="reservation_id" value="'+reservedDate[1]+'" /><input type="hidden" class="type" value="reserved" />'};
-                            } else if (reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_REQUESTED') }}){
-                                return {selectable: true, dateClass: 'day_requested', title: 'Requested', content: date.getDateFormatted() + '{{ day_requested_icon|raw }}<span class="day_price">&euro;' + priceDate[0] + '</span><input type="hidden" class="reservation_id" value="'+reservedDate[1]+'" /><input type="hidden" class="type" value="reserved" />'};
-                            } else {
-                                return {selectable: true, dateClass: 'day_available', title: '&euro; ' + priceDate[0], content: date.getDateFormatted() + '{{ day_available_icon|raw }}<span class="day_price">&euro;' + priceDate[0] + '</span>'};
+                        if (reservedDates){
+                            var dateClasses = new Array();
+                            var titles = new Array();
+                            var content = new Array();
+                            var selectable = true;
+                            var i, numStates=0, numRequested=0;
+                            for (i=0; i<reservedDates.length; i++){
+                                var reservedDate = reservedDates[i];
+                                if (reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') }} || reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') }}){
+                                    dateClasses['day_booked'] = {'reservation_state': 'day_booked', 'suffix': reservedDate[3]};
+                                    numStates++;
+                                } else if (reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_SELF') }}){
+                                    dateClasses['day_reserved'] = {'reservation_state': 'day_reserved', 'suffix': reservedDate[3]};
+                                    numStates++;
+                                } else {
+                                    var defDayClass = defaultDateClass(date.getDateFormatted());
+                                    dateClasses[defDayClass] = {'reservation_state': defDayClass, 'suffix': null};
+                                    numStates++;
+                                }
                             }
+                            if (numRequested>0) numStates++;
+                            return {selectable: selectable, dateClass: dateClass, title: '', content: date.getDateFormatted() + '<span class="day_price">'+priceDate[0]+'</span>'};
                         } else {
-                            return {selectable: true, dateClass: 'day_available', title: '&euro; ' + priceDate[0], content: date.getDateFormatted() + '{{ day_available_icon|raw }}<span class="day_price">&euro;' + priceDate[0] + '</span>'};
+                            return {selectable: true, dateClass: 'day_available', title: '&euro; ' + priceDate[0], content: date.getDateFormatted() + '<span class="day_price">&euro;' + priceDate[0] + '</span>'};
                         }
                     } else {
-                        if (reservedDate){
-                            if (reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') }} || reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') }}){
-                                return {selectable: false, dateClass: 'day_booked', title: 'Booked (Default price)', content: date.getDateFormatted() + '{{ day_unavailable_icon|raw }}<span class="day_price">'+(availabilityDefaultAllowed?availabilityDefaultPrice:'')+'*</span><input type="hidden" class="reservation_id" value="'+reservedDate[1]+'" /><input type="hidden" class="type" value="booked" />'};
-                            } else if (reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_SELF') }}){
-                                return {selectable: true, dateClass: 'day_reserved', title: 'Reserved (Default price)', content: date.getDateFormatted() + '{{ day_reserved_icon|raw }}<span class="day_price">'+(availabilityDefaultAllowed?availabilityDefaultPrice:'')+'*</span><input type="hidden" class="reservation_id" value="'+reservedDate[1]+'" /><input type="hidden" class="type" value="reserved" />'};
-                            } else if (reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_REQUESTED') }}){
-                                return {selectable: true, dateClass: 'day_requested', title: 'Requested (Default price)', content: date.getDateFormatted() + '{{ day_requested_icon|raw }}<span class="day_price">&euro;' + (availabilityDefaultAllowed?availabilityDefaultPrice:'') + '*</span><input type="hidden" class="reservation_id" value="'+reservedDate[1]+'" /><input type="hidden" class="type" value="reserved" />'};
-                            } else {
-                                return defaultDate(date.getDateFormatted());
+                        if (reservedDates){
+                            var dateClasses = new Object();
+                            var titles = new Array();
+                            var content = new Array();
+                            var selectable = true;
+                            var i, numStates=0, numRequested=0;
+                            for (i=0; i<reservedDates.length; i++){
+                                var reservedDate = reservedDates[i];
+                                if (reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') }} || reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') }}){
+                                    dateClasses['day_booked'] = {'reservation_state': 'day_booked', 'suffix': reservedDate[3]};
+                                    numStates++;
+                                } else if (reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_SELF') }}){
+                                    dateClasses['day_reserved'] = {'reservation_state': 'day_reserved', 'suffix': reservedDate[3]};
+                                    numStates++;
+                                } else {
+                                    var defDayClass = defaultDateClass(date.getDateFormatted());
+                                    dateClasses[defDayClass] = {'reservation_state': defDayClass, 'suffix': null};
+                                    numStates++;
+                                }
                             }
+                            if (numRequested>0) numStates++;
+                            
+                            var dateClass = combinedDateClasses(dateClasses, numStates);
+                            return {selectable: selectable, dateClass: dateClass, title: '', content: date.getDateFormatted() + '<span class="day_price">'+(availabilityDefaultAllowed?availabilityDefaultPrice+'*':'')+'</span>'};
                         }
                         return defaultDate(date.getDateFormatted());    
                     }

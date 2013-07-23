@@ -1,0 +1,58 @@
+<table id="availability-legend">
+    <tr>
+        <td class="key-cell">
+            <div class="key" id="availability-legend-available">Day<span class="day_price_icon">{{ day_available_icon|raw }}</span><span class="day_price">Price</span></div>
+        </td>
+        <td class="label-cell">Available 
+            <a class="help" href="#">
+                <span class="tooltip">The boat is available on this day for the specified price. You have the following options: 
+                    <ul>
+                        <li>Set a specific price for this day</li>
+                        <li>Set the default (available or unavailable) for this day</li>
+                        <li>Reserve the boat (make unavailble) so it can't be booked on this day</li>
+                    </ul>
+                </span>
+            </a>
+       </td>
+    </tr>
+    <tr>
+        <td class="key-cell">
+            <div class="key" id="availability-legend-reserved">Day<span class="day_price_icon">{{ day_reserved_icon|raw }}</span><span class="day_price">Price</span></div>
+        </td>
+        <td class="label-cell">Self-Reserved
+            <a class="help" href="#">
+                <span class="tooltip">The boat has been marked as unavailable/reserved by you or your charter. You have the following options: 
+                    <ul>
+                        <li>Set a specific price for this day</li>
+                        <li>Set the default (available or unavailable) for this day</li>
+                    </ul>
+                </span>
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td class="key-cell">
+            <div class="key" id="availability-legend-booked">Day<span class="day_price_icon">{{ day_unavailable_icon|raw }}</span><span class="day_price">Price</span></div>
+        </td>
+        <td class="label-cell">Booked
+            <a class="help" href="#">
+                <span class="tooltip">The boat has been requested on this day for the specified price and has been accepted.
+                </span>
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td class="key-cell">
+            <div class="key" id="availability-legend-unavailable">Day<span class="day_price_icon"></span><span class="day_price">Price</span></div>
+        </td>
+        <td class="label-cell">No default price
+            <a class="help" href="#">
+                <span class="tooltip">The boat is unavailable on this day because you have not set a default price for the boat. You have the following options: 
+                    <ul>
+                        <li>Set a specific price for this day</li>
+                    </ul>
+                </span>
+            </a>
+        </td>
+    </tr>
+</table>
