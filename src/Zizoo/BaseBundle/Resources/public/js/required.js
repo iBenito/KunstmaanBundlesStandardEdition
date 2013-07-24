@@ -192,27 +192,48 @@ $(document).ready(function() {
      * Dropdown
      */
 
-    $(".dropdown").click(function(e) {
+    /**$(".dropdown").click(function(e) {
+        $(this).children(".selectboxit").toggleClass("selectboxit-open");
+        $(this).children("ul").toggle();
+        e.stopPropagation();
+    });*/
+   
+    $(document).delegate(".dropdown", "click", function(e) {
         $(this).children(".selectboxit").toggleClass("selectboxit-open");
         $(this).children("ul").toggle();
         e.stopPropagation();
     });
 
     // Hide dropdown on html click
-    $("html").click(function() {
+//    $("html").click(function() {
+//        $(".dropdown").children(".selectboxit").removeClass("selectboxit-open");
+//        $(".dropdown").children("ul").hide();
+//    });
+    $(document).delegate("html", "click", function() {
         $(".dropdown").children(".selectboxit").removeClass("selectboxit-open");
         $(".dropdown").children("ul").hide();
     });
 
     // Add hover class
-    $(".dropdown").mouseenter(function() {
-        $(this).children(".selectboxit").addClass("selectboxit-hover");
-    }).mouseleave(function() {
-        $(this).children(".selectboxit").removeClass("selectboxit-hover");
+//    $(".dropdown").mouseenter(function() {
+//        $(this).children(".selectboxit").addClass("selectboxit-hover");
+//    }).mouseleave(function() {
+//        $(this).children(".selectboxit").removeClass("selectboxit-hover");
+//    });
+    $(document).delegate(".dropdown", "mousenter mouseleave", function(e){
+       if (e.type=="mouseenter"){
+           $(this).children(".selectboxit").addClass("selectboxit-hover");
+       } else {
+           $(this).children(".selectboxit").removeClass("selectboxit-hover");
+       }
     });
 
+
     // Block adding hover class hovering options
-    $(".dropdown .selectboxit-options").mouseenter(function(e) {
+//    $(".dropdown .selectboxit-options").mouseenter(function(e) {
+//        e.stopPropagation();
+//    });
+    $(".dropdown").delegate(".selectboxit-options", "mouseenter", function(e) {
         e.stopPropagation();
     });
 

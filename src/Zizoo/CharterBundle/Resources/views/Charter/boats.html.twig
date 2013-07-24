@@ -158,7 +158,7 @@
             
             function fillActiveError(json){
                 $('#active_error_popup').html('');
-                var h = json.boat_active == true ? 'Boat was activated, but errors occurred:' : 'Boat could not be actived because:';
+                var h = json.boat_active == true ? 'Boat was activated, but errors occurred:' : 'Boat could not be activated because:';
                 $('#active_error_popup').append('<h2>'+h+'</h2>')
                 $.each(json.errors, function(val_group, val_group_errors) {
                     $('#active_error_popup').append('<ul id="error_'+val_group+'"></ul>')

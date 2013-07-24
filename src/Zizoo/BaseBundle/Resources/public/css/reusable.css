@@ -576,10 +576,6 @@
     text-align: center;
 }
 
-.form .row.textarea {
-    margin-right: -120px;
-}
-
 .form .row label.root {
     position: absolute;
     top: 0;
@@ -719,6 +715,14 @@
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     -webkit-appearance: none;
+}
+
+.form .row-content.root input[type="text"], .form .row-content.no-margin input[type="text"],
+.form .row-content.root input[type="email"], .form .row-content.no-margin input[type="email"]
+.form .row-content.root input[type="password"], .form .row-content.no-margin input[type="password"]
+.form .row-content.root textarea, .form .row-content.no-margin textarea 
+{
+    border-radius: 5px;
 }
 
 .form .row textarea {
