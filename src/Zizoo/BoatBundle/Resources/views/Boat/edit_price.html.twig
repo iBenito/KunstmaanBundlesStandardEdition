@@ -65,6 +65,10 @@
             transition: color 200ms ease, border 200ms ease, background-color 200ms ease;
             
         }
+        #dashboard #availability-calendar .ui-datepicker td > span {
+            opacity: 0.5;
+        }
+        
         /**** FULL DAYS ****/
         
         #dashboard #availability-calendar .ui-datepicker td .day_available {
@@ -206,7 +210,6 @@
                     $('#zizoo_boat_availability_reservation_range_reservation_from').val(dates[0].getDateFormatted() + '/' + (dates[0].getMonthFormatted()) + '/' + dates[0].getFullYear()).change();
                 }
                 if (numClicks>1) numClicks = 0;
-                //checkAvailabilitySetter();
             } 
         }
 
@@ -352,6 +355,7 @@
                 rangeSelect: true,
                 changeMonth: false,
                 monthsToShow: [12,1],
+                minDate: new Date(),
                 onDate: $.datepick.zizoo_availability,
                 onSelect: selectDates,
                 renderer: $.datepick.themeRollerRenderer
