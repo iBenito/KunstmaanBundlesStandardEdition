@@ -67,7 +67,7 @@ class DashboardController extends Controller {
         $user       = $this->getUser();
         $url        = $this->generateUrl($route, array('id' => 0));
 
-        $pattern = '/^\charter\/|^\/app_dev\.php\/charter\//';
+        $pattern = '/^\/charter\/|^\/app_dev\.php\/charter\//';
         $isCharterRoute = preg_match($pattern, $url);
         
         if ($user->getCharter() && $isCharterRoute){

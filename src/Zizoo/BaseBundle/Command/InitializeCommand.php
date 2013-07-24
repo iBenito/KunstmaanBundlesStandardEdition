@@ -53,6 +53,7 @@ class InitializeCommand extends ContainerAwareCommand
         
         if ($input->isInteractive()) {
             $dialog = $this->getHelperSet()->get('dialog');
+            
             if (!$dialog->askConfirmation($output, '<question>Do you want to continue load sample data Y/N ?</question>', false)) {
                 return;
             }
@@ -60,11 +61,27 @@ class InitializeCommand extends ContainerAwareCommand
             $arguments = array('command' => 'doctrine:fixtures:load', '--append' => true);
             $input = new ArrayInput($arguments);
             $returnCode = $command->run($input, $output);
+            
+            if (!$dialog->askConfirmation($output, '<question>Do you want to install web assets Y/N ?</question>', false)) {
+                return;
+            }
+            $command = $this->getApplication()->find('assets:install');
+            $arguments = array('command' => 'assets:install', 'web', '--symlink');
+            $input = new ArrayInput($arguments);
+            $returnCode = $command->run($input, $output);
+            
+            
         } else if ($loadFixtures){
             $command = $this->getApplication()->find('doctrine:fixtures:load');
             $arguments = array('command' => 'doctrine:fixtures:load', '--append' => true);
             $input = new ArrayInput($arguments);
             $returnCode = $command->run($input, $output);
+            
+            $command = $this->getApplication()->find('assets:install');
+            $arguments = array('command' => 'assets:install', 'web', '--symlink');
+            $input = new ArrayInput($arguments);
+            $returnCode = $command->run($input, $output);
+            
         }
         
     }

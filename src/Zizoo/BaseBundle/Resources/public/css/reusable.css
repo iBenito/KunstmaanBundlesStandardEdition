@@ -717,13 +717,6 @@
     -webkit-appearance: none;
 }
 
-.form .row-content.root input[type="text"], .form .row-content.no-margin input[type="text"],
-.form .row-content.root input[type="email"], .form .row-content.no-margin input[type="email"]
-.form .row-content.root input[type="password"], .form .row-content.no-margin input[type="password"]
-.form .row-content.root textarea, .form .row-content.no-margin textarea 
-{
-    border-radius: 5px;
-}
 
 .form .row textarea {
     position: relative;
