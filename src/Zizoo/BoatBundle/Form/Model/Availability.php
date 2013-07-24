@@ -2,14 +2,14 @@
 namespace Zizoo\BoatBundle\Form\Model;
 
 use Zizoo\BoatBundle\Entity\Boat;
-
-use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\Common\Collections\ArrayCollection;
+use Zizoo\ReservationBundle\Form\Model\DenyReservation;
 
 class Availability
 {
     
     protected $boat;
+    
+    protected $boat_id;
     
     protected $reservationRange;
     
@@ -20,16 +20,34 @@ class Availability
     protected $denyReservation;
     protected $overlappingReservationRequests;
     protected $overlappingExternalReservations;
+    protected $overlappingBookedReservations;
     
-    protected $overlap;
+    protected $validationGroups;
+    
     protected $confirm;
  
-    public function __construct(Boat $boat=null) {
+    public function __construct(Boat $boat=null) 
+    {
         $this->boat  = $boat;
+        if ($boat!==null){
+            $this->setBoatId($boat->getId());
+        }
     }
     
-    public function getBoat(){
+    public function getBoat()
+    {
         return $this->boat;
+    }
+    
+    public function setBoatId($boat_id)
+    {
+        $this->boat_id = $boat_id;
+        return $this;
+    }
+    
+    public function getBoatId()
+    {
+        return $this->boat_id;
     }
     
     
@@ -100,6 +118,17 @@ class Availability
         return $this->overlappingReservationRequests;
     }
     
+    public function setOverlappingBookedReservations($reservations)
+    {
+        $this->overlappingBookedReservations = $reservations;
+        return $this;
+    }
+    
+    public function getOverlappingBookedReservations()
+    {
+        return $this->overlappingBookedReservations;
+    }
+    
     public function setConfirm($confirm)
     {
         $this->confirm = $confirm;
@@ -111,15 +140,15 @@ class Availability
         return $this->confirm;
     }
     
-    public function setOverlap($overlap)
+    public function setTest($test)
     {
-        $this->overlap = $overlap;
+        $this->test = $test;
         return $this;
     }
     
-    public function getOverlap()
+    public function getTest()
     {
-        return $this->overlap;
+        return $this->test;
     }
 }
 

@@ -11,6 +11,7 @@ use Zizoo\BoatBundle\Form\Model\BookBoat;
 use Zizoo\BoatBundle\Form\Model\ConfirmBoatPrice;
 use Zizoo\BoatBundle\Form\Model\Availability;
 use Zizoo\ReservationBundle\Entity\Reservation;
+use Zizoo\ReservationBundle\Exception\InvalidReservationException;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -559,21 +560,29 @@ class BoatController extends Controller
         }
 
         $availability = new Availability($boat);
+        $availability->setBoatId($boat->getId());
         $availabilityForm = $this->createForm('zizoo_boat_availability', $availability, array('boat' => $boat, 'label' => 'f'));
         
         $routes = $request->query->get('routes');
         
         $reservations   = $boat->getReservation();
         $prices         = $boat->getPrice();
-    
+            
         if ($request->isMethod('post')){
             $availabilityForm->bind($request);
+            $availability                   = $availabilityForm->getData();
+            $reservationRange               = $availability->getReservationRange();
+            $from                           = $reservationRange->getReservationFrom();
+            $to                             = $reservationRange->getReservationTo();
             
+            // Store date range in session
+            if ($from instanceof \DateTime && $to instanceof \DateTime){
+                $session->set('availability_from_'.$boat->getId(), $from);
+            } else {
+                $session->set('availability_from_'.$boat->getId(), null);
+            }
             if ($availabilityForm->isValid()){
-                $availability                   = $availabilityForm->getData();
-                $reservationRange               = $availability->getReservationRange();
-                $from                           = $reservationRange->getReservationFrom();
-                $to                             = $reservationRange->getReservationTo();
+                
                 $overlapRequestedReservations   = $availability->getOverlappingReservationRequests();
                 $overlapExternalReservations    = $availability->getOverlappingExternalReservations();
                 
@@ -581,7 +590,7 @@ class BoatController extends Controller
                     $em = $this->getDoctrine()->getManager();
                     $reservationAgent = $this->get('zizoo_reservation_reservation_agent');
                     foreach ($overlapRequestedReservations as $overlapRequestedReservation){
-                        $reservationAgent->denyReservation($overlapRequestedReservation);
+                        $reservationAgent->denyReservation($overlapRequestedReservation, false);
                     }
 
                     foreach ($overlapExternalReservations as $overlapExternalReservation){
@@ -612,7 +621,8 @@ class BoatController extends Controller
             }
             
         }
-        
+        $v = $availabilityForm->createView();
+        $a = "";
         return $this->render('ZizooBoatBundle:Boat:edit_price.html.twig', array(
             'boat'              => $boat,
             'reservations'      => $reservations,

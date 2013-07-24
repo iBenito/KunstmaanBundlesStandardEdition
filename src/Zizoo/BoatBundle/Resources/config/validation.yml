@@ -5,7 +5,11 @@ Zizoo\BoatBundle\Form\Model\BookBoat:
 Zizoo\BoatBundle\Form\Model\Availability:
     constraints:
         - Zizoo\BoatBundle\Validator\Constraints\Availability: ~
-        
+    
+    properties:
+        confirm:
+            - "True": { message: "Please confirm." }
+           
 Zizoo\BoatBundle\Form\Model\ReservationRange:
     properties:
         reservation_from:

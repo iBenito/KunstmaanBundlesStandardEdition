@@ -30,10 +30,12 @@
         </div>
     {% endfor %}
     
-    
+    <noscript>
+        <h2>You must enable JavaScript in your browser to view this page</h2>
+    </noscript>
     <div id="availability-calendar" class="">
     </div>
-    <div id="availability-sidebar">
+    <div id="availability-sidebar" style="display: none">
         {% include 'ZizooBoatBundle:Boat:availability_setter.html.twig' %}
         {% include 'ZizooBoatBundle:Boat:availability_legend.html.twig' %}
     </div>
@@ -179,6 +181,7 @@
     <script type="text/javascript">
         var lastSelectedDates;
         var numClicks = 0;
+        var selectDateCallback = true;
 
         function showPopup(){
             $('#popup').dialog({
@@ -189,34 +192,21 @@
             });
         }
 
-        function checkAvailabilitySetter(){
-            if ($('#date_from').val()!='' && $('#date_to').val()!=''){
-                if ($('#price').val()!=''){
-                    $('#availability-setter-buttons button').removeClass('disabled').attr('disabled', null);
-                } else {
-                    $('#availability-setter-buttons button').addClass('disabled').attr('disabled', 'disabled');
-                }
-                $('#price').attr('disabled', null);
-            } else {
-                $('#availability-setter-buttons button').addClass('disabled').attr('disabled', 'disabled');
-                $('#price').attr('disabled', 'disabled');
-            }
-        }
-
         function selectDates(dates){
             if (dates.length==2){
                 lastSelectedDates = dates;
                 
                 numClicks++;
                 if (numClicks==2){
-                    setHinter('type');
-                    $('#zizoo_boat_availability_reservation_range_reservation_to').val(dates[1].getDateFormatted() + '/' + (dates[1].getMonthFormatted()) + '/' + dates[1].getFullYear());
+                    $('#zizoo_boat_availability_reservation_range_reservation_to').val(dates[1].getDateFormatted() + '/' + (dates[1].getMonthFormatted()) + '/' + dates[1].getFullYear()).change();
                 } else {
-                    setHinter('to');
-                    $('#zizoo_boat_availability_reservation_range_reservation_from').val(dates[0].getDateFormatted() + '/' + (dates[0].getMonthFormatted()) + '/' + dates[0].getFullYear());
-                    {{ form.vars.id }}_reset();
+                    if (selectDateCallback==true){
+                        {{ form.vars.id }}_reset();
+                    }
+                    $('#zizoo_boat_availability_reservation_range_reservation_from').val(dates[0].getDateFormatted() + '/' + (dates[0].getMonthFormatted()) + '/' + dates[0].getFullYear()).change();
                 }
                 if (numClicks>1) numClicks = 0;
+                //checkAvailabilitySetter();
             } 
         }
 
@@ -225,10 +215,11 @@
         }
 
         function defaultDate(day){
+            var overlay = '<div class="day_overlay"></div>';
             if (availabilityDefaultAllowed){
-                return {selectable: true, dateClass: 'day_available', title: '&euro; ' + availabilityDefaultPrice + ' (Default price)', content: day + '<span class="day_price">&euro;' + availabilityDefaultPrice + '*</span>'};
+                return {selectable: true, dateClass: 'day_available', title: '&euro; ' + availabilityDefaultPrice + ' (Default price)', content: overlay + day + '<span class="day_price">&euro;' + availabilityDefaultPrice + '*</span>'};
             } else {
-                return {selectable: true, dateClass: 'day_unavailable', title: 'Unavailable', content: day + ''};
+                return {selectable: true, dateClass: 'day_unavailable', title: 'Unavailable', content: overlay + day + ''};
             }
         }
         
@@ -296,6 +287,7 @@
                         priceDate = availabilityPriceDates[date.getFullYear()][date.getMonthFormatted()][date.getDateFormatted()];
                     }
 
+                    var overlay = '<div class="day_overlay"></div>'
                     if (priceDate){
                         if (reservedDates){
                             var dateClasses = new Array();
@@ -318,9 +310,10 @@
                                 }
                             }
                             if (numRequested>0) numStates++;
-                            return {selectable: selectable, dateClass: dateClass, title: '', content: date.getDateFormatted() + '<span class="day_price">'+priceDate[0]+'</span>'};
+                            var dateClass = combinedDateClasses(dateClasses, numStates);
+                            return {selectable: selectable, dateClass: dateClass, title: '', content: overlay + date.getDateFormatted() + '<span class="day_price">'+priceDate[0]+'</span>'};
                         } else {
-                            return {selectable: true, dateClass: 'day_available', title: '&euro; ' + priceDate[0], content: date.getDateFormatted() + '<span class="day_price">&euro;' + priceDate[0] + '</span>'};
+                            return {selectable: true, dateClass: 'day_available', title: '&euro; ' + priceDate[0], content: overlay + date.getDateFormatted() + '<span class="day_price">&euro;' + priceDate[0] + '</span>'};
                         }
                     } else {
                         if (reservedDates){
@@ -346,7 +339,7 @@
                             if (numRequested>0) numStates++;
                             
                             var dateClass = combinedDateClasses(dateClasses, numStates);
-                            return {selectable: selectable, dateClass: dateClass, title: '', content: date.getDateFormatted() + '<span class="day_price">'+(availabilityDefaultAllowed?availabilityDefaultPrice+'*':'')+'</span>'};
+                            return {selectable: selectable, dateClass: dateClass, title: '', content: overlay + date.getDateFormatted() + '<span class="day_price">'+(availabilityDefaultAllowed?availabilityDefaultPrice+'*':'')+'</span>'};
                         }
                         return defaultDate(date.getDateFormatted());    
                     }
@@ -423,33 +416,61 @@
         function moveLegend(obj){
             var scrollTopVal = $(obj).scrollTop();
             if (scrollTopVal < minScrollPosition.top) scrollTopVal = minScrollPosition.top;
+            var sidebarHeight = $('#availability-sidebar').height();
+            var maxScrollPosition = $('#dashboard #availability-calendar').position().top + $('#dashboard #availability-calendar').height();
+            if (scrollTopVal + $('#availability-sidebar').height() > maxScrollPosition) scrollTopVal = maxScrollPosition - sidebarHeight;
+            
             $('#availability-sidebar').css({'top' :scrollTopVal+'px'});
         }
 
         function setupScroll(){
+            var sidebarHeight = $('#availability-sidebar').height();
+            var windowHeight = $(window).height();
+            if (sidebarHeight > windowHeight - $('#availability-sidebar').offset().top){
+                $(window).unbind('scroll');
+                $('#availability-sidebar').css({'top' : '120px'});
+                return;
+            }
             minScrollPosition = $('#dashboard .ui-datepicker-calendar').first().position();
-            $(window).scroll(function() {
+            $(window).unbind('scroll').scroll(function() {
                 moveLegend(this);
-             });
+            });
+            moveLegend(window);
         }
         
-        function setHinter(hint){
-            //$('#availability-setter .step:not(.'+hint+')').removeClass('current').children('input').attr('readonly', 'readonly');
-            //$('#availability-setter .step.'+hint).addClass('current').children('input').attr('readonly', null);
-        }
 
         $(document).ready(function(){
 
             setupCalendar();
-            setupPopup();
+            $('#availability-sidebar').show();
             setupScroll();
-            moveLegend(window);
+            $(window).resize(setupScroll);
             
-            //$('#date_from').change(checkAvailabilitySetter);
-            //$('#date_to').change(checkAvailabilitySetter);
-            //$('#price').change(checkAvailabilitySetter);
-            setHinter('from');
-           
+            $('#{{ form.vars.id }}-confirm-cancel-btn').click(function(){
+                $('#availability-calendar').datepick('setDate', null);
+                numClicks = 0;
+            });
+                        
+            var from = $('#{{ form.reservation_range.reservation_from.vars.id }}').val();
+            var to   = $('#{{ form.reservation_range.reservation_to.vars.id }}').val();
+            if (from!='' && to !=''){
+                var fromArr = from.split('/');
+                var toArr   = to.split('/');
+                if (fromArr.length==3 && toArr.length==3){
+                    selectDateCallback = false;
+                    $('#availability-calendar').datepick('setDate', new Date(fromArr[2], fromArr[1]-1, fromArr[0]), new Date(toArr[2], toArr[1]-1, toArr[0]));
+                    selectDateCallback = true;
+                    numClicks = 0;
+                }
+            }
+            
+            {% set last_from = app.session.get('availability_from_'~boat.id) %}
+            {% if last_from != null %}
+                from = new Date({{ last_from.format('Y') }}, {{ last_from.format('m') }}, {{ last_from.format('d') }});
+                $('#availability-calendar').datepick('showMonth', from.getFullYear(), from.getMonth());
+                {% set last_from = app.session.set('availability_from_'~boat.id, null) %}
+            {% endif %}
+                    
         });
 
     </script>

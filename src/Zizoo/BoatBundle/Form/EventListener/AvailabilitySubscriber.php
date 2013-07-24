@@ -5,8 +5,6 @@ use Zizoo\ReservationBundle\Entity\Reservation;
 use Zizoo\ReservationBundle\Form\Type\DenyReservationType;
 
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\Form\FormFactoryInterface;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -45,85 +43,85 @@ class AvailabilitySubscriber implements EventSubscriberInterface
         $em                 = $this->container->get('doctrine.orm.entity_manager');
         $reservationRepo    = $em->getRepository('ZizooReservationBundle:Reservation');
         
+        $from->setTime(12,0,0);
+        $to->setTime(11,59,59);
+        
         $overlapRequestedReservations   = $reservationRepo->getReservations($charter, null, $boat, $from, $to, array(Reservation::STATUS_REQUESTED));
         $overlapExternalReservations    = $reservationRepo->getReservations($charter, null, $boat, $from, $to, array(Reservation::STATUS_SELF));
+        $overlapBookedReservations      = $reservationRepo->getReservations($charter, null, $boat, $from, $to, array(Reservation::STATUS_ACCEPTED, Reservation::STATUS_HOLD));
         
         $data->setOverlappingExternalReservations($overlapExternalReservations);
         $data->setOverlappingReservationRequests($overlapRequestedReservations);
-        
-        $form = $event->getForm();
-        
-        if (count($overlapRequestedReservations)>0){
-            $form->add('deny_reservation', new DenyReservationType(), array('label' => ' '));
-        }
-        
+        $data->setOverlappingBookedReservations($overlapBookedReservations);
+                
     }
+    
     
     /**
      * @param event FormEvent
      */
     public function preSetData(FormEvent $event)
     {
-        $data = $event->getData();
-        
-        // Before binding the form, the "meetup" will be null
-        if (null === $data) {
-            return;
-        }
-
-
-//        $reservationRange = $event->getData()->getReservationRange();
-//
-//        $form = $event->getForm();
-//        $positions = $meetup->getSport()->getPositions();
-//
-//        $this->customizeForm($form, $positions);
+       
     }
 
     public function preBind(FormEvent $event)
     {
-//        $data = $event->getData();
-//        $id = $data['event'];
-//        $meetup = $this->em
-//            ->getRepository('AcmeDemoBundle:SportMeetup')
-//            ->find($id);
-//
-//        if ($meetup === null) {
-//            $msg = 'The event %s could not be found for you registration';
-//            throw new \Exception(sprintf($msg, $id));
-//        }
-//        $form = $event->getForm();
-//        $positions = $meetup->getSport()->getPositions();
-//
-//        $this->customizeForm($form, $positions);
-        $data = $event->getData();
+        $em                 = $this->container->get('doctrine.orm.entity_manager');
+        $boatRepo           = $em->getRepository('ZizooBoatBundle:Boat');
+        $reservationRepo    = $em->getRepository('ZizooReservationBundle:Reservation');
         
-        // Before binding the form, the "meetup" will be null
-        if (null === $data) {
-            return;
+        $data = $event->getData();
+        $boatId = $data['boat_id'];
+        $boat = $boatRepo->findOneById($boatId);
+        
+        if ($boat === null) {
+            $msg = 'The boat %s could not be found';
+            throw new \Exception(sprintf($msg, $boatId));
         }
-
+        
+        $charter = $boat->getCharter();
+        if ($charter === null) {
+            $msg = 'The boat %s could not be found';
+            throw new \Exception(sprintf($msg, $boatId));
+        }
+        
+        $form = $event->getForm();
+        
         if (array_key_exists('reservation_range', $data)){
-            $reservation_range = $data['reservation_range'];
-            if (array_key_exists('reservation_to', $reservation_range) && array_key_exists('reservation_from', $reservation_range)){
-                $from   = $reservation_range['reservation_from'];
-                $to     = $reservation_range['reservation_to'];
-                
+            $reservationRange = $data['reservation_range'];
+            if  (array_key_exists('reservation_from', $reservationRange) && array_key_exists('reservation_to', $reservationRange)){
+                $from   = $reservationRange['reservation_from'];
+                $to     = $reservationRange['reservation_to'];
+                $from = \DateTime::createFromFormat('d/m/Y', $from);
+                $to = \DateTime::createFromFormat('d/m/Y', $to);
+                if ($from instanceof \DateTime && $to instanceof \DateTime){
+                    $from->setTime(12,0,0);
+                    $to->setTime(11,59,59);
+
+                    $overlapRequestedReservations   = $reservationRepo->getReservations($charter, null, $boat, $from, $to, array(Reservation::STATUS_REQUESTED));
+                    $overlapExternalReservations    = $reservationRepo->getReservations($charter, null, $boat, $from, $to, array(Reservation::STATUS_SELF));
+                    $overlapBookedReservations      = $reservationRepo->getReservations($charter, null, $boat, $from, $to, array(Reservation::STATUS_ACCEPTED, Reservation::STATUS_HOLD));
+                    
+                    if (count($overlapBookedReservations)==0){
+                        if (count($overlapRequestedReservations)>0){
+                            $form->add('deny_reservation', new DenyReservationType(), array('label' => ' '));
+                        }
+
+                        if (count($overlapExternalReservations)>0 || count($overlapRequestedReservations)>0){
+                            $form->add('confirm', 'checkbox', array(
+                                                    'required'  => true,
+                                                    'label'     => 'Confirm'));
+                        }
+                    }
+                }
             }
         }
+        
 
-//        $reservationRange = $event->getData()->getReservationRange();
-//
-//        $form = $event->getForm();
-//        $positions = $meetup->getSport()->getPositions();
-//
-//        $this->customizeForm($form, $positions);
     }
 
-    protected function customizeForm($form, $positions)
-    {
-        // ... customize the form according to the positions
-    }
+    
     
 }
 

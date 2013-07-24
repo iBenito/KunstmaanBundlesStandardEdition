@@ -3,9 +3,11 @@
 namespace Zizoo\BoatBundle\Form\Type;
 
 use Zizoo\BoatBundle\Form\EventListener\AvailabilitySubscriber;
+use Zizoo\BoatBundle\Form\Model\Availability;
 
-use Zizoo\ReservationBundle\Form\EventListener\AddDenyReservationSubscriber;
+use Zizoo\ReservationBundle\Form\Type\DenyReservationType;
 
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,6 +26,8 @@ class AvailabilityType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         
+        $builder->add('boat_id', 'hidden');
+        
         $builder->add('reservation_range', new ReservationRangeType(), array(   'required'          => true, 
                                                                                 'label'             => false,
                                                                                 'from_placeholder'  => 'From dd/mm/yyyy',
@@ -41,18 +45,16 @@ class AvailabilityType extends AbstractType
                                                 'required'  => true,
                                                 'expanded'  => true,
                                                 'multiple'  => false,
-                                                'label'     => false
+                                                'label'     => false,
+                                                'attr'      => array('autocomplete' => 'off')
         ));
                 
         $builder->add('price', 'number', array('label'      => false,
                                                 'required'  => true,
-                                                'attr'      => array('placeholder' => 'Price per day')));
+                                                'attr'      => array('placeholder' => 'Price per day', 'autocomplete' => 'off', 'disabled' => 'disabled')));
         
         $builder->addEventSubscriber(new AvailabilitySubscriber($this->container));
         
-        $builder->add('confirm', 'checkbox', array(
-                                                'required'  => true,
-                                                'label'     => 'Confirm'));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -60,6 +62,7 @@ class AvailabilityType extends AbstractType
         $resolver->setDefaults(array(
             'data_class'            => 'Zizoo\BoatBundle\Form\Model\Availability',
             'cascade_validation'    => true,
+            'allow_extra_fields'    => true,
             'boat'                  => null
         ));
     }

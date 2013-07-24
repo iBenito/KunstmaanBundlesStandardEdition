@@ -9,11 +9,14 @@ use Symfony\Component\Validator\Constraint;
  */
 class Availability extends Constraint
 {
-    public $messageDates        = 'zizoo_boat.error.availability_dates';
-    public $messageSelectType   = 'zizoo_boat.error.availability_select_type';
-    public $messageInvalidType  = 'zizoo_boat.error.availability_invalid_type';
-    public $messagePrice        = 'zizoo_boat.error.availability_price';
-    public $messageOverlap      = 'zizoo_boat.error.availability_overlap';
+    public $messageDatesPast                        = 'zizoo_boat.error.availability_dates_not_past';
+    public $messageDatesDefaultOrAvailable          = 'zizoo_boat.error.availability_dates_default_or_available';
+    public $messageDatesNotDefaultAndNotAvailable   = 'zizoo_boat.error.availability_dates_not_default_and_not_available';
+    public $messageSelectType                       = 'zizoo_boat.error.availability_select_type';
+    public $messageInvalidType                      = 'zizoo_boat.error.availability_invalid_type';
+    public $messagePrice                            = 'zizoo_boat.error.availability_price';
+    public $messageOverlapReservations              = 'zizoo_boat.error.availability_overlap_reservations';
+    public $messageOverlapBookings                  = 'zizoo_boat.error.availability_overlap_bookings';
     
     public function validatedBy()
     {
