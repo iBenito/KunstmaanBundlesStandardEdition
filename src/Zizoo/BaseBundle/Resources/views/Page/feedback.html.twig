@@ -8,29 +8,42 @@
 {% block title %}Feedback{% endblock%}
 
 {% block body %}
-    <header>
-        <h1>Feedback</h1>
-    </header>
 
-    <p>Drop us a line</p>
+    <!-- start:content -->
+    <div id="content">
+        <div class="container clearfix">
 
-    {% if app.session.hasFlash('zizoo-notice') %}
-        <div class="zizoo-notice">
-            {{ app.session.flash('zizoo-notice') }}
+            <!-- start:feedback -->
+            <section id="feedback" class="section">
+                <header>
+                    <h1>Drop us a line</h1>
+                </header>
+
+                <div class="content">
+                    {% if app.session.hasFlash('zizoo-notice') %}
+                        <div class="zizoo-notice">
+                            {{ app.session.flash('zizoo-notice') }}
+                        </div>
+                    {% endif %}
+
+                    <form action="{{ path('ZizooBaseBundle_feedback') }}" method="post" {{ form_enctype(form) }} class="zizoo">
+                        {{ form_errors(form) }}
+
+                        {{ form_row(form.name) }}
+                        {{ form_row(form.email) }}
+                        {{ form_row(form.subject) }}
+                        {{ form_row(form.body) }}
+
+                        {{ form_rest(form) }}
+
+                        <input type="submit" value="Submit" />
+                    </form>
+                </div>
+            </section>
+            <!-- end:about -->
+
         </div>
-    {% endif %}
-    
-    <form action="{{ path('ZizooBaseBundle_feedback') }}" method="post" {{ form_enctype(form) }} class="zizoo">
-        {{ form_errors(form) }}
-
-        {{ form_row(form.name) }}
-        {{ form_row(form.email) }}
-        {{ form_row(form.subject) }}
-        {{ form_row(form.body) }}
-
-        {{ form_rest(form) }}
-
-        <input type="submit" value="Submit" />
-    </form>
+    </div>
+    <!-- end:content -->
 
 {% endblock %}
