@@ -947,7 +947,7 @@ class Boat extends BaseEntity
     
     public function getMinimumDays()
     {
-        return $this->minimumDays;
+        return (int)$this->minimumDays;
     }
     
     public function setCrewPrice($crewPrice)
