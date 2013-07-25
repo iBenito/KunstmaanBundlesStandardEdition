@@ -1,9 +1,9 @@
 {% trans_default_domain "labels" %}
 <div id="list" class="clearfix{% if view != "list" %} hidden{% endif %}" >
     {% for boat in pagination %}
-
+        {% set bookable = boat|bookable(form.vars.value.reservationFrom, form.vars.value.reservationTo)==true %}
         <div class="box">
-            <a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}?zizoo_boat_book[reservation_range][reservation_from]={{ form.vars.value.reservationFrom is empty ? "" : form.vars.value.reservationFrom|date }}&zizoo_boat_book[reservation_range][reservation_to]={{ form.vars.value.reservationTo is empty ? "" : form.vars.value.reservationTo|date }}&zizoo_boat_book[num_guests]={{ form.vars.value.numGuests }}{% if boat.crewOptional == true %}&zizoo_boat_book[crew]=true{% endif %}" class="boat white clearfix">
+            <a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}?zizoo_boat_book[reservation_range][reservation_from]={{ form.vars.value.reservationFrom is empty ? "" : form.vars.value.reservationFrom|date }}&zizoo_boat_book[reservation_range][reservation_to]={{ form.vars.value.reservationTo is empty ? "" : form.vars.value.reservationTo|date }}&zizoo_boat_book[num_guests]={{ form.vars.value.numGuests }}{% if boat.crewOptional == true %}&zizoo_boat_book[crew]=true{% endif %}" class="boat {% if bookable==true %}white{% else %}gray disabled{% endif %} clearfix">
                 <figure>
                     <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg') }}" alt="">
                 </figure>

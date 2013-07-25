@@ -58,6 +58,7 @@ class BoatController extends Controller
         $map->setMapOption('zoom', 6);
         $map->setMapOption('disableDefaultUI', true);
         $map->setMapOption('zoomControl', true);
+        $map->setMapOption('scrollwheel', false);
         $map->setStylesheetOptions(array(
             'width' => '100%',
             'height' => '0'
