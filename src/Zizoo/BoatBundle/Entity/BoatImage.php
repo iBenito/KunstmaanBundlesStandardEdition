@@ -106,7 +106,7 @@ class BoatImage extends Media {
     {
         return null === $this->getPath()
             ? null
-            : $this->getUploadDir().'/'.$this->id.'.'.$this->getPath();
+            : $this->getUploadDir().'/originals/'.$this->getPath();
     }
     
 }

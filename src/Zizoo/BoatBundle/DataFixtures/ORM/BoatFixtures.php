@@ -178,6 +178,158 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $manager->persist($boat4);
         
         $this->addReference('boat-4', $boat4);
+
+
+
+        $boat5 = new Boat();
+        $boat5->setName('Elanusha');
+        $boat5->setTitle('TNG');
+        $boat5->setDescription('The Elan 31 from Elan Yachts is a great Sailing boat available for charter in Croatia. With 2 cabins and 6 berths, it has the ability to cater up to people overnight. This makes it a perfect choice for small groups wishing to charter the region. Book online for a great sailing holiday in Croatia.');
+        $boat5->setBrand('Elan Yachts ');
+        $boat5->setModel('Elan 31');
+        $boat5->setLength(9.45);
+        $boat5->setCabins(2);
+        $boat5->setBerths(6);
+        $boat5->setBathrooms(2);
+        $boat5->setToilets(2);
+        $boat5->setNrGuests(6);
+        $boat5->setDefaultPrice(10000);
+        
+        $boat5Address = new BoatAddress();
+        $boat5Address->setAddressLine1('Hvar');
+        $boat5Address->setLocality('Hvar');
+        $boat5Address->setPostcode('HR 21450');
+        $boat5Address->setCountry($countryRepo->findOneByIso('HR'));
+        
+        $boat5 = $boatService->createBoat($boat5, $boat5Address, $boatTypeRepo->findOneByName('Sailboat'), $charter1);
+        $manager->persist($boat5);
+        
+        $this->addReference('boat-5', $boat5);
+
+        $boat6 = new Boat();
+        $boat6->setName('Enterprise');
+        $boat6->setTitle('TNG');
+        $boat6->setDescription('The First 31.7 from Beneteau is a great Sailing boat available for charter in Italy. With 2 cabins and 4 berths, it has the ability to cater up to people overnight. This makes it a perfect choice for small groups wishing to charter the region. Book online for a great sailing holiday in Italy.');
+        $boat6->setBrand('Beneteau');
+        $boat6->setModel('First 31.7 ');
+        $boat6->setLength(9.85);
+        $boat6->setCabins(2);
+        $boat6->setBerths(4);
+        $boat6->setBathrooms(2);
+        $boat6->setToilets(2);
+        $boat6->setNrGuests(4);
+        $boat6->setDefaultPrice(10000);
+        
+        $boat6Address = new BoatAddress();
+        $boat6Address->setAddressLine1('Capri');
+        $boat6Address->setLocality('Capri');
+        $boat6Address->setPostcode('80073');
+        $boat6Address->setCountry($countryRepo->findOneByIso('IT'));
+        
+        $boat6 = $boatService->createBoat($boat6, $boat6Address, $boatTypeRepo->findOneByName('Sailboat'), $charter2);
+        $manager->persist($boat6);
+        
+        $this->addReference('boat-6', $boat6);
+
+        $boat7 = new Boat();
+        $boat7->setName('Enterprise');
+        $boat7->setTitle('TNG');
+        $boat7->setDescription('The Bavaria 38 from Bavaria Yachtbau is a great Sailing boat available for charter in Greece. With 3 cabins and 6 berths, it has the ability to cater up to 8 people overnight. This makes it a perfect choice for small groups wishing to charter the region. Book online for a great sailing holiday in Greece.');
+        $boat7->setBrand('Bavaria Yachtbau');
+        $boat7->setModel('Bavaria 38');
+        $boat7->setLength(11.85);
+        $boat7->setCabins(3);
+        $boat7->setBerths(6);
+        $boat7->setBathrooms(3);
+        $boat7->setToilets(3);
+        $boat7->setNrGuests(8);
+        $boat7->setDefaultPrice(10000);
+        
+        $boat7Address = new BoatAddress();
+        $boat7Address->setAddressLine1('Crete');
+        $boat7Address->setLocality('Crete');
+        $boat7Address->setPostcode('730 04');
+        $boat7Address->setCountry($countryRepo->findOneByIso('GR'));
+        
+        $boat7 = $boatService->createBoat($boat7, $boat7Address, $boatTypeRepo->findOneByName('Sailboat'), $charter2);
+        $manager->persist($boat7);
+        
+        $this->addReference('boat-7', $boat7);
+
+        $boat8 = new Boat();
+        $boat8->setName('Enterprise');
+        $boat8->setTitle('TNG');
+        $boat8->setDescription('The First 21.7 from Beneteau is a great Sailing boat available for charter in Italy. With 2 cabins and 4 berths, it has the ability to cater up to people overnight. This makes it a perfect choice for small groups wishing to charter the region. Book online for a great sailing holiday in Italy.');
+        $boat8->setBrand('Beneteau');
+        $boat8->setModel('First 21.7');
+        $boat8->setLength(6.4);
+        $boat8->setCabins(1);
+        $boat8->setBerths(2);
+        $boat8->setBathrooms(1);
+        $boat8->setToilets(1);
+        $boat8->setNrGuests(2);
+        $boat8->setDefaultPrice(10000);
+        
+        $boat8Address = new BoatAddress();
+        $boat8Address->setAddressLine1('Mallorca');
+        $boat8Address->setLocality('Mallorca');
+        $boat8Address->setPostcode('07410');
+        $boat8Address->setCountry($countryRepo->findOneByIso('ES'));
+        
+        $boat8 = $boatService->createBoat($boat8, $boat8Address, $boatTypeRepo->findOneByName('Yacht'), $charter1);
+        $manager->persist($boat8);
+        
+        $this->addReference('boat-8', $boat8);
+
+        $boat9 = new Boat();
+        $boat9->setName('Enterprise');
+        $boat9->setTitle('TNG');
+        $boat9->setDescription('The Sun Odyssey 29.2 from Jeanneau is a great Sailing boat available for charter in Greece. With 2 cabins and 4 berths, it has the ability to cater up to 4 people overnight. This makes it a perfect choice for small groups wishing to charter the region. Book online for a great sailing holiday in Greece.');
+        $boat9->setBrand('Jeanneau');
+        $boat9->setModel('Sun Odyssey 29.2');
+        $boat9->setLength(8.8);
+        $boat9->setCabins(4);
+        $boat9->setBerths(4);
+        $boat9->setBathrooms(4);
+        $boat9->setToilets(4);
+        $boat9->setNrGuests(4);
+        $boat9->setDefaultPrice(10000);
+        
+        $boat9Address = new BoatAddress();
+        $boat9Address->setAddressLine1('Crete');
+        $boat9Address->setLocality('Crete');
+        $boat9Address->setPostcode('730 04');
+        $boat9Address->setCountry($countryRepo->findOneByIso('GR'));
+        
+        $boat9 = $boatService->createBoat($boat9, $boat9Address, $boatTypeRepo->findOneByName('Sailboat'), $charter2);
+        $manager->persist($boat9);
+        
+        $this->addReference('boat-9', $boat9);
+
+        $boat10 = new Boat();
+        $boat10->setName('Enterprise');
+        $boat10->setTitle('TNG');
+        $boat10->setDescription('The Oceanis 31 from Beneteau is a great Sailing boat available for charter in Greece. With 2 cabins and 4 berths, it has the ability to cater up to 4 people overnight. This makes it a perfect choice for small groups wishing to charter the region. Book online for a great sailing holiday in Greece.');
+        $boat10->setBrand('Beneteau');
+        $boat10->setModel('Oceanis 31 ');
+        $boat10->setLength(50);
+        $boat10->setCabins(2);
+        $boat10->setBerths(4);
+        $boat10->setBathrooms(2);
+        $boat10->setToilets(2);
+        $boat10->setNrGuests(4);
+        $boat10->setDefaultPrice(10000);
+        
+        $boat10Address = new BoatAddress();
+        $boat10Address->setAddressLine1('Zakynthos');
+        $boat10Address->setLocality('Zakynthos');
+        $boat10Address->setPostcode('291 00');
+        $boat10Address->setCountry($countryRepo->findOneByIso('GR'));
+        
+        $boat10 = $boatService->createBoat($boat10, $boat10Address, $boatTypeRepo->findOneByName('Sailboat'), $charter1);
+        $manager->persist($boat10);
+        
+        $this->addReference('boat-10', $boat10);
         
         $manager->flush();
         
