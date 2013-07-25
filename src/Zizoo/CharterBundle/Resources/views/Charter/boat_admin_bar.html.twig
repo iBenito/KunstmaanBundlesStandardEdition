@@ -52,10 +52,15 @@
                 <li><a href="#" class="button blue disabled medium view_btn">View</a></li>
             {% endif %}
             <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterEditBoat', {id: boat.id}) }}" class="button blue medium">Edit</a></li>
-            <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterEditPriceBoat', {id: boat.id}) }}" class="button blue medium">Calendar</a></li>
-            <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterDeleteBoat', {id: boat.id}) }}" class="button blue medium">
-                {% if boat.deleted is null %}Delete{% else %}Undelete{% endif %}
-            </a></li>
+            <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterEditPriceBoat', {id: boat.id}) }}" class="button blue light">Calendar</a></li>
+            <li>
+                {% if boat.deleted is null %}
+                    <a href="{{ path('ZizooBaseBundle_Dashboard_CharterDeleteBoat', {id: boat.id}) }}" class="button blue light">Delete</a>
+                {% else %}
+                    <a href="{{ path('ZizooBaseBundle_Dashboard_CharterDeleteBoat', {id: boat.id}) }}" class="button red medium">Undelete</a>
+                {% endif %}
+                </a>
+            </li>
         </ul>
     </div>
 </article>
