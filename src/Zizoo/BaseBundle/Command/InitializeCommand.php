@@ -111,11 +111,13 @@ class InitializeCommand extends ContainerAwareCommand
             }
         }
         
+        return;
+        // TODO: fix
         if ($clearCache){
             // CLEAR CACHE
             $command = $this->getApplication()->find('cache:clear');
 
-            $arguments = array('command' => 'cache:clear', '-=env=dev');
+            $arguments = array('command' => 'cache:clear', '--env=dev');
             $input = new ArrayInput($arguments);
             $returnCode = $command->run($input, $output);
 

@@ -41,9 +41,11 @@ class Messenger {
         $textBody = $templateTxt->render($context);
         $htmlBody = $templateHtml->render($context);
 
+        $from = $this->container->getParameter('email_info');
+        $name = $this->container->hasParameter('email_info_name') ? $this->container->getParameter('email_info_name') : null;
         $email = \Swift_Message::newInstance()
             ->setSubject($subject)
-            ->setFrom($this->container->getParameter('email_info'))
+            ->setFrom($from, $name)
             ->setTo($to->getUser()->getEmail());
 
         if (!empty($htmlBody)) {
@@ -67,9 +69,11 @@ class Messenger {
         $textBody = $templateHtml->render($context);
         $htmlBody = $templateTxt->render($context);
 
+        $from = $this->container->getParameter('email_info');
+        $name = $this->container->hasParameter('email_info_name') ? $this->container->getParameter('email_info_name') : null;
         $email = \Swift_Message::newInstance()
             ->setSubject($subject)
-            ->setFrom($this->container->getParameter('email_info'))
+            ->setFrom($from, $name)
             ->setTo($to->getEmail());
 
         if (!empty($htmlBody)) {
@@ -98,9 +102,11 @@ class Messenger {
         $textBody = $templateTxt->render($context);
         $htmlBody = $templateHtml->render($context);
 
+        $from = $this->container->getParameter('email_info');
+        $name = $this->container->hasParameter('email_info_name') ? $this->container->getParameter('email_info_name') : null;
         $email = \Swift_Message::newInstance()
             ->setSubject($subject)
-            ->setFrom($this->container->getParameter('email_info'))
+            ->setFrom($from, $name)
             ->setTo($to);
 
         if (!empty($htmlBody)) {
@@ -123,6 +129,8 @@ class Messenger {
         $textBody = $template->renderBlock('body_text', $context);
         $htmlBody = $template->renderBlock('body_html', $context);
 
+        $from = $this->container->getParameter('email_register');
+        $name = $this->container->hasParameter('email_register_name') ? $this->container->getParameter('email_register_name') : null;
         $email = \Swift_Message::newInstance()
             ->setSubject($subject)
             ->setFrom($this->container->getParameter('email_register'))
@@ -165,9 +173,11 @@ class Messenger {
         $textBody = $templateTxt->render($context);
         $htmlBody = $templateHtml->render($context);
 
+        $from = $this->container->getParameter('email_info');
+        $name = $this->container->hasParameter('email_register_name') ? $this->container->getParameter('email_register_name') : null;
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
-            ->setFrom($this->container->getParameter('email_register'))
+            ->setFrom($from, $name)
             ->setTo($user->getEmail());
 
         if (!empty($htmlBody)) {
@@ -200,9 +210,11 @@ class Messenger {
         $textBody = $templateTxt->render($context);
         $htmlBody = $templateHtml->render($context);
 
+        $from = $this->container->getParameter('email_info');
+        $name = $this->container->hasParameter('email_register_name') ? $this->container->getParameter('email_register_name') : null;
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
-            ->setFrom($this->container->getParameter('email_register'))
+            ->setFrom($from, $name)
             ->setTo($user->getEmail());
 
         if (!empty($htmlBody)) {
@@ -235,9 +247,11 @@ class Messenger {
         $textBody = $templateTxt->render($context);
         $htmlBody = $templateHtml->render($context);
 
+        $from = $this->container->getParameter('email_password');
+        $name = $this->container->hasParameter('email_password_name') ? $this->container->getParameter('email_password_name') : null;
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
-            ->setFrom($this->container->getParameter('email_password'))
+            ->setFrom($from, $name)
             ->setTo($user->getEmail());
 
         if (!empty($htmlBody)) {
@@ -269,9 +283,11 @@ class Messenger {
         $textBody = $templateTxt->render($context);
         $htmlBody = $templateHtml->render($context);
 
+        $from = $this->container->getParameter('email_password');
+        $name = $this->container->hasParameter('email_password_name') ? $this->container->getParameter('email_password_name') : null;
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
-            ->setFrom($this->container->getParameter('email_password'))
+            ->setFrom($from, $name)
             ->setTo($user->getEmail());
 
         if (!empty($htmlBody)) {
