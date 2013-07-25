@@ -115,22 +115,22 @@ class InitializeCommand extends ContainerAwareCommand
             // CLEAR CACHE
             $command = $this->getApplication()->find('cache:clear');
 
-            $arguments = array('command' => 'cache:clear', '-env=dev');
+            $arguments = array('command' => 'cache:clear', '-=env=dev');
             $input = new ArrayInput($arguments);
             $returnCode = $command->run($input, $output);
 
-            $arguments = array('command' => 'cache:clear', '-env=prod');
+            $arguments = array('command' => 'cache:clear', '--env=prod');
             $input = new ArrayInput($arguments);
             $returnCode = $command->run($input, $output);
         } else if ($interactive){
             if ($dialog->askConfirmation($output, '<question>Do you want to clear the cache Y/N ?</question>', false)) {
                 $command = $this->getApplication()->find('cache:clear');
                 
-                $arguments = array('command' => 'cache:clear', '-env=dev');
+                $arguments = array('command' => 'cache:clear', '--env=dev');
                 $input = new ArrayInput($arguments);
                 $returnCode = $command->run($input, $output);
                 
-                $arguments = array('command' => 'cache:clear', '-env=prod');
+                $arguments = array('command' => 'cache:clear', '--env=prod');
                 $input = new ArrayInput($arguments);
                 $returnCode = $command->run($input, $output);
             }
@@ -140,22 +140,22 @@ class InitializeCommand extends ContainerAwareCommand
             // WARMUP CACHE
             $command = $this->getApplication()->find('cache:warmup');
 
-            $arguments = array('command' => 'cache:warmup', '-env=dev');
+            $arguments = array('command' => 'cache:warmup', '--env=dev');
             $input = new ArrayInput($arguments);
             $returnCode = $command->run($input, $output);
 
-            $arguments = array('command' => 'cache:warmup', '-env=prod');
+            $arguments = array('command' => 'cache:warmup', '--env=prod');
             $input = new ArrayInput($arguments);
             $returnCode = $command->run($input, $output);
         } else if ($interactive){
             if ($dialog->askConfirmation($output, '<question>Do you want to warm up the cache Y/N ?</question>', false)) {
                 $command = $this->getApplication()->find('cache:warmup');
                 
-                $arguments = array('command' => 'cache:warmup', '-env=dev');
+                $arguments = array('command' => 'cache:warmup', '--env=dev');
                 $input = new ArrayInput($arguments);
                 $returnCode = $command->run($input, $output);
                 
-                $arguments = array('command' => 'cache:warmup', '-env=prod');
+                $arguments = array('command' => 'cache:warmup', '--env=prod');
                 $input = new ArrayInput($arguments);
                 $returnCode = $command->run($input, $output);
             }
