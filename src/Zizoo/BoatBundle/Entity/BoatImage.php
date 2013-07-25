@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class BoatImage extends Media {
     
     /**
-     * @ORM\ManyToOne(targetEntity="\Zizoo\BoatBundle\Entity\Boat", inversedBy="image")
+     * @ORM\ManyToOne(targetEntity="\Zizoo\BoatBundle\Entity\Boat", inversedBy="image", cascade={"persist"})
      * @ORM\JoinColumn(name="boat_id", referencedColumnName="id")
      */
     protected $boat;

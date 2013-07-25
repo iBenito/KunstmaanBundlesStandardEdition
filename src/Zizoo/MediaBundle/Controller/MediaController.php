@@ -75,17 +75,22 @@ class MediaController extends Controller
             return $mediaEntity;
         }
         
+        $now = new \DateTime();
+        
         if ($mediaEntity instanceof ProfileAvatar){
             $profile = $mediaEntity->getProfile();
             $profile->removeAvatar($mediaEntity);
+            $profile->setUpdated($now);
             $em->persist($profile);
         } else if ($mediaEntity instanceof CharterLogo){
             $charter = $mediaEntity->getCharter();
             $charter->setLogo(null);
+            $charter->setUpdated($now);
             $em->persist($charter);
         } else if ($mediaEntity instanceof BoatImage){
             $boat = $mediaEntity->getBoat();
             $boat->removeImage($mediaEntity);
+            $boat->setUpdated($now);
             $em->persist($boat);
         } else {
             return new JsonResponse(array('error' => 'Not allowed'), 400);

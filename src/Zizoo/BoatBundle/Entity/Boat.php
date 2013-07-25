@@ -101,7 +101,7 @@ class Boat extends BaseEntity
     protected $status;
        
     /**
-     * @ORM\OneToMany(targetEntity="BoatImage", mappedBy="boat")
+     * @ORM\OneToMany(targetEntity="BoatImage", mappedBy="boat", cascade={"persist","remove"})
      * @ORM\OrderBy({"order" = "ASC"})
      */
     protected $image;

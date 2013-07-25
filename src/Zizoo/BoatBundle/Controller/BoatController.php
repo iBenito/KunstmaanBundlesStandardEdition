@@ -474,7 +474,8 @@ class BoatController extends Controller
 
             $image->setBoat($boat);
             $boat->addImage($image);
-
+            $boat->setUpdated(new \DateTime());
+            
             $em->persist($image);
 
             $validator          = $this->get('validator');
