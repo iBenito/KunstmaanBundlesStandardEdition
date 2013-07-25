@@ -21,9 +21,12 @@ function codeAddress(address) {
 function initialize() {
     geocoder = new google.maps.Geocoder();
     map = new google.maps.Map(document.getElementById('map'), {
-        center: center,
-        zoom: zoom,
-        mapTypeId: 'terrain'
+        center:             center,
+        zoom:               zoom,
+        scrollwheel:        false,
+        disableDefaultUI:   true,
+        zoomControl:        true
+        
     });
     markers = new Array();
     mc = new MarkerClusterer(map, markers, {maxZoom: 19});

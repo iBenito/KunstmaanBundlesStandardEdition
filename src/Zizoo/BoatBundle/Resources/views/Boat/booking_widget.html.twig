@@ -92,44 +92,19 @@
 
 <script type="text/javascript">
 
+    var bookingWidgetMappings = new Array({'original_state': {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') }}, 
+                                    'mapped_state': 'day_unavailable'},
+                                    {'original_state': {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') }}, 
+                                    'mapped_state': 'day_unavailable'},
+                                    {'original_state': {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_SELF') }},
+                                    'mapped_state': 'day_unavailable'});
+                                
     var bookingWidgetReservedDates      = {{ boat|reservedDatesWithBookings(reservations)|raw }};
     var bookingWidgetPriceDates         = {{ boat|priceDates(prices)|raw }};
-    var bookingWidgetDefaultAllowed     = {{ boat.defaultPrice is not null ? 'true' : 'false' }};
-    var bookingWidgetDefaultPrice       = {{ boat.defaultPrice is not null ? boat.defaultPrice : 'null' }};
+    var bookingWidgetDefaultAllowed     = {{ boat.hasDefaultPrice ? 'true' : 'false' }};
+    var bookingWidgetDefaultPrice       = {{ boat.hasDefaultPrice ? boat.defaultPrice : 'null' }};
     
-    function bookingWidgetDefaultDateClass(day){
-        if (bookingWidgetDefaultAllowed){
-            return 'day_available';
-        } else {
-            return 'day_unavailable';
-        }
-    }
     
-    function bookingWidgetCombinedDateClasses(dayStates, numStates){
-        var arr = [], p, i = 0;
-        for (dayStateId in dayStates){
-            var dayState = dayStates[dayStateId];
-            var suffix = dayState['suffix'];
-            if (dayState!=null && suffix!=null && numStates==1){
-                if (suffix=='start'){
-                    arr[i++] = (availabilityDefaultAllowed?'day_available':'day_unavailable') + '-' + dayState['reservation_state'];
-                } else {
-                    arr[i++] = dayState['reservation_state'] + '-' + (availabilityDefaultAllowed?'day_available':'day_unavailable');
-                }
-            } else {
-                arr[i++] = dayState['reservation_state'];
-            }
-        }
-        return arr.join('-');
-    }
-    
-    function bookingWidgetDefaultDate(day){
-        if (bookingWidgetDefaultAllowed){
-            return {selectable: true, dateClass: 'day_available', title: '&euro; ' + bookingWidgetDefaultPrice, content: day};
-        } else {
-            return {selectable: false, dateClass: 'day_unavailable', title: 'Unavailable', content: day};
-        }
-    }
     
     function openComingSoonDialog(){
         $('#coming_soon').dialog({
@@ -198,69 +173,35 @@
         $.extend($.datepick, {
             zizoo_widget: function(date) {
                 var id = $(this).attr('id');
-                var reservedDates    = null;
-                var priceDate       = null;
+                var selectable = true;
+                var previousDate            = date.daysMoreLess(-1);
+                var reservedDate            = getDates(availabilityReservedDates, date);
+                var previousReservedDate    = getDates(availabilityReservedDates, previousDate);
+                var priceDate               = getDates(availabilityPriceDates, date);
 
-                if (dateExists(bookingWidgetReservedDates, date.getFullYear(), date.getMonthFormatted(), date.getDateFormatted())){
-                    reservedDates = bookingWidgetReservedDates[date.getFullYear()][date.getMonthFormatted()][date.getDateFormatted()];
-                }
-
-                if (dateExists(bookingWidgetPriceDates, date.getFullYear(), date.getMonthFormatted(), date.getDateFormatted())){
-                    priceDate = bookingWidgetPriceDates[date.getFullYear()][date.getMonthFormatted()][date.getDateFormatted()];
+                var content = date.getDateFormatted();
+                var defaultDateClass = '{% if boat.hasDefaultPrice %}day_available{% else %}day_unavailable{% endif %}';
+                var todayClass  = getDateClass(reservedDate, bookingWidgetMappings, defaultDateClass);
+                var dateClass   = todayClass;
+                var lastClass   = getDateClass(previousReservedDate, bookingWidgetMappings, defaultDateClass);
+                
+                var lastClassArr = lastClass.split('-');
+                lastClass = lastClassArr[lastClassArr.length-1];
+                if (lastClass != dateClass){
+                    dateClass = lastClass + '-' + dateClass;
                 }
                 
-                
-                if (priceDate){
-                    if (reservedDates){
-                        var dateClasses = new Array();
-                        var selectable = true;
-                        var i, numStates=0, numRequested=0;
-                        for (i=0; i<reservedDates.length; i++){
-                            var reservedDate = reservedDates[i];
-                            if (reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') }} || reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_SELF') }} || reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') }}){
-                                dateClasses['day_booked'] = {'reservation_state': 'day_booked', 'suffix': reservedDate[3]};
-                                numStates++;
-                            } else {
-                                var defDayClass = defaultDateClass(date.getDateFormatted());
-                                dateClasses[defDayClass] = {'reservation_state': defDayClass, 'suffix': null};
-                                numStates++;
-                            }
-                        }
-                        if (numRequested>0) numStates++;
-                        var dateClass = bookingWidgetCombinedDateClasses(dateClasses, numStates);
-                        if (dateClass=='day_booked') selectable = false;
-                        return {selectable: selectable, dateClass: dateClass, title: '', content: date.getDateFormatted()};
-                    } else {
-                        return {selectable: true, dateClass: 'day_available', title: '&euro; ' + priceDate[0], content: date.getDateFormatted()};
-                    }
-                } else {
-                    if (reservedDates){
-                        var dateClasses = new Array();
-                        var selectable = true;
-                        var i, numStates=0, numRequested=0;
-                        for (i=0; i<reservedDates.length; i++){
-                            var reservedDate = reservedDates[i];
-                            if (reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') }} || reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_SELF') }} || reservedDate[0]=={{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') }}){
-                                dateClasses['day_booked'] = {'reservation_state': 'day_booked', 'suffix': reservedDate[3]};
-                                numStates++;
-                            } else {
-                                var defDayClass = bookingWidgetDefaultDateClass(date.getDateFormatted());
-                                dateClasses[defDayClass] = {'reservation_state': defDayClass, 'suffix': null};
-                                numStates++;
-                            }
-                        }
-                        if (numRequested>0) numStates++;
-                        var dateClass = bookingWidgetCombinedDateClasses(dateClasses, numStates);
-                        if ( dateClass=='day_booked' 
-                            || (dateClass=='day_available-day_booked' && id=='zizoo_boat_book_reservation_range_reservation_from') 
-                            || (dateClass=='day_booked-day_available' && id=='zizoo_boat_book_reservation_range_reservation_to') )
-                        {
-                            selectable = false;
-                        }
-                        return {selectable: selectable, dateClass: dateClass, title: '', content: date.getDateFormatted()};
-                    }
-                    return bookingWidgetDefaultDate(date.getDateFormatted());    
+                if ( (dateClass=='day_available-day_unavailable' && id=='zizoo_boat_book_reservation_range_reservation_from') 
+                    || (dateClass=='day_unavailable-day_available' && id=='zizoo_boat_book_reservation_range_reservation_to') )
+                {
+                    selectable = false;
+                } else  if (dateClass=='day_available-day_unavailable' && id=='zizoo_boat_book_reservation_range_reservation_to'){
+                    selectable = true;
+                } else if (todayClass=='day_unavailable'){
+                    selectable = false;
                 }
+                
+                return {selectable: selectable, dateClass: todayClass, title: '', content: content};
                 
             }
         });

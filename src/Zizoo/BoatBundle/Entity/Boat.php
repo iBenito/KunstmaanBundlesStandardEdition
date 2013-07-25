@@ -101,7 +101,7 @@ class Boat extends BaseEntity
     protected $status;
        
     /**
-     * @ORM\OneToMany(targetEntity="BoatImage", mappedBy="boat")
+     * @ORM\OneToMany(targetEntity="BoatImage", mappedBy="boat", cascade={"persist","remove"})
      * @ORM\OrderBy({"order" = "ASC"})
      */
     protected $image;
@@ -947,7 +947,7 @@ class Boat extends BaseEntity
     
     public function getMinimumDays()
     {
-        return $this->minimumDays;
+        return (int)$this->minimumDays;
     }
     
     public function setCrewPrice($crewPrice)
@@ -969,7 +969,7 @@ class Boat extends BaseEntity
     
     public function getNumCrew()
     {
-        return $this->numCrew;
+        return (int)$this->numCrew;
     }
     
     public function setCrewOptional($crewOptional)

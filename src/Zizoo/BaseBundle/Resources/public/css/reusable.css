@@ -580,7 +580,8 @@
     position: absolute;
     top: 0;
     left: 0;
-    
+    max-width: 140px;
+    overflow: hidden;
     min-width: 140px;
     height: 100%;
     font: italic 14px/36px 'Asap', Arial;
@@ -677,8 +678,6 @@
 
 .form .row .row-content.root {
     margin-left: 140px;
-    position: relative;
-    z-index: 1003;
 }
 
 .form .row .row-content.no-margin {
@@ -1781,18 +1780,20 @@
 }
 
 .box .boat.gray:hover {
-    -webkit-box-shadow: inset 0 0 0 3px #47c2d2;
-    -moz-box-shadow: inset 0 0 0 3px #47c2d2;
-    box-shadow: inset 0 0 0 3px #47c2d2;
+    -webkit-box-shadow: inset 0 0 0 3px red;
+    -moz-box-shadow: inset 0 0 0 3px red;
+    box-shadow: inset 0 0 0 3px red;
 }
 
 .box .boat.disabled {
-    pointer-events: none;
+    /**pointer-events: none;
     cursor: default;
     background: #ebecec;
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
+    */
+    background: #ebecec;
 }
 
 .box .boat figure {

@@ -78,7 +78,7 @@ class CharterController extends Controller
         $searchBoatName     = $request->query->get('boat_name', null);
         $searchBoatType     = $request->query->get('boat_type', null);
         $page               = $request->attributes->get('page', 1);
-        $pageSize           = $request->query->get('page_size', 1);
+        $pageSize           = $request->query->get('page_size', 10);
         $listing_status     = $request->query->get('listing_status');
                 
         $em    = $this->getDoctrine()->getManager();
@@ -124,7 +124,6 @@ class CharterController extends Controller
         }
         
         $page_sizes = array(
-                                        '1'    => '1',
                                         '10'    => '10',
                                         '20'    => '20',
                                         '50'    => '50',

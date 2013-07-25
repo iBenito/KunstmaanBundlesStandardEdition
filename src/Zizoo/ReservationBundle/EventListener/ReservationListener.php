@@ -39,7 +39,7 @@ class ReservationListener
         } 
         
         // Ensure that the boat is available for desired dates
-        if ($reservationAgent->reservationExists($boat, $from, $until) || !$reservationAgent->available($boat, $from, $until)){
+        if ($reservationAgent->reservationExists($boat, $from, $until) || (!$reservationAgent->available($boat, $from, $until) && $reservation->getStatus()!=Reservation::STATUS_SELF)){
             throw new InvalidReservationException('Boat not available for '.$from->format('d/m/Y') . ' - ' . $until->format('d/m/Y'));
         } 
         
