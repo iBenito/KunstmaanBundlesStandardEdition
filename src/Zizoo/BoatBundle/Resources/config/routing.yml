@@ -56,13 +56,6 @@ ZizooBoatBundle_Boat_EditPrice:
         _method:  GET|POST
         id: \d+
 
-ZizooBoatBundle_Boat_ConfirmBoatPrice:
-    pattern:  /charter/account/boat/{id}/price/confirm
-    defaults: { _controller: ZizooBoatBundle:Boat:boatConfirmPrice }
-    requirements:
-        _method:  GET|POST
-        id: \d+
-
 ZizooBoatBundle_Boat_Active:
     pattern:  /charter/account/boat/active/{id}
     defaults: { _controller: ZizooBoatBundle:Boat:active, id: null }

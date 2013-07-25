@@ -79,3 +79,213 @@
     </script>
 {% endspaceless %}
 {% endblock zizoo_boat_crew_widget %}
+    
+    
+{% block zizoo_boat_availability_widget %}
+{% spaceless %}
+    {% set overlap_reservations = false %}
+    {% if form.vars.errors|length > 0 %}
+        {% for i, e in form.vars.errors %}
+            {% if e.messageTemplate == 'zizoo_boat.error.availability_overlap_reservations' %}
+                {% set overlap_reservations = true %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% if form.confirm is defined %}
+        {% if form.confirm.vars.errors|length > 0 %}
+            {% set overlap_reservations = true %}
+        {% endif %}
+    {% endif %}
+    {% if form.deny_reservation is defined %}
+        {% if form.deny_reservation.deny_message.vars.errors|length > 0 %}
+            {% set overlap_reservations = true %}
+        {% endif %}
+    {% endif %}
+   
+    <div id="{{ id }}-details" {% if overlap_reservations==true%}style="display: none"{% endif %}>
+        <div id="{{ id }}-dates" class="clearfix">
+            <div class="step from">
+                <!--<div class="availability-hinter">Select a starting date from the calendar</div>-->
+                <div id="availability-setter-dates-from">
+                    {{ form_widget(form.reservation_range.reservation_from) }}
+                    {% if form.reservation_range.reservation_from.vars.errors|length > 0 %}
+                        {{ form_errors(form.reservation_range.reservation_from) }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="step tp">
+                <!--<div class="availability-hinter">Select a starting date from the calendar</div>-->
+                <div id="availability-setter-dates-tp">
+                    {{ form_widget(form.reservation_range.reservation_to) }}
+                    {% if form.reservation_range.reservation_to.vars.errors|length > 0 %}
+                        {{ form_errors(form.reservation_range.reservation_to) }}
+                    {% endif %}
+                </div>
+            </div>
+            {% if form.reservation_range.vars.errors|length > 0 %}
+            {{ form_errors(form.reservation_range) }}
+            {% endif %}
+
+        </div>
+
+        <div id="{{ id }}-type" class="clearfix row">
+            <div class="step type">
+                {{ form_widget(form.type) }}
+                {% if form.type.vars.errors|length > 0 %}
+                    {{ form_errors(form.type) }}
+                {% endif %}
+            </div>
+        </div>
+
+        <div id="{{ id }}-price" class="clearfix">
+            <div class="step price">
+                <div class="clearfix">
+                    <div class="input-wrap">
+                        {{ form_widget(form.price) }}
+                        <span>&euro;</span>
+                    </div>
+                </div>
+                {% if form.price.vars.errors|length > 0 %}
+                    {{ form_errors(form.price) }}
+                {% endif %}
+            </div>
+        </div>
+            
+        <div id="{{ id }}-buttons" class="clearfix">
+            <div class="step set">
+                <button class="button blue large disabled" disabled="disabled" type="submit">Set</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="{{ id }}-overlap" {% if overlap_reservations==false%}style="display: none"{% endif %}>
+        {% if overlap_external_reservations|length > 0 %}
+            <p>The following self-reservations will be removed:</p>
+            <ul>
+                {% for reservation in overlap_external_reservations %}
+                    <li>{{ reservation.checkIn|date }} - {{ reservation.checkOut|date }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if overlap_requested_reservations|length > 0 %}
+            <p>The following requested reservations will be denied:</p>
+            <ul>
+                {% for reservation in overlap_requested_reservations %}
+                    <li>{{ reservation.checkIn|date }} - {{ reservation.checkOut|date }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% if form.deny_reservation is defined %}
+            {{ form_widget(form.deny_reservation) }}
+        {% endif %}
+        {% if form.confirm is defined %}
+        <div class="row">
+        {{ form_widget(form.confirm) }}
+        {{ form_label(form.confirm) }}
+        {% if form.confirm.vars.errors|length > 0 %}
+            {{ form_errors(form.confirm) }}
+        {% endif %}
+        </div>
+        {% endif %}
+            
+        <div id="{{ id }}-buttons" class="clearfix">
+            <div class="step confirm">
+                <button id="{{ id }}-confirm-confirm-btn" class="button blue large disabled" disabled="disabled" type="submit">Set</button>
+                <button id="{{ id }}-confirm-cancel-btn" class="button blue large" type="button">Cancel</button>
+            </div>
+        </div>
+    </div>
+                    
+    {{ form_rest(form) }}
+
+    <script type="text/javascript">
+        function {{ id }}_reset(){
+            $('#{{ form.reservation_range.reservation_from.vars.id }}').val('');
+            $('#{{ form.reservation_range.reservation_to.vars.id }}').val('');
+            $('#{{ form.type.vars.id }}').find('ul li input[type="radio"]').checkBox('changeCheckStatus');
+            $('#{{ form.price.vars.id }}').val('');
+            $('#{{ id }}-details').show();
+            $('#{{ id }}-overlap').html('');
+        }
+        
+        {% if overlap_reservations == true %}
+        function {{ id }}_checkConfirm(){
+            var msg     = {% if form.deny_reservation is defined %}$('#{{ form.deny_reservation.deny_message.vars.id }}').val();{% else %}true;{% endif %}
+            var confirm = $('#{{ form.confirm.vars.id }}').attr('checked')=='checked';
+            if (msg!='' && confirm==true){
+                $('#{{ id }}-buttons #{{ id }}-confirm-confirm-btn').removeClass('disabled').attr('disabled', null);
+            } else {
+                $('#{{ id }}-buttons #{{ id }}-confirm-confirm-btn').addClass('disabled').attr('disabled', 'disabled');
+            }
+        }
+        {% endif %}
+        
+        function {{ id }}_checkSetter(){
+            var from    = $('#{{ form.reservation_range.reservation_from.vars.id }}').val();
+            var to      = $('#{{ form.reservation_range.reservation_to.vars.id }}').val();
+            var type    = $('#{{ form.type.vars.id }}').find('ul li input[type="radio"]:checked').val();
+            if (from!='' && to!=''){
+                if (type=='availability'){
+                    var price   = $('#{{ form.price.vars.id }}').val();
+                    if (price!=''){
+                        $('#{{ id }}-buttons .set button').removeClass('disabled').attr('disabled', null);
+                        return true;
+                    } else {
+                        $('#{{ id }}-buttons .set button').addClass('disabled').attr('disabled', 'disabled');
+                        return false;
+                    }
+                } else if (type=='unavailability'){
+                    $('#{{ id }}-buttons .set button').removeClass('disabled').attr('disabled', null);
+                    return true;
+                } else if (type=='default'){
+                    $('#{{ id }}-buttons .set button').removeClass('disabled').attr('disabled', null);
+                    return true;
+                } else {
+                    $('#{{ id }}-buttons .set button').addClass('disabled').attr('disabled', 'disabled');
+                    return false;
+                }
+            } else {
+                $('#{{ id }}-buttons .set button').addClass('disabled').attr('disabled', 'disabled');
+                return false;
+            }
+        }
+        
+        $(document).ready(function(){
+            $('#{{ form.reservation_range.reservation_from.vars.id }}').change({{ id }}_checkSetter);
+            $('#{{ form.reservation_range.reservation_to.vars.id }}').change({{ id }}_checkSetter);
+            $('#{{ form.type.vars.id }}').change(function(){
+                var checkedType = $(this).find('ul li input[type="radio"]:checked').val();
+                if (checkedType=='availability'){
+                    $('#{{ form.price.vars.id }}').attr('disabled',null).attr('required', 'required').attr('readonly',null);
+                } else if (checkedType=='unavailability'){
+                    $('#{{ form.price.vars.id }}').attr('disabled','disabled').attr('required', null).val('');
+                } else {
+                    {% if has_default_price == true %}
+                    $('#{{ form.price.vars.id }}').attr('disabled','disabled').attr('readonly', 'readonly').attr('required','required').val('{{ default_price }}');
+                    {% endif %}
+                }
+                {{ id }}_checkSetter();
+            });
+            $('#{{ form.price.vars.id }}').change({{ id }}_checkSetter);
+            $('#{{ form.price.vars.id }}').keyup({{ id }}_checkSetter);
+            
+            
+            {% if overlap_reservations == true %}
+                {% if form.deny_reservation is defined %}
+                    $('#{{ form.deny_reservation.deny_message.vars.id }}').change({{ id }}_checkConfirm);
+                    $('#{{ form.deny_reservation.deny_message.vars.id }}').keyup({{ id }}_checkConfirm);
+                {% endif %}
+                $('#{{ form.confirm.vars.id }}').change({{ id }}_checkConfirm);
+                $('#{{ id }}-confirm-cancel-btn').click({{ id }}_reset);
+                $('#{{ id }}').parents('form').submit({{ id }}_checkConfirm);
+            {% else %}
+                $('#{{ form.type.vars.id }}').change();
+                {{ id }}_checkSetter();
+                $('#{{ id }}').parents('form').submit({{ id }}_checkSetter);
+            {% endif %}
+        });
+    </script>
+{% endspaceless %}
+{% endblock zizoo_boat_availability_widget %}
+    

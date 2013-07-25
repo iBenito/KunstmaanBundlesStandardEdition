@@ -17,12 +17,14 @@ class AccountSettingsType extends AbstractType
         $builder->add('password', 'password', array('label'         => array('value' => 'zizoo_user.label.current_password', 'class' => 'password'),
                                                     'property_path' => 'password'));
         
-        $builder->add('new_email', new UserNewEmailType(), array(   'label'             => array('value' => 'zizoo_user.label.change_email',
+        $builder->add('new_email', new UserNewEmailType(), array(   'label'             => array('value' => 'zizoo_user.label.email',
                                                                                                 'class' => 'email'),
-                                                                    'property_path'     => 'newEmail'));
+                                                                    'property_path'     => 'newEmail',
+                                                                    'required'          => false));
         
         $builder->add('new_password', new UserNewPasswordType(), array( 'label'         => false,
-                                                                        'property_path' => 'newPassword'));
+                                                                        'property_path' => 'newPassword',
+                                                                        'required'          => false));
         
     }
 

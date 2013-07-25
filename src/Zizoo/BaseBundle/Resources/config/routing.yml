@@ -203,14 +203,7 @@ ZizooBaseBundle_Dashboard_CharterEditPriceBoat:
     requirements:
         _method:  GET|POST
         id: \d+
-        
-ZizooBaseBundle_Dashboard_CharterConfirmPriceBoat:
-    pattern:  /charter/account/dashboard/boat/{id}/edit/price/confirm
-    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBoat, boat_controller: ZizooBoatBundle:Boat:boatConfirmPrice }
-    requirements:
-        _method:  GET|POST
-        id: \d+
-         
+                 
 ZizooBaseBundle_Dashboard_CharterDeleteBoat:
     pattern:  /charter/account/dashboard/boat/{id}/delete
     defaults: { _controller: ZizooBaseBundle:Dashboard:charterBoat, boat_controller: ZizooBoatBundle:Boat:delete }

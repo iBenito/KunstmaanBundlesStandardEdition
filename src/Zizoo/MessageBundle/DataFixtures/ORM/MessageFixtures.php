@@ -53,6 +53,10 @@ class MessageFixtures implements OrderedFixtureInterface, SharedFixtureInterface
         $profile2 = $this->getReference('profile-2');
         $profile3 = $this->getReference('profile-3');
         
+                //before you render template add bellow code
+        $this->container->enterScope('request');
+        $this->container->set('request', new \Symfony\Component\HttpFoundation\Request(), 'request');
+        
         $composer       = $this->container->get('zizoo_message.composer');
         $sender         = $this->container->get('fos_message.sender');
         $messageTypeRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooMessageBundle:MessageType');

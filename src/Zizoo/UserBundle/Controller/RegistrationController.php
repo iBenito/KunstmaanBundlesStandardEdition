@@ -125,6 +125,8 @@ class RegistrationController extends Controller
             }
         }
 
+        $v = $form->createView();
+        
         return $this->render('ZizooUserBundle:Registration:register.html.twig', array(  'form' => $form->createView(), 
                                                                                         'unconfirmed_user'  => null, 
                                                                                         'unconfirmed_email'     => false, 

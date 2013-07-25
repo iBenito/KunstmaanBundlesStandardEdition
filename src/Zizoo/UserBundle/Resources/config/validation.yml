@@ -15,6 +15,14 @@ Zizoo\UserBundle\Entity\User:
         password:
             - NotBlank: { message: zizoo_user.error.password_not_blank, groups: [registration, fb_link] }
             - MinLength: { limit: 5, message: zizoo_user.error.password_min_length, groups: [registration, fb_link] }
+  
+Zizoo\UserBundle\Form\Model\AccountSettings:
+    constraints:
+        - Zizoo\UserBundle\Validator\Constraints\AccountSettings: { message: "test" }
+        
+    properties:
+        password:
+            - NotBlank: { message: zizoo_user.error.current_password_not_blank }
     
 Zizoo\UserBundle\Form\Model\UserNewPassword:
     properties:

@@ -13,7 +13,6 @@
     
 {% block stylesheets %}
     {{ parent() }}
-    <!--<link href="{{ asset('css/datepick/jquery.datepick.css') }}" type="text/css" rel="stylesheet" />-->
     <link href="{{ asset('css/datepick/ui-ui-zizoo.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('bundles/zizooboat/css/boat.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
@@ -49,8 +48,8 @@
 
             <!-- start:subnavigation -->
             <ul class="subnavigation overview clearfix">
-                <li class="current"><a href="#" title="Location"><span class="icon location white shadow"></span> Location</a></li>
-                <li><a href="#" title="Photos"><span class="icon photo"></span> Photos</a></li>
+                <li class="current"><a href="#" title="Photos"><span class="icon photo"></span> Photos</a></li>
+                <li><a href="#" title="Location"><span class="icon location white shadow"></span> Location</a></li>
                 <li><a href="#" title="Availability"><span class="icon availability"></span> Availability</a></li>
             </ul>
             <!-- end:subnavigation -->
@@ -62,12 +61,6 @@
                 <div class="tabbed">
 
                     <div class="tab" style="display: block;">
-                        <!-- start:map -->
-                        {{ google_map_container(map) }}
-                        <!-- end:map -->
-                    </div>
-
-                    <div class="tab" style="display: none;">
                         <!-- start:media -->
                         <div class="media">
                             <div class="full">
@@ -88,9 +81,20 @@
                     </div>
 
                     <div class="tab" style="display: none;">
-                        <!-- start:availability -->
-                        <div id="calendar" class=""></div>
-                        <!-- end:availability -->
+                        <!-- start:map -->
+                        {{ google_map_container(map) }}
+                        <!-- end:map -->
+                    </div>
+
+                    <div class="tab" style="display: none">
+                        <div id="calendar-container">
+                            <!-- start:availability -->
+                            <div id="calendar" class=""></div>
+                            <div id="availability-sidebar">
+                                {% include 'ZizooBoatBundle:Boat:boat_legend.html.twig' %}
+                            </div>
+                            <!-- end:availability -->
+                        </div>
                     </div>
                 </div>
                 <!-- end:tabbed -->
@@ -217,14 +221,19 @@
     </div>
     <!-- end:content -->
 
+    <style type="text/css">
+        
+    </style>
+    
     <script type="text/javascript">
-        var availabilityReservedDates   = {{ boat|reservedDates(reservations)|raw }};
+        var availabilityReservedDates   = {{ boat|reservedDatesWithBookings(reservations)|raw }};
         var availabilityPriceDates      = {{ boat|priceDates(prices)|raw }};
-        var availabilityDefaultAllowed  = {{ boat.defaultPrice is not null ? 'true' : 'false' }};
+        var availabilityDefaultAllowed  = {{ boat.hasDefaultPrice == true ? 'true' : 'false' }};
         var availabilityDefaultPrice    = {{ boat.defaultPrice is not null ? boat.defaultPrice : 'null' }};
         var STATUS_ACCEPTED             = {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') }};
         var STATUS_SELF                 = {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_SELF') }};
         var STATUS_HOLD                 = {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') }};
+
     </script>
 
     {{ google_map_js(map) }}

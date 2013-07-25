@@ -25,7 +25,7 @@ class UserNewPasswordType extends AbstractType
         $resolver->setDefaults(array(   'data_class' => 'Zizoo\UserBundle\Form\Model\UserNewPassword',
                                         'validation_groups' => function(FormInterface $form) {
                                             $data = $form->getParent()->getData();
-                                            if ($data->getPassword()!='' && $form->getData()->getPassword()!='') {
+                                            if ($data->getPassword()!=null) {
                                                 return array('change_password');
                                             } else {
                                                 return array('Default');

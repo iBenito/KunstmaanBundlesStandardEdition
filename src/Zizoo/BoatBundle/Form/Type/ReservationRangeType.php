@@ -11,19 +11,19 @@ class ReservationRangeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('reservation_from', 'date', array('required'      => false,
+        $builder->add('reservation_from', 'date', array('required'      => $options['required'],
                                                         'by_reference'  => false,
                                                         'widget'        => 'single_text',
                                                         'format'        => 'dd/MM/yyyy',
-                                                        
-                                                        'attr'          => array('autocomplete' => 'off', 'placeholder' => 'From')));
+                                                        'label'         => $options['from_label'],
+                                                        'attr'          => array('autocomplete' => 'off', 'placeholder' => $options['from_placeholder'])));
         
-        $builder->add('reservation_to', 'date', array('required'        => false,
+        $builder->add('reservation_to', 'date', array('required'        => $options['required'],
                                                         'by_reference'  => false,
                                                         'widget'        => 'single_text',
                                                         'format'        => 'dd/MM/yyyy',
-                                                        
-                                                        'attr'          => array('autocomplete' => 'off', 'placeholder' => 'Until')));
+                                                        'label'         => $options['to_label'],
+                                                        'attr'          => array('autocomplete' => 'off', 'placeholder' => $options['to_placeholder'])));
           
     }
 
@@ -31,7 +31,12 @@ class ReservationRangeType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(   'data_class'        => 'Zizoo\BoatBundle\Form\Model\ReservationRange',
-                                        'error_bubbling'    => false));
+                                        'error_bubbling'    => false,
+                                        'from_label'        => false,
+                                        'to_label'          => false,
+                                        'from_placeholder'  => 'From',
+                                        'to_placeholder'    => 'Until'
+                                        ));
     }
     
     public function getParent()

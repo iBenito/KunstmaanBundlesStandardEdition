@@ -3,3 +3,11 @@ zizoo_boat.error.booking_not_available: "This boat is not bookable for these dat
 zizoo_boat.error.booking_minimum_days: "This boat must be booked for a minimum of %days% days."
 zizoo_boat.error.booking_minimum_days_in_advance: "This boat must be booked at least %days% in advance."
 zizoo_boat.error.booking_past: "This boat cannot be booked in the past."
+
+zizoo_boat.error.availability_overlap_bookings: "These dates overlap accepted bookings. Please choose other dates."
+zizoo_boat.error.availability_select_type: "You must select 'Available', 'Default' or 'Self-Reserve'."
+zizoo_boat.error.availability_invalid_type: "You must select 'Available', 'Default' or 'Self-Reserve'."
+zizoo_boat.error.availability_price: "You must enter a valid price."
+zizoo_boat.error.availability_dates_default_or_available: "End date must be after or on start date when setting availability or default."
+zizoo_boat.error.availability_dates_not_default_and_not_available: "End date must be after start date when self-reserving."
+zizoo_boat.error.availability_dates_not_past: "The start date cannot be in the past."

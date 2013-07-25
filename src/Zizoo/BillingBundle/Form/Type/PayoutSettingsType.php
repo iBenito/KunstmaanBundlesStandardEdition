@@ -14,11 +14,6 @@ class PayoutSettingsType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-//        $builder->add('payout_method', 'choice', array( 'property_path' => 'payoutMethod',
-//                                                        'choices'       => array(   'bank_account'  => 'Bank Account',
-//                                                                                    'paypal'        => 'PayPal'),
-//                                                        'multiple'      => false,
-//                                                        'expanded'      => false));
         $builder->add('payout_method', 'entity', array(
                                                 'class' => 'ZizooBillingBundle:PayoutMethod',
                                                 'query_builder' => function(EntityRepository $er) {
@@ -26,6 +21,7 @@ class PayoutSettingsType extends AbstractType
                                                         ->where('p.enabled = TRUE')
                                                         ->orderBy('p.order, p.name', 'ASC');
                                                 },
+                                                'attr'  => array('class' => 'gray')
                                         ));
         $builder->add('bank_account', new BankAccountType(), array('property_path' => 'bankAccount'));
         $builder->add('paypal', new PayPalType(), array('property_path' => 'payPal'));

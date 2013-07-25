@@ -24,8 +24,7 @@ class ReservationListener
         $boat               = $reservation->getBoat();
         $from               = $reservation->getCheckIn();
         $until              = $reservation->getCheckOut();
-        $from->setTime(0,0,0);
-        $until->setTime(23,59,59);
+        
         $interval = $from->diff($until);
         $now = new \DateTime();
         $now->setTime(0,0,0);
@@ -35,7 +34,7 @@ class ReservationListener
         $boat               = $reservation->getBoat();
         
         // Ensure that boat is active and not deleted
-        if (!$boat->getActive() || $boat->getDeleted()){
+        if ( (!$boat->getActive() || $boat->getDeleted()) && $reservation->getStatus()!=Reservation::STATUS_SELF){
             throw new InvalidReservationException('Boat not available');
         } 
         

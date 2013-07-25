@@ -24,7 +24,6 @@ class DashboardController extends Controller {
                             'details_route'             => 'ZizooBaseBundle_Dashboard_CharterEditDetailsBoat',
                             'photos_route'              => 'ZizooBaseBundle_Dashboard_CharterEditPhotosBoat',
                             'calendar_route'            => 'ZizooBaseBundle_Dashboard_CharterEditPriceBoat',
-                            'confirm_route'             => 'ZizooBaseBundle_Dashboard_CharterConfirmPriceBoat',
                             'complete_route'            => 'ZizooBaseBundle_Dashboard_CharterBoats',
                             'delete_route'              => 'ZizooBaseBundle_Dashboard_CharterDeleteBoat',
                             'active_route'              => 'ZizooBaseBundle_Dashboard_CharterActiveBoat'
@@ -68,7 +67,7 @@ class DashboardController extends Controller {
         $user       = $this->getUser();
         $url        = $this->generateUrl($route, array('id' => 0));
 
-        $pattern = '/^\charter\/|^\/app_dev\.php\/charter\//';
+        $pattern = '/^\/charter\/|^\/app_dev\.php\/charter\//';
         $isCharterRoute = preg_match($pattern, $url);
         
         if ($user->getCharter() && $isCharterRoute){
@@ -407,7 +406,7 @@ class DashboardController extends Controller {
         $charter = $user->getCharter();
         return $this->render('ZizooBaseBundle:Dashboard:Charter/charter.html.twig', array(
             'title'     => 'My Bookings',
-            'current'   => 'boats',
+            'current'   => 'bookings',
             'id'        => $charter->getId(),
             'response'  => $response->getContent()
         ));

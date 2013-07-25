@@ -28,9 +28,9 @@
         <ul class="actions clearfix">
             <li>{{ boat.address.locality }}, {{ boat.address.country }}</li>
             {% if boat.complete %}
-                <li>Complete <span class="icon complete"></span></li>
+                <li class="complete">Complete <span class="icon complete"></span></li>
             {% else %}
-                <li>Incomplete <span class="icon incomplete"></span></li>
+                <li class="complete">Incomplete <span class="icon incomplete"></span></li>
             {% endif %}
             <li>
                 <form action="{{ path('ZizooBaseBundle_Dashboard_CharterActiveBoat', {id: boat.id}) }}">
