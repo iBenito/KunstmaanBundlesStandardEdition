@@ -207,19 +207,30 @@ class BoatRepository extends EntityRepository
             $qb->andWhere('boat.highestPrice IS NOT NULL');
         }
         
-        if ($orderBy=='price'){
-            $qb->addOrderBy('boat.lowestPrice', 'asc');
-        } else {
-            $qb->addOrderBy('boat.created', 'desc');
-        }
+//        if ($orderBy=='price'){
+//            $qb->addOrderBy('reservation.id, boat.highestPrice', 'desc');
+//            $sortableNullsWalker = SortableNullsWalker::NULLS_LAST;
+//        } else {
+//            $qb->addOrderBy('reservation.id, boat.created', 'desc');
+//            $sortableNullsWalker = SortableNullsWalker::NULLS_FIRST;
+//        }
 
+        if ($orderBy=='price'){
+            $hintArray = array(
+                            'reservation.id'    => SortableNullsWalker::NULLS_FIRST,
+                            'boat.lowestPrice'  => 'asc'
+                        );
+        } else {
+            $hintArray = array(
+                            'reservation.id'    => SortableNullsWalker::NULLS_FIRST,
+                            'boat.created'      => 'desc'
+                        );
+        }
         
         return $qb->getQuery()
                   ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'Zizoo\BoatBundle\Extensions\DoctrineExtensions\CustomWalker\SortableNullsWalker')
                   ->setHint('SortableNullsWalker.fields',
-                        array(
-                            'reservation.id' => SortableNullsWalker::NULLS_LAST,
-                        ));
+                        $hintArray);
     }
     
     /**
