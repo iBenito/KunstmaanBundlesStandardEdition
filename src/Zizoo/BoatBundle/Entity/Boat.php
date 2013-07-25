@@ -969,7 +969,7 @@ class Boat extends BaseEntity
     
     public function getNumCrew()
     {
-        return $this->numCrew;
+        return (int)$this->numCrew;
     }
     
     public function setCrewOptional($crewOptional)
