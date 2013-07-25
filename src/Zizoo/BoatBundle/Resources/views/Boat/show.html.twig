@@ -5,6 +5,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/zizooboat/js/availability.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/zizooboat/js/boat_show.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/colour_gradient.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/datepick/jquery.datepick.js') }}"></script>
@@ -226,14 +227,18 @@
     </style>
     
     <script type="text/javascript">
+        var mappings = new Array({'original_state': {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') }}, 
+                                    'mapped_state': 'day_booked'},
+                                    {'original_state': {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') }}, 
+                                    'mapped_state': 'day_booked'},
+                                    {'original_state': {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_SELF') }},
+                                    'mapped_state': 'day_booked'});
         var availabilityReservedDates   = {{ boat|reservedDatesWithBookings(reservations)|raw }};
         var availabilityPriceDates      = {{ boat|priceDates(prices)|raw }};
         var availabilityDefaultAllowed  = {{ boat.hasDefaultPrice == true ? 'true' : 'false' }};
-        var availabilityDefaultPrice    = {{ boat.defaultPrice is not null ? boat.defaultPrice : 'null' }};
-        var STATUS_ACCEPTED             = {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') }};
-        var STATUS_SELF                 = {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_SELF') }};
-        var STATUS_HOLD                 = {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') }};
-
+        var availabilityDefaultPrice    = {{ boat.hasDefaultPrice ? boat.defaultPrice : 'null' }};
+        var defaultDateClass            = '{% if boat.hasDefaultPrice %}day_available{% else %}day_unavailable{% endif %}';
+        
     </script>
 
     {{ google_map_js(map) }}

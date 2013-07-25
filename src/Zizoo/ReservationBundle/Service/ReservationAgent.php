@@ -186,7 +186,7 @@ class ReservationAgent {
         return $prices;
     }   
       
-
+    // TODO: CHECK FUNCTION!
     public function available(Boat $boat, $fromOrig, $toOrig)
     {
         if (!$fromOrig || !$toOrig) return false;
