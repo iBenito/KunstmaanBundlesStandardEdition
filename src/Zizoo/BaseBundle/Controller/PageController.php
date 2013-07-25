@@ -95,10 +95,12 @@ class PageController extends Controller {
 
             if ($form->isValid()) {
 
+                $to = $this->container->getParameter('email_info');
+                
                 $message = \Swift_Message::newInstance()
-                    ->setSubject('Contact enquiry from symblog')
-                    ->setFrom('enquiries@symblog.co.uk')
-                    ->setTo('email@email.com')
+                    ->setSubject('Contact enquiry from ' . $feedback->getName())
+                    ->setFrom($feedback->getEmail())
+                    ->setTo($to)
                     ->setBody($this->renderView('ZizooBaseBundle:Page:feedbackEmail.txt.twig', array('feedback' => $feedback)));
                 $this->get('mailer')->send($message);
 
@@ -186,43 +188,43 @@ class PageController extends Controller {
             'response'  => $response->getContent()
         ));
     }
-    
-    public function test1Action()
-    {
-        $user       = $this->getUser();
-        $profile    = $user->getProfile();
-        $em         = $this->getDoctrine()->getEntityManager();
-        
-        $test = new \Zizoo\BaseBundle\Entity\Test();
-        
-
-        
-        
-        $em->persist($test);
-        
-        
-        sleep(10);
-        //$test->setTest('test1');
-        
-        
-        $em->flush();
-        return $this->render('ZizooBaseBundle:Test:test.html.twig', array(
-                
-        ));
-        
-    }
-    
-    
-    public function test2Action()
-    {
-        $em         = $this->getDoctrine()->getEntityManager();
-        $test = new \Zizoo\BaseBundle\Entity\Test();
-        $test->setTest('test2');
-        $em->persist($test);
-        $em->flush();
-        return $this->render('ZizooBaseBundle:Test:test.html.twig', array(
-                
-        ));
-    }
+//    
+//    public function test1Action()
+//    {
+//        $user       = $this->getUser();
+//        $profile    = $user->getProfile();
+//        $em         = $this->getDoctrine()->getEntityManager();
+//        
+//        $test = new \Zizoo\BaseBundle\Entity\Test();
+//        
+//
+//        
+//        
+//        $em->persist($test);
+//        
+//        
+//        sleep(10);
+//        //$test->setTest('test1');
+//        
+//        
+//        $em->flush();
+//        return $this->render('ZizooBaseBundle:Test:test.html.twig', array(
+//                
+//        ));
+//        
+//    }
+//    
+//    
+//    public function test2Action()
+//    {
+//        $em         = $this->getDoctrine()->getEntityManager();
+//        $test = new \Zizoo\BaseBundle\Entity\Test();
+//        $test->setTest('test2');
+//        $em->persist($test);
+//        $em->flush();
+//        return $this->render('ZizooBaseBundle:Test:test.html.twig', array(
+//                
+//        ));
+//    }
     
 }
