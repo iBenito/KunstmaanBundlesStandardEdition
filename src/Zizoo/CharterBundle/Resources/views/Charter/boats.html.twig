@@ -189,12 +189,14 @@
                     data: $(toggle).parent('form').serialize()+'&'+$('#filter_form').serialize()+$.param(routes),
                     dataType: 'json',
                     success: function(json, textStatus, XHR){
+                        $(toggle).parent('form').find('input[name="active"]').val(!json.boat_active);
                         $(toggle).zToggle('setState', json.boat_active, false);
                         setView(toggle, json);
                         doBlock(false);
                     },
                     error: function(data, textStatus, XHR){
                         var json = $.parseJSON(data.responseText);
+                        $(toggle).parent('form').find('input[name="active"]').val(!json.boat_active);
                         $(toggle).zToggle('setState', json.boat_active, false);
                         setView(toggle, json)
                         fillActiveError(json);
