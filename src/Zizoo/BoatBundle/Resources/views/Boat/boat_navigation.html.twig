@@ -1,51 +1,30 @@
-<ul id="boat_nav" class="tabs boat clearfix">
-    {% if boat.id is not null %}
-        <li{{ current_route == routes['edit_route'] ? ' class="current"' : ''}}><a href="{{ path(routes['edit_route'], { 'id': boat.id }) }}">Overview</a></li>
-        <li{{ current_route == routes['details_route'] ? ' class="current"' : ''}}><a href="{{ path(routes['details_route'], { 'id': boat.id }) }}">Details</a></li>
-        <li{{ current_route == routes['photos_route'] ? ' class="current"' : ''}}><a href="{{ path(routes['photos_route'], { 'id': boat.id }) }}">Photos</a></li>
-        <li{{ current_route == routes['calendar_route'] ? ' class="current"' : ''}}><a href="{{ path(routes['calendar_route'], { 'id': boat.id }) }}">Price</a></li>
-    {% else %}
-        <li class="current"><a href="{{ path(routes['new_route']) }}">Overview</a></li>
-        <li class=""><a href="#" redirect="{{ routes['details_route'] }}">Details</a></li>
-        <li class=""><a href="#" redirect="{{ routes['photos_route'] }}">Photos</a></li>
-        <li class=""><a href="#" redirect="{{ routes['calendar_route'] }}">Price</a></li>
-    {% endif %}
-</ul>
-<div id="save_changes_popup">
-    <p>You have unsaved changes. Do you want to save your changes first?</p>
-    <div id="save_changes_btns">
-        <button id="save_changes_yes_btn" class="button blue small">Yes</button>
-        <button id="save_changes_no_btn" class="button blue small">No</button>
-        <button id="save_changes_cancel_btn" class="button blue small">Cancel</button>
-    </div>
-</div>
 <script type="text/javascript">
     var changed = false;
     $(document).ready(function(){
-        
+
         $('form.form').delegate('input, select', 'change', function(){
             changed = true;
         });
-        
+
         $('#save_changes_yes_btn').click(function(){
             $('form.form').submit();
             $('#save_changes_popup').dialog('close');
         });
-        
+
         $('#save_changes_no_btn').click(function(){
             window.location.href = $('#override_url').val();
             $('#save_changes_popup').dialog('close');
         });
-        
+
         $('#save_changes_cancel_btn').click(function(){
             $('#override_url').val('');
             $('#save_changes_popup').dialog('close');
         });
-        
+
         $('#boat_nav li a').click(function(){
             if ($(this).parent().hasClass('disabled')) return false;
             if ($(this).parent().hasClass('current')) return false;
-            
+
             if (changed){
                 {% if boat.id is not null %}
                 $('#override_url').val($(this).attr('href'));
@@ -77,8 +56,29 @@
         margin-top: 20px;
         text-align: center;
     }
-    
+
     #save_changes_btns button {
         margin: 0 10px;
     }
 </style>
+<div id="save_changes_popup">
+    <p>You have unsaved changes. Do you want to save your changes first?</p>
+    <div id="save_changes_btns">
+        <button id="save_changes_yes_btn" class="button blue small">Yes</button>
+        <button id="save_changes_no_btn" class="button blue small">No</button>
+        <button id="save_changes_cancel_btn" class="button blue small">Cancel</button>
+    </div>
+</div>
+<ul id="boat_nav" class="tabs boat clearfix">
+    {% if boat.id is not null %}
+        <li{{ current_route == routes['edit_route'] ? ' class="current"' : ''}}><a href="{{ path(routes['edit_route'], { 'id': boat.id }) }}">Overview</a></li>
+        <li{{ current_route == routes['details_route'] ? ' class="current"' : ''}}><a href="{{ path(routes['details_route'], { 'id': boat.id }) }}">Details</a></li>
+        <li{{ current_route == routes['photos_route'] ? ' class="current"' : ''}}><a href="{{ path(routes['photos_route'], { 'id': boat.id }) }}">Photos</a></li>
+        <li{{ current_route == routes['calendar_route'] ? ' class="current"' : ''}}><a href="{{ path(routes['calendar_route'], { 'id': boat.id }) }}">Price</a></li>
+    {% else %}
+        <li class="current"><a href="{{ path(routes['new_route']) }}">Overview</a></li>
+        <li class=""><a href="#" redirect="{{ routes['details_route'] }}">Details</a></li>
+        <li class=""><a href="#" redirect="{{ routes['photos_route'] }}">Photos</a></li>
+        <li class=""><a href="#" redirect="{{ routes['calendar_route'] }}">Price</a></li>
+    {% endif %}
+</ul>

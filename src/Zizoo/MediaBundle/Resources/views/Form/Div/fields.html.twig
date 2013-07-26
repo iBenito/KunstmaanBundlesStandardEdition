@@ -110,8 +110,8 @@
     {% if part_of_collection == false %}
         <div id="{{ id }}_crop_container">
             <img src="" id="{{ id }}_crop_image" style="max-width: 100%"/>
-            <button id="{{ id }}_save_btn" class="save_btn">Crop</button>
-            <button id="{{ id }}_cancel_btn" class="cancel_btn">Cancel</button>
+            <button id="{{ id }}_save_btn" class="save_btn button blue">Crop</button>
+            <button id="{{ id }}_cancel_btn" class="cancel_btn button gray">Cancel</button>
         </div>
         {{ block('zizoo_media_js') }}
     {% endif %}
@@ -272,8 +272,8 @@
     {% spaceless %}
         <div id="{{ id }}_crop_container">
             <img src="" id="{{ id }}_crop_image" />
-            <button id="{{ id }}_save_btn" class="save_btn">Crop</button>
-            <button id="{{ id }}_cancel_btn" class="cancel_btn">Cancel</button>
+            <button id="{{ id }}_save_btn" class="save_btn button blue">Crop</button>
+            <button id="{{ id }}_cancel_btn" class="cancel_btn button gray">Cancel</button>
             <input id="{{ id }}_x1" type="hidden" />
             <input id="{{ id }}_y1" type="hidden" />
             <input id="{{ id }}_x2" type="hidden" />

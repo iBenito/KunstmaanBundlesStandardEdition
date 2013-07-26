@@ -13,7 +13,7 @@ class BoatImageType extends AbstractType
         $builder
             ->add('image', 'zizoo_media_collection', array( 'type' => 'zizoo_media',
                                                             'property_path' => 'image',
-                                                            'label'         => 'Image',
+                                                            'label'         => false,
                                                             'file_path'     => 'webPath',
                                                             'aspect_ratio'  => 1.48,
                                                             'crop_js'           => 'photoCrop',
