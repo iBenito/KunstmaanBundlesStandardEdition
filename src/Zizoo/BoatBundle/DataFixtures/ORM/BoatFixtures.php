@@ -75,7 +75,9 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat1->setBathrooms(6);
         $boat1->setToilets(6);
         $boat1->setNrGuests(12);
-        $boat1->setDefaultPrice(9.99);        
+        $boat1->setDefaultPrice(9.99);       
+        $boat1->setHasDefaultPrice(true);
+        $boat1->setActive(true);
         
         $boat1Address = new BoatAddress();
         $boat1Address->setAddressLine1('Krk Marina 48');
@@ -113,6 +115,8 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat2->setToilets(1);
         $boat2->setNrGuests(1);
         $boat2->setDefaultPrice(11.99);
+        $boat2->setHasDefaultPrice(true);
+        $boat2->setActive(true);
         
         $boat2Address = new BoatAddress();
         $boat2Address->setAddressLine1('Alicante Marina 84');
@@ -140,6 +144,8 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat3->setToilets(2);
         $boat3->setNrGuests(20);
         $boat3->setDefaultPrice(99.99);
+        $boat3->setHasDefaultPrice(true);
+        $boat3->setActive(true);
         
         $boat3Address = new BoatAddress();
         $boat3Address->setAddressLine1('Brighton Marina 48');
@@ -167,6 +173,8 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat4->setToilets(4);
         $boat4->setNrGuests(40);
         $boat4->setDefaultPrice(10000);
+        $boat4->setHasDefaultPrice(true);
+        $boat4->setActive(true);
         
         $boat4Address = new BoatAddress();
         $boat4Address->setAddressLine1('Bristol Harbour 48');
@@ -194,6 +202,8 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat5->setToilets(2);
         $boat5->setNrGuests(6);
         $boat5->setDefaultPrice(10000);
+        $boat5->setHasDefaultPrice(true);
+        $boat5->setActive(true);
         
         $boat5Address = new BoatAddress();
         $boat5Address->setAddressLine1('Hvar');
@@ -219,6 +229,8 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat6->setToilets(2);
         $boat6->setNrGuests(4);
         $boat6->setDefaultPrice(10000);
+        $boat6->setHasDefaultPrice(true);
+        $boat6->setActive(true);
         
         $boat6Address = new BoatAddress();
         $boat6Address->setAddressLine1('Capri');
@@ -244,6 +256,8 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat7->setToilets(3);
         $boat7->setNrGuests(8);
         $boat7->setDefaultPrice(10000);
+        $boat7->setHasDefaultPrice(true);
+        $boat7->setActive(true);
         
         $boat7Address = new BoatAddress();
         $boat7Address->setAddressLine1('Crete');
@@ -269,6 +283,9 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat8->setToilets(1);
         $boat8->setNrGuests(2);
         $boat8->setDefaultPrice(10000);
+        $boat8->setHasDefaultPrice(true);
+        $boat8->setActive(true);
+        
         
         $boat8Address = new BoatAddress();
         $boat8Address->setAddressLine1('Mallorca');
@@ -294,6 +311,8 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat9->setToilets(4);
         $boat9->setNrGuests(4);
         $boat9->setDefaultPrice(10000);
+        $boat9->setHasDefaultPrice(true);
+        $boat9->setActive(true);
         
         $boat9Address = new BoatAddress();
         $boat9Address->setAddressLine1('Crete');
@@ -319,6 +338,8 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat10->setToilets(2);
         $boat10->setNrGuests(4);
         $boat10->setDefaultPrice(10000);
+        $boat10->setHasDefaultPrice(true);
+        $boat10->setActive(true);
         
         $boat10Address = new BoatAddress();
         $boat10Address->setAddressLine1('Zakynthos');

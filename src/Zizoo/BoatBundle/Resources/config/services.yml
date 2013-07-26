@@ -1,5 +1,5 @@
 parameters:
-    zizoo_boat.completeness_validation_groups: [boat_edit, boat_details, boat_photos]
+    zizoo_boat.completeness_validation_groups: [boat_complete]
 
 services:
     # TWIG EXTENSIONS

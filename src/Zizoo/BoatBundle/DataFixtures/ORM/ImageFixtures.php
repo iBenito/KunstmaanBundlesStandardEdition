@@ -12,6 +12,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Zizoo\BoatBundle\Entity\BoatImage;
 use Zizoo\BoatBundle\Entity\Boat;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ImageFixtures implements OrderedFixtureInterface, SharedFixtureInterface, ContainerAwareInterface
 {
@@ -45,137 +46,45 @@ class ImageFixtures implements OrderedFixtureInterface, SharedFixtureInterface, 
         $this->imgPath = $this->container->getParameter('kernel.root_dir').'/../web/images/boat';
     }
     
-    private function rrmdir($dir) { 
+    private function rrmdir($dir) 
+    { 
         foreach(glob($dir . '/*') as $file) { 
           if(is_dir($file)) $this->rrmdir($file); else unlink($file); 
         } 
         rmdir($dir); 
     }
     
-    private function copyImage($boat, $image){
-        $boatImgPath = $this->imgPath.'/'.$boat->getId().'/originals';
-        
-        if (!file_exists($boatImgPath)){
-            mkdir($boatImgPath, 0775, true);
-        } else if (!is_dir($boatImgPath)){
-            unlink($boatImgPath);
-            mkdir($boatImgPath, 0775, true);
-        }
-        
-        $boatImgPath .= '/'.$image->getPath();
-        
-        if (file_exists($boatImgPath)){
-            unlink($boatImgPath);
-        } 
-        
-        $from = dirname(__FILE__).'/../Images/'.$image->getPath();
-        echo "copy ". $from . " to " . $boatImgPath . "\n";
-        copy($from, $boatImgPath);
+    private function copyImage($filename, $tempDir)
+                {
+        $from = dirname(__FILE__).'/../Images/'.$filename;
+        $toFile = tempnam($tempDir, $filename); 
+        echo "copy ". $from . " to " . $toFile . "\n";
+        copy($from, $toFile);
+        return $toFile;
+    }
+    
+    private function addImage(Boat $boat, $filename, $j)
+    {
+        $tempDir = ini_get('upload_tmp_dir');
+        $tmpFilename = $this->copyImage($j.'/'.$filename, $tempDir);
+        $uploadedFile = new UploadedFile($tmpFilename, $filename, null, null, null, true);
+        $boatService = $this->container->get('boat_service');
+        $boatService->addImage($boat, $uploadedFile, false);
+        $boat->setActive(true);
+        $now = new \DateTime();
+        $boat->setUpdated($now);
     }
     
     public function load(ObjectManager $manager)
     {
-        /*
-        return;
-        if (file_exists($this->imgPath)){
-            if (is_dir($this->imgPath)){
-                $this->rrmdir($this->imgPath);
-            } else {
-                unlink($this->imgPath);
+        for ($j=5; $j<=10; $j++){
+            $boat = $this->getReference("boat-$j");
+            for($i=1; $i<=3; $i++) {
+                $this->addImage($boat, "$i.jpg", $j);
+                $manager->persist($boat);
             }
         }
-
-        mkdir($this->imgPath, 0775, true);
-        
-        $boat = $this->getReference('boat-1');
-        $image = new BoatImage();
-        $image->setBoat($manager->merge($boat));
-        $image->setPath('1.jpg');
-        $image->setMimeType('image/jpeg');
-
-        $manager->persist($image);
-        //$this->copyImage($boat, '1', $image);
-        
-        $image = new BoatImage();
-        $image->setBoat($manager->merge($boat));
-        $image->setPath('2.jpg');
-        $image->setMimeType('image/jpeg');
-
-        $manager->persist($image);
-        //$this->copyImage($boat, '1', $image);
-        
-        $boat = $this->getReference('boat-2');
-        $image = new BoatImage();
-        $image->setBoat($manager->merge($boat));
-        $image->setPath('3.jpg');
-        $image->setMimeType('image/jpeg');
-
-        $manager->persist($image);
-        //$this->copyImage($boat, '2', $image);
-        */
-
-        $boat = $this->getReference('boat-5');
-        for($i=1; $i<4; $i++) {
-            $image = new BoatImage();
-            $image->setBoat($manager->merge($boat));
-            $image->setMimeType('image/jpeg');
-            $image->setPath("elan_$i.jpg");
-            $manager->persist($image);
-            $this->copyImage($boat, $image);
-        }
-
-        $boat = $this->getReference('boat-6');
-        for($i=1; $i<4; $i++) {
-            $image = new BoatImage();
-            $image->setBoat($manager->merge($boat));
-            $image->setPath("first31_1.jpg");
-            $image->setMimeType('image/jpeg');
-            $manager->persist($image);
-            $this->copyImage($boat, $image);
-        }
-
-        $boat = $this->getReference('boat-7');
-        for($i=1; $i<4; $i++) {
-            $image = new BoatImage();
-            $image->setBoat($manager->merge($boat));
-            $image->setPath("bavaria$i.jpg");
-            $image->setMimeType('image/jpeg');
-            $manager->persist($image);
-            $this->copyImage($boat, $image);
-        }
-
-        $boat = $this->getReference('boat-8');
-        for($i=1; $i<4; $i++) {
-            $image = new BoatImage();
-            $image->setBoat($manager->merge($boat));
-            $image->setPath("first21_$i.jpg");
-            $image->setMimeType('image/jpeg');
-            $manager->persist($image);
-            $this->copyImage($boat, $image);
-        }
-
-        $boat = $this->getReference('boat-9');
-        for($i=1; $i<4; $i++) {
-            $image = new BoatImage();
-            $image->setBoat($manager->merge($boat));
-            $image->setPath("oceanis$i.jpg");
-            $image->setMimeType('image/jpeg');
-            $manager->persist($image);
-            $this->copyImage($boat, $image);
-        }
-
-        $boat = $this->getReference('boat-10');
-        for($i=1; $i<4; $i++) {
-            $image = new BoatImage();
-            $image->setBoat($manager->merge($boat));
-            $image->setPath("odyssey$i.jpg");
-            $image->setMimeType('image/jpeg');
-            $manager->persist($image);
-            $this->copyImage($boat, $image);
-        }
-        
         $manager->flush();
-
     }
 
     public function getOrder()

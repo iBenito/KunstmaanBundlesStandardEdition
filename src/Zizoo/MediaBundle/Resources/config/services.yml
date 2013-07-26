@@ -27,3 +27,12 @@ services:
         class: Zizoo\MediaBundle\Imagine\Filter\CropThumbnailFilterLoader
         tags:
             - { name: liip_imagine.filter.loader, loader: crop_and_thumbnail }
+            
+    
+    # LISTENERS
+    zizoo_media.media_listener:
+        class: Zizoo\MediaBundle\EventListener\MediaListener
+        arguments:
+            container:      "@service_container"
+        tags:
+            - { name: doctrine.event_listener, event: postPersist }

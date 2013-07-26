@@ -23,24 +23,24 @@ Zizoo\BoatBundle\Form\Model\ReservationRange:
 Zizoo\BoatBundle\Entity\Boat:
     constraints:
         - Zizoo\BoatBundle\Validator\Constraints\Boat:
-            groups: [boat_edit]
+            groups: [boat_edit, boat_complete]
         
     properties:
         # Boat edit
         name:
             - NotBlank:
                 message: Name must not be blank
-                groups: [boat_edit]
+                groups: [boat_edit, boat_complete]
                                 
         brand:
             - NotBlank:
                 message: Brand must not be blank
-                groups: [boat_edit]
+                groups: [boat_edit, boat_complete]
                 
         model:
             - NotBlank:
                 message: Model must not be blank
-                groups: [boat_edit]
+                groups: [boat_edit, boat_complete]
                 
         length:
             - Range:
@@ -48,11 +48,11 @@ Zizoo\BoatBundle\Entity\Boat:
                 max: 4294967295
                 minMessage: Your boat is too small
                 maxMessage: Your boat is too big
-                groups: [boat_edit]
+                groups: [boat_edit, boat_complete]
                 
             - NotBlank:
                 message: Length must not be blank
-                groups: [boat_edit]
+                groups: [boat_edit, boat_complete]
                 
         cabins:
             - Range:
@@ -60,11 +60,11 @@ Zizoo\BoatBundle\Entity\Boat:
                 max: 4294967295
                 minMessage: Your boat doesn't have enough cabins
                 maxMessage: Your boat has too many cabins
-                groups: [boat_edit]
+                groups: [boat_edit, boat_complete]
                 
             - NotBlank:
                 message: Cabins must not be blank
-                groups: [boat_edit]
+                groups: [boat_edit, boat_complete]
                 
         berths:
             - Range:
@@ -72,11 +72,11 @@ Zizoo\BoatBundle\Entity\Boat:
                 max: 4294967295
                 minMessage: Your boat doesn't have enough berths
                 maxMessage: Your boat has too many berths
-                groups: [boat_edit]
+                groups: [boat_edit, boat_complete]
                 
             - NotBlank:
                 message: Berths must not be blank
-                groups: [boat_edit]
+                groups: [boat_edit, boat_complete]
                 
         bathrooms:
             - Range:
@@ -84,11 +84,11 @@ Zizoo\BoatBundle\Entity\Boat:
                 max: 4294967295
                 minMessage: Your boat doesn't have enough bathrooms
                 maxMessage: Your boat has too many bathrooms
-                groups: [boat_edit]
+                groups: [boat_edit, boat_complete]
                 
             - NotBlank:
                 message: Bathrooms must not be blank
-                groups: [boat_edit]
+                groups: [boat_edit, boat_complete]
               
         toilets:
             - Range:
@@ -96,11 +96,11 @@ Zizoo\BoatBundle\Entity\Boat:
                 max: 4294967295
                 minMessage: Your boat doesn't have enough toilets
                 maxMessage: Your boat has too many toilets
-                groups: [boat_edit]
+                groups: [boat_edit, boat_complete]
                 
             - NotBlank:
                 message: Toilets must not be blank
-                groups: [boat_edit]
+                groups: [boat_edit, boat_complete]
                 
         nr_guests:
             - Range:
@@ -108,33 +108,36 @@ Zizoo\BoatBundle\Entity\Boat:
                 max: 4294967295
                 minMessage: Your boat can't handle enough guests
                 maxMessage: Your boat attempts to handle too many guests
-                groups: [boat_edit]
+                groups: [boat_edit, boat_complete]
                 
             - NotBlank:
                 message: Number of guests must not be blank
-                groups: [boat_edit]
+                groups: [boat_edit, boat_complete]
                 
                 
         # Boat details 
         description:
             - NotBlank:
                 message: Description must not be blank
-                groups: [boat_details]
+                groups: [boat_details, boat_complete]
         
         title:
             - NotBlank:
                 message: Title must not be blank
-                groups: [boat_details]
+                groups: [boat_details, boat_complete]
                 
                 
         # Boat images
         image:
             - Count:
-                min: 1
                 max: 10
-                minMessage: "You must upload at least 1 boat image"
                 maxMessage: "You cannot upload more than {{ limit }} images"
                 groups: [boat_photos]
+                
+            - Count:
+                min: 1
+                minMessage: "You must upload at least 1 boat image"
+                groups: [boat_complete]
                 
         
 

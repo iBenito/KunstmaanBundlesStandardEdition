@@ -90,13 +90,20 @@ class BoatImage extends Media {
         }
     }
 
+    public function getPathAndName()
+    {
+        return (null === $this->getPath() || null === $this->getId())
+            ? null
+            : $this->getId().'.'.$this->getPath();
+    }
+    
     public function getAbsolutePath()
     {
-        return null === $this->getPath()
+        return null === $this->getPathAndName()
             ? null
-            : $this->getUploadRootDir().'/'.$this->id.'.'.$this->getPath();
+            : $this->getUploadRootDir().'/'.$this->getPathAndName();
     }
-
+    
     /**
      * Get the image url
      *
@@ -104,9 +111,9 @@ class BoatImage extends Media {
      */
     public function getWebPath()
     {
-        return null === $this->getPath()
+        return null === $this->getPathAndName()
             ? null
-            : $this->getUploadDir().'/originals/'.$this->getPath();
+            : $this->getUploadDir().'/'.$this->getPathAndName();
     }
     
 }

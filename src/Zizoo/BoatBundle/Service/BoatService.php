@@ -4,11 +4,13 @@ namespace Zizoo\BoatBundle\Service;
 use Zizoo\BoatBundle\Entity\Boat;
 use Zizoo\BoatBundle\Entity\BoatType;
 use Zizoo\BoatBundle\Entity\Price;
-use Zizoo\BoatBundle\Entity\Image;
+use Zizoo\BoatBundle\Entity\BoatImage;
 use Zizoo\BoatBundle\Entity\Equipment;
 
 use Zizoo\CharterBundle\Entity\Charter;
 use Zizoo\AddressBundle\Entity\BoatAddress;
+
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -108,17 +110,58 @@ class BoatService {
         }
     }
     
-    public function addImage(Boat $boat, Image $image, $flush=true){
+    public function addImage(Boat $boat, $imageFile, $flush=true){
         
-        //check if image already exists otherwise add it to boat
-        if(!($boat->getImage()->contains($image))){
-            $boat->addImage($image);
-            $this->em->persist($image);
-            if ($flush){
-                $this->em->flush();
-            }
+        if (!$imageFile instanceof UploadedFile){
+            throw new \Exception('Unable to upload');
         }
+
+        $image = new BoatImage();
+        $image->setFile($imageFile);
+        $image->setPath($imageFile->guessExtension());
+        $image->setMimeType($imageFile->getMimeType());
         
+        $validator          = $this->container->get('validator');
+        $boatErrors         = $validator->validate($boat, 'boat_photos');
+        $imageErrors        = $validator->validate($image, 'boat_photos');
+        $numBoatErrors      = $boatErrors->count();
+        $numImageErrors     = $imageErrors->count();
+        
+        if ($numBoatErrors==0 && $numImageErrors==0){
+            
+            $image->setBoat($boat);
+            $boat->addImage($image);
+            $boat->setUpdated(new \DateTime());
+
+            try {
+                $this->em->persist($image);
+                
+                if ($flush) $this->em->flush();
+                
+                return $image;
+                
+            } catch (\Exception $e){
+                throw new \Exception('Unable to upload: ' . $e->getMessage());
+            }
+            
+        } else {
+            
+            $errorArr = array();
+            for ($i=0; $i<$numBoatErrors; $i++){
+                $error = $boatErrors->get($i);
+                $msgTemplate = $error->getMessage();
+                $errorArr[] = $msgTemplate;
+            }
+            for ($i=0; $i<$numImageErrors; $i++){
+                $error = $imageErrors->get($i);
+                $msgTemplate = $error->getMessage();
+                $errorArr[] = $msgTemplate;
+            }
+            
+            throw new \Exception(join(',', $errorArr));
+            
+        }
+             
     }
     
     public function createBoat(Boat $boat, BoatAddress $address, BoatType $boatType = null, Charter $charter, ArrayCollection $equipment=null, $flush=false){

@@ -4,6 +4,8 @@ namespace Zizoo\MediaBundle\Entity;
 
 use Zizoo\BaseBundle\Entity\BaseEntity;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -37,6 +39,8 @@ abstract class Media extends BaseEntity
     protected $y2;
     protected $w;
     protected $h;
+    
+    protected $file;
     
 
     public function __construct() 
@@ -160,5 +164,17 @@ abstract class Media extends BaseEntity
             unlink($this->temp);
         }
     }
+    
+    public function setFile(UploadedFile $file=null)
+    {
+        $this->file = $file;
+        return $this;
+    }
+    
+    public function getFile()
+    {
+        return $this->file;
+    }
+    
 }
 ?>

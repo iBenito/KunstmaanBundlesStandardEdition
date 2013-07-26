@@ -455,62 +455,21 @@ class BoatController extends Controller
     }
 
     public function addPhotoAction(Request $request, $id)
-    {
-        try {
-            $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
-            if (!$boat){
-                throw $this->createNotFoundException('Unable to find Boat entity.');
-            }
-
-            $em = $this->getDoctrine()->getManager();
-            $imageFile = $request->files->get('boatFile');
-            if (!$imageFile instanceof UploadedFile){
-                return new Response('Unable to upload', 400);
-            }
-
-            $image = new BoatImage();
-            $image->setPath($imageFile->guessExtension());
-            $image->setMimeType($imageFile->getMimeType());
-
-            $image->setBoat($boat);
-            $boat->addImage($image);
-            $boat->setUpdated(new \DateTime());
-            
-            $em->persist($image);
-
-            $validator          = $this->get('validator');
-            $boatErrors         = $validator->validate($boat, 'boat_photos');
-            $imageErrors        = $validator->validate($image, 'boat_photos');
-            $numBoatErrors      = $boatErrors->count();
-            $numImageErrors     = $imageErrors->count();
-
-            if ($numBoatErrors==0 && $numImageErrors==0){
-                $em->flush();
-
-                $imageFile->move(
-                    $image->getUploadRootDir(),
-                    $image->getId().'.'.$image->getPath()
-                );
-
-                return new JsonResponse(array('message' => 'Your image has been uploaded successfully', 'id' => $image->getId()));
-            } else {
-                $errorArr = array();
-                for ($i=0; $i<$numBoatErrors; $i++){
-                    $error = $boatErrors->get($i);
-                    $msgTemplate = $error->getMessage();
-                    $errorArr[] = $msgTemplate;
-                }
-                for ($i=0; $i<$numImageErrors; $i++){
-                    $error = $imageErrors->get($i);
-                    $msgTemplate = $error->getMessage();
-                    $errorArr[] = $msgTemplate;
-                }
-                return new Response(join(',', $errorArr), 400);
-            }
-        } catch (\Exception $e){
-            return new Response('Unable to upload', 400);
+    {          
+        $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
+        if (!$boat){
+            throw $this->createNotFoundException('Unable to find Boat entity.');
         }
-        
+
+        $imageFile = $request->files->get('boatFile');
+        $boatService = $this->container->get('boat_service');
+
+        try {
+            $image = $boatService->addImage($boat, $imageFile, true);
+            return new JsonResponse(array('message' => 'Your image has been uploaded successfully', 'id' => $image->getId()));
+        } catch (\Exception $e){
+            return new Response($e->getMessage(), 400);
+        }
     }
     
     public function getPhotosAction(Request $request, $id)
