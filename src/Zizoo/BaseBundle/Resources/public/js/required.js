@@ -366,7 +366,7 @@ $(document).ready(function() {
         $(".tabbed .tab").eq($(this).parent().index()).show().siblings().hide();
 
         if ($(this).attr("title") == "Location") {
-            initialize();
+            load_ivory_google_map_api();
         }
 
         return false;
