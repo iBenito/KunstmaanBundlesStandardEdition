@@ -56,24 +56,39 @@
 
     </div>
     <!-- end:slideshow -->
-    
+
     <!-- start:how it works short -->
     <section id="how-it-works-short" class="container">
         <h2>How it Works</h2>
         <div class="columns clearfix">
             <section class="book">
-                <h3>Book<br> your Trip</h3>
-                <a href="{{ path('ZizooBaseBundle_how') }}" class="button blue" title="Search">Search</a>
+                <div class="background clearfix">
+                    <img src="{{ asset('bundles/zizoobase/images/how-it-works-book.png') }}" alt="Book your trip">
+                    <div class="entry">
+                        <h3>Book your Trip</h3>
+                        <a href="{{ path('ZizooBaseBundle_how') }}" class="button blue" title="More">More</a>
+                    </div>
+                </div>
             </section>
 
             <section class="add">
-                <h3>Add<br> your Boat</h3>
-                <a href="{{ path('ZizooBaseBundle_how') }}" class="button blue" title="Add">Add</a>
+                <div class="background clearfix">
+                    <img src="{{ asset('bundles/zizoobase/images/how-it-works-add.png') }}" alt="Add your Boat">
+                    <div class="entry">
+                        <h3>Add your<br> Boat</h3>
+                        <a href="{{ path('ZizooBaseBundle_how') }}" class="button blue" title="More">More</a>
+                    </div>
+                </div>
             </section>
 
             <section class="join">
-                <h3>Join Skipper<br> Community</h3>
-                <a href="{{ path('ZizooBaseBundle_how') }}" class="button blue" title="Join">Join</a>
+                <div class="background clearfix">
+                    <img src="{{ asset('bundles/zizoobase/images/how-it-works-join.png') }}" alt="Join Skipper Community">
+                    <div class="entry">
+                        <h3>Join Skipper<br> Community</h3>
+                        <a href="{{ path('ZizooBaseBundle_how') }}" class="button blue" title="More">More</a>
+                    </div>
+                </div>
             </section>
         </div>
         <p>

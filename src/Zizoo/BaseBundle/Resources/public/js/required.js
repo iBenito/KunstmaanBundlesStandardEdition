@@ -344,6 +344,12 @@ $(document).ready(function() {
         return false;
     });
 
+    // Show more
+    $("#how-it-works .more a").click(function() {
+        $(this).closest(".more").next(".expand").slideToggle(200);
+        return false;
+    });
+
 
 /* ==========================================================================
    Overview tabs
