@@ -38,7 +38,6 @@ class BoatAssetBase
      */
     private $order;
 
-
     public function __construct($id=null, $name=null, $order=null) {
         $this->id       = $id;
         $this->name     = $name;

@@ -12,5 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Amenities extends BoatAssetBase
 {
-
+    /**
+     * @ORM\ManyToMany(targetEntity="Zizoo\BoatBundle\Entity\Boat", mappedBy="amenities")
+     */
+    private $boats;
+    
 }

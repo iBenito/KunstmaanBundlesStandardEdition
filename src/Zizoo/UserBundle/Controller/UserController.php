@@ -321,8 +321,8 @@ class UserController extends Controller
                 }
 
                 $newPassword = $accountSettings->getNewPassword();
-                if ($newPassword->getPassword()!=null){
-
+                if ($newPassword!=null){
+                    $encoder = new MessageDigestPasswordEncoder('sha512', true, 10);
                     $user->setPassword($encoder->encodePassword($newPassword->getPassword(), $user->getSalt()));
 
                     $em = $this->getDoctrine()
