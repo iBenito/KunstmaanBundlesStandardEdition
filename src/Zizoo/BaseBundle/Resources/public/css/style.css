@@ -58,6 +58,10 @@ a:hover {
     text-decoration: none;
 }
 
+a.disabled {
+    cursor: default;
+}
+
 /**
  * Fonts used: Asap
  */

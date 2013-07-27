@@ -9,7 +9,8 @@ services:
     profile_service:
         class:        Zizoo\ProfileBundle\Service\ProfileService
         arguments:
-            entityManager:  "@doctrine.orm.entity_manager"    
+            entityManager:  "@doctrine.orm.entity_manager"
+            container:      "@service_container"
   
     zizoo_profile.profile_type:
         class:  Zizoo\ProfileBundle\Form\Type\ProfileType

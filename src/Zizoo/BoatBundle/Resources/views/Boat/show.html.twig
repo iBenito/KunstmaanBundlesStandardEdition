@@ -211,7 +211,11 @@
                             {{ boat.charter.charterName }}
                         </figcaption>
                     </figure>
-                    <a href="" class="button blue big" title="Send Message">Send Message</a>
+                    <div id="message_coming_soon" style="display: none">
+                        <h1>Hold tight!</h1>
+                        <h2>Messaging functionality is coming soon!</h2>
+                    </div>
+                    <a href="#" id="send_message_btn" class="button blue big" title="Send Message">Send Message</a>
                 </div>
                 <!-- end:avatar -->
 
@@ -228,11 +232,11 @@
     
     <script type="text/javascript">
         var mappings = new Array({'original_state': {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') }}, 
-                                    'mapped_state': 'day_booked'},
+                                    'mapped_state': 'day_unavailable'},
                                     {'original_state': {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') }}, 
-                                    'mapped_state': 'day_booked'},
+                                    'mapped_state': 'day_unavailable'},
                                     {'original_state': {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_SELF') }},
-                                    'mapped_state': 'day_booked'});
+                                    'mapped_state': 'day_unavailable'});
         var availabilityReservedDates   = {{ boat|reservedDatesWithBookings(reservations)|raw }};
         var availabilityPriceDates      = {{ boat|priceDates(prices)|raw }};
         var availabilityDefaultAllowed  = {{ boat.hasDefaultPrice == true ? 'true' : 'false' }};

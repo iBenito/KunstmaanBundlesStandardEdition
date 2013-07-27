@@ -11,7 +11,7 @@ Zizoo\CharterBundle\Entity\Charter:
             - NotBlank: { message: zizoo_charter.error.charter_about_not_blank, groups: [Default, CompletenessLevel2] }
             
         logo:
-            - NotNull: { message: zizoo_charter.error.charter_logo_not_null, groups: [logo, Default, CompletenessLevel3] }
+            - NotNull: { message: zizoo_charter.error.charter_logo_not_null, groups: [Default, CompletenessLevel3] }
             
 Zizoo\AddressBundle\Entity\CharterAddress:
     properties:

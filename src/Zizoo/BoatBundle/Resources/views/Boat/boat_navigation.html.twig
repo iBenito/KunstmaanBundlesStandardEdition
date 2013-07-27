@@ -1,5 +1,6 @@
 <script type="text/javascript">
     var changed = false;
+    
     $(document).ready(function(){
 
         $('form.form').delegate('input, select', 'change', function(){
@@ -28,6 +29,7 @@
             if (changed){
                 {% if boat.id is not null %}
                 $('#override_url').val($(this).attr('href'));
+                $('#continue_to').html($(this).text());
                 $('#save_changes_popup').dialog({
                     modal: true,
                     closeOnEscape: false,
@@ -62,11 +64,21 @@
     }
 </style>
 <div id="save_changes_popup">
-    <p>You have unsaved changes. Do you want to save your changes first?</p>
+    <p>You have unsaved changes. Do you want to </p>
+    <ul id="save_changes_options_list">
+        <li><strong>Save</strong> your changes first, or</li>
+        <li><strong>Continue</strong> to <span id="continue_to"></span>, or</li>
+        <li><strong>Stay</strong> on this page?</li>
+    </ul>
+    <style type="text/css">
+        #save_changes_options_list li {
+            list-style: circle inside none;
+        }
+    </style>
     <div id="save_changes_btns">
-        <button id="save_changes_yes_btn" class="button blue small">Yes</button>
-        <button id="save_changes_no_btn" class="button blue small">No</button>
-        <button id="save_changes_cancel_btn" class="button blue small">Cancel</button>
+        <button id="save_changes_yes_btn" class="button blue small">Save</button>
+        <button id="save_changes_no_btn" class="button blue small">Continue</button>
+        <button id="save_changes_cancel_btn" class="button blue small">Stay</button>
     </div>
 </div>
 <ul id="boat_nav" class="tabs boat clearfix">

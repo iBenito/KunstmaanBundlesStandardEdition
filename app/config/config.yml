@@ -74,10 +74,21 @@ doctrine:
 
 liip_imagine:
     filter_sets:
+      
         thumb_120x80:
             quality: 75
             filters:
                 thumbnail: { size: [120, 80], mode: outbound, allow_upscale: true }
+            
+        thumb_131x68:
+            quality: 75
+            filters:
+                thumbnail: { size: [131, 68], mode: outbound, allow_upscale: true }
+                
+        thumb_218x114:
+            quality: 75
+            filters:
+                thumbnail: { size: [218, 114], mode: outbound, allow_upscale: true }
                 
         thumb_190x_:
             quality: 75

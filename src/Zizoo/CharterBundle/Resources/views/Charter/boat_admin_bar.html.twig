@@ -3,7 +3,7 @@
         {% if boat.active %}
             <a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" class="boat gray clearfix">
         {% else %}
-            <a href="#" class="boat disabled clearfix">
+            <a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" class="boat disabled clearfix">
         {% endif %}
             <figure>
                 {% if boat.image.first != false %}
@@ -49,7 +49,7 @@
             {% if boat.active %}
                 <li><a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" class="button blue medium view_btn">View</a></li>
             {% else %}
-                <li><a href="#" class="button blue disabled medium view_btn">View</a></li>
+                <li><a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" class="button blue disabled medium view_btn">View</a></li>
             {% endif %}
             <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterEditBoat', {id: boat.id}) }}" class="button blue medium">Edit</a></li>
             <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterEditPriceBoat', {id: boat.id}) }}" class="button blue light">Calendar</a></li>

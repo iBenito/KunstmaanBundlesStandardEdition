@@ -63,3 +63,11 @@ function getDates(dates, date){
     }
     return returnDates;
 }
+
+function determineDefaultDateClass(boatDefaultDateClass, priceDate){
+    if (priceDate) {
+        return 'day_available';
+    } else {
+        return boatDefaultDateClass;
+    }
+}

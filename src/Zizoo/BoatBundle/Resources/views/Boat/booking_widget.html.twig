@@ -71,7 +71,7 @@
            <button type="button" id="book_btn" disabled="disabled" class="button orange big" title="Book it">Book It</button>
         {% endif %}
 
-        <div id="coming_soon" style="display: none">
+        <div id="booking_coming_soon" style="display: none">
             <h1>Hold tight!</h1>
             <h2>Booking functionality is coming soon!</h2>
         </div>
@@ -106,8 +106,8 @@
     
     
     
-    function openComingSoonDialog(){
-        $('#coming_soon').dialog({
+    function openBookingComingSoonDialog(){
+        $('#booking_coming_soon').dialog({
             modal: true,
             closeOnEscape: false,
             resizable: false,
@@ -128,9 +128,11 @@
         
         $('#booking_form').submit(function(){
             //window.location.href = $('#booking_form').attr('action');
-            openComingSoonDialog();
+            openBookingComingSoonDialog();
             return false;
         });
+
+        $("#booking_price_container input[type='radio'], #booking_price_container input[type='checkbox']").checkBox();
 
         $('#booking_price_container, #book_btn').show();
 
@@ -178,12 +180,18 @@
                 var reservedDate            = getDates(availabilityReservedDates, date);
                 var previousReservedDate    = getDates(availabilityReservedDates, previousDate);
                 var priceDate               = getDates(availabilityPriceDates, date);
-
+                var previousPriceDate       = getDates(availabilityPriceDates, previousDate);
+                
                 var content = date.getDateFormatted();
                 var defaultDateClass = '{% if boat.hasDefaultPrice %}day_available{% else %}day_unavailable{% endif %}';
-                var todayClass  = getDateClass(reservedDate, bookingWidgetMappings, defaultDateClass);
+                var previousDefaultDateClass = defaultDateClass;
+                    
+                var todayDefaultDateClass    = determineDefaultDateClass(defaultDateClass, priceDate);
+                var previousDefaultDateClass = determineDefaultDateClass(defaultDateClass, previousPriceDate);
+                    
+                var todayClass  = getDateClass(reservedDate, bookingWidgetMappings, todayDefaultDateClass);
                 var dateClass   = todayClass;
-                var lastClass   = getDateClass(previousReservedDate, bookingWidgetMappings, defaultDateClass);
+                var lastClass   = getDateClass(previousReservedDate, bookingWidgetMappings, previousDefaultDateClass);
                 
                 var lastClassArr = lastClass.split('-');
                 lastClass = lastClassArr[lastClassArr.length-1];

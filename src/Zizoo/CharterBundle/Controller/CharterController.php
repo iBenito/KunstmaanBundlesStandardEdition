@@ -892,60 +892,18 @@ class CharterController extends Controller
     
     public function setLogoAction()
     {
+        $request    = $this->getRequest();
+        $user       = $this->getUser();
+        $charter    = $user->getCharter();
+            
+        $imageFile      = $request->files->get('logoFile');
+        $charterService = $this->container->get('zizoo_charter_charter_service');
+
         try {
-            $request    = $this->getRequest();
-            $user       = $this->getUser();
-            $charter    = $user->getCharter();
-            
-            $em = $this->getDoctrine()->getManager();
-            $logoFile = $request->files->get('logoFile');
-            if (!$logoFile instanceof UploadedFile){
-                return new Response('Unable to upload', 400);
-            }
-
-            $oldLogo = $charter->getLogo();
-            
-            $logo = new CharterLogo();
-            $logo->setPath($logoFile->guessExtension());
-            $logo->setMimeType($logoFile->getMimeType());
-
-            $logo->setCharter($charter);
-            $charter->setLogo($logo);
-
-            $em->persist($logo);
-
-            $validator          = $this->get('validator');
-            $charterErrors      = $validator->validate($charter, 'logo');
-            $logoErrors       = $validator->validate($logo, 'logo');
-            $numCharterErrors   = $charterErrors->count();
-            $numLogoErrors      = $logoErrors->count();
-
-            if ($numCharterErrors==0 && $numLogoErrors==0){
-                if ($oldLogo) $em->remove($oldLogo);
-                $em->flush();
-
-                $logoFile->move(
-                    $logo->getUploadRootDir(),
-                    $logo->getId().'.'.$logo->getPath()
-                );
-
-                return new JsonResponse(array('message' => 'Your logo has been uploaded successfully', 'id' => $logo->getId()));
-            } else {
-                $errorArr = array();
-                for ($i=0; $i<$numCharterErrors; $i++){
-                    $error = $charterErrors->get($i);
-                    $msgTemplate = $error->getMessage();
-                    $errorArr[] = $msgTemplate;
-                }
-                for ($i=0; $i<$numLogoErrors; $i++){
-                    $error = $logoErrors->get($i);
-                    $msgTemplate = $error->getMessage();
-                    $errorArr[] = $msgTemplate;
-                }
-                return new Response(join(',', $errorArr), 400);
-            }
+            $logo = $charterService->setCharterLogo($charter, $imageFile, true);
+            return new JsonResponse(array('message' => 'Your logo has been uploaded successfully', 'id' => $logo->getId()));
         } catch (\Exception $e){
-            return new Response('Unable to upload', 400);
+            return new Response($e->getMessage(), 400);
         }
     }
     

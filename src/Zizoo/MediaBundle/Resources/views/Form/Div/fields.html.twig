@@ -1,28 +1,37 @@
 {% block zizoo_media_row %}
 {% spaceless %}
+    {% set default_class = block_prefixes|parentBlockPrefix %}
+    {% set default_class = form|rootLabel(default_class) %}
     <div id="{{ id }}_container" class="zizoo_media_container {% if part_of_collection == false %}single row{% endif %}">
         {% if part_of_collection == false %}
-        <div class="row_content">
+        <div class="row-content {{ default_class }}">
         {% endif %}
             {{ form_widget(form) }}
 
-            {% if file_url is not null %}
-                <div class="image_div">
-                    <img id="{{ id }}_image" src="{{ asset(file_url|imagine_filter('thumb_120x80')) }}?ver={{ version }}"/><br />
-                    <div class="zizoo_media_overlay"></div>
-                    <div class="controls">
-                        <a href="#" id="{{ id }}_crop_btn" class="crop_btn">Crop</a>
-                        {% if allow_delete == true %}
-                            <a href="#" id="{{ id }}_delete_btn" class="delete_btn">Delete</a>
-                        {% endif %}
-                        <input id="{{ id }}_full_url" class="full_url" type="hidden" value="{{ asset(file_url) }}?ver={{ version }}" />
-                        <input id="{{ id }}_id" class="id" type="hidden" value="{{ id }}" />
+            {% if part_of_collection == false %}
+            <div id="{{ id }}_dropzone" class="{% if dropzone != false %}dropzone{% endif %}">
+            {% endif %}
+                    
+                {% if file_url is not null %}
+
+                     <div class="image_div">
+                        <img id="{{ id }}_image" src="{{ asset(file_url|imagine_filter('thumb_120x80')) }}?ver={{ version }}"/><br />
+                        <div class="zizoo_media_overlay"></div>
+                        <div class="controls">
+                            <a href="#" id="{{ id }}_crop_btn" class="crop_btn">Crop</a>
+                            {% if allow_delete == true %}
+                                <a href="#" id="{{ id }}_delete_btn" class="delete_btn">Delete</a>
+                            {% endif %}
+                            <input id="{{ id }}_full_url" class="full_url" type="hidden" value="{{ asset(file_url) }}?ver={{ version }}" />
+                            <input id="{{ id }}_id" class="id" type="hidden" value="{{ id }}" />
+                        </div>
                     </div>
-                </div>
+                {% endif %}
+                        
+            {% if part_of_collection == false %}
+            </div>
             {% endif %}
-             {% if part_of_collection == false %}
-                <div id="{{ id }}_dropzone" class="{% if dropzone != false %}dropzone{% endif %}"></div>
-            {% endif %}
+                
         {% if part_of_collection == false %}
         </div>
         {% endif %}
@@ -78,6 +87,14 @@
                 
         .image_div {
             position: relative;
+        }
+        
+        .zizoo_media_container.single .image_div {
+            display: inline-block;
+            margin-right: 10px;
+            margin-bottom: 40px;
+            border: 1px solid #ACACAC;
+            height: 80px;
         }
         
         .image_div .zizoo_media_overlay {
@@ -196,7 +213,7 @@
             $('#{{ id }}_crop_image').attr('src', url);
             
             var width = $(parentContainer).width();
-            var rowContent = $(container).children('.row_content');
+            var rowContent = $(container).children('.row-content');
             if (rowContent.length>0) width = $(rowContent).innerWidth();
             
             $('#{{ id }}_crop_image').Jcrop({

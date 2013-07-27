@@ -7,12 +7,16 @@ function setupCalendar(){
             var reservedDate            = getDates(availabilityReservedDates, date);
             var previousReservedDate    = getDates(availabilityReservedDates, previousDate);
             var priceDate               = getDates(availabilityPriceDates, date);
+            var previousPriceDate       = getDates(availabilityPriceDates, previousDate);
 
             var overlay = '<div class="day_overlay"></div>';
             var content = priceDate ? overlay + date.getDateFormatted() + '<span class="day_price">'+priceDate[0]+'</span>' : overlay + date.getDateFormatted() + '<span class="day_price">'+(availabilityDefaultAllowed?availabilityDefaultPrice+'*':'')+'</span>';
+            
+            var todayDefaultDateClass    = determineDefaultDateClass(defaultDateClass, priceDate);
+            var previousDefaultDateClass = determineDefaultDateClass(defaultDateClass, previousPriceDate);
 
-            var todayClass  = getDateClass(reservedDate, mappings, defaultDateClass);
-            var lastClass   = getDateClass(previousReservedDate, mappings, defaultDateClass);
+            var todayClass  = getDateClass(reservedDate, mappings, todayDefaultDateClass);
+            var lastClass   = getDateClass(previousReservedDate, mappings, previousDefaultDateClass);
 
             var lastClassArr = lastClass.split('-');
             lastClass = lastClassArr[lastClassArr.length-1];
@@ -34,6 +38,24 @@ function setupCalendar(){
     
 }
 
+function openMessageComingSoonDialog(){
+    $('#message_coming_soon').dialog({
+        modal: true,
+        closeOnEscape: false,
+        resizable: false,
+        width: 470,
+        maxWidth: 470,
+        fluid: true,
+        title: 'Coming Soon'
+    });
+}
+
 $(document).ready(function(){
     setupCalendar();
+    
+    $('#send_message_btn').click(function(){
+        openMessageComingSoonDialog();
+        return false;
+    });
+    
 });

@@ -768,7 +768,11 @@ class Boat extends BaseEntity
      */
     public function getDefaultPrice()
     {
-        return (float)$this->defaultPrice;
+        if ($this->defaultPrice!==null){
+            return (float)$this->defaultPrice;
+        } else {
+            return $this->defaultPrice;
+        }
     }
     
     /**
@@ -947,7 +951,11 @@ class Boat extends BaseEntity
     
     public function getMinimumDays()
     {
-        return (int)$this->minimumDays;
+        if ($this->minimumDays!==null){
+            return (int)$this->minimumDays;
+        } else {
+            return $this->minimumDays;
+        }
     }
     
     public function setCrewPrice($crewPrice)
@@ -958,7 +966,11 @@ class Boat extends BaseEntity
     
     public function getCrewPrice()
     {
-        return (float)$this->crewPrice;
+        if ($this->crewPrice!==null){
+            return (float)$this->crewPrice;
+        } else {
+            return $this->crewPrice;
+        }
     }
     
     public function setNumCrew($numCrew)
@@ -969,7 +981,11 @@ class Boat extends BaseEntity
     
     public function getNumCrew()
     {
-        return (int)$this->numCrew;
+        if ($this->numCrew!==null){
+            return (int)$this->numCrew;
+        } else {
+            return $this->numCrew;
+        }
     }
     
     public function setCrewOptional($crewOptional)

@@ -78,57 +78,18 @@ class ProfileController extends Controller
     
     public function addAvatarAction()
     {
+        $request    = $this->getRequest();
+        $user       = $this->getUser();
+        $profile    = $user->getProfile();
+
+        $imageFile      = $request->files->get('avatarFile');
+        $profileService = $this->container->get('profile_service');
+
         try {
-            $request    = $this->getRequest();
-            $user       = $this->getUser();
-            $profile    = $user->getProfile();
-
-            $em = $this->getDoctrine()->getManager();
-            $avatarFile = $request->files->get('avatarFile');
-            if (!$avatarFile instanceof UploadedFile){
-                return new Response('Unable to upload', 400);
-            }
-
-            $avatar = new ProfileAvatar();
-            $avatar->setPath($avatarFile->guessExtension());
-            $avatar->setMimeType($avatarFile->getMimeType());
-
-            $avatar->setProfile($profile);
-            $profile->addAvatar($avatar);
-
-            $em->persist($avatar);
-
-            $validator          = $this->get('validator');
-            $profileErrors      = $validator->validate($profile, 'avatars');
-            $avatarErrors       = $validator->validate($avatar, 'avatars');
-            $numProfileErrors   = $profileErrors->count();
-            $numAvatarErrors    = $avatarErrors->count();
-
-            if ($numProfileErrors==0 && $numAvatarErrors==0){
-                $em->flush();
-
-                $avatarFile->move(
-                    $avatar->getUploadRootDir(),
-                    $avatar->getId().'.'.$avatar->getPath()
-                );
-
-                return new JsonResponse(array('message' => 'Your avatar has been uploaded successfully', 'id' => $avatar->getId()));
-            } else {
-                $errorArr = array();
-                for ($i=0; $i<$numProfileErrors; $i++){
-                    $error = $profileErrors->get($i);
-                    $msgTemplate = $error->getMessage();
-                    $errorArr[] = $msgTemplate;
-                }
-                for ($i=0; $i<$numAvatarErrors; $i++){
-                    $error = $avatarErrors->get($i);
-                    $msgTemplate = $error->getMessage();
-                    $errorArr[] = $msgTemplate;
-                }
-                return new Response(join(',', $errorArr), 400);
-            }
+            $avatar = $profileService->addAvatar($profile, $imageFile, true);
+            return new JsonResponse(array('message' => 'Your avatar has been uploaded successfully', 'id' => $avatar->getId()));
         } catch (\Exception $e){
-            return new Response('Unable to upload', 400);
+            return new Response($e->getMessage(), 400);
         }
         
     }

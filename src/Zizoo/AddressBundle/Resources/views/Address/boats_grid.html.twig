@@ -6,7 +6,12 @@
         <div class="box">
             <a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}?zizoo_boat_book[reservation_range][reservation_from]={{ form.vars.value.reservationFrom is empty ? "" : form.vars.value.reservationFrom|date }}&zizoo_boat_book[reservation_range][reservation_to]={{ form.vars.value.reservationTo is empty ? "" : form.vars.value.reservationTo|date }}&zizoo_boat_book[num_guests]={{ form.vars.value.numGuests }}{% if boat.crewOptional == true %}&zizoo_boat_book[crew]=true{% endif %}" class="boat {% if bookable==true %}white{% else %}gray disabled{% endif %} clearfix">
                 <figure>
-                    <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg') }}" alt="">
+                    {% if boat.image.first != false %}
+                    <img src="{{ asset(boat.image.first|pictureWebPath|imagine_filter('thumb_218x114')) }}" alt="" />
+                    {% else %}
+                    <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg'|imagine_filter('thumb_218x114')) }}" alt="" />
+                    {% endif %}
+                    
                     <figcaption class="clearfix">
                         {{ boat.title }}<span class="icon minus"></span>
                     </figcaption>

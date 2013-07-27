@@ -211,8 +211,8 @@ class ReservationAgent {
         //if (!$boat->getCrewOptional() && !$includeCrew) throw new InvalidReservationException('Boat must be booked with crew');
         
         if (!$from || !$to) return null;
-        $from = $from->setTime(11,0,0);
-        $to = $to->setTime(12,59,59);
+        $from = $from->setTime(0,0,0);
+        $to = $to->setTime(0,0,0);
         
         $totalSetPrice  = $this->em->getRepository('ZizooBoatBundle:Price')->getTotalSetPrice($boat, $from, $to);
         
@@ -220,7 +220,7 @@ class ReservationAgent {
         $numDays = $interval->days;
         
         if ($numDays > $totalSetPrice['num_days']){
-            if ($boat->getDefaultPrice()>0){
+            if ($boat->getHasDefaultPrice()){
                 $diffDays = $numDays-$totalSetPrice['num_days'];
                 $subtotal = $totalSetPrice['set_price'] + ($diffDays*$boat->getDefaultPrice());
                 $crewPrice = $diffDays*$boat->getCrewPrice();
@@ -238,7 +238,7 @@ class ReservationAgent {
             }
         } else {
             $subtotal = $totalSetPrice['set_price'];
-            $crewPrice = $diffDays*$boat->getCrewPrice();
+            $crewPrice = $numDays*$boat->getCrewPrice();
             $total = $subtotal;
             if ($includeCrew){
                 $total = $subtotal + $crewPrice;

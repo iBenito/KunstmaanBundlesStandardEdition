@@ -237,12 +237,6 @@
     width: 150px;
 }
 
-#availability-legend #availability-legend-available {
-    background-color: #47C2D2;
-    border-color: #47C2D2;
-    color: #FFFFFF;
-}
-
 #availability-legend .key {
     background: none repeat scroll 0 0 transparent;
     border: 3px solid;
@@ -269,11 +263,13 @@
 }
 
 #availability-legend #availability-legend-available {
+    background-color: #47C2D2;
+    border-color: #47C2D2;
     color: #FFFFFF;
 }
 
-#availability-legend #availability-legend-booked {
-    background-color: red;
-    border-color: red;
+#availability-legend #availability-legend-unavailable {
+    background-color: #F1665E;
+    border-color: #F1665E;
     color: #FFFFFF;
 }

@@ -104,10 +104,13 @@ class BoatService {
         }
     }
     
-    public function addImages(Boat $boat, ArrayCollection $images){
-        foreach ($images as $image){
-            $this->addImage($boat, $image);
+    public function addImages(Boat $boat, $imageFiles, $flush=true){
+        $boatImages = new ArrayCollection();
+        foreach ($imageFiles as $imageFile){
+            $boatImages->add($this->addImage($boat, $imageFile, false));
         }
+        if ($flush) $this->em->flush();
+        return $boatImages;
     }
     
     public function addImage(Boat $boat, $imageFile, $flush=true){
@@ -120,7 +123,9 @@ class BoatService {
         $image->setFile($imageFile);
         $image->setPath($imageFile->guessExtension());
         $image->setMimeType($imageFile->getMimeType());
-        
+        $image->setBoat($boat);
+        $boat->addImage($image);
+            
         $validator          = $this->container->get('validator');
         $boatErrors         = $validator->validate($boat, 'boat_photos');
         $imageErrors        = $validator->validate($image, 'boat_photos');
@@ -129,8 +134,6 @@ class BoatService {
         
         if ($numBoatErrors==0 && $numImageErrors==0){
             
-            $image->setBoat($boat);
-            $boat->addImage($image);
             $boat->setUpdated(new \DateTime());
 
             try {

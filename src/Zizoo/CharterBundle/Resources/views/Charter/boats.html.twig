@@ -114,6 +114,14 @@
                     text_on:        'Active',
                     onToggle:       activeToggle
                 });
+                
+                $('#boats a.boat, #boats .buttons a').click(function(){
+                    if ($(this).hasClass('disabled')){
+                        return false;
+                    } else {
+                        return true;
+                    }
+                });
             }
 
             function setupFilter(){

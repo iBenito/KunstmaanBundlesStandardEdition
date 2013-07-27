@@ -217,13 +217,18 @@
                     var reservedDate            = getDates(availabilityReservedDates, date);
                     var previousReservedDate    = getDates(availabilityReservedDates, previousDate);
                     var priceDate               = getDates(availabilityPriceDates, date);
+                    var previousPriceDate       = getDates(availabilityPriceDates, previousDate);
 
                     var overlay = '<div class="day_overlay"></div>';
                     var content = priceDate ? overlay + date.getDateFormatted() + '<span class="day_price">'+priceDate[0]+'</span>' : overlay + date.getDateFormatted() + '<span class="day_price">'+(availabilityDefaultAllowed?availabilityDefaultPrice+'*':'')+'</span>';
                     
                     var defaultDateClass = '{% if boat.hasDefaultPrice %}day_available{% else %}day_unavailable{% endif %}';
-                    var todayClass  = getDateClass(reservedDate, mappings, defaultDateClass);
-                    var lastClass   = getDateClass(previousReservedDate, mappings, defaultDateClass);
+                    
+                    var todayDefaultDateClass    = determineDefaultDateClass(defaultDateClass, priceDate);
+                    var previousDefaultDateClass = determineDefaultDateClass(defaultDateClass, previousPriceDate);
+                    
+                    var todayClass  = getDateClass(reservedDate, mappings, todayDefaultDateClass);
+                    var lastClass   = getDateClass(previousReservedDate, mappings, previousDefaultDateClass);
                     
                     var lastClassArr = lastClass.split('-');
                     lastClass = lastClassArr[lastClassArr.length-1];
