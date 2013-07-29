@@ -4,34 +4,41 @@
 
 {% block body %}
 
-    <div class="span4 hero-unit">
-        <section class="user">
-            <h2>PICTURE BOX</h2>
-            <div class="avatar">
-                {% if charter.logo is not null %}
-                    <img src="{{ asset(charter.logo|pictureWebPath) }}" alt="image not found" class="large" />
-                {% endif %}
-            </div>
-            <p>{{ charter.charterName }}</p>
-        </section>
-            
-        <section class="boats">
-            <h2>Boats</h2>
-            {% render controller('ZizooCharterBundle:Charter:showBoats', {id: charter.id, page: 1}) %}
-        </section>
-    </div>
+    <!-- start:content -->
+    <div id="content">
+        <div class="container clearfix">
 
-    <div class="span8 hero-unit">
-        <header>
-            <h2>Profile</h2>
-        </header>
-            
-        <section class="details" id="profile">
-            <h3>{% trans %}zizoo_charter.label.about{% endtrans %}</h3>
-            <p>{{ charter.about }}</p>
-            
-        </section>
+            <!-- start:about -->
+            <section id="user" class="section">
+                <h2>PICTURE BOX</h2>
+                <div class="avatar">
+                    {% if charter.logo is not null %}
+                        <img src="{{ asset(charter.logo|pictureWebPath) }}" alt="image not found" class="large" />
+                    {% endif %}
+                </div>
+                <p>{{ charter.charterName }}</p>
+            </section>
 
+            <section class="boats">
+                <h2>Boats</h2>
+                {% render controller('ZizooCharterBundle:Charter:showBoats', {id: charter.id, page: 1}) %}
+            </section>
+
+            <!-- start:sidebar -->
+            <aside id="sidebar" class="left clearfix">
+                <header>
+                    <h2>Profile</h2>
+                </header>
+
+                <section class="details" id="profile">
+                    <h3>{% trans %}zizoo_charter.label.about{% endtrans %}</h3>
+                    <p>{{ charter.about }}</p>
+
+                </section>
+            </aside>
+            <!-- end:sidebar -->
+        </div>
     </div>
-  
+    <!-- end:content -->
+
 {% endblock %} 

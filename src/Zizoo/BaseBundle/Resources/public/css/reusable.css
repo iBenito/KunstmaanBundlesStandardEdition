@@ -1786,14 +1786,15 @@
 }
 
 .box .boat.disabled {
-    /**pointer-events: none;
-    cursor: default;
+    /**
     background: #ebecec;
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
     */
     background: #ebecec;
+    pointer-events: none;
+    cursor: default;
 }
 
 .box .boat figure {

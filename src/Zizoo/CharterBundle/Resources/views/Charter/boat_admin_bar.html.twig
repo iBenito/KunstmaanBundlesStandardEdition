@@ -9,7 +9,7 @@
                 {% if boat.image.first != false %}
                 <img src="{{ asset(boat.image.first|pictureWebPath|imagine_filter('thumb_190x_')) }}" alt="" />
                 {% else %}
-                <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg') }}" alt="">
+                <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg'|imagine_filter('thumb_190x_')) }}" alt="">
                 {% endif %}
                 <figcaption class="clearfix">
                     {% if boat.name is not null %}{{ boat.name }}{% else %}{{ boat.created|date }}{% endif %}<span class="icon plus"></span>
