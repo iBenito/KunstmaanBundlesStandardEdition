@@ -131,7 +131,7 @@ ZizooBaseBundle_Dashboard_CharterProfile:
         
 ZizooBaseBundle_Dashboard_CharterInbox:
     pattern:  /charter/account/dashboard/inbox
-    defaults: { _controller: ZizooBaseBundle:Dashboard:charterInbox }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterInbox, message_controller: ZizooMessageBundle:Message:inbox }
     requirements:
         _method:  GET
         
@@ -140,6 +140,13 @@ ZizooBaseBundle_Dashboard_CharterSent:
     defaults: { _controller: ZizooBaseBundle:Dashboard:charterSent }
     requirements:
         _method:  GET
+        
+ZizooBaseBundle_Dashboard_CharterViewThread:
+    pattern:  /charter/account/dashboard/inbox/{id}
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterViewThread, message_controller: FOSMessageBundle:Message:thread }
+    requirements:
+        _method:  GET
+        id: \d+
         
 ZizooBaseBundle_Dashboard_CharterBookings:
     pattern:  /charter/account/dashboard/bookings

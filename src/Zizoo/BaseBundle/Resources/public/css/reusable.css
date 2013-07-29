@@ -2464,9 +2464,16 @@
 
 .messages .message .article {
     position: relative;
-    padding: 0 0 0 63px;
     -webkit-transition: background-color 200ms ease;
     transition: background-color 200ms ease;
+}
+
+.messages .message.sender .article {
+    padding: 0 0 0 63px;
+}
+
+.messages .message.receiver .article {
+    padding: 0 63px 0 0;
 }
 
 .inbox .messages .message .article {
@@ -2497,11 +2504,19 @@
 
 .messages .message .image {
     position: absolute;
-    top: 0;
-    left: 0;
     width: 50px;
     font: italic 11px/12px "Asap", Arial;
     text-align: center;
+}
+
+.messages .message.sender .image {
+    top: 0;
+    left: 0;
+}
+
+.messages .message.receiver .image {
+    top: 0;
+    right: 0;
 }
 
 .inbox .messages .message .image {
@@ -2550,7 +2565,7 @@
     background: #47c2d2;
 }
 
-.messages .message .background:before {
+.messages .message.sender .background:before {
     display: block;
     position: absolute;
     top: 5px;
@@ -2558,11 +2573,32 @@
     content: "";
     width: 7px;
     height: 8px;
+}
+
+.messages .message.receiver .background:before {
+    display: block;
+    position: absolute;
+    top: 5px;
+    right: -7px;
+    content: "";
+    width: 7px;
+    height: 8px;
+}
+
+.messages .message.sender .background:before {
     background: url(../images/messages-arrow.png);
 }
 
-.messages .message.unread .background:before {
+.messages .message.receiver .background:before {
+    background: url(../images/messages-arrow-inverse.png);
+}
+
+.messages .message.sender.unread .background:before {
     background: url(../images/messages-arrow-unread.png);
+}
+
+.messages .message.receiver.unread .background:before {
+    background: url(../images/messages-arrow-unread-inverse.png);
 }
 
 .messages .message.dark > .article .background:before,
@@ -2574,20 +2610,40 @@
     height: 13px;
 }
 
-.messages .message.dark > .article .background:before {
+.messages .message.sender.dark > .article .background:before {
     background: url(../images/messages-arrow-dark.png);
 }
 
-.messages .message.red > .article .background:before {
+.messages .message.receiver.dark > .article .background:before {
+    background: url(../images/messages-arrow-dark-inverse.png);
+}
+
+.messages .message.sender.red > .article .background:before {
     background: url(../images/messages-arrow-red.png);
+}
+
+.messages .message.receiver.red > .article .background:before {
+    background: url(../images/messages-arrow-red-inverse.png);
 }
 
 .messages .message.blue > .article .background:before {
     background: url(../images/messages-arrow-blue.png);
 }
 
-.messages .message.orange > .article .background:before {
+.messages .message.sender.blue > .article .background:before {
+    background: url(../images/messages-arrow-blue.png);
+}
+
+.messages .message.receiver.blue > .article .background:before {
+    background: url(../images/messages-arrow-blue-inverse.png);
+}
+
+.messages .message.sender.orange > .article .background:before {
     background: url(../images/messages-arrow-orange.png);
+}
+
+.messages .message.receiver.orange > .article .background:before {
+    background: url(../images/messages-arrow-orange-inverse.png);
 }
 
 .messages .message .background h2 {

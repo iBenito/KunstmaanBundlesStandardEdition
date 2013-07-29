@@ -1,11 +1,15 @@
 {# Zizoo Sliding pagination control implementation #}
 
+{% if itemName is not defined %}
+    {% set itemName = 'Items' %}
+{% endif %}
+
 <div class="pagination-container">
     <div class="pagination-info">
         {% if totalCount > 0 %}
-        {{ firstItemNumber}} &ndash; {{ lastItemNumber }} of {{ totalCount }} Boats
+        {{ firstItemNumber}} &ndash; {{ lastItemNumber }} of {{ totalCount }} {{ itemName }}
         {% else %}
-        No boats
+        No {{ itemName }}
         {% endif %}
     </div>
 

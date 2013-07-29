@@ -1,5 +1,10 @@
 {% extends 'ZizooUserBundle::layout.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/zizoobase/js/timer-redirect.js') }}" type="text/javascript"></script>
+{% endblock javascripts %}
+
 {% block body %}
     <!-- start:content -->
     <div id="content">
@@ -7,12 +12,13 @@
             
             <section id="registration" class="section">
                 <header>
-                    <h1>Charter Registration</h1>
+                    <h1>Charter Registration Successful</h1>
                 </header>
                     
                 <div class="content clearfix">
                     <div class="main">
                         <p>Thanks for registering.</p>
+                        <p>You will automatically be redirected to your Dashboard in <span class="redirect_timer" redirect="{{ path('ZizooBaseBundle_Dashboard_CharterDashboard') }}" time="5"></span> seconds, or <a href="{{ path('ZizooBaseBundle_Dashboard_CharterDashboard') }}">click here</a> to go there now.</p>
                     </div>
                 </div>
                     

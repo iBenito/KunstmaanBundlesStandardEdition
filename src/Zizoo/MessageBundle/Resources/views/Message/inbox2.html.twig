@@ -2,7 +2,9 @@
 
 {% block fos_message_content %}
 
-<a id="new_thread_link" href="{{ url('fos_message_thread_new' )}}">{% trans from 'FOSMessageBundle' %}send_new{% endtrans %}</a><br />
+    <div>
+        <a id="new_thread_link" href="{{ url('fos_message_thread_new' )}}">{% trans from 'FOSMessageBundle' %}send_new{% endtrans %}</a><br />
+    </div>
 
     <div id="context_hidden" style="display: none">
         <div id="delete_hidden" class="empty">{% render controller('ZizooMessageBundle:Message:deleteForm', {ajax: true }) %}</div>
@@ -31,21 +33,23 @@
         </ul>
     </div>
 
-    <select id="box_select" class="gray">
-        <option value="{{ path(grid.extraParams['inbox_url']) }}" selected="selected">Inbox</option>
-        <option value="{{ path(grid.extraParams['sent_url']) }}">Sent Messages</option>
-    </select>
-    <noscript>
-        <a href="{{ path(grid.extraParams['inbox_url']) }}">Sent Messages</a>
-    </noscript>
-
-    <div id="script">
-        {{jqgrid(grid)}}
+    <section class="inbox">
+        <!-- start:messagess -->
+        <ul class="messages">
+            {% for thread in pagination %}
+                {% include "ZizooMessageBundle:Message:inbox_thread_view.html.twig" with { thread: thread } %}
+            {% endfor %}
+        </ul>
+        <!-- end:messagess -->
+    </section>
+    
+    {# display navigation #}
+    <div id="navigation_container">
+        <div id="navigation">
+            {{ pagination.setTemplate('ZizooBaseBundle:Elements:pagination_sliding_with_info.html.twig') }}
+            {{ knp_pagination_render(pagination) }}
+        </div>
     </div>
-
-    <noscript>
-        {% include 'FOSMessageBundle:Message:threads_list.html.twig' with {'threads': grid.sourceData} %}
-    </noscript>
 
     <script type="text/javascript">
     
@@ -154,6 +158,11 @@
     }
     
     function deleteListeners(){
+        $('.messages .message .delete').click(function(){
+            var threadId = $(this).parents('.message').attr('thread-id');
+            deleteThreadPopup(threadId);
+            return false;
+        });
         $(document).delegate('#delete_thread_inner_ajax #delete_thread_form', 'submit', function(){
             $('#delete_thread_inner_ajax').block({ message: '' });
             $.ajax({
@@ -297,83 +306,16 @@
     }
     
     function readThread(rowId, read){
-        var threadId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', rowId, 'grid_inboxId');
-        $.ajax({
-            type: 'get', 
-            url: '{{ path('ZizooMessageBundle_mark_thread') }}/'+threadId+'/'+read,
-            success: function(data, textStatus, XHR){
-            },
-            error: function(jqXHR, textStatus,errorThrown){
-            }
-        });
-        if (read){
-            jQuery('#{{ grid.name|raw }} tr#'+rowId+' td div').removeClass('unread').addClass('read');
-            jQuery('#{{ grid.name|raw }}').jqGrid('setCell',rowId,'{{ grid.name|raw }}IsRead', 'read');
-        } else {
-            jQuery('#{{ grid.name|raw }} tr#'+rowId+' td div').removeClass('read').addClass('unread');
-            jQuery('#{{ grid.name|raw }}').jqGrid('setCell',rowId,'{{ grid.name|raw }}IsRead', null);
-        }
+        
     }
     
     function threadDoubleClick(rowId, rowIndex, colIndex, e){
-        var threadId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', rowId, 'grid_inboxId');
-        var type = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', rowId, 'grid_inboxTypeInt');
-        openThread(threadId, type);
+        
     }
     
-    function reloadGrid(){
-        jQuery('#{{ grid.name|raw }}').trigger('reloadGrid');
-    }
-    
-    function loadComplete(){
-        $("tr.jqgrow", this).contextMenu('contextMenu', {
-            bindings: {
-                'open': function(trigger) {
-                    // trigger is the DOM element ("tr.jqgrow") which is triggered
-                    var threadId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_inboxId');
-                    var type  = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_inboxTypeInt');
-                    openThread(threadId, type);
-                },
-                'mark_read': function(trigger) {
-                    // trigger is the DOM element ("tr.jqgrow") which is triggered
-                    readThread(trigger.id, true);
-                },
-                'mark_unread': function(trigger) {
-                    // trigger is the DOM element ("tr.jqgrow") which is triggered
-                    readThread(trigger.id, false);
-                },
-                'del': function(trigger) {
-                    // trigger is the DOM element ("tr.jqgrow") which is triggered
-                    var threadId = jQuery('#{{ grid.name|raw }}').jqGrid('getCell', trigger.id, 'grid_inboxId');
-                    deleteThreadPopup(threadId);
-                }
-            },
-            onContextMenu: function(event/*, menu*/) {
-                var rowId = $(event.target).closest("tr.jqgrow").attr("id");
-                jQuery('#{{ grid.name|raw }}').jqGrid('setSelection', rowId);
-                var isRead = jQuery('#{{ grid.name|raw }}').jqGrid('getCell',rowId,'{{ grid.name|raw }}IsRead') == 'true';
-                if (isRead){
-                    $('#contextMenu #mark_read').hide();
-                    //$('#contextMenu #mark_unread').show();
-                } else {
-                    $('#contextMenu #mark_read').show();
-                    //$('#contextMenu #mark_unread').hide();
-                }
-                return true;
-            }
-        });
-    }
     
     
     $(document).ready(function(){
-        
-        $('#box_select').change(function(){
-            $.blockUI({ message: '' });
-            window.location.href = $(this).val();
-        });
-
-        jQuery('#{{ grid.name|raw }}').jqGrid('setGridParam', { ondblClickRow: threadDoubleClick } );
-        jQuery('#{{ grid.name|raw }}').jqGrid('setGridParam', { loadComplete: loadComplete } );
 
         deleteListeners();
         threadListeners();
@@ -383,15 +325,7 @@
     </script>
     
     <style type="text/css">
-        #pager_{{ grid.name|raw }}_left table.navtable tbody tr label {
-            font-size: 11px;
-            display: inline;
-            margin-left: 2px;
-        }
         
-        .unread {
-            font-weight: bolder;
-        }
         
         ul.ui-menu li .ui-icon {
             position: static;

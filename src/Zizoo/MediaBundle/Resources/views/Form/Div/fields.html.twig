@@ -14,16 +14,18 @@
                     
                 {% if file_url is not null %}
 
-                     <div class="image_div">
-                        <img id="{{ id }}_image" src="{{ asset(file_url|imagine_filter('thumb_120x80')) }}?ver={{ version }}"/><br />
-                        <div class="zizoo_media_overlay"></div>
-                        <div class="controls">
-                            <a href="#" id="{{ id }}_crop_btn" class="crop_btn">Crop</a>
-                            {% if allow_delete == true %}
-                                <a href="#" id="{{ id }}_delete_btn" class="delete_btn">Delete</a>
-                            {% endif %}
-                            <input id="{{ id }}_full_url" class="full_url" type="hidden" value="{{ asset(file_url) }}?ver={{ version }}" />
-                            <input id="{{ id }}_id" class="id" type="hidden" value="{{ id }}" />
+                    <div id="{{ id }}_image_div_container" class="image_div_container">
+                        <div class="image_div">
+                           <img id="{{ id }}_image" src="{{ asset(file_url|imagine_filter('thumb_120x80')) }}?ver={{ version }}"/><br />
+                           <div class="zizoo_media_overlay"></div>
+                           <div class="controls">
+                               <a href="#" id="{{ id }}_crop_btn" class="crop_btn">Crop</a>
+                               {% if allow_delete == true %}
+                                   <a href="#" id="{{ id }}_delete_btn" class="delete_btn">Delete</a>
+                               {% endif %}
+                               <input id="{{ id }}_full_url" class="full_url" type="hidden" value="{{ asset(file_url) }}?ver={{ version }}" />
+                               <input id="{{ id }}_id" class="id" type="hidden" value="{{ id }}" />
+                           </div>
                         </div>
                     </div>
                 {% endif %}
@@ -89,13 +91,14 @@
             position: relative;
         }
         
-        .zizoo_media_container.single .image_div {
+        .zizoo_media_container.single .image_div_container {
             display: inline-block;
             margin-right: 10px;
             margin-bottom: 40px;
             border: 1px solid #ACACAC;
             height: 80px;
         }
+       
         
         .image_div .zizoo_media_overlay {
             position: absolute;
@@ -257,10 +260,12 @@
                 return true;
             });
             
-            $('#{{ id }}_container .image_div').hover(function(){
-                $(this).children('.controls, .zizoo_media_overlay').stop().fadeIn();
-            }, function(){
-                $(this).children('.controls, .zizoo_media_overlay').stop().fadeOut();
+            $('#{{ id }}_container').delegate('.image_div', 'mouseenter mouseleave', function(event){
+                if (event.type === 'mouseenter'){
+                    $(this).children('.controls, .zizoo_media_overlay').stop().fadeIn();
+                } else {
+                    $(this).children('.controls, .zizoo_media_overlay').stop().fadeOut();
+                }
             });
             
             $('#{{ id }}_container').delegate('.crop_btn', 'click', function(){

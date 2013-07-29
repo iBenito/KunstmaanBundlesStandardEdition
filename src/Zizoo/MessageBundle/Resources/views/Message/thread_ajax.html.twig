@@ -1,81 +1,70 @@
-<div>
-    <div class="view_thread" id="{% if ajax %}view_thread_inner_ajax{% else %}view_thread_inner{% endif %}">    
-        <h2>{{ thread.subject }}</h2>
-
-        {% if thread.booking and thread.booking.reservation %}
-            {% if thread.booking.reservation.guest == user %}
-                <p>You sent a reservation request for boat {{ thread.booking.reservation.boat.id }}</p>
-                {% if thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_REQUESTED') %}
-                    <p>Please wait for the boat owner to respond.</p>
-                {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') %}
-                    <p>The request was accepted.</p>
-                {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_EXPIRED') %}
-                    <p>The request has expired.</p>
-                {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_DENIED') %}
-                    <p>The request was denied.</p>
-                {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') %}
-                    <p>The request was tenatively accepted.</p>
-                {% endif %}
-            {% elseif thread.booking.reservation.boat.charter == charter %}
-                <p>You received reservation request for boat {{ thread.booking.reservation.boat.id }}</p>
-                {% if thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_REQUESTED') %}
-                    <p>Please <a href="{{ path('ZizooReservationBundle_view', {id: thread.booking.reservation.id}) }}">respond to the request</a>.</p>
-                {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') %}
-                    <p>You accepted the request.</p>
-                {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_EXPIRED') %}
-                    <p>The request has expired.</p>
-                {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_DENIED') %}
-                    <p>You denied the request.</p>
-                {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') %}
-                    <p>You tentatively accepted the request.</p>
-                {% endif %}
-            {% endif %}
+{% if thread.booking and thread.booking.reservation %}
+    {% if thread.booking.reservation.guest == user %}
+        <p>You sent a reservation request for boat {{ thread.booking.reservation.boat.id }}</p>
+        {% if thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_REQUESTED') %}
+            <p>Please wait for the boat owner to respond.</p>
+        {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') %}
+            <p>The request was accepted.</p>
+        {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_EXPIRED') %}
+            <p>The request has expired.</p>
+        {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_DENIED') %}
+            <p>The request was denied.</p>
+        {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') %}
+            <p>The request was tenatively accepted.</p>
         {% endif %}
-        
+    {% elseif thread.booking.reservation.boat.charter == charter %}
+        <p>You received reservation request for boat {{ thread.booking.reservation.boat.id }}</p>
+        {% if thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_REQUESTED') %}
+            <p>Please <a href="{{ path('ZizooReservationBundle_view', {id: thread.booking.reservation.id}) }}">respond to the request</a>.</p>
+        {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') %}
+            <p>You accepted the request.</p>
+        {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_EXPIRED') %}
+            <p>The request has expired.</p>
+        {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_DENIED') %}
+            <p>You denied the request.</p>
+        {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') %}
+            <p>You tentatively accepted the request.</p>
+        {% endif %}
+    {% endif %}
+{% endif %}
+
+<section class="thread">
+    <ul class="messages">
         {% for message in thread.messages %}
-            <div class="messenger_thread_message {{ message.messageType?message.messageType.id:'' }}">
-                <div class="messenger_thread_message_info">
-                    By {{ message.sender|messageSender }} 
-                    {% trans with {'%sender%': message.sender|e, '%date%': message.createdAt|date} from 'FOSMessageBundle' %}message_info{% endtrans %}
-                </div>
-
-                <div class="messenger_thread_message_body" id="message_{{ message.id }}">
-                    {{ message.body }}
-                </div>
-                <div style="clear: both"></div>
-            </div>
+            {% include 'ZizooMessageBundle:Message:thread_messages.html.twig' with {message: message, user: user, message_types: message_types} %}
         {% endfor %}
-
-        <h3>{% trans from 'FOSMessageBundle' %}reply{% endtrans %}</h3>
-
-        <form action="{{ url('fos_message_thread_view', {'threadId': thread.id}) }}" id="send_message_form" method="post">
-            {{ form_widget(form) }}
-
-            <input type="submit" />
-        </form>
-
-        <style type="text/css">
-
-
-            .messenger_thread_message {
-                margin-bottom: 20px;
-                clear: both;
-            }
-
-            .messenger_thread_message .messenger_thread_message_info {
-                float: left;
-                margin-right: 50px;
-            }
-
-            .messenger_thread_message .messenger_thread_message_body {
-                float: left;
-                border-radius: 15px;
-                background-color: lightgrey;
-                padding: 20px;
-            }
-
-        </style>
-        
+    </ul>
+    <div class="reply">
+        <ul class="messages">
+            <li class="message sender">
+                <form class="form" action="#">
+                    <div class="article clearfix">
+                        <div class="image">
+                            {% if user.charter is not null %}
+                                {% if user.charter.logo is not null %}
+                                    <img src="{{ asset(user.charter.logo|pictureWebPath|imagine_filter('thumb_50x50')) }}" alt="" />
+                                {% else %}
+                                    <img src="{{ asset('bundles/zizoobase/images/default/avatar.png'|imagine_filter('thumb_50x50')) }}" alt="" />
+                                {% endif %}
+                                {{ user.charter.charterName }}
+                            {% else %}
+                                {% if user.profile.avatar|length > 0 %}
+                                    <img src="{{ asset(user.profile.avatar.first|pictureWebPath|imagine_filter('thumb_50x50')) }}" alt="" />
+                                {% else %}
+                                    <img src="{{ asset('bundles/zizoobase/images/default/avatar.png'|imagine_filter('thumb_50x50')) }}" alt="" />
+                                {% endif %}
+                                {{ user.profile.firstName }}
+                            {% endif %}
+                        </div>
+                        <textarea placeholder="..."></textarea>
+                        <footer class="clearfix">
+                            <div class="right">
+                                <button class="button blue" type="submit">Reply</button>
+                            </div>
+                        </footer>
+                    </div>
+                </form>
+            </li>
+        </ul>
     </div>
-
-</div>
+</section>

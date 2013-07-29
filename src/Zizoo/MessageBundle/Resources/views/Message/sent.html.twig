@@ -31,7 +31,7 @@
         </ul>
     </div>
 
-    <select id="box_select" style="display: none">
+    <select id="box_select" class="gray">
         <option value="{{ path(grid.extraParams['inbox_url']) }}">Inbox</option>
         <option value="{{ path(grid.extraParams['sent_url']) }}" selected="selected">Sent Messages</option>
     </select>
@@ -369,7 +369,7 @@
         $('#box_select').change(function(){
             $.blockUI({ message: '' });
             window.location.href = $(this).val();
-        }).show();
+        });
 
         jQuery('#{{ grid.name|raw }}').jqGrid('setGridParam', { ondblClickRow: threadDoubleClick } );
         jQuery('#{{ grid.name|raw }}').jqGrid('setGridParam', { loadComplete: loadComplete } );

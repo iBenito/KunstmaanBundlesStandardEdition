@@ -22,14 +22,14 @@
                 url:        '{{ path('ZizooCharterBundle_Charter_GetLogo') }}',
                 type:       'get',
                 success:    function(data, textStatus, XHR){
-                    var newImageDiv     = $(data).find('.image_div');
-                    var newCharterLogo  = $(data).find('#zizoo_charter_logo');
+                    var newImageDivContainer    = $(data).find('#zizoo_charter_logo_image_div_container');
+                    var newCharterLogo          = $(data).find('#zizoo_charter_logo');
                     
-                    $('#zizoo_charter_logo_container .image_div').html($(newImageDiv).html());
+                    $('#zizoo_charter_logo_image_div_container').html($(newImageDivContainer).html());
                     $('#zizoo_charter_logo_container #zizoo_charter_logo').html($(newCharterLogo).html());
                     removeUploadedFiles();
                     
-                    var src = $(newImageDiv).find('.controls .full_url').val();
+                    var src = $(newImageDivContainer).find('.controls .full_url').val();
                     $('#charter_logo #logo_img').attr('src', src).css('display', 'block');
                 }
             });

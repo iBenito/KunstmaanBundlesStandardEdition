@@ -1,0 +1,24 @@
+{% if message.sender == user %}
+    {% if message.sender.charter is not null %}
+        {% if message.sender.charter.logo is not null %}
+            <img src="{{ asset(message.sender.charter.logo|pictureWebPath|imagine_filter('thumb_50x50')) }}" alt="" />
+        {% else %}
+            <img src="{{ asset('bundles/zizoobase/images/default/avatar.png'|imagine_filter('thumb_50x50')) }}" alt="" />
+        {% endif %}
+        {{ message.sender.charter.charterName }}
+    {% else %}
+        {% if message.sender.profile.avatar|length > 0 %}
+            <img src="{{ asset(message.sender.profile.avatar.first|pictureWebPath|imagine_filter('thumb_50x50')) }}" alt="" />
+        {% else %}
+            <img src="{{ asset('bundles/zizoobase/images/default/avatar.png'|imagine_filter('thumb_50x50')) }}" alt="" />
+        {% endif %}
+        {{ message.sender.profile.firstName }}
+    {% endif %}
+{% else %}
+    {% if message.sender.profile.avatar|length > 0 %}
+        <img src="{{ asset(message.sender.profile.avatar.first|pictureWebPath|imagine_filter('thumb_50x50')) }}" alt="" />
+    {% else %}
+        <img src="{{ asset('bundles/zizoobase/images/default/avatar.png'|imagine_filter('thumb_50x50')) }}" alt="" />
+    {% endif %}
+    {{ message.sender.profile.firstName }}
+{% endif %}

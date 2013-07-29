@@ -13,7 +13,7 @@
             <h2>Alerts</h2>
 
             <ul>
-                <li><a href=""><span class="circle red">5</span>Unread messages</a></li>
+                <li><a href=""><span class="circle red">{{ unreadMessages }}</span>Unread messages</a></li>
                 <li><a href=""><span class="circle red">2</span>Payment due</a></li>
                 <li><a href=""><span class="circle red">1</span>Payment overdue</a></li>
                 <li><a href=""><span class="circle red">3</span>Reviews due</a></li>
@@ -106,7 +106,7 @@
 
                 <!-- start:more -->
                 <div class="more">
-                    <a href="">All Messages</a>
+                    <a href="{{ path('ZizooBaseBundle_Dashboard_Inbox') }}">All Messages</a>
                 </div>
                 <!-- end:more -->
 

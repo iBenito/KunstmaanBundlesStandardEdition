@@ -119,6 +119,7 @@ class CharterController extends Controller
                 $page/*page number*/,
                 $pageSize/*limit per page*/
             );
+            $pagination->setCustomParameters(array('itemName' => 'Boats'));
         } catch (\Exception $e){
             return $this->redirect($this->generateUrl($routes['complete_route']));
         }

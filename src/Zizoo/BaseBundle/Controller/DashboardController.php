@@ -30,6 +30,12 @@ class DashboardController extends Controller {
                             );
     private $verifyRoutes   = array('verify_facebook_route'      => 'ZizooBaseBundle_Dashboard_VerifyFacebook',
                                     'unverify_facebook_route'    => 'ZizooBaseBundle_Dashboard_UnverifyFacebook');
+
+    private $charterMessageRoutes = array(  'view_thread_route'     => 'ZizooBaseBundle_Dashboard_CharterViewThread',
+                                            'inbox_route'           => 'ZizooBaseBundle_Dashboard_CharterInbox');
+    
+    private $userMessageRoutes = array( 'view_thread_route'     => 'ZizooBaseBundle_Dashboard_UserViewThread',
+                                        'inbox_route'           => 'ZizooBaseBundle_Dashboard_UserInbox');
     
     private function widgetCharterAction($charter, $route)
     {
@@ -346,8 +352,13 @@ class DashboardController extends Controller {
     public function charterInboxAction()
     {
         $request    = $this->getRequest();
-        $response   = $this->forward('ZizooMessageBundle:Message:inbox', array(), array('inbox_url' => 'ZizooBaseBundle_Dashboard_CharterInbox',
-                                                                                        'sent_url'  => 'ZizooBaseBundle_Dashboard_CharterSent'));
+        
+        $params = $request->query->all();
+        $params['routes'] = $this->charterMessageRoutes;
+        
+        $messageController = $request->attributes->get('message_controller');
+        
+        $response   = $this->forward($messageController, array(), $params);
         
         if ($response->isRedirect()){
             return $this->redirect($response->headers->get('Location'));
@@ -361,6 +372,41 @@ class DashboardController extends Controller {
             'id'        => $charter->getId(),
             'response'  => $response->getContent()
         ));
+    }
+    
+    
+    /**
+     * Display Charter inbox
+     *
+     * @return Response
+     */
+    public function charterViewThreadAction($id)
+    {
+        $request    = $this->getRequest();
+ 
+        $params = $request->query->all();
+        $params['routes'] = $this->charterMessageRoutes;
+        
+        $messageController = $request->attributes->get('message_controller');
+        
+        $response   = $this->forward($messageController, array('threadId' => $id, 'ajax' => false), $params);
+        
+        if ($response->isRedirect()){
+            return $this->redirect($response->headers->get('Location'));
+        }
+        
+        $headers = $response->headers;
+        $title = 'Message thread "' . $headers->get('x-zizoo-thread-subject') . '" with ' . $headers->get('x-zizoo-thread-participants');
+        
+        if ($response instanceof JsonResponse) {
+            return $response;
+        } else {
+            return $this->render('ZizooBaseBundle:Dashboard:Charter/charter.html.twig', array(
+                'title'     => $title,
+                'current'   => 'inbox',
+                'response'  => $response->getContent()
+            ), $response);
+        }
     }
     
     /**
