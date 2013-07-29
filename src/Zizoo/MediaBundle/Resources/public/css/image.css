@@ -1,0 +1,178 @@
+/**
+ * Crop
+ */
+
+#dashboard #zizoo_boat_image_image_crop_container {
+    margin: 0 0 30px 0;
+    border: 0;
+    outline: none;
+}
+
+#dashboard #zizoo_boat_image_image_crop_container .jcrop-holder {
+    margin: 0 0 10px 0;
+    border: 6px solid #eceded;
+    border-radius: 5px;
+}
+
+#dashboard #zizoo_boat_image_image_crop_container #zizoo_boat_image_image_crop_image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    visibility: hidden !important;
+}
+
+#dashboard #zizoo_boat_image_image_crop_container .save_btn {
+    margin: 0 15px 0 0;
+}
+
+/**
+ * Dropzone
+ */
+
+#dashboard .dropzone {
+    clear: both;
+    padding: 0;
+    background: 0;
+    border: 0;
+    overflow: hidden;
+}
+
+#dashboard .dropzone .dz-preview {
+    display: block;
+    float: left;
+    margin: 0 10px 10px 0;
+    background: none;
+    border: 0;
+}
+
+#dashboard .dropzone .dz-success-mark,
+#dashboard .dropzone .dz-error-mark {
+    display: none !important;
+}
+
+#dashboard .dropzone .dz-preview .dz-error-message {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-width: 100px;
+    max-width: 100px;
+    width: 100px;
+    height: 68px;
+    font-size: 12px;
+    text-align: center;
+    padding: 13px 10px 0 10px;
+}
+
+#dashboard .dropzone .dz-preview .dz-details {
+    width: 100px;
+    height: 68px;
+    font-size: 12px;
+    text-align: center;
+    padding: 0;
+    background: #eceded;
+    border-radius: 3px;
+}
+
+#dashboard .dropzone .dz-preview .dz-details .dz-filename {
+    height: auto;
+    line-height: 28px;
+}
+
+#dashboard .dropzone .dz-preview .dz-details .dz-size {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: auto;
+    text-align: center;
+}
+
+#dashboard .dropzone .dz-preview .dz-progress {
+    top: 50%;
+    height: 4px;
+    margin: -2px 0 0 0;
+}
+
+#dashboard .dropzone .dz-preview.dz-processing.dz-error .dz-error-message {
+    display: block !important;
+}
+
+#dashboard .zizoo_media_container {
+    display: block;
+    float: left;
+    width: auto;
+    height: auto;
+    margin: 0 10px 10px 0;
+    background: #eceded;
+    border: 0;
+    border-radius: 3px;
+}
+
+#dashboard .zizoo_media_container img {
+    display: block;
+    width: 100px;
+    height: 68px;
+    border-radius: 3px;
+}
+
+#dashboard .zizoo_media_container br {
+    display: none;
+}
+
+#dashboard .zizoo_media_container .image_div .zizoo_media_overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: auto;
+    border-radius: 3px;
+}
+
+#dashboard .zizoo_media_container .image_div .controls {
+    position: absolute;
+    top: 24px;
+    left: 25px;
+}
+
+#dashboard .zizoo_media_container .image_div .controls a {
+    display: block;
+    float: left;
+    width: 21px;
+    height: 21px;
+    font: 0/0 a;
+    background: url(images/dropzone.png);
+    cursor: pointer;
+}
+
+#dashboard .zizoo_media_container .image_div .controls .crop_btn {
+    margin: 0 9px 0 0;
+    background-position: 0 0;
+}
+
+#dashboard .zizoo_media_container .image_div .controls .crop_btn:hover {
+    background-position: 0 -21px;
+}
+
+#dashboard .zizoo_media_container .image_div .controls .delete_btn {
+    background-position: -21px 0;
+}
+
+#dashboard .zizoo_media_container .image_div .controls .delete_btn:hover {
+    background-position: -21px -21px;
+}
+
+#dashboard .dz-message {
+    display: block;
+    float: left;
+    width: 100px;
+    height: 68px;
+    padding: 13px 0 0 0;
+    font-size: 12px;
+    text-align: center;
+    margin: 0 10px 10px 0;
+    background: #eceded;
+    border: 0;
+    border-radius: 3px;
+}
