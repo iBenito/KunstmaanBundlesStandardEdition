@@ -6,7 +6,7 @@
     </li>
     <li {% if current=="inbox" %} class="current" {% endif %}>
 	    <a href="{{ path('ZizooBaseBundle_Dashboard_Inbox') }}" title="Inbox"><span class="icon message">
-	    	<span class="circle red">{{ unread_messages }}</span></span> Inbox
+	    	{% if unread_messages > 0 %}<span class="circle red">{{ unread_messages }}</span>{% endif %}</span> Inbox
 	    </a>
     </li>
     <li {% if current=="profile" %} class="current" {% endif %}>
