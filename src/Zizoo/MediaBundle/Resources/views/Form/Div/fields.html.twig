@@ -2,21 +2,27 @@
 {% spaceless %}
     {% set default_class = block_prefixes|parentBlockPrefix %}
     {% set default_class = form|rootLabel(default_class) %}
-    <div id="{{ id }}_container" class="zizoo_media_container {% if part_of_collection == false %}single row{% endif %}">
+    <div id="{{ id }}_container" class="zizoo_media_container {% if part_of_collection == false %}single row{% else %}collection{% endif %}">
         {% if part_of_collection == false %}
-        <div class="row-content {{ default_class }}">
+            {% set actual_label = label %}
+            {% if label is not sameas(false) %}
+                {% if label is empty %}
+                    {% set actual_label = name|humanize %}
+                {% endif %}
+            {% endif %}
+        <div class="row-content {{ default_class }} {% if actual_label == false %}no-margin{% endif %}">
         {% endif %}
             {{ form_widget(form) }}
 
             {% if part_of_collection == false %}
-            <div id="{{ id }}_dropzone" class="{% if dropzone != false %}dropzone{% endif %}">
+            <div id="{{ id }}_dropzone" class="{% if dropzone != false %}dropzone{% endif %} list">
             {% endif %}
                     
                 {% if file_url is not null %}
 
                     <div id="{{ id }}_image_div_container" class="image_div_container">
                         <div class="image_div">
-                           <img id="{{ id }}_image" src="{{ asset(file_url|imagine_filter('thumb_120x80')) }}?ver={{ version }}"/><br />
+                           <img id="{{ id }}_image" src="{{ asset(file_url|imagine_filter('thumb_120x80')) }}?ver={{ version }}"/>
                            <div class="zizoo_media_overlay"></div>
                            <div class="controls">
                                <a href="#" id="{{ id }}_crop_btn" class="crop_btn">Crop</a>
@@ -62,63 +68,6 @@
             
         }
         
-        .zizoo_media_container {
-            display: inline-block;
-            margin-right: 10px;
-            margin-bottom: 40px;
-            width: 122px;
-            height: 82px;
-            border: 1px solid #ACACAC;
-        }
-        
-        .zizoo_media_container.single {
-            height: auto;
-            width: 100%;
-            border: none;
-        }
-        
-        .dz-message {
-            display: inline-block;
-            margin-right: 10px;
-            margin-bottom: 40px;
-            width: 122px;
-            height: 82px;
-            border: 1px dotted black;
-            padding: 10px;
-        }
-                
-        .image_div {
-            position: relative;
-        }
-        
-        .zizoo_media_container.single .image_div_container {
-            display: inline-block;
-            margin-right: 10px;
-            margin-bottom: 40px;
-            border: 1px solid #ACACAC;
-            height: 80px;
-        }
-       
-        
-        .image_div .zizoo_media_overlay {
-            position: absolute;
-            width: 120px;
-            height: 80px;
-            background-color: black;
-            opacity: 0.8;
-            display: none;
-            left: 0;
-            top: 0;
-        }
-        
-        .image_div .controls {
-            z-index: 2;
-            position: absolute;
-            display: none;
-            left: 10px;
-            top: 30px;
-        }
-        
     </style>
 {% endblock zizoo_media_css %}
 
@@ -128,8 +77,8 @@
         {{ form_label(form) }}
     {% endif %}
     {% if part_of_collection == false %}
-        <div id="{{ id }}_crop_container">
-            <img src="" id="{{ id }}_crop_image" style="max-width: 100%"/>
+        <div id="{{ id }}_crop_container" class="crop_container">
+            <img src="" id="{{ id }}_crop_image" style="max-width: 100%" class="crop_image" />
             <button id="{{ id }}_save_btn" class="save_btn button blue">Crop</button>
             <button id="{{ id }}_cancel_btn" class="cancel_btn button gray">Cancel</button>
         </div>
@@ -292,8 +241,8 @@
     
 {% block zizoo_media_collection_widget %}
     {% spaceless %}
-        <div id="{{ id }}_crop_container">
-            <img src="" id="{{ id }}_crop_image" />
+        <div id="{{ id }}_crop_container" class="crop_container">
+            <img src="" id="{{ id }}_crop_image" class="crop_image" />
             <button id="{{ id }}_save_btn" class="save_btn button blue">Crop</button>
             <button id="{{ id }}_cancel_btn" class="cancel_btn button gray">Cancel</button>
             <input id="{{ id }}_x1" type="hidden" />
@@ -304,7 +253,7 @@
             <input id="{{ id }}_h" type="hidden" />
             <input id="{{ id }}_id" type="hidden" />
         </div>
-        <div id="{{ id }}_list" class="{% if dropzone != false %}dropzone{% endif %}">
+        <div id="{{ id }}_list" class="{% if dropzone != false %}dropzone{% endif %} list">
             {% for child in form %}
                 {{ form_row(child) }}
             {% endfor %}

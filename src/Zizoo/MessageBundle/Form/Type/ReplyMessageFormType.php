@@ -16,7 +16,7 @@ class ReplyMessageFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('body', 'textarea');
+            ->add('body', 'textarea', array('label' => false));
             /**->add('message_type', 'entity', array(
                                                 'class' => 'ZizooMessageBundle:MessageType',
                                                 'property' => 'id',

@@ -85,6 +85,11 @@ class Thread extends BaseThread
         return $this->messages->toArray();
     }
     
+    public function getMessagesReverse()
+    {
+        return array_reverse($this->messages->toArray());
+    }
+    
     public function getLastMessageType()
     {
         $lastMessageType = null;

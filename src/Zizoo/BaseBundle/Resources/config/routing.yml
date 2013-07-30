@@ -86,15 +86,16 @@ ZizooBaseBundle_Dashboard_Trips:
         
 ZizooBaseBundle_Dashboard_Inbox:
     pattern:  /account/dashboard/inbox
-    defaults: { _controller: ZizooBaseBundle:Dashboard:inbox }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:inbox, message_controller: ZizooMessageBundle:Message:inbox }
     requirements:
         _method:  GET
         
-ZizooBaseBundle_Dashboard_Sent:
-    pattern:  /account/dashboard/sent
-    defaults: { _controller: ZizooBaseBundle:Dashboard:sent }
+ZizooBaseBundle_Dashboard_ViewThread:
+    pattern:  /account/dashboard/inbox/{id}
+    defaults: { _controller: ZizooBaseBundle:Dashboard:viewThread, message_controller: FOSMessageBundle:Message:thread }
     requirements:
-        _method:  GET
+        _method:  GET|POST
+        id: \d+
         
 ZizooBaseBundle_Dashboard_AccountSettings:
     pattern:  /account/dashboard/settings
@@ -135,17 +136,11 @@ ZizooBaseBundle_Dashboard_CharterInbox:
     requirements:
         _method:  GET
         
-ZizooBaseBundle_Dashboard_CharterSent:
-    pattern:  /charter/account/dashboard/sent
-    defaults: { _controller: ZizooBaseBundle:Dashboard:charterSent }
-    requirements:
-        _method:  GET
-        
 ZizooBaseBundle_Dashboard_CharterViewThread:
     pattern:  /charter/account/dashboard/inbox/{id}
     defaults: { _controller: ZizooBaseBundle:Dashboard:charterViewThread, message_controller: FOSMessageBundle:Message:thread }
     requirements:
-        _method:  GET
+        _method:  GET|POST
         id: \d+
         
 ZizooBaseBundle_Dashboard_CharterBookings:

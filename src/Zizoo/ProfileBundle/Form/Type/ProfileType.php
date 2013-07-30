@@ -36,7 +36,7 @@ class ProfileType extends AbstractType
                 'label' => array('value' => 'zizoo_profile.label.languages', 'class' => 'languages')))
             ->add('avatar', 'zizoo_media_collection', array(    'type'              => 'zizoo_media',
                                                                 'property_path'     => 'avatar',
-                                                                'label'             => array('value' => 'zizoo_profile.label.avatar', 'class' => 'photo'),
+                                                                'label'             => false,
                                                                 'file_path'         => 'webPath',
                                                                 'aspect_ratio'      => 1.48,
                                                                 'crop_js'           => 'avatarCrop',

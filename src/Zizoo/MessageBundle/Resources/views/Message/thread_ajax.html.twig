@@ -29,24 +29,19 @@
 {% endif %}
 
 <section class="thread">
-    <ul class="messages">
-        {% for message in thread.messages %}
-            {% include 'ZizooMessageBundle:Message:thread_messages.html.twig' with {message: message, user: user, message_types: message_types} %}
-        {% endfor %}
-    </ul>
     <div class="reply">
         <ul class="messages">
             <li class="message sender">
-                <form class="form" action="#">
+                <form class="form" action="{{ path(routes['view_thread_route'], {id: thread.id}) }}" method="post">
                     <div class="article clearfix">
                         <div class="image">
-                            {% if user.charter is not null %}
+                            {% if view == 'charter' %}
                                 {% if user.charter.logo is not null %}
                                     <img src="{{ asset(user.charter.logo|pictureWebPath|imagine_filter('thumb_50x50')) }}" alt="" />
                                 {% else %}
                                     <img src="{{ asset('bundles/zizoobase/images/default/avatar.png'|imagine_filter('thumb_50x50')) }}" alt="" />
                                 {% endif %}
-                                {{ user.charter.charterName }}
+                                {{ user.profile.firstName }} @ {{ user.charter.charterName }}
                             {% else %}
                                 {% if user.profile.avatar|length > 0 %}
                                     <img src="{{ asset(user.profile.avatar.first|pictureWebPath|imagine_filter('thumb_50x50')) }}" alt="" />
@@ -56,7 +51,7 @@
                                 {{ user.profile.firstName }}
                             {% endif %}
                         </div>
-                        <textarea placeholder="..."></textarea>
+                        {{ form_widget(form) }}
                         <footer class="clearfix">
                             <div class="right">
                                 <button class="button blue" type="submit">Reply</button>
@@ -67,4 +62,9 @@
             </li>
         </ul>
     </div>
+    <ul class="messages">
+        {% for message in thread.messagesReverse %}
+            {% include 'ZizooMessageBundle:Message:thread_messages.html.twig' with {message: message, user: user, message_types: message_types} %}
+        {% endfor %}
+    </ul>
 </section>

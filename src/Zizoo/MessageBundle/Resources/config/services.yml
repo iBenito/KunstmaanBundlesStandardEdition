@@ -2,6 +2,11 @@ parameters:
 #    zizoo_message.example.class: Zizoo\MessageBundle\Example
 
 services:
+    zizoo_message.twig.picture_extension:
+        class: Zizoo\MessageBundle\Twig\MessageExtension
+        tags:
+            - { name: twig.extension }
+  
     messenger:
         class:  Zizoo\MessageBundle\Service\Messenger
         arguments: 

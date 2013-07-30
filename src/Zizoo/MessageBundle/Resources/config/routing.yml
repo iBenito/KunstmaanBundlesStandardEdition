@@ -8,7 +8,7 @@ ZizooMessageBundle_mark_thread:
    
 ZizooMessageBundle_thread_view:
     pattern: /view/{threadId}
-    defaults: { _controller: FOSMessageBundle:Message:thread, threadId: null, ajax: false }
+    defaults: { _controller: FOSMessageBundle:Message:thread, threadId: null }
    
 ZizooMessageBundle_new_thread:
     pattern: /test

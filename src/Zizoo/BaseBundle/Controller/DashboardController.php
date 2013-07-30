@@ -34,8 +34,15 @@ class DashboardController extends Controller {
     private $charterMessageRoutes = array(  'view_thread_route'     => 'ZizooBaseBundle_Dashboard_CharterViewThread',
                                             'inbox_route'           => 'ZizooBaseBundle_Dashboard_CharterInbox');
     
-    private $userMessageRoutes = array( 'view_thread_route'     => 'ZizooBaseBundle_Dashboard_UserViewThread',
-                                        'inbox_route'           => 'ZizooBaseBundle_Dashboard_UserInbox');
+    private $userMessageRoutes = array( 'view_thread_route'     => 'ZizooBaseBundle_Dashboard_ViewThread',
+                                        'inbox_route'           => 'ZizooBaseBundle_Dashboard_Inbox');
+    
+    private function isCharterRoute($url)
+    {
+        $pattern = '/^\/charter\/|^\/app_dev\.php\/charter\//';
+        $isCharterRoute = preg_match($pattern, $url);
+        return $isCharterRoute;
+    }
     
     private function widgetCharterAction($charter, $route)
     {
@@ -73,8 +80,7 @@ class DashboardController extends Controller {
         $user       = $this->getUser();
         $url        = $this->generateUrl($route, array('id' => 0));
 
-        $pattern = '/^\/charter\/|^\/app_dev\.php\/charter\//';
-        $isCharterRoute = preg_match($pattern, $url);
+        $isCharterRoute = $this->isCharterRoute($url);
         
         if ($user->getCharter() && $isCharterRoute){
             return $this->widgetCharterAction($user->getCharter(), $route);
@@ -108,8 +114,9 @@ class DashboardController extends Controller {
         $hiddenListings     = $boatRepository->getNumberOfCharterBoats($charter, FALSE, TRUE);
 
         $bookingRepository      = $this->getDoctrine()->getRepository('ZizooBookingBundle:Booking');
+        $paymentRepository      = $this->getDoctrine()->getRepository('ZizooBookingBundle:Payment');
         $outstandingPayments    = $bookingRepository->getOutstandingBookings($charter);
-        $receivedPayments       = $bookingRepository->getPaidBookings($charter);
+        $settledPayments        = $paymentRepository->getSettledPayments($charter);
 
         $payoutRepository   = $this->getDoctrine()->getRepository('ZizooBillingBundle:Payout');
         $settledPayouts     = $payoutRepository->getSettledPayouts($charter);
@@ -124,7 +131,7 @@ class DashboardController extends Controller {
             'incompleteListings'    => $incompleteListings,
             'hiddenListings'        => $hiddenListings,
             'outstandingPayments'   => count($outstandingPayments),
-            'receivedPayments'      => count($receivedPayments),
+            'receivedPayments'      => count($settledPayments),
             'settledPayouts'        => $settledPayouts,
             'searchForm'            => $form->createView()
         ));
@@ -162,41 +169,61 @@ class DashboardController extends Controller {
     public function inboxAction()
     {
         $request    = $this->getRequest();
-        $response   = $this->forward('ZizooMessageBundle:Message:inbox', array(), array('inbox_url'     => 'ZizooBaseBundle_Dashboard_Inbox',
-                                                                                        'sent_url'      => 'ZizooBaseBundle_Dashboard_Sent'));
+        
+        $params = $request->query->all();
+        $params['routes'] = $this->userMessageRoutes;
+        
+        $messageController = $request->attributes->get('message_controller');
+        
+        $response   = $this->forward($messageController, array(), $params);
         
         if ($response->isRedirect()){
             return $this->redirect($response->headers->get('Location'));
         }
-        
-        return $this->render('ZizooBaseBundle:Dashboard:inbox.html.twig', array(
-            'username'  => $this->getUser()->getUsername(),
-            'response'  => $response->getContent()
-        ));
-    }
-    
-    /**
-     * Display User outbox
-     *
-     * @return Response
-     */
-    public function sentAction()
-    {
-        $request    = $this->getRequest();
-        $response   = $this->forward('ZizooMessageBundle:Message:sent', array(), array('inbox_url' => 'ZizooBaseBundle_Dashboard_Inbox',
-                                                                                        'sent_url'  => 'ZizooBaseBundle_Dashboard_Sent'));
-        
-        if ($response->isRedirect()){
-            return $this->redirect($response->headers->get('Location'));
-        }
-        
         
         $user = $this->getUser();
         $charter = $user->getCharter();
-        return $this->render('ZizooBaseBundle:Dashboard:outbox.html.twig', array(
+        return $this->render('ZizooBaseBundle:Dashboard:inbox.html.twig', array(
+            'title'     => 'My Inbox',
+            'current'   => 'inbox',
             'id'        => $charter->getId(),
             'response'  => $response->getContent()
         ));
+        
+    }
+    
+    /**
+     * Display User thread
+     *
+     * @return Response
+     */
+    public function viewThreadAction($id)
+    {
+        $request    = $this->getRequest();
+ 
+        $params = $request->query->all();
+        $params['routes'] = $this->userMessageRoutes;
+        
+        $messageController = $request->attributes->get('message_controller');
+        
+        $response   = $this->forward($messageController, array('threadId' => $id, 'view' => 'user'), $params);
+        
+        if ($response->isRedirect()){
+            return $this->redirect($response->headers->get('Location'));
+        }
+        
+        $headers = $response->headers;
+        $title = 'Message thread "' . $headers->get('x-zizoo-thread-subject') . '" with ' . $headers->get('x-zizoo-thread-participants');
+        
+        if ($response instanceof JsonResponse) {
+            return $response;
+        } else {
+            return $this->render('ZizooBaseBundle:Dashboard:thread.html.twig', array(
+                'title'     => $title,
+                'current'   => 'inbox',
+                'response'  => $response->getContent()
+            ), $response);
+        }
     }
 
     /**
@@ -389,7 +416,7 @@ class DashboardController extends Controller {
         
         $messageController = $request->attributes->get('message_controller');
         
-        $response   = $this->forward($messageController, array('threadId' => $id, 'ajax' => false), $params);
+        $response   = $this->forward($messageController, array('threadId' => $id, 'view' => 'charter'), $params);
         
         if ($response->isRedirect()){
             return $this->redirect($response->headers->get('Location'));
@@ -401,7 +428,7 @@ class DashboardController extends Controller {
         if ($response instanceof JsonResponse) {
             return $response;
         } else {
-            return $this->render('ZizooBaseBundle:Dashboard:Charter/charter.html.twig', array(
+            return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_thread.html.twig', array(
                 'title'     => $title,
                 'current'   => 'inbox',
                 'response'  => $response->getContent()
@@ -409,30 +436,6 @@ class DashboardController extends Controller {
         }
     }
     
-    /**
-     * Display Charter outbox
-     *
-     * @return Response
-     */
-    public function charterSentAction()
-    {
-        $request    = $this->getRequest();
-        $response   = $this->forward('ZizooMessageBundle:Message:sent', array(), array('inbox_url' => 'ZizooBaseBundle_Dashboard_CharterInbox',
-                                                                                        'sent_url'  => 'ZizooBaseBundle_Dashboard_CharterSent'));
-        
-        if ($response->isRedirect()){
-            return $this->redirect($response->headers->get('Location'));
-        }
-        
-        $user = $this->getUser();
-        $charter = $user->getCharter();
-        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter.html.twig', array(
-            'title'     => 'My Sent Messages',
-            'current'   => 'inbox',
-            'id'        => $charter->getId(),
-            'response'  => $response->getContent()
-        ));
-    }
 
     /**
      * Display Charter Bookings

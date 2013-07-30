@@ -1,0 +1,12 @@
+{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
+
+{% block tabs %}
+{{ render(controller('ZizooBaseBundle:Dashboard:userTabs', { 'current': 'inbox' })) }}
+{% endblock %}
+
+{% block content %}
+    <div class="content">
+        <h2>{{ title}}</h2>
+        {{ response|raw }}
+    </div>
+{% endblock %}

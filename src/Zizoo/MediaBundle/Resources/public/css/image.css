@@ -1,27 +1,93 @@
+.zizoo_media_container {
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 40px;
+    width: 122px;
+    height: 82px;
+    border: 1px solid #ACACAC;
+}
+
+.zizoo_media_container.single {
+    height: auto;
+    width: 100%;
+    border: none;
+}
+
+.zizoo_media_container.collection {
+    display: block;
+    float: left;
+    width: auto;
+    height: auto;
+    margin: 0 10px 10px 0;
+    background: #eceded;
+    border: 0;
+    border-radius: 3px;
+}
+
+.dz-message {
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 40px;
+    width: 122px;
+    height: 82px;
+    border: 1px dotted black;
+    padding: 10px;
+}
+
+.image_div {
+    position: relative;
+}
+
+.zizoo_media_container.single .image_div_container {
+    display: inline-block;
+    margin: 0 10px 10px 0;
+    float: left;
+}
+
+
+.image_div .zizoo_media_overlay {
+    position: absolute;
+    width: 120px;
+    height: 80px;
+    background-color: black;
+    opacity: 0.8;
+    display: none;
+    left: 0;
+    top: 0;
+}
+
+.image_div .controls {
+    z-index: 2;
+    position: absolute;
+    display: none;
+    left: 10px;
+    top: 30px;
+}
+
+
 /**
  * Crop
  */
 
-#dashboard #zizoo_boat_image_image_crop_container {
+.crop_container {
     margin: 0 0 30px 0;
     border: 0;
     outline: none;
 }
 
-#dashboard #zizoo_boat_image_image_crop_container .jcrop-holder {
+.crop_container .jcrop-holder {
     margin: 0 0 10px 0;
     border: 6px solid #eceded;
     border-radius: 5px;
 }
 
-#dashboard #zizoo_boat_image_image_crop_container #zizoo_boat_image_image_crop_image {
+.crop_container .crop_image {
     position: absolute;
     top: 0;
     left: 0;
-    visibility: hidden !important;
 }
 
-#dashboard #zizoo_boat_image_image_crop_container .save_btn {
+.crop_container .save_btn {
     margin: 0 15px 0 0;
 }
 
@@ -29,7 +95,7 @@
  * Dropzone
  */
 
-#dashboard .dropzone {
+.dropzone {
     clear: both;
     padding: 0;
     background: 0;
@@ -37,7 +103,7 @@
     overflow: hidden;
 }
 
-#dashboard .dropzone .dz-preview {
+.dropzone .dz-preview {
     display: block;
     float: left;
     margin: 0 10px 10px 0;
@@ -45,12 +111,12 @@
     border: 0;
 }
 
-#dashboard .dropzone .dz-success-mark,
-#dashboard .dropzone .dz-error-mark {
+.dropzone .dz-success-mark,
+.dropzone .dz-error-mark {
     display: none !important;
 }
 
-#dashboard .dropzone .dz-preview .dz-error-message {
+.dropzone .dz-preview .dz-error-message {
     top: 0;
     left: 0;
     right: 0;
@@ -64,7 +130,7 @@
     padding: 13px 10px 0 10px;
 }
 
-#dashboard .dropzone .dz-preview .dz-details {
+.dropzone .dz-preview .dz-details {
     width: 100px;
     height: 68px;
     font-size: 12px;
@@ -74,12 +140,12 @@
     border-radius: 3px;
 }
 
-#dashboard .dropzone .dz-preview .dz-details .dz-filename {
+.dropzone .dz-preview .dz-details .dz-filename {
     height: auto;
     line-height: 28px;
 }
 
-#dashboard .dropzone .dz-preview .dz-details .dz-size {
+.dropzone .dz-preview .dz-details .dz-size {
     left: 0;
     right: 0;
     bottom: 0;
@@ -87,39 +153,30 @@
     text-align: center;
 }
 
-#dashboard .dropzone .dz-preview .dz-progress {
+.dropzone .dz-preview .dz-progress {
     top: 50%;
     height: 4px;
     margin: -2px 0 0 0;
 }
 
-#dashboard .dropzone .dz-preview.dz-processing.dz-error .dz-error-message {
+.dropzone .dz-preview.dz-processing.dz-error .dz-error-message {
     display: block !important;
 }
 
-#dashboard .zizoo_media_container {
-    display: block;
-    float: left;
-    width: auto;
-    height: auto;
-    margin: 0 10px 10px 0;
-    background: #eceded;
-    border: 0;
-    border-radius: 3px;
-}
 
-#dashboard .zizoo_media_container img {
+
+.zizoo_media_container img {
     display: block;
     width: 100px;
     height: 68px;
     border-radius: 3px;
 }
 
-#dashboard .zizoo_media_container br {
+.zizoo_media_container br {
     display: none;
 }
 
-#dashboard .zizoo_media_container .image_div .zizoo_media_overlay {
+.zizoo_media_container .image_div .zizoo_media_overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -130,13 +187,13 @@
     border-radius: 3px;
 }
 
-#dashboard .zizoo_media_container .image_div .controls {
+.zizoo_media_container .image_div .controls {
     position: absolute;
     top: 24px;
     left: 25px;
 }
 
-#dashboard .zizoo_media_container .image_div .controls a {
+.zizoo_media_container .image_div .controls a {
     display: block;
     float: left;
     width: 21px;
@@ -146,24 +203,24 @@
     cursor: pointer;
 }
 
-#dashboard .zizoo_media_container .image_div .controls .crop_btn {
+.zizoo_media_container .image_div .controls .crop_btn {
     margin: 0 9px 0 0;
     background-position: 0 0;
 }
 
-#dashboard .zizoo_media_container .image_div .controls .crop_btn:hover {
+.zizoo_media_container .image_div .controls .crop_btn:hover {
     background-position: 0 -21px;
 }
 
-#dashboard .zizoo_media_container .image_div .controls .delete_btn {
+.zizoo_media_container .image_div .controls .delete_btn {
     background-position: -21px 0;
 }
 
-#dashboard .zizoo_media_container .image_div .controls .delete_btn:hover {
+.zizoo_media_container .image_div .controls .delete_btn:hover {
     background-position: -21px -21px;
 }
 
-#dashboard .dz-message {
+.dz-message {
     display: block;
     float: left;
     width: 100px;

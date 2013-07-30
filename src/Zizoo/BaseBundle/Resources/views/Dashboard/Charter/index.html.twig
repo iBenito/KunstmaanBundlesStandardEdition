@@ -12,11 +12,25 @@
         <section class="links">
             <h2>Alerts</h2>
 
+            {% set num_alerts = 0 %}
             <ul>
+                {% if unreadMessages > 0 %}
                 <li><a href="{{ path('fos_message_inbox') }}"><span class="circle red">{{ unreadMessages }}</span>Unread messages</a></li>
+                {% set num_alerts = num_alerts + unreadMessages %}
+                {% endif %}
+                {% if reservationRequests > 0 %}
                 <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}"><span class="circle red">{{ reservationRequests }}</span>New Requests</a></li>
-                <li><a href=""><span class="circle red">24</span>Payments received</a></li>
+                {% set num_alerts = num_alerts + reservationRequests %}
+                {% endif %}
+                {% if receivedPayments > 0 %}
+                <li><a href=""><span class="circle red">{{ receivedPayments }}</span>Payments received</a></li>
+                {% set num_alerts = num_alerts + receivedPayments %}
+                {% endif %}
+                {% if num_alerts == 0 %}
+                <li>You currently have no alerts</li>
+                {% endif %}
             </ul>
+            
         </section>
         <!-- end:links -->
 

@@ -19,116 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class MessageController extends BaseController
 {
-    /**
-     * @Template()
-     */
-//    public function inboxAction()
-//    {
-//        $request    = $this->container->get('request');
-//        
-//        $threads    = $this->getProvider()->getInboxThreads();
-//        $router     = $this->container->get('router');
-//        $grid       = $this->container->get('jq_grid_custom');
-//        
-//        //OPTIONAL
-//        $grid->setGetDataFunction(function($grid){ MessageController::getInboxData($grid); });
-//        $grid->setName('grid_inbox');
-//        $grid->setCaption('Inbox');
-//        $grid->setOptions(array('height' => 'auto', 
-//                            'width' => '910',
-//                            'ondblClickRow' => 'messageDoubleClick',
-//                            'jsonReader' => array(  'repeatitems' => false, 
-//                                                    'root' => 'rows'
-//                                            )
-//                         ));
-//        $grid->setRouteForced($router->generate('fos_message_inbox', array('show_threads' => true)));
-//        $grid->setHideIfEmpty(false);
-//
-//        //MANDATORY
-//        $grid->setSourceData($threads);
-//        
-//        
-//        $formatFnc = "function(cellValue, options, rowObject){"
-//                                ."var cellClass = 'unread';"
-//                                ."if (rowObject.cell[7]) cellClass='read';"
-//                                ."return '<div class=\"'+cellClass+'\">'+cellValue+'</div>'"
-//                                ."}";
-//        
-//        $extraJS = "function openThread(threadId, type){"
-//                    ."  switch (type){"
-//                    ."      case '0':"
-//                    ."          url = '".$router->generate('ZizooMessageBundle_thread_view')."/'+threadId;"
-//                    ."          viewThread(url);"
-//                    ."          break;"
-//                    ."      case '1':"
-//                    ."          alert('Feature not available yet');"
-//                    ."          break;"
-//                    ."      case '2':"
-//                    ."          alert('Feature not available yet');"
-//                    ."          break;"
-//                    ."      case '3':"
-//                    ."          alert('Feature not available yet');"
-//                    ."          break;"
-//                    ."      case '4':"
-//                    ."          alert('Feature not available yet');"
-//                    ."          break;"
-//                    ."      default:"
-//                    ."          url = '".$router->generate('ZizooMessageBundle_thread_view')."/'+threadId;"
-//                    ."          viewThread(url);"
-//                    ."          break;"
-//                    ."  }"
-//                    ."}";
-//        
-//        $messageId = $request->query->get('messageId', null);
-//        if ($messageId){
-//            $em = $this->container->get('doctrine.orm.entity_manager');
-//            $message = $em->getRepository('ZizooMessageBundle:Message')->findOneById($messageId);
-//            if ($message){
-//                $thread = $message->getThread();
-//                $extraJS    .= "\n\n"
-//                            ."$(document).ready(function(){"
-//                            ."  url = '".$router->generate('ZizooMessageBundle_thread_view')."/".$thread->getID()."';"
-//                            ."  viewThread(url);"
-//                            ."});";
-//            }
-//        }
-//        
-//        //COLUMNS DEFINITION
-//        $grid->addColumn('ID', array('name' => 'Id', 'jsonmap' => 'cell.0','index' => 'm.id', 'hidden' => true, 'sortable' => false, 'search' => false));
-//        
-//        $grid->addColumn('Subject', array('name' => 'Subject', 'jsonmap' => 'cell.1', 'width' => '200', 'sortable' => false, 'search' => false, 'formatter' => $formatFnc));
-//        $grid->addColumn('Type', array('name' => 'Type', 'jsonmap' => 'cell.2', 'width' => '75', 'sortable' => false, 'search' => false, 'formatter' => $formatFnc));
-//        $grid->addColumn('Started By', array('name' => 'CreatedBy', 'jsonmap' => 'cell.3', 'width' => '100', 'sortable' => false, 'search' => false, 'formatter' => $formatFnc));
-//        $grid->addColumn('Start date', array('name' => 'CreatedAt', 'jsonmap' => 'cell.4', 'formatter' => 'date', 'formatoptions' => array( 'srcformat' => 'Y-m-d H:i:s', 'newformat' => 'd/m/Y H:i' ), 'datepicker' => false, 'sortable' => false, 'search' => false, 'formatter' => $formatFnc));
-//        $grid->addColumn('Messages', array('name' => 'Messages', 'jsonmap' => 'cell.5', 'width' => '50', 'sortable' => false, 'search' => false, 'formatter' => $formatFnc));
-//        $grid->addColumn('Last Message', array('name' => 'LastMessage', 'jsonmap' => 'cell.6', 'width' => '150', 'sortable' => false, 'search' => false, 'formatter' => $formatFnc));
-//        $grid->addColumn('Is Read', array('name' => 'IsRead', 'jsonmap' => 'cell.7', 'hidden' => true, 'sortable' => false, 'search' => false));
-//        $grid->addColumn('TypeInt', array('name' => 'TypeInt', 'jsonmap' => 'cell.8', 'hidden' => true, 'sortable' => false, 'search' => false));
-//        
-//        $inboxUrl = $request->query->get('inbox_url');
-//        $sentUrl  = $request->query->get('sent_url');
-//        
-////        $user = $this->container->get('security.context')->getToken()->getUser();
-////        if ($user->getCharter()!=null){
-////            $inboxUrl   = 'ZizooBaseBundle_Dashboard_CharterInbox';
-////            $sentUrl    = 'ZizooBaseBundle_Dashboard_CharterSent';
-////        } else {
-////            $inboxUrl   = 'ZizooBaseBundle_Dashboard_Inbox';
-////            $sentUrl    = 'ZizooBaseBundle_Dashboard_Sent';
-////        }
-//        
-//        $grid->setExtraParams(array( 'show_threads'         => (true?'checked="checked"':''),
-//                                        'loadComplete'      => 'loadComplete',
-//                                        'url_threads'       => $this->container->get('router')->generate('fos_message_inbox', array('show_threads' => true)),
-//                                        'url_no_threads'    => $this->container->get('router')->generate('fos_message_inbox', array('show_threads' => false)),
-//                                        'extraJS'           => $extraJS,
-//                                        'inbox_url'         => $inboxUrl,
-//                                        'sent_url'          => $sentUrl));
-//        
-//        
-//        return $grid->render();
-//    }
-    
+ 
     public function inboxAction()
     {
         $request    = $this->container->get('request');
@@ -149,209 +40,25 @@ class MessageController extends BaseController
         );
         $pagination->setCustomParameters(array('itemName' => 'Threads'));
         
-        return $this->container->get('templating')->renderResponse('ZizooMessageBundle:Message:inbox2.html.twig', array(
+        return $this->container->get('templating')->renderResponse('ZizooMessageBundle:Message:inbox.html.twig', array(
             'pagination'        => $pagination,
             'user'              => $user,
             'routes'            => $routes
         ));
     }
     
-    public static function getInboxData(&$grid)
-    {
-        if ($grid->getSession()->get($grid->getHash()) == 'Y') {
-            
-            $request = $grid->getRequest();
-            $page = $request->query->get('page');
-            $limit = $request->query->get('rows');
-
-            /**
-            if ($search) {
-                $this->generateFilters();
-            }*/
-
-            $pagination = $grid->getPaginator()->paginate($grid->getSourceData(), $page, $limit);
-
-            $nbRec = $pagination->getTotalItemCount();
-
-            if ($nbRec > 0) {
-                $total_pages = ceil($nbRec / $limit);
-            } else {
-                $total_pages = 0;
-            }
-
-            $response = array(
-                'page' => $page, 'total' => $total_pages, 'records' => $nbRec
-            );
-
-            $router = $grid->getContainer()->get('router');
-            $trans  = $grid->getContainer()->get('translator');
-            $columns = $grid->getColumns();
-            $templating = $grid->getTemplating();
-            foreach ($pagination as $key => $item) {
-                $row = $item;
-
-                $val = array();
-                foreach ($columns as $c) {
-                    if ($row instanceof Thread){
-                        $fieldName = $c->getFieldName();
-                        $methodName = 'get'.$c->getFieldName();
-                        if ($fieldName=='CreatedBy'){
-                            $val[] = $row->getCreatedBy()->getUsername();
-                        } else if ($fieldName=='Messages'){
-                            $val[] = count($row->getMessages());
-                        } else if ($fieldName=='LastMessage'){
-                            $lastMessage = $row->getLastMessage();
-                            if ($lastMessage){
-                                $title = $trans->trans('goto_last', array(), 'FOSMessageBundle');'';//{% trans from 'FOSMessageBundle' %}goto_last{% endtrans %}
-                                $link = $router->generate('fos_message_thread_view', array('threadId' => $row->getId()));
-                                $line = '<a href="'.$link.'#message_'.$lastMessage->getId().'" title="'.$title.'">→</a>';                                
-                                $date = $trans->trans('on', array('%date%' => $lastMessage->getCreatedAt()->format('d/m/Y H:i')), 'FOSMessageBundle');//{% trans with {'%date%': thread.lastMessage.createdAt|date} from 'FOSMessageBundle' %}on{% endtrans %}
-                                $by   = $trans->trans('by', array('%sender%' => $lastMessage->getSender()->getUsername()), 'FOSMessageBundle');//{% trans with {'%sender%': thread.lastMessage.sender|e } from 'FOSMessageBundle' %}by{% endtrans %}
-                                $line .= $date.'<br />';
-                                $line .= $by;
-                                $val[] = $line;
-                            } else {
-                                $val[] = '----';
-                            }
-                        } else if ($fieldName=='CreatedAt'){
-                            $val[] = $row->getCreatedAt()->format('d/m/Y H:i');
-                        } else if ($fieldName=='IsRead'){
-                            $user = $grid->getContainer()->get('security.context')->getToken()->getUser();
-                            $val[] = $row->isReadByParticipant($user);
-                        } else if ($fieldName=='Type'){
-                            //$val[] = $row->getThreadType()->getName();
-                            //$lastMessageType = $row->getLastMessage()->getMessageType();
-                            $lastMessageType = $row->getLastMessageType();
-                            $val [] = $lastMessageType?$lastMessageType->getName():'General';
-                        } else if ($fieldName=='TypeInt'){
-                            //$val[] = $row->getThreadType()->getId();
-                            //$lastMessageType = $row->getLastMessage()->getMessageType();
-                            $lastMessageType = $row->getLastMessageType();
-                            $val [] = $val [] = $lastMessageType?$lastMessageType->getId():'';
-                        } else if (method_exists($row, $methodName)){
-                            $val[] = call_user_func(array( &$row, $methodName)); 
-                        } else {
-                            $val[] = ' ';
-                        }
-                    }
-                    
-                }
-
-                $response['rows'][$key]['cell'] = $val;
-            }
-
-            $grid->setGetDataFunctionResponse($response);
-        } else {
-            throw \Exception('Invalid query');
-        }
-    }
-
-    /**
-     * @Template()
-     */
-    public function sentAction()
-    {
-        $request    = $this->container->get('request');
-        
-        $threads    = $this->getProvider()->getSentThreads();
-        $router     = $this->container->get('router');
-        $grid       = $this->container->get('jq_grid_custom');
-        
-        //OPTIONAL
-        $grid->setGetDataFunction(function($grid){ MessageController::getInboxData($grid); });
-        $grid->setName('grid_sent');
-        $grid->setCaption('Sent');
-        $grid->setOptions(array('height' => 'auto', 
-                            'width' => '910',
-                            'ondblClickRow' => 'messageDoubleClick',
-                            'jsonReader' => array(  'repeatitems' => false, 
-                                                    'root' => 'rows'
-                                            )
-                         ));
-        $grid->setRouteForced($router->generate('fos_message_sent', array('show_threads' => true)));
-        $grid->setHideIfEmpty(false);
-
-        //MANDATORY
-        $grid->setSourceData($threads);
-        
-        
-        $formatFnc = "function(cellValue, options, rowObject){"
-                                ."var cellClass = 'unread';"
-                                ."if (rowObject.cell[7]) cellClass='read';"
-                                ."return '<div class=\"'+cellClass+'\">'+cellValue+'</div>'"
-                                ."}";
-        
-        $extraJS = "function openThread(threadId, type){"
-                    ."  switch (type){"
-                    ."      case '0':"
-                    ."          url = '".$router->generate('ZizooMessageBundle_thread_view')."/'+threadId;"
-                    ."          viewThread(url);"
-                    ."          break;"
-                    ."      case '1':"
-                    ."          alert('Feature not available yet');"
-                    ."          break;"
-                    ."      case '2':"
-                    ."          alert('Feature not available yet');"
-                    ."          break;"
-                    ."      case '3':"
-                    ."          alert('Feature not available yet');"
-                    ."          break;"
-                    ."      case '4':"
-                    ."          alert('Feature not available yet');"
-                    ."          break;"
-                    ."      default:"
-                    ."          url = '".$router->generate('ZizooMessageBundle_thread_view')."/'+threadId;"
-                    ."          viewThread(url);"
-                    ."          break;"
-                    ."  }"
-                    ."}";
-        
-        //COLUMNS DEFINITION
-        $grid->addColumn('ID', array('name' => 'Id', 'jsonmap' => 'cell.0','index' => 'm.id', 'hidden' => true, 'sortable' => false, 'search' => false));
-        
-        $grid->addColumn('Subject', array('name' => 'Subject', 'jsonmap' => 'cell.1', 'width' => '200', 'sortable' => false, 'search' => false, 'formatter' => $formatFnc));
-        $grid->addColumn('Type', array('name' => 'Type', 'jsonmap' => 'cell.2', 'width' => '75', 'sortable' => false, 'search' => false, 'formatter' => $formatFnc));
-        $grid->addColumn('Started By', array('name' => 'CreatedBy', 'jsonmap' => 'cell.3', 'width' => '100', 'sortable' => false, 'search' => false, 'formatter' => $formatFnc));
-        $grid->addColumn('Start date', array('name' => 'CreatedAt', 'jsonmap' => 'cell.4', 'formatter' => 'date', 'formatoptions' => array( 'srcformat' => 'Y-m-d H:i:s', 'newformat' => 'd/m/Y H:i' ), 'datepicker' => false, 'sortable' => false, 'search' => false, 'formatter' => $formatFnc));
-        $grid->addColumn('Messages', array('name' => 'Messages', 'jsonmap' => 'cell.5', 'width' => '50', 'sortable' => false, 'search' => false, 'formatter' => $formatFnc));
-        $grid->addColumn('Last Message', array('name' => 'LastMessage', 'jsonmap' => 'cell.6', 'width' => '150', 'sortable' => false, 'search' => false, 'formatter' => $formatFnc));
-        $grid->addColumn('Is Read', array('name' => 'IsRead', 'jsonmap' => 'cell.7', 'hidden' => true, 'sortable' => false, 'search' => false));
-        $grid->addColumn('TypeInt', array('name' => 'TypeInt', 'jsonmap' => 'cell.8', 'hidden' => true, 'sortable' => false, 'search' => false));
-        
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        if ($user->getCharter()!=null){
-            $inboxUrl   = 'ZizooBaseBundle_Dashboard_CharterInbox';
-            $sentUrl    = 'ZizooBaseBundle_Dashboard_CharterSent';
-        } else {
-            $inboxUrl   = 'ZizooBaseBundle_Dashboard_Inbox';
-            $sentUrl    = 'ZizooBaseBundle_Dashboard_Sent';
-        }
-        
-        $grid->setExtraParams(array( 'show_threads'         => (true?'checked="checked"':''),
-                                        'loadComplete'      => 'loadComplete',
-                                        'url_threads'       => $this->container->get('router')->generate('fos_message_sent', array('show_threads' => true)),
-                                        'url_no_threads'    => $this->container->get('router')->generate('fos_message_sent', array('show_threads' => false)),
-                                        'extraJS'           => $extraJS,
-                                        'inbox_url'         => $inboxUrl,
-                                        'sent_url'          => $sentUrl));
-        
-        
-        return $grid->render();
-    }
-
     /**
      * Displays a thread, also allows to reply to it
      *
      * @param strind $threadId the thread id
      * @return Response
      */
-    public function threadAction($threadId, $ajax=false)
+    public function threadAction($threadId, $view='user')
     {
         if (!$threadId){
             return new RedirectResponse($this->container->get('router')->generate('fos_message_inbox'));
         }
         $request                = $this->container->get('request');
-        if (!$ajax) $ajax       = $request->isXmlHttpRequest();
         
         $routes         = $request->query->get('routes');
         
@@ -372,16 +79,13 @@ class MessageController extends BaseController
         }
         
         if ($message = $formHandler->process($form)) {
-            if ($ajax){
-                return new Response();
-            } else {
-                return new RedirectResponse($this->container->get('router')->generate($routes['view_thread_route'], array(
-                    'threadId'      => $message->getThread()->getId(),
-                    'message_types' => $messageTypesArr,
-                    'user'          => $user,
-                    'ajax'          => $ajax
-                )));
-            }
+            $url = $this->container->get('router')->generate($routes['view_thread_route'], array('id' => $message->getThread()->getId()), array(
+                'threadId'      => $message->getThread()->getId(),
+                'message_types' => $messageTypesArr,
+                'user'          => $user,
+                'view'          => $view
+            ));
+            return new RedirectResponse($url);
         }
 
         $headers = array();
@@ -395,25 +99,15 @@ class MessageController extends BaseController
         $headers['x-zizoo-thread-participants'] = implode(',', $participantsArr);
         $response = new Response('', 200, $headers);
         
-        if ($ajax){
-            return $this->container->get('templating')->renderResponse('FOSMessageBundle:Message:thread_ajax.html.twig', array(
-                'form'          => $form->createView(),
-                'thread'        => $thread,
-                'message_types' => $messageTypesArr,
-                'user'          => $user,
-                'charter'       => $charter,
-                'ajax'          => $ajax
-            ), $response);
-        } else {
-            return $this->container->get('templating')->renderResponse('FOSMessageBundle:Message:thread.html.twig', array(
-                'form'          => $form->createView(),
-                'thread'        => $thread,
-                'message_types' => $messageTypesArr,
-                'user'          => $user,
-                'charter'       => $charter,
-                'ajax'          => $ajax
-            ), $response);
-        }
+        return $this->container->get('templating')->renderResponse('FOSMessageBundle:Message:thread.html.twig', array(
+            'form'          => $form->createView(),
+            'thread'        => $thread,
+            'message_types' => $messageTypesArr,
+            'user'          => $user,
+            'charter'       => $charter,
+            'routes'        => $routes,
+            'view'          => $view
+        ), $response);
     }
 
     /**
@@ -584,6 +278,8 @@ class MessageController extends BaseController
 
             // sort by date of last message written by an other participant
             //->orderBy('tm.lastMessageDate', 'DESC')
+                
+            ->orderBy('t.createdAt, t.id', 'DESC')
         ;
         return $qb;
     }

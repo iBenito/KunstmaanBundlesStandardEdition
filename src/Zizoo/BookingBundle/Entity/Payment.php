@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Payment
  *
  * @ORM\Table(name="booking_payment")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Zizoo\BookingBundle\Entity\PaymentRepository")
  */
 class Payment extends BaseEntity
 {

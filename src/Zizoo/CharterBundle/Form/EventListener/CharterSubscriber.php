@@ -66,7 +66,7 @@ class CharterSubscriber implements EventSubscriberInterface
         // This should be considered a new "Product"
         if ($charter && $charter->getId()) {
             $form->add('logo', 'zizoo_media', array(    'property_path'     => 'logo',
-                                                        'label' => array('value' => 'zizoo_charter.label.charter_logo', 'class' => 'photo'),
+                                                        'label'             => false,
                                                         'file_path'         => 'webPath',
                                                         'aspect_ratio'      => 1.48,
                                                         'crop_js'           => 'logoCrop',

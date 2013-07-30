@@ -74,7 +74,6 @@
                 {% set actual_label = name|humanize %}
             {% endif %}
         {% endif %}
-       
         <div class="row-content {{ default_class }} {% if actual_label == false %}no-margin{% endif %}">
         {{ form_widget(form) }}
         </div>
