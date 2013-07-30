@@ -148,7 +148,7 @@ class DashboardController extends Controller {
         $reservationsMade   = $user->getReservations();
         $bookingsMade       = $user->getBookings();
         
-        $messageProvider    = $this->container->get('fos_message.provider');
+        $messageProvider    = $this->container->get('zizoo_message.provider');
         $unreadMessages     = $messageProvider->getNbUnreadMessages();
 
         $form = $this->createForm(new SearchBoatType($this->container), new SearchBoat());
@@ -613,7 +613,7 @@ class DashboardController extends Controller {
         $request            = $this->getRequest();
         $user               = $this->getUser();
         
-        $messageManager     = $this->container->get('fos_message.message_manager');
+        $messageManager     = $this->container->get('zizoo_message.message_manager');
         $numUnreadMessages  = $messageManager->getNbUnreadMessageByParticipant($user);
         
         return $this->render('ZizooBaseBundle:Dashboard:Charter/charter_tabs.html.twig', array(

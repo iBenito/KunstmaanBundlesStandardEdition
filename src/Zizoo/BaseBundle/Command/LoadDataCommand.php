@@ -307,7 +307,7 @@ class LoadDataCommand extends ContainerAwareCommand
     private function loadMessageTypes()
     {
         /**
-         *  Inquiry
+         *  Enquiry
             Expired
             Declined
             Accepted
@@ -315,7 +315,7 @@ class LoadDataCommand extends ContainerAwareCommand
             Canceled 
          */
         
-        $this->em->persist(new MessageType('inquiry', 'Inquiry'));
+        $this->em->persist(new MessageType('enquiry', 'Enquiry'));
 
         $this->em->persist(new MessageType('expired', 'Expired'));
         

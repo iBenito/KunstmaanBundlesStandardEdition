@@ -2,16 +2,25 @@
 
 namespace Zizoo\MessageBundle\Twig;
 
+use Zizoo\MessageBundle\EntityManager\MessageManager;
 use Zizoo\MessageBundle\Entity\Message;
 use Zizoo\MessageBundle\Entity\MessageRecipient;
 use Zizoo\ProfileBundle\Entity\Profile;
 
 class MessageExtension extends \Twig_Extension
 {
+    private $messageManager;
+    
+    public function __construct(MessageManager $messageManager) 
+    {
+        $this->messageManager = $messageManager;
+    }
+    
     public function getFilters()
     {
         return array(
-            'senderDisplay' => new \Twig_Filter_Method($this, 'senderDisplay'),
+            'senderDisplay'             => new \Twig_Filter_Method($this, 'senderDisplay'),
+            'numUnreadMessageInThread'  => new \Twig_Filter_Method($this, 'numUnreadMessageInThread'),
         );
     }
     
@@ -57,6 +66,11 @@ class MessageExtension extends \Twig_Extension
         }
         return $ret;
         
+    }
+    
+    public function numUnreadMessageInThread($thread, $user)
+    {
+        return $this->messageManager->getNbUnreadMessageInThreadByParticipant($thread, $user);
     }
     
     public function getName()

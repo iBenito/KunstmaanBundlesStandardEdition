@@ -57,29 +57,27 @@ class MessageFixtures implements OrderedFixtureInterface, SharedFixtureInterface
         $this->container->enterScope('request');
         $this->container->set('request', new \Symfony\Component\HttpFoundation\Request(), 'request');
         
-        $composer       = $this->container->get('zizoo_message.composer');
-        $sender         = $this->container->get('fos_message.sender');
-        $messageTypeRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooMessageBundle:MessageType');
+        $composer           = $this->container->get('zizoo_message.composer');
+        $sender             = $this->container->get('fos_message.sender');
+        $messageTypeRepo    = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooMessageBundle:MessageType');
         
         // Message thread 1 from profile 2 (Benny) to profile 1 (Alex)
         $thread = $composer->newThread()
                             ->setSender($profile2->getUser())
                             ->addRecipient($profile1->getUser())
                             ->setSubject('First thread!')
-                            ->setBody('This is a test inquiry');
+                            ->setBody('This is a test message');
         
-        $message = $thread->getMessage()
-                            ->setMessageType($messageTypeRepo->findOneById('inquiry'));
+        $message = $thread->getMessage();
         
         $sender->send($message);
         
         // Reply (thread 1) from profile 1 (Alex) to profile 2 (Benny)
         $thread = $composer->reply($message->getThread())
                             ->setSender($profile1->getUser())
-                            ->setBody('This is the answer to the test inquiry... denied!.');
+                            ->setBody('Message received. Over.');
         
-        $message =  $thread->getMessage()
-                            ->setMessageType($messageTypeRepo->findOneById('declined'));
+        $message =  $thread->getMessage();
         
         $sender->send($message);
                 

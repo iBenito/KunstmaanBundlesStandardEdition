@@ -48,32 +48,6 @@ class UserFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
     
     public function load(ObjectManager $manager)
     {
-//        
-//        $encoderRegister = new MessageDigestPasswordEncoder('sha512', true, 10);
-//        $user_register = new User();
-//        $user_register->setUsername('zizoo_registration');
-//        $user_register->setEmail($this->container->getParameter('email_register'));
-//        $user_register->setSalt(md5(time()));
-//        $password_register = $encoderRegister->encodePassword('seaman', $user_register->getSalt());
-//        $user_register->setPassword($password_register);
-//        $user_register->setIsActive(true);
-//        $user_register->addGroup($manager->merge($this->getReference('group_super_admin')));
-//       
-//        $this->addReference('user-register', $user_register);
-//        
-//        
-//        
-//        $encoderInfo = new MessageDigestPasswordEncoder('sha512', true, 10);
-//        $user_info = new User();
-//        $user_info->setUsername('zizoo_info');
-//        $user_info->setEmail($this->container->getParameter('email_info'));
-//        $user_info->setSalt(md5(time()));
-//        $password_info = $encoderInfo->encodePassword('seaman', $user_info->getSalt());
-//        $user_info->setPassword($password_info);
-//        $user_info->setIsActive(true);
-//        $user_info->addGroup($manager->merge($this->getReference('group_super_admin')));
-//       
-//        $this->addReference('user-info', $user_info);
         
         $em = $this->container->get('doctrine.orm.entity_manager');
         

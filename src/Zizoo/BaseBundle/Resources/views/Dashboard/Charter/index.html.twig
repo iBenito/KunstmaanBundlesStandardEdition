@@ -15,7 +15,7 @@
             {% set num_alerts = 0 %}
             <ul>
                 {% if unreadMessages > 0 %}
-                <li><a href="{{ path('fos_message_inbox') }}"><span class="circle red">{{ unreadMessages }}</span>Unread messages</a></li>
+                <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterInbox') }}"><span class="circle red">{{ unreadMessages }}</span>Unread messages</a></li>
                 {% set num_alerts = num_alerts + unreadMessages %}
                 {% endif %}
                 {% if reservationRequests > 0 %}
@@ -23,7 +23,7 @@
                 {% set num_alerts = num_alerts + reservationRequests %}
                 {% endif %}
                 {% if receivedPayments > 0 %}
-                <li><a href=""><span class="circle red">{{ receivedPayments }}</span>Payments received</a></li>
+                <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterPayments') }}"><span class="circle red">{{ receivedPayments }}</span>Payments received</a></li>
                 {% set num_alerts = num_alerts + receivedPayments %}
                 {% endif %}
                 {% if num_alerts == 0 %}
@@ -45,9 +45,9 @@
             <section class="links">
                 <h2>My Boats</h2>
                 <ul>
-                    <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'active'}) }}">{{ activeListings }} Active Listings</a></li>
-                    <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'incomplete'}) }}">{{ incompleteListings }} Incomplete Listings</a></li>
-                    <li><a href="{{ path('ZizooCharterBundle_Charter_Boats', {listing_status: 'hidden'}) }}">{{ hiddenListings }} Hidden Listings</a></li>
+                    <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterBoats', {listing_status: 'active'}) }}">{{ activeListings }} Active Listings</a></li>
+                    <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterBoats', {listing_status: 'incomplete'}) }}">{{ incompleteListings }} Incomplete Listings</a></li>
+                    <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterBoats', {listing_status: 'hidden'}) }}">{{ hiddenListings }} Hidden Listings</a></li>
                 </ul>
             </section>
             <!-- end:links -->
