@@ -177,6 +177,95 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#40aebd", endColorstr="#3ca5b3",GradientType=0);
 }
 
+.button.blue.dark {
+    font-weight: 700;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    color: #fff;
+    background: -moz-linear-gradient(top, #34568d 50%, #2f4d7f 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#34568d), color-stop(50%,#2f4d7f));
+    background: -webkit-linear-gradient(top, #34568d 50%,#2f4d7f 50%);
+    background: -o-linear-gradient(top, #34568d 50%,#2f4d7f 50%);
+    background: -ms-linear-gradient(top, #34568d 50%,#2f4d7f 50%);
+    background: linear-gradient(to bottom, #34568d 50%,#2f4d7f 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#34568d", endColorstr="#2f4d7f",GradientType=0);
+    -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    -moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+}
+
+.button.blue.dark:hover {
+    background: -moz-linear-gradient(top, #2e4e81 50%, #294676 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#2e4e81), color-stop(50%,#294676));
+    background: -webkit-linear-gradient(top, #2e4e81 50%,#294676 50%);
+    background: -o-linear-gradient(top, #2e4e81 50%,#294676 50%);
+    background: -ms-linear-gradient(top, #2e4e81 50%,#294676 50%);
+    background: linear-gradient(to bottom, #2e4e81 50%,#294676 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#2e4e81", endColorstr="#294676",GradientType=0);
+    -webkit-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+    -moz-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+}
+
+.button.blue.light {
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    color: #fff;
+    background: -moz-linear-gradient(top, #189aca 50%, #148cb8 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#189aca), color-stop(50%,#148cb8));
+    background: -webkit-linear-gradient(top, #189aca 50%,#148cb8 50%);
+    background: -o-linear-gradient(top, #189aca 50%,#148cb8 50%);
+    background: -ms-linear-gradient(top, #189aca 50%,#148cb8 50%);
+    background: linear-gradient(to bottom, #189aca 50%,#148cb8 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#189aca", endColorstr="#148cb8",GradientType=0);
+    -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    -moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+}
+
+.button.blue.light:hover {
+    text-shadow: 1px 1px 1px rgba(255,255,255,0.4);
+    color: #064d67;
+    background: -moz-linear-gradient(top, #1489b4 50%, #1380a8 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#1489b4), color-stop(50%,#1380a8));
+    background: -webkit-linear-gradient(top, #1489b4 50%,#1380a8 50%);
+    background: -o-linear-gradient(top, #1489b4 50%,#1380a8 50%);
+    background: -ms-linear-gradient(top, #1489b4 50%,#1380a8 50%);
+    background: linear-gradient(to bottom, #1489b4 50%,#1380a8 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#1489b4", endColorstr="#1380a8",GradientType=0);
+    -webkit-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+    -moz-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+}
+
+.button.red {
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    color: #fff;
+    background: -moz-linear-gradient(top, #f1665e 50%, #e9635b 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#f1665e), color-stop(50%,#e9635b));
+    background: -webkit-linear-gradient(top, #f1665e 50%,#e9635b 50%);
+    background: -o-linear-gradient(top, #f1665e 50%,#e9635b 50%);
+    background: -ms-linear-gradient(top, #f1665e 50%,#e9635b 50%);
+    background: linear-gradient(to bottom, #f1665e 50%,#e9635b 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f1665e", endColorstr="#e9635b",GradientType=0);
+    -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    -moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+}
+
+.button.red:hover {
+    text-shadow: 1px 1px 1px rgba(255,255,255,0.4);
+    color: #892620;
+    background: -moz-linear-gradient(top, #e25a52 50%, #d24e47 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#e25a52), color-stop(50%,#d24e47));
+    background: -webkit-linear-gradient(top, #e25a52 50%,#d24e47 50%);
+    background: -o-linear-gradient(top, #e25a52 50%,#d24e47 50%);
+    background: -ms-linear-gradient(top, #e25a52 50%,#d24e47 50%);
+    background: linear-gradient(to bottom, #e25a52 50%,#d24e47 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e25a52", endColorstr="#d24e47",GradientType=0);
+    -webkit-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+    -moz-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+}
+
 .button.white {
     text-shadow: 1px 1px 1px rgba(255,255,255,0.4);
     color: #000;
@@ -2604,8 +2693,7 @@
 
 .messages .message.dark > .article .background:before,
 .messages .message.red > .article .background:before,
-.messages .message.blue > .article .background:before,
-.messages .message.orange > .article .background:before {
+.messages .message.green > .article .background:before {
     top: 4px;
     width: 9px;
     height: 13px;
@@ -2627,24 +2715,16 @@
     background: url(../images/messages-arrow-red-inverse.png);
 }
 
-.messages .message.blue > .article .background:before {
-    background: url(../images/messages-arrow-blue.png);
+.messages .message.green > .article .background:before {
+    background: url(../images/messages-arrow-green.png);
 }
 
-.messages .message.sender.blue > .article .background:before {
-    background: url(../images/messages-arrow-blue.png);
+.messages .message.sender.green > .article .background:before {
+    background: url(../images/messages-arrow-green.png);
 }
 
-.messages .message.receiver.blue > .article .background:before {
-    background: url(../images/messages-arrow-blue-inverse.png);
-}
-
-.messages .message.sender.orange > .article .background:before {
-    background: url(../images/messages-arrow-orange.png);
-}
-
-.messages .message.receiver.orange > .article .background:before {
-    background: url(../images/messages-arrow-orange-inverse.png);
+.messages .message.receiver.green > .article .background:before {
+    background: url(../images/messages-arrow-green-inverse.png);
 }
 
 .messages .message .background h2 {
@@ -2696,24 +2776,14 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f1665e", endColorstr="#e9635b",GradientType=0);
 }
 
-.messages .message.orange header {
-    background: -moz-linear-gradient(top, #ff9922 50%, #f79421 50%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#ff9922), color-stop(50%,#f79421));
-    background: -webkit-linear-gradient(top, #ff9922 50%,#f79421 50%);
-    background: -o-linear-gradient(top, #ff9922 50%,#f79421 50%);
-    background: -ms-linear-gradient(top, #ff9922 50%,#f79421 50%);
-    background: linear-gradient(to bottom, #ff9922 50%,#f79421 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff9922", endColorstr="#f79421",GradientType=0);
-}
-
-.messages .message.blue header {
-    background: -moz-linear-gradient(top, #47c2d2 50%, #45bccb 50%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#47c2d2), color-stop(50%,#45bccb));
-    background: -webkit-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
-    background: -o-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
-    background: -ms-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
-    background: linear-gradient(to bottom, #47c2d2 50%,#45bccb 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#47c2d2", endColorstr="#45bccb",GradientType=0);
+.messages .message.green header {
+    background: -moz-linear-gradient(top, #00e177 50%, #00d872 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#00e177), color-stop(50%,#00d872));
+    background: -webkit-linear-gradient(top, #00e177 50%,#00d872 50%);
+    background: -o-linear-gradient(top, #00e177 50%,#00d872 50%);
+    background: -ms-linear-gradient(top, #00e177 50%,#00d872 50%);
+    background: linear-gradient(to bottom, #00e177 50%,#00d872 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#00e177", endColorstr="#00d872",GradientType=0);
 }
 
 /**
