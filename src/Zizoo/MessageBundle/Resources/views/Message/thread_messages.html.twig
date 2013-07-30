@@ -7,10 +7,10 @@
     {% set message_class    = 'dark' %}
     {% set header           = 'Boat Name | Aug 12, 2013 (Booking date)' %}
 {% elseif message.messageType.id == message_types['accepted']['id'] %}
-    {% set message_class    = 'blue' %}
+    {% set message_class    = 'green' %}
     {% set header           = 'Accepted' %}
 {% elseif message.messageType.id == message_types['expired']['id'] %}
-    {% set message_class    = 'orange' %}
+    {% set message_class    = 'red' %}
     {% set header           = 'Expired' %}
 {% elseif message.messageType.id == message_types['declined']['id'] %}
     {% set message_class    = 'red' %}

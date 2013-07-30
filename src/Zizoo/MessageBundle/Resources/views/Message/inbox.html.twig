@@ -2,10 +2,6 @@
 
 {% block fos_message_content %}
 
-    <div>
-        <a id="new_thread_link" href="{{ url('fos_message_thread_new' )}}">{% trans from 'FOSMessageBundle' %}send_new{% endtrans %}</a><br />
-    </div>
-
     <div id="context_hidden" style="display: none">
         <div id="delete_hidden" class="empty">{% render controller('ZizooMessageBundle:Message:deleteForm', {ajax: true }) %}</div>
         <div id="thread_hidden" class="empty"></div>

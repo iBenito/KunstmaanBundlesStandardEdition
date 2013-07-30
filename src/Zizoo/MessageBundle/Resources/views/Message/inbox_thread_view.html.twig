@@ -1,10 +1,9 @@
 {% set last_message         = thread.lastMessage %}
 {% set last_message_sender  = last_message.sender %}
 {% set last_message_type    = last_message.messageType %}
-{% set sender_receiver      = last_message_sender == user ? 'sender' : 'receiver' %}
 {% set unread               = thread.isReadByParticipant(user) == false %}
 {% set num_unread_messages  = thread|numUnreadMessageInThread(user) %}
-<li class="message {{ sender_receiver }} {% if unread %}unread{% endif %}" thread-id="{{ thread.id }}">
+<li class="message sender {% if unread %}unread{% endif %}" thread-id="{{ thread.id }}">
     <a href="{{ path(routes['view_thread_route'], {id: thread.id}) }}">
         <article class="article clearfix">
             <div class="image">
