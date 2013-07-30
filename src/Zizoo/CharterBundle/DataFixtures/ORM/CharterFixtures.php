@@ -21,9 +21,7 @@ class CharterFixtures extends AbstractFixture implements OrderedFixtureInterface
         $charter_1->setAdminUser($user1);
         $charter_1->setBillingUser($user1);
         $charter_1->addUser($user1);
-        $charter_1->addUser($user2);
         $user1->setCharter($charter_1);
-        $user2->setCharter($charter_1);
         
         $this->addReference('charter-1', $charter_1);
         

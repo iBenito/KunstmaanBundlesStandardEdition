@@ -313,7 +313,7 @@ class BookingAgent {
         
         
         $message = $thread->getMessage()
-                            ->setMessageType($messageTypeRepo->findOneById('inquiry'));
+                            ->setMessageType($messageTypeRepo->findOneById('enquiry'));
         
         
         $thread->setBooking($booking);

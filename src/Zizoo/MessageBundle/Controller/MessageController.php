@@ -27,7 +27,7 @@ class MessageController extends BaseController
         
         $routes = $request->query->get('routes');
         
-        $qb = $this->getParticipantThreadsQueryBuilder($user);
+        $qb = $this->getProvider()->getThreadsQueryBuilder();
         
         $page     = $request->attributes->get('page', 1);
         $pageSize = $request->query->get('page_size', 10);
@@ -247,43 +247,7 @@ class MessageController extends BaseController
         }
     }
     
-    /**
-     *
-     * @param ParticipantInterface $participant
-     * @return Builder a query builder suitable for pagination
-     */
-    private function getParticipantThreadsQueryBuilder(ParticipantInterface $participant)
-    {
-        $em         = $this->container->get('doctrine.orm.entity_manager');
-        $repository = $em->getRepository('ZizooMessageBundle:Thread');
-        $qb         = $repository->createQueryBuilder('t');
-        
-        $qb->innerJoin('t.metadata', 'tm')
-            ->innerJoin('tm.participant', 'p')
-
-            // the participant is in the thread participants
-            ->andWhere('p.id = :user_id')
-            ->setParameter('user_id', $participant->getId())
-
-            // the thread does not contain spam or flood
-            ->andWhere('t.isSpam = :isSpam')
-            ->setParameter('isSpam', false, \PDO::PARAM_BOOL)
-
-            // the thread is not deleted by this participant
-            ->andWhere('tm.isDeleted = :isDeleted')
-            ->setParameter('isDeleted', false, \PDO::PARAM_BOOL)
-
-            // there is at least one message written by an other participant
-            //->andWhere('tm.lastMessageDate IS NOT NULL')
-
-            // sort by date of last message written by an other participant
-            //->orderBy('tm.lastMessageDate', 'DESC')
-                
-            ->orderBy('t.createdAt, t.id', 'DESC')
-        ;
-        return $qb;
-    }
-    
+     
     /**
      * Gets the provider service
      *
@@ -291,7 +255,7 @@ class MessageController extends BaseController
      */
     protected function getProvider()
     {
-        return $this->container->get('fos_message.provider');
+        return $this->container->get('zizoo_message.provider');
     }
     
     

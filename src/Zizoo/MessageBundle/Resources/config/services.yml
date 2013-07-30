@@ -2,17 +2,23 @@ parameters:
 #    zizoo_message.example.class: Zizoo\MessageBundle\Example
 
 services:
+    # TWIG EXTENSIONS
     zizoo_message.twig.picture_extension:
         class: Zizoo\MessageBundle\Twig\MessageExtension
+        arguments: ["@zizoo_message.message_manager"]
         tags:
             - { name: twig.extension }
   
+  
+    # SERVICES
     messenger:
         class:  Zizoo\MessageBundle\Service\Messenger
         arguments: 
             entityManager:  "@doctrine.orm.entity_manager"
             container:      "@service_container"
     
+    
+    # FORM TYPES
     zizoo_message.new_thread_form.type:
         class: Zizoo\MessageBundle\Form\Type\NewThreadMessageFormType
         arguments:  ["@doctrine.orm.entity_manager"]
@@ -24,11 +30,7 @@ services:
     zizoo_message.reply_form_type:
         class: Zizoo\MessageBundle\Form\Type\ReplyMessageFormType
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
-    
-    fos_user.user_to_username_transformer:
-        class: Zizoo\UserBundle\Form\DataTransformer\UserToUsernameTransformer
-        arguments: ["@doctrine.orm.entity_manager"]
-      
+        
     zizoo_message.user_name_form_type:
         class: Zizoo\MessageBundle\Form\Type\UsernameFormType
         arguments: ["@fos_user.user_to_username_transformer"]
@@ -39,9 +41,26 @@ services:
         class: Zizoo\MessageBundle\Form\Type\UsernameMultipleFormType
         arguments: ["@fos_user.user_to_username_transformer"]
         tags:
-            - { name: form.type, alias: zizoo_user_multiple_username }        
+            - { name: form.type, alias: zizoo_user_multiple_username }  
             
+    zizoo_message.recipients_selector:
+        class:  Zizoo\MessageBundle\Form\Type\RecipientsType
+        arguments: ["@zizoo_message.recipients_multiple_data_transformer"]
+        tags:
+            - { name: form.type, alias: zizoo_recipients_selector }
             
+    zizoo_message.message_type_selector:
+        class:  Zizoo\MessageBundle\Form\Type\MessageTypeType
+        arguments: ["@zizoo_message.message_type_data_transformer"]
+        tags:
+            - { name: form.type, alias: zizoo_message_type_selector }
+            
+    
+    # DATA TRANSFORMERS
+    fos_user.user_to_username_transformer:
+        class: Zizoo\UserBundle\Form\DataTransformer\UserToUsernameTransformer
+        arguments: ["@doctrine.orm.entity_manager"]
+           
     zizoo_message.recipients_data_transformer:
         class:  Zizoo\MessageBundle\DataTransformer\RecipientsDataTransformer
         arguments: ["@fos_user.user_to_username_transformer"]
@@ -55,18 +74,8 @@ services:
         class:  Zizoo\MessageBundle\Form\DataTransformer\MessageTypeTransformer
         arguments: ["@doctrine.orm.entity_manager"]
             
-    zizoo_message.recipients_selector:
-        class:  Zizoo\MessageBundle\Form\Type\RecipientsType
-        arguments: ["@zizoo_message.recipients_multiple_data_transformer"]
-        tags:
-            - { name: form.type, alias: zizoo_recipients_selector }
-            
-    zizoo_message.message_type_selector:
-        class:  Zizoo\MessageBundle\Form\Type\MessageTypeType
-        arguments: ["@zizoo_message.message_type_data_transformer"]
-        tags:
-            - { name: form.type, alias: zizoo_message_type_selector }
     
+    # FORM FACTORIES
     zizoo_message.reply_form.factory:
         class:  Zizoo\MessageBundle\Form\Factory\ReplyMessageFormFactory
         arguments: ["@form.factory", "@fos_message.reply_form.type", "%fos_message.reply_form.name%", "%fos_message.reply_form.model%"]
@@ -77,10 +86,7 @@ services:
         arguments: ["@form.factory", "@fos_message.new_thread_form.type", "%fos_message.reply_form.name%", "%fos_message.reply_form.model%"]
         
         
-    zizoo_message.composer:
-        class: Zizoo\MessageBundle\Composer\Composer
-        arguments: ["@fos_message.message_manager", "@fos_message.thread_manager"]
-        
+    # FORM HANDLERS
     zizoo_message.new_thread_multiple_form.handler:
         scope: request
         class: Zizoo\MessageBundle\Form\Handler\NewThreadMultipleMessageFormHandler
@@ -91,6 +97,8 @@ services:
         class: Zizoo\MessageBundle\Form\Handler\ReplyMessageFormHandler
         arguments: ["@request", "@zizoo_message.composer", "@fos_message.sender", "@fos_message.participant_provider", "@service_container"]
     
+    
+    # EVENT LISTENERS
     zizoo_message.message_event_listener:
         class: Zizoo\MessageBundle\EventListener\MessageEventListener
         arguments: ["@service_container"]
@@ -98,6 +106,25 @@ services:
             - { name: kernel.event_listener, event: fos_message.post_send, method: onMessageEvent } 
     
             
-#    zizoo_message.example:
-#        class: %zizoo_message.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    # OTHER FOSMESSAGEBUNDLE OVERRIDES
+    zizoo_message.message_manager:
+        class: Zizoo\MessageBundle\EntityManager\MessageManager
+        arguments: ["@doctrine.orm.entity_manager", "%fos_message.message_class%", "%fos_message.message_meta_class%"]
+        
+    zizoo_message.thread_manager:
+        class: Zizoo\MessageBundle\EntityManager\ThreadManager
+        arguments: ["@doctrine.orm.entity_manager", "%fos_message.thread_class%", "%fos_message.thread_meta_class%", "@zizoo_message.message_manager"]
+        
+    zizoo_message.composer:
+        class: Zizoo\MessageBundle\Composer\Composer
+        arguments: ["@zizoo_message.message_manager", "@zizoo_message.thread_manager"]
+        
+    zizoo_message.provider:
+        class: Zizoo\MessageBundle\Provider\Provider
+        arguments:
+          threadManager:        "@zizoo_message.thread_manager"
+          messageManager:       "@zizoo_message.message_manager"
+          threadReader:         "@fos_message.thread_reader" 
+          authorizer:           "@fos_message.authorizer"
+          participantProvider:  "@fos_message.participant_provider"
+        
