@@ -149,7 +149,10 @@
         {{id}}_map = new google.maps.Map(document.getElementById('{{id}}_map_div'), {
             center: {{id}}_center,
             zoom: {{id}}_zoom,
-            mapTypeId: 'terrain'
+            mapTypeId: 'terrain',
+            scrollwheel:        false,
+            disableDefaultUI:   true,
+            zoomControl:        true
         });
         
         {% if form.lat.vars.value and form.lng.vars.value %}

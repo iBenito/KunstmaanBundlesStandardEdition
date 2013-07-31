@@ -11,7 +11,7 @@
     <form class="form" action="{{ formPath }}" method="post" {{ form_enctype(form) }}>
 
         {{ form_widget(form) }}
-
+        <br />
         {% if step != "" %}
             <button type="submit" class="button blue large">Continue</button>
         {% else %}

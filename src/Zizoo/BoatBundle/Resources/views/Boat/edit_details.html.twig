@@ -11,6 +11,7 @@
 
         {{ form_widget(form) }}
 
+        <br />
         {% if step != "" %}
             <button type="submit" class="button blue large">Continue</button>
         {% else %}
@@ -18,6 +19,15 @@
         {% endif %}
         <input id="override_url" name="override_url" type="hidden" value="" />
     </form>
+        
+    <style type="text/css">
+        #zizoo_boat_details ul li {
+            width: 33%;
+            float: left;
+            line-height: 20px;
+        }
+    </style>
+        
     <script type="text/javascript">
 
         

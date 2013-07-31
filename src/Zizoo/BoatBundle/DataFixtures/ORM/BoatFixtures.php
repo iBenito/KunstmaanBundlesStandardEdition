@@ -86,19 +86,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat1Address->setCountry($countryRepo->findOneByIso('HR'));
         
         $boat1 = $boatService->createBoat($boat1, $boat1Address, $boatTypeRepo->findOneByName('Yacht'), $charter1, new ArrayCollection(array($equipmentBattenedMainsail, $equipmentMainsailFurling)));
-//        
-//        $from = new \DateTime();
-//        $from->modify( 'first day of last month' );
-//        $to = new \DateTime();
-//        $to->modify( 'last day of next month' );
-//        $boatService->addPrice($boat1, $from, $to, 9.99, false, true);
-//        
-//        $from = clone $to;
-//        $from->modify( '+1 day' );
-//        $to = clone $from;
-//        $to->modify( '+1 month' );
-//        //$boatService->addPrice($boat1, $from, $to, 299.99, false, true);
-//        
+
         $manager->persist($boat1);
         $this->addReference('boat-1', $boat1);
         

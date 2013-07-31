@@ -12,15 +12,15 @@
 
             <!-- start:subnavigation -->
             <ul class="subnavigation how-it-works clearfix">
-                <li><a href="#" title="Charter"><span class="icon boat"></span> Charter</a></li>
-                <li><a href="#" title="Holidayer"><span class="icon suitcase"></span> Holidayer</a></li>
-                <li><a href="#" title="Skipper"><span class="icon sailor"></span> Skipper</a></li>
+                <li class="{{ what=='charter' ? 'current':'' }}"><a href="#" title="Charter"><span class="icon boat"></span> Charter</a></li>
+                <li class="{{ what=='holidayer' ? 'current':'' }}"><a href="#" title="Holidayer"><span class="icon suitcase"></span> Holidayer</a></li>
+                <li class="{{ what=='skipper' ? 'current':'' }}"><a href="#" title="Skipper"><span class="icon sailor"></span> Skipper</a></li>
             </ul>
             <!-- end:subnavigation -->
 
             <!-- start:how it works -->
             <div id="how-it-works" class="section">
-                <section class="tab">
+                <section class="tab{{ what==' charter' ? 'current':'' }}" {{ what=='charter' ? 'style="display: block;"':'' }}>
                     <header>
                         <h1>Charter</h1>
                     </header>
@@ -154,7 +154,7 @@ listed in a beautiful way.
                     </div>
                 </section>
 
-                <section class="tab">
+                <section class="tab{{ what=='holdidayer' ? ' current':'' }}" {{ what=='holidayer' ? 'style="display: block;"':'' }}>
                     <header>
                         <h1>Book your dream trip in 3 easy steps</h1>
                     </header>
@@ -279,7 +279,7 @@ listed in a beautiful way.
                     </div>
                 </section>
 
-                <section class="tab">
+                <section class="tab{{ what=='skipper' ? ' current':'' }}" {{ what=='skipper' ? 'style="display: block;"':'' }}>
                     <header>
                         <h1>Skipper</h1>
                     </header>

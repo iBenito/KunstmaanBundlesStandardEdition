@@ -355,11 +355,13 @@ $(document).ready(function() {
      * Function
      */
 
-    // Show first tab on load
-    $("#how-it-works .tab:first-child").show();
-
-    // Add class current for first subnavigation
-    $(".how-it-works li:first-child").addClass("current");
+    // Show first tab on load if no other tabs are already loaded
+    if ($(".how-it-works li.current").length==0){
+        $("#how-it-works .tab:first-child").show();
+        // Add class current for first subnavigation
+        $(".how-it-works li:first-child").addClass("current");
+    }
+    
 
     // Switch tabs with subnavigation
     $(".how-it-works li a").click(function() {

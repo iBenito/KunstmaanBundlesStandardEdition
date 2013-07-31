@@ -38,7 +38,7 @@ class PageController extends Controller {
         ));
     }
     
-    public function howAction()
+    public function howAction($what)
     {
         $user = $this->getUser();
 
@@ -46,7 +46,8 @@ class PageController extends Controller {
         
         return $this->render('ZizooBaseBundle:Page:how.html.twig',array(
             'user' => $user,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'what' => $what
         ));
     }
     

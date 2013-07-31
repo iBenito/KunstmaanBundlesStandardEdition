@@ -5,10 +5,11 @@ ZizooBaseBundle_homepage:
         _method:  GET
         
 ZizooBaseBundle_how:
-    pattern:  /how
-    defaults: { _controller: ZizooBaseBundle:Page:how }
+    pattern:  /how/{what}
+    defaults: { _controller: ZizooBaseBundle:Page:how, what: 'charter' }
     requirements:
         _method:  GET
+        what: charter|holidayer|skipper
         
 ZizooBaseBundle_about:
     pattern:  /about

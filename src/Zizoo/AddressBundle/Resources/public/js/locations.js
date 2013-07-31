@@ -73,6 +73,7 @@ $(document).ready(function(){
     $( "#zizoo_boat_search_reservation_from" ).datepicker({
         defaultDate: "+1d",
         changeMonth: true,
+        minDate: new Date(),
         numberOfMonths: 1,
         showAnim: 'slideDown',
         dateFormat: 'dd/mm/yy',
@@ -86,6 +87,7 @@ $(document).ready(function(){
     $( "#zizoo_boat_search_reservation_to" ).datepicker({
         defaultDate: "+1d",
         changeMonth: true,
+        minDate: new Date(),
         numberOfMonths: 1,
         showAnim: 'slideDown',
         dateFormat: 'dd/mm/yy',

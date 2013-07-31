@@ -45,8 +45,8 @@
 
             <div class="container clearfix">
                 <ul class="clearfix">
-                    <li><a href="" title="Lagoon">Lagoon</a></li>
-                    <li><a href="" title="Abigail sailing club"><strong>Abigail sailing club</strong></a></li>
+                    <li><a href="#" title="Lagoon">Lagoon</a></li>
+                    <li><a href="#" title="Abigail sailing club"><strong>Abigail sailing club</strong></a></li>
                     <li><span class="icon location white"></span> <a href="" title="Barcelona, Span">Barcelona, Span</a></li>
                     <li class="price">6,600 &euro; <small>(per week)</small></li>
                 </ul>
@@ -66,7 +66,7 @@
                     <img src="{{ asset('bundles/zizoobase/images/how-it-works-book.png') }}" alt="Book your trip">
                     <div class="entry">
                         <h3>Book your Trip</h3>
-                        <a href="{{ path('ZizooBaseBundle_how') }}" class="button blue" title="More">More</a>
+                        <a href="{{ path('ZizooBaseBundle_how', {what: 'holidayer'}) }}" class="button blue" title="More">More</a>
                     </div>
                 </div>
             </section>
@@ -86,7 +86,7 @@
                     <img src="{{ asset('bundles/zizoobase/images/how-it-works-join.png') }}" alt="Join Skipper Community">
                     <div class="entry">
                         <h3>Join Skipper<br> Community</h3>
-                        <a href="{{ path('ZizooBaseBundle_how') }}" class="button blue" title="More">More</a>
+                        <a href="{{ path('ZizooBaseBundle_how', {what: 'skipper'}) }}" class="button blue" title="More">More</a>
                     </div>
                 </div>
             </section>

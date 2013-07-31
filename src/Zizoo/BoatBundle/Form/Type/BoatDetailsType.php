@@ -21,13 +21,15 @@ class BoatDetailsType extends AbstractType
                 'multiple'  => true,
                 'expanded'  => true,
                 'property'  => 'name',
-                'label'     => 'Amenities'))
+                'label'     => 'Amenities',
+                'attr'      => array('class' => 'clearfix checkboxes')))
             ->add('equipment', 'entity', array(
                 'class'     => 'ZizooBoatBundle:Equipment',
                 'multiple'  => true,
                 'expanded'  => true,
                 'property'  => 'name',
-                'label'     => 'Equipment'));
+                'label'     => 'Equipment',
+                'attr'      => array('class' => 'clearfix checkboxes')));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
