@@ -34,6 +34,9 @@
     <script type="text/javascript">
         $(document).ready(function(){
             $('#zizoo_boat_search_location').chosen();
+            $( "#zizoo_boat_search_reservation_from" ).attr('placeholder', 'CheckIn');
+            $( "#zizoo_boat_search_reservation_to" ).attr('placeholder', 'CheckOut');
+            $( "#zizoo_boat_search_num_guests" ).attr('placeholder', 'Guests');
             
             var clearBtnFnc1 = function(input) {
                     setTimeout(function() {

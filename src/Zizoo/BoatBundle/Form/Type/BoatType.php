@@ -32,13 +32,17 @@ class BoatType extends AbstractType
                                                                             'value_property_path'   => 'minimumDays',
                                                                             'data_class'            => $options['data_class'],
                                                                             'label'                 => 'Min. days'))
+            ->add('year', 'text', array('required'  => $options['required']))
             ->add('brand', 'text', array('required'  => $options['required']))
             ->add('model', 'text', array('required'  => $options['required']))
             ->add('length', 'number', array('required'  => $options['required']))
+            ->add('hull_material', 'text', array('required'  => $options['required']))
+            ->add('water_capacity', 'number', array('required'  => $options['required']))
             ->add('cabins', 'number', array('required'  => $options['required']))
             ->add('berths', 'number', array('required'  => $options['required']))
             ->add('bathrooms', 'number', array('required'  => $options['required']))
             ->add('toilets', 'number', array('required'  => $options['required']))
+            ->add('showers', 'number', array('required'  => $options['required']))
             ->add('nr_guests', 'number', array('required'  => $options['required']))
             ->add('crew', new BoatCrewType(), array('label'             => 'Crew',
                                                     'required'          => $options['required']))
@@ -53,7 +57,9 @@ class BoatType extends AbstractType
             ->add('engine_type', 'entity', array(
                 'class'     => 'ZizooBoatBundle:EngineType',
                 'property'  => 'name',
-                'required'  => $options['required']));        
+                'required'  => $options['required']))
+            ->add('fuel', 'text', array('required'  => $options['required']))
+            ->add('fuel_capacity', 'number', array('required'  => $options['required']));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

@@ -121,24 +121,24 @@
                     <div class="content">
                         <div class="columns clearfix">
                             <ul>
+                                <li><strong>Boat Type:</strong> {{ boat.boatType.name }}</li>
                                 <li><strong>Year:</strong> {{ boat.year }}</li>
                                 <li><strong>Length Over All:</strong> {{ boat.length }} m</li>
-                                <li><strong>Hull Material:</strong> ??</li>
-                                <li><strong>Beam:</strong> ?,?? m</li>
-                                <li><strong>Draft:</strong> ?,? m</li>
+                                <li><strong>Hull Material:</strong> {{ boat.hullMaterial }}</li>
+
                             </ul>
                             <ul>
-                                <li><strong>Engine:</strong> ??</li>
-                                <li><strong>Fuel:</strong> ??</li>
-                                <li><strong>Fuel Capacity:</strong> ?? l</li>
-                                <li><strong>Water Capacity:</strong> ?? l</li>
+                                <li><strong>Engine:</strong> {{ boat.engineType.name }}</li>
+                                <li><strong>Fuel:</strong> {{ boat.fuel }}</li>
+                                <li><strong>Fuel Capacity:</strong> {{ boat.fuelCapacity }} l</li>
+                                <li><strong>Water Capacity:</strong> {{ boat.waterCapacity }} l</li>
+
+                            </ul>
+                            <ul>
                                 <li><strong>Cabins:</strong> {{ boat.cabins }}</li>
-                            </ul>
-                            <ul>
                                 <li><strong>Berths:</strong> {{ boat.nrGuests }}</li>
-                                <li><strong>Shower / Toilet:</strong> ? / {{ boat.bathrooms }}</li>
-                                <li><strong>Main Sail:</strong> ?</li>
-                                <li><strong>Flag:</strong> {{ boat.address.country }}</li>
+                                <li><strong>Bathrooms:</strong> {{ boat.bathrooms }}</li>
+                                <li><strong>Shower / Toilet:</strong> {{ boat.showers }} / {{ boat.toilets }}</li>
                             </ul>
                         </div>
                     </div>

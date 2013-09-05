@@ -95,9 +95,9 @@
 
         $(document).ready(function(){
 
-            $( "#zizoo_boat_search_reservation_from" ).attr('placeholder', 'From');
-            $( "#zizoo_boat_search_reservation_to" ).attr('placeholder', 'Until');
-            $( "#zizoo_boat_search_num_guests" ).attr('placeholder', 'Number of people');
+            $( "#zizoo_boat_search_reservation_from" ).attr('placeholder', 'CheckIn');
+            $( "#zizoo_boat_search_reservation_to" ).attr('placeholder', 'CheckOut');
+            $( "#zizoo_boat_search_num_guests" ).attr('placeholder', 'Guests');
 
             $('#all').delegate('#results-navigation a', 'click', function(){
                 updateSearch($(this).attr('href'));

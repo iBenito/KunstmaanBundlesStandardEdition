@@ -16,7 +16,7 @@
     {% set step = app.session.get('step') %}
 
     {% if step != "" %}
-        <h3>Step {{ step }}</h3>
+        <h1>Step {{ step }}</h1>
     {% endif %}
 
     {% for flashMessage in app.session.flashbag.get('error') %}
