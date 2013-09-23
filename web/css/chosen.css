@@ -49,6 +49,10 @@
   color: #444444;
   text-decoration: none;
 }
+#slideshow .chzn-container-single .chzn-single {
+    height: 40px
+}
+
 .chzn-container-single .chzn-default {
   color: #999;
 }

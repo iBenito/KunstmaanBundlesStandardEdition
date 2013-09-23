@@ -4,7 +4,7 @@
 
 <div class="content">
     {% if step != "" %}
-        <h3>Step {{ step }}</h3>
+        <h1>Step {{ step }}</h1>
     {% endif %}
 
     {% set formPath = boat.id is null ? path(routes['new_route']) : path(routes['edit_route'], { 'id': boat.id }) %}
@@ -32,6 +32,8 @@
         }
 
         $(document).ready(function(){
+            $( "#zizoo_boat_default_price_choice_nullable_value" ).attr('placeholder', 'per day');
+            $( "#zizoo_boat_length" ).attr('placeholder', 'in metres');
             $('#zizoo_boat_crew_optional input[name="zizoo_boat[crew_optional]"]').change(changeCrew).change();
             {% if boat.id is not null %}
                 changed = false;

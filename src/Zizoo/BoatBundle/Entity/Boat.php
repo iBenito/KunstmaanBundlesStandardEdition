@@ -58,6 +58,26 @@ class Boat extends BaseEntity
     protected $model;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $hull_material;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $fuel;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $fuel_capacity;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $water_capacity;
+
+    /**
      * @ORM\Column(type="integer", nullable=true)
      */
     protected $year;
@@ -86,6 +106,11 @@ class Boat extends BaseEntity
      * @ORM\Column(type="integer", nullable=true)
      */
     protected $toilets;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $showers;
     
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -359,6 +384,29 @@ class Boat extends BaseEntity
     }
 
     /**
+     * Set hull material
+     *
+     * @param string $hullMaterial
+     * @return Boat
+     */
+    public function setHullMaterial($hullMaterial)
+    {
+        $this->hull_material = $hullMaterial;
+
+        return $this;
+    }
+
+    /**
+     * Get hull material
+     *
+     * @return string
+     */
+    public function getHullMaterial()
+    {
+        return $this->hull_material;
+    }
+
+    /**
      * Set year
      *
      * @param integer $year
@@ -494,6 +542,98 @@ class Boat extends BaseEntity
     public function getToilets()
     {
         return $this->toilets;
+    }
+
+    /**
+     * Set showers
+     *
+     * @param integer $showers
+     * @return Boat
+     */
+    public function setShowers($showers)
+    {
+        $this->showers = $showers;
+
+        return $this;
+    }
+
+    /**
+     * Get showers
+     *
+     * @return integer
+     */
+    public function getShowers()
+    {
+        return $this->showers;
+    }
+
+    /**
+     * Set fuel
+     *
+     * @param string $fuel
+     * @return Boat
+     */
+    public function setFuel($fuel)
+    {
+        $this->fuel = $fuel;
+
+        return $this;
+    }
+
+    /**
+     * Get fuel
+     *
+     * @return string
+     */
+    public function getFuel()
+    {
+        return $this->fuel;
+    }
+
+    /**
+     * Set fuel capacity
+     *
+     * @param integer $fuelCapacity
+     * @return Boat
+     */
+    public function setFuelCapacity($fuelCapacity)
+    {
+        $this->fuel_capacity = $fuelCapacity;
+
+        return $this;
+    }
+
+    /**
+     * Get fuel capacity
+     *
+     * @return integer
+     */
+    public function getFuelCapacity()
+    {
+        return $this->fuel_capacity;
+    }
+
+    /**
+     * Set water capacity
+     *
+     * @param integer $waterCapacity
+     * @return Boat
+     */
+    public function setWaterCapacity($waterCapacity)
+    {
+        $this->water_capacity = $waterCapacity;
+
+        return $this;
+    }
+
+    /**
+     * Get water capacity
+     *
+     * @return integer
+     */
+    public function getWaterCapacity()
+    {
+        return $this->water_capacity;
     }
 
     /**

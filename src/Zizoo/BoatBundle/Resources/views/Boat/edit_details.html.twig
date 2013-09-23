@@ -4,7 +4,7 @@
 
 <div class="content">
     {% if step != "" %}
-        <h3>Step {{ step }}</h3>
+        <h1>Step {{ step }}</h1>
     {% endif %}
 
     <form class="form" action="{{ path(routes['details_route'], { 'id': boat.id }) }}" method="post" {{ form_enctype(form) }}>
@@ -30,10 +30,7 @@
         
     <script type="text/javascript">
 
-        
-
         $(document).ready(function(){
-            
         });
     </script>
 </div>

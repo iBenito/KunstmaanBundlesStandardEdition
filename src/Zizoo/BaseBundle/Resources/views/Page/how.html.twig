@@ -83,8 +83,8 @@ listed in a beautiful way.
                             <p>
                                 More reasons to love Zizoo?<br>
                                 100% free to list, plus a lot more.<br>
-                                <a href="#">Read on...</a>
                             </p>
+                            <a href="#">Read on...</a>
                         </section>
 
                         <div class="expand">
@@ -209,8 +209,8 @@ listed in a beautiful way.
                             <h5>Get started now, it’s free!</h5>
                             <p>
                                 Why holidayers love Zizoo<br>
-                                <a href="#">Read on...</a>
                             </p>
+                            <a href="#">Read on...</a>
                         </section>
 
                         <div class="expand">
@@ -345,7 +345,14 @@ listed in a beautiful way.
     </div>
     <!-- end:content -->
 
+    <script type="text/javascript">
+        $(document).ready(function(){
 
-
+            $(".more a").click(function() {
+                $(this).parent().next(".expand").show();
+                return false;
+            });
+        });
+    </script>
 
 {% endblock %}
