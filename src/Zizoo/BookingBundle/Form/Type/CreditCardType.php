@@ -12,10 +12,10 @@ class CreditCardType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('cardholder_name', 'text', array('label'          => 'zizoo_booking.label.cardholder',
+        $builder->add('cardholder_name', 'text', array('label'          => array('value' => 'zizoo_booking.label.cardholder', 'class' => 'credit_card'),
                                                         'property_path' => 'cardHolder'));
         
-        $builder->add('number', 'text', array('label'           => 'zizoo_booking.label.credit_card_number',
+        $builder->add('number', 'text', array('label'           => array('value' => 'zizoo_booking.label.credit_card_number', 'class' => 'credit_card'),
                                                 'attr'          => array('class' => 'sensitive'),
                                                 'property_path' => 'creditCardNumber'));
         
@@ -36,7 +36,7 @@ class CreditCardType extends AbstractType
                                                     ),
                                                     'multiple'      => false,
                                                     'expanded'      => false,
-                                                    'label'         => 'zizoo_booking.label.expiration_date_month',
+                                                    'label'         => array('value' => 'zizoo_booking.label.expiration_date_month', 'class' => 'credit_card'),
                                                     'attr'          => array('class' => 'sensitive'),
                                                     'property_path' => 'expiryMonth'
                                                 ));
@@ -54,12 +54,12 @@ class CreditCardType extends AbstractType
                                                     'choices'       => $yearChoices,
                                                     'multiple'      => false,
                                                     'expanded'      => false,
-                                                    'label'         => 'zizoo_booking.label.expiration_date_year',
+                                                    'label'         => array('value' => 'zizoo_booking.label.expiration_date_year', 'class' => 'credit_card'),
                                                     'attr'          => array('class' => 'sensitive'),
                                                     'property_path' => 'expiryYear'
                                                 ));
         
-        $builder->add('cvv', 'text', array('label'          => 'zizoo_booking.label.cvv',
+        $builder->add('cvv', 'text', array('label'          => array('value' => 'zizoo_booking.label.cvv', 'class' => 'credit_card'),
                                             'attr'          => array('class' => 'sensitive'),
                                             'property_path' => 'cvv'));
     }

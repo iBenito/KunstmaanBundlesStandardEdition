@@ -199,6 +199,16 @@ class BoatController extends Controller
         if (!$url)      $url = $request->request->get('url', null);
         if (!$ajaxUrl)  $ajaxUrl = $request->request->get('ajax_url');
         
+        $bookingsAllowed = false;
+        if ($this->container->hasParameter('zizoo_booking.allow_bookings')){
+            $bookingsAllowed = $this->container->getParameter('zizoo_booking.allow_bookings') === true;
+        }
+        
+        $bookUrl = $this->generateUrl('ZizooBoatBundle_Boat_Show', array('id' => $boat->getId()));
+        if ($bookingsAllowed===true){
+            $bookUrl = $this->generateUrl('ZizooBookingBundle_book');
+        }
+        
         return $this->render('ZizooBoatBundle:Boat:booking_widget.html.twig', array(
             'boat'                  => $boat,
             'book_boat'             => $bookBoat,
@@ -211,7 +221,8 @@ class BoatController extends Controller
             'prices'                => $prices,
             'url'                   => $url,
             'ajax_url'              => $ajaxUrl,
-            'book_url'              => $this->generateUrl('ZizooBookingBundle_book')
+            'book_url'              => $bookUrl,
+            'bookings_allowed'      => $bookingsAllowed
         ));
     }
     

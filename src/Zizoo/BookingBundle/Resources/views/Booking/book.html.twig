@@ -1,7 +1,6 @@
-{% extends 'ZizooBookingBundle::layout.html.twig' %}
-{% trans_default_domain "labels" %}
-
-{% block title %}{{ boat.name }}{% endblock %}
+{% extends 'ZizooBaseBundle:Page:index.html.twig' %}
+    
+{% block title_page_title %}{{ boat.name }}{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -9,105 +8,442 @@
 {% endblock %}
 
 {% block body %}
-    
-    <table>
-        <tbody id="trip_details">
-            <tr>
-                <td>Check in:</td>
-                <td>{{ book_boat.reservationRange.reservationFrom|date }}</td>
-            </tr>
-            <tr>
-                <td>Check out:</td>
-                <td>{{ book_boat.reservationRange.reservationTo|date }}</td>
-            </tr>
-            <tr>
-                <td>Nights:</td>
-                <td>{{ book_boat|BookBoat_numberOfDays }}</td>
-            </tr>
-            <tr>
-                <td>Guests:</td>
-                <td>{{ book_boat.numGuests }}</td>
-            </tr>
-        </tbody>
-        <tbody id="cost_details">
-            <tr>
-                <td>Total price:</td>
-                <td>
-                    {{ book_boat|BookBoat_price( total_price['total'] )|raw }}
-                </td>
-            </tr>
-            <tr>
-                <td>Price to pay now:</td>
-                <td>{{ book_boat|BookBoat_price( price_to_pay_now )|raw }}</td>
-            </tr>
-        </tbody>
-    </table>
 
-    <br />
-
-    {{ form_widget(form._token) }}
-    {{ form_errors(form) }}
-    <form id="tr_booking_form" method="post" action="{{ braintree_action }}">
-        <input type="hidden" name="tr_data" value="{{ tr_data }}" />
-
-        {{ form_widget(form) }}
-        
-        <button type="submit">Book It</button>
-    </form>
-    
-    <form id="booking_form" action="{{ path('ZizooBookingBundle_book') }}" method="post">
-        
-    </form>
-
-    <div id="errors">
-        {% if errors|length > 0 %}
-            <ul>
-            {% for error in errors %} 
-                <li>{{ error }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-    </div>
-    
-    <script type="text/javascript">
-        
-        function encrypt(){
-            var enc = Braintree.create("{{ client_key }}");
-            $('#tr_booking_form input').each(function(index,el){
-                var clone = $(el).clone();
-                if ($(clone).attr('type')=='checkbox'){
-                    $(clone).attr('style', 'display: none');
-                } else {
-                    $(clone).attr('type', 'hidden');
-                }
-                if ($(clone).hasClass('sensitive')){
-                    $(clone).val(enc.encrypt($(clone).val()));
-                }
-                $(clone).appendTo('#booking_form');
-            });
-            $('#tr_booking_form select').each(function(index,el){
-                var selected = $(el).find('option:selected');
-                
-                $('#booking_form').append('<input type="hidden" name="'+$(el).attr('name')+'" value="'+$(selected).val()+'" />');
-                
-            });
-            $('#tr_booking_form textarea').each(function(index,el){
-                $('#booking_form').append('<input type="hidden" name="'+$(el).attr('name')+'" value="'+$(el).val()+'" />');
-                
-            });
-            $('#transaction__token').appendTo('#booking_form');
-        }
-        
-        $(document).ready(function(){            
+    <!-- start:content -->
+    <div id="content">
+        <div class="container clearfix">
             
-            $('#tr_booking_form').submit(function(){
-                $('#booking_form').html('');
-                encrypt();
-                $('#booking_form').submit();
-                return false;
-            });
+            <!-- start:section -->
+            <section id="how" class="section blue" style="display: none">
+                <header>
+                    <h6>How This Works</h6>
+                </header>
 
-        });
-    </script>
+                <div class="content">
+                    <p>
+                        If you are a private owner sign up and we will contact you when you open our private boat marketplace tick box and you can register as a regular user but they will be marked as a boat owner. 
+                    </p>
+                    <p>
+                        If you are a private owner sign up and we will contact you when you open our private boat marketplace tick box and you can register as a regular user but they will be marked as a boat owner. If you are a private owner sign up and we will contact you when you open our <a href="">private</a> boat marketplace tick box and you can <strong>register</strong> as a regular user but they will be marked as a boat owner. 
+                    </p>
+                </div>
+            </section>
+            <!-- end:section -->
+            
+            
+            <noscript>
+                <section class="section">
+                    <header>
+                        <h1>Enable JavaScript</h1>
+                    </header>
+                    <div class="content clearfix">
+                        <strong>You need to enable JavaScript in your browser to make bookings.</strong>
+                    </div>
+                </section>
+            </noscript>
+            
+            <!-- start:details -->
+            <section id="details" class="section" style="display: none">
+                <header>
+                    <h1>Trip Details</h1>
+                </header>
 
-{% endblock %}
+                <div class="content clearfix">
+
+                    <!-- start:trips -->
+                    <section class="trips">
+                        <h2>Boat</h2>
+
+                        <article class="trip clearfix">
+                            <div class="box">
+                                {% set boat_url = path('ZizooBoatBundle_Boat_Show', {id: boat.id}) ~ '?zizoo_boat_book[reservation_range][reservation_from]='~ book_boat.reservationRange.reservationFrom|date ~'&zizoo_boat_book[reservation_range][reservation_to]='~ book_boat.reservationRange.reservationTo|date ~'&zizoo_boat_book[num_guests]='~ book_boat.numGuests %}
+                                <a href="{{ boat_url }}" class="boat gray clearfix">
+                                    <figure>
+                                        {% if boat.image.first != false %}
+                                        <img src="{{ asset(boat.image.first|pictureWebPath|imagine_filter('thumb_218x114')) }}" alt="" />
+                                        {% else %}
+                                        <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg'|imagine_filter('thumb_218x114')) }}" alt="" />
+                                        {% endif %}
+                                        <figcaption class="clearfix">
+                                            {{ boat.name }} <span class="icon {{ book_boat.crew==true?'plus':'minus' }}"></span>
+                                        </figcaption>
+                                    </figure>
+                                    <div class="left">
+                                        {# 24 Reviews #}
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="info">
+                                <h3>{{ boat.address.locality }}</h3>
+                                <span class="price">{{ book_boat|BookBoat_price( total_price['total'] )|raw }} &euro;</span>
+                                <time datetime="{{ book_boat.reservationRange.reservationFrom|date(constant('DATE_W3C')) }}">{{ book_boat.reservationRange.reservationFrom|date('M d, Y') }} &ndash; {{ book_boat.reservationRange.reservationTo|date('M d, Y') }}</time>
+                                <div class="overall clearfix">
+                                    {#
+                                    <div class="column">
+                                        Overall Rating
+                                        <div class="ratings big"><span class="r4 r5"></span></div>
+                                    </div>
+                                    <div class="column">
+                                        Value
+                                        <div class="ratings"><span class="r4"></span></div>
+                                    </div>
+                                    <div class="column">
+                                        Service
+                                        <div class="ratings"><span class="r3"></span></div>
+                                    </div>
+                                    <div class="column">
+                                        Location
+                                        <div class="ratings"><span class="r2 r3"></span></div>
+                                    </div>
+                                    <div class="column">
+                                        Food
+                                        <div class="ratings"><span class="r5"></span></div>
+                                    </div>
+                                    <div class="column">
+                                        Clear
+                                        <div class="ratings"><span class="r1"></span></div>
+                                    </div>
+                                    #}
+                                </div>
+                            </div>
+                        </article>
+
+                    </section>
+                    <!-- end:trips -->
+                    
+                    <!-- start:trip table -->
+                    <section class="trip-table">
+                        <h2>Your Trip</h2>
+
+                        <div class="clearfix">
+
+                            <div class="column">
+
+                                <div class="table">
+                                    <table>
+                                        <tr>
+                                            <td>Check In</td>
+                                            <td>{{ book_boat.reservationRange.reservationFrom|date }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Check Out</td>
+                                            <td>{{ book_boat.reservationRange.reservationTo|date }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Nights</td>
+                                            <td>{{ book_boat|BookBoat_numberOfDays }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Guests</td>
+                                            <td>{{ book_boat.numGuests }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td><a href="{{ boat_url }}">Change Trip</a></td>
+                                    </table>
+                                </div>
+
+                                <div class="table">
+                                    <table>
+                                        <tr>
+                                            <td class="{{ book_boat.crew==true?'available':'' }}">Skipper</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                {#
+                                <div class="table">
+                                    <table>
+                                        <tr>
+                                            <td class="available">Insurance</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="link"><a href="">Insurance Details</a></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                #}
+                            </div>
+
+                            <div class="column">
+                                {#
+                                <div class="table">
+                                    <table>
+                                        <tr>
+                                            <td class="available" colspan="2">Extras Included Free of Charge</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="unavailable">Meals</td>
+                                            <td>0 &euro;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="unavailable">Jet Ski</td>
+                                            <td>0 &euro;</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                #}
+                                    
+                                <div class="table">
+                                    <table>
+                                        {#
+                                        <tr>
+                                            <td>Rate (Per Night)</td>
+                                            <td>200 &euro;</td>
+                                        </tr>
+                                        #}
+                                        <tr>
+                                            <td>Subtotal</td>
+                                            <td>1000 &euro;</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Service Fee</td>
+                                            <td>120 &euro;</td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="table">
+                                    <table>
+                                        <tr class="total">
+                                            <td>Total</td>
+                                            <td><strong>1120 &euro;</strong></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+                    <!-- end:trip table -->
+                    
+                    
+                    <form id="tr_booking_form" method="post" action="{{ braintree_action }}" class="form">
+                        <input type="hidden" name="tr_data" value="{{ tr_data }}" />
+                        <!-- start:payment -->
+                        <section class="payment">
+                            <h2>Payment</h2>
+
+                            <!-- start:details -->
+                            <section class="details clearfix">
+                                <h3>Your Details</h3>
+                                <div class="left">
+                                {{ form_row(form.billing) }}
+                                {{ form_row(form.payment_method) }}
+                                </div>
+                                <div class="right">
+                                    <div class="options">
+                                    </div>
+                                </div>
+                            </section>
+                            <!-- end:details -->
+                            
+                            <!-- start:payment options -->
+                            <div class="payment-options">
+                            
+                                <!-- start:credit-card -->
+                                <section id="credit-card" class="clearfix">
+                                    <div class="left">
+                                        <h3>Credit Card Information</h3>
+                                        {{ form_row(form.credit_card) }}
+                                    </div>
+                                    <div class="right">
+                                        <div class="information">
+                                            <p>
+                                                Tooltip:
+                                            </p>
+                                            <p>
+                                                Please note that credit card details are used for verification purposes only.
+                                            </p>
+                                            <p>
+                                                The credit card will be charged upon the approval of the Boat Owner.
+                                            </p>
+                                            <p>
+                                                If the Boat Owner does not reply within 24 hours, the booking will be automatically cancelled and the process will have to be repeated.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </section>
+                                <!-- end:credit-card -->
+                                
+                                <!-- start:bank -->
+                                <section id="bank" class="clearfix">
+                                    <div class="left">
+                                        <h3>Bank Transfer Information</h3>
+                                        <table>
+                                            <tr>
+                                                <td>Company name:</td>
+                                                <td>Zizoo GmbH Vienna</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Bank Details:</td>
+                                                <td>Bank Austria<br> Sosogasse 1/11010 Vienna</td>
+                                            </tr>
+                                            <tr>
+                                                <td>IBAN:</td>
+                                                <td>2356728BA</td>
+                                            </tr>
+                                            <tr>
+                                                <td>SWIFT:</td>
+                                                <td>BA500XXX</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Rererence Booking:</td>
+                                                <td>XZ23YZIZOO</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="right">
+                                        <div class="information">
+                                            <p>
+                                                Tooltip:
+                                            </p>
+                                            <p>
+                                                Please use the following bank details to complete the payment. 
+                                            </p>
+                                            <p>
+                                                Please proceed with the payment only when you receive the confirmation email from Zizoo that the Boat Owner has approved your booking request.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </section>
+                                <!-- end:bank -->
+                                
+                                
+                            </div>
+                            <!-- end:payment options -->
+                            
+                            <!-- start:instalment -->
+                            <div class="clearfix">
+                                <div class="clearfix">
+                                {{ form_row(form.instalment_option) }}
+                                </div>
+                                <div class="payment-options instalment clearfix">
+                                    <div class="instalment-option-one">
+
+                                        <div class="left">
+                                            <h4>First Instalment</h4>
+                                            <p>
+                                                (paid upon approval of the request by the Boat Owner)
+                                            </p>
+                                            <p>
+                                                <span>XXX &euro;</span>
+                                            </p>
+                                        </div>
+                                        <div class="right">
+                                            <h4>Later Instalment(s)</h4>
+                                            <p>
+                                                (oustanding amount has to be paid by 12/07/2013)
+                                            </p>
+                                            <p>
+                                                <span>XXX &euro;</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="instalment-option-multiple">
+                                        <h4>First and only payment</h4>
+                                        <p>
+                                            (paid upon approval of the request by the Boat Owner)
+                                        </p>
+                                        <p>
+                                            <span>XXX &euro;</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- end:instalment -->
+                            
+                        </section>
+                        <!-- end:payment -->
+                    </form>
+            
+                    <div id="errors">
+                        {% if errors|length > 0 %}
+                            <ul>
+                            {% for error in errors %} 
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                    
+                    <form id="booking_form" action="{{ path('ZizooBookingBundle_book') }}" method="post">
+                    </form>
+                    
+                    <script type="text/javascript">
+
+                        function encrypt(){
+                            var enc = Braintree.create("{{ client_key }}");
+                            $('#tr_booking_form input').each(function(index,el){
+                                var clone = $(el).clone();
+                                if ($(clone).attr('type')=='checkbox'){
+                                    $(clone).attr('style', 'display: none');
+                                } else {
+                                    $(clone).attr('type', 'hidden');
+                                }
+                                if ($(clone).hasClass('sensitive')){
+                                    $(clone).val(enc.encrypt($(clone).val()));
+                                }
+                                $(clone).appendTo('#booking_form');
+                            });
+                            $('#tr_booking_form select').each(function(index,el){
+                                var selected = $(el).find('option:selected');
+
+                                $('#booking_form').append('<input type="hidden" name="'+$(el).attr('name')+'" value="'+$(selected).val()+'" />');
+
+                            });
+                            $('#tr_booking_form textarea').each(function(index,el){
+                                $('#booking_form').append('<input type="hidden" name="'+$(el).attr('name')+'" value="'+$(el).val()+'" />');
+
+                            });
+                            $('#transaction__token').appendTo('#booking_form');
+                        }
+                        
+                        function selectPaymentMethod(method, animate){
+                            console.log(method);
+                            if (method=='credit_card'){
+                                if (animate){
+                                    $('#credit-card').slideDown();
+                                    $('#bank').slideUp();
+                                } else {
+                                    $('#credit-card').show();
+                                    $('#bank').hide();
+                                }
+                            } else {
+                                if (animate){
+                                    $('#credit-card').slideUp();
+                                    $('#bank').slideDown();
+                                } else {
+                                    $('#credit-card').hide();
+                                    $('#bank').show();
+                                }
+                            }
+                        }
+
+                        $(document).ready(function(){            
+
+                            $('#tr_booking_form').submit(function(){
+                                $('#booking_form').html('');
+                                encrypt();
+                                $('#booking_form').submit();
+                                return false;
+                            });
+                            
+                            
+                            $('#transaction_payment_method').change(function(){
+                                var method = $(this).val();
+                                selectPaymentMethod(method, true);
+                            });
+
+                            selectPaymentMethod($('#transaction_payment_method').val(), false);
+                            
+                            $('#details, #how').show();
+
+                        });
+                    </script>
+                    
+        </div>
+    </div>
+{% endblock body %}
+
+    

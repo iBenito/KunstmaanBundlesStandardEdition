@@ -5,35 +5,41 @@ namespace Zizoo\BookingBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Payment
+ * InstalmentOption
  *
- * @ORM\Table(name="booking_payment_method")
- * @ORM\Entity
+ * @ORM\Table(name="booking_instalment_option", uniqueConstraints={@ORM\UniqueConstraint(name="idx", columns={"name"})})
+ * @ORM\Entity(repositoryClass="Zizoo\BookingBundle\Entity\InstalmentOptionRepository")
  */
-class PaymentMethod
+class InstalmentOption
 {
-        
     /**
      * @var string
      *
      * @ORM\Column(name="id", type="string", length=255)
      * @ORM\Id
      */
-    protected $id;
-    
+    private $id;
+
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="text")
+     * @ORM\Column(name="name", type="string", length=255)
      */
-    protected $name;
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pattern", type="text", nullable=true)
+     */
+    private $pattern;
     
     /**
      * @var integer
      *
      * @ORM\Column(name="display_order", type="integer")
      */
-    protected $order;
+    private $order;
     
     /**
      * @var boolean
@@ -41,7 +47,7 @@ class PaymentMethod
      * @ORM\Column(name="enabled", type="boolean")
      */
     protected $enabled;
-    
+
     
     public function __construct($id=null, $name=null, $order=0) {
         $this->id       = $id;
@@ -51,9 +57,22 @@ class PaymentMethod
     }
     
     /**
+     * Set id
+     *
+     * @param string $id
+     * @return InstalmentOption
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    
+        return $this;
+    }
+    
+    /**
      * Get id
      *
-     * @return string 
+     * @return integer 
      */
     public function getId()
     {
@@ -61,14 +80,15 @@ class PaymentMethod
     }
 
     /**
-     * Set id
+     * Set name
      *
-     * @param string $id
-     * @return PaymentType
+     * @param string $name
+     * @return InstalmentOption
      */
-    public function setId($id)
+    public function setName($name)
     {
-        $this->id = $id;
+        $this->name = $name;
+    
         return $this;
     }
 
@@ -81,49 +101,51 @@ class PaymentMethod
     {
         return $this->name;
     }
-    
+
     /**
-     * Set name
+     * Set pattern
      *
-     * @param string $name
-     * @return PaymentType
+     * @param string $pattern
+     * @return InstalmentOption
      */
-    public function setName($name)
+    public function setPattern($pattern)
     {
-        $this->name = $name;
+        $this->pattern = $pattern;
+    
         return $this;
     }
 
     /**
-     * Get order
+     * Get pattern
+     *
+     * @return string 
+     */
+    public function getPattern()
+    {
+        return $this->pattern;
+    }
+    
+    /**
+     * Set order_num
+     *
+     * @param integer $orderNum
+     * @return BoatType
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+    
+        return $this;
+    }
+
+    /**
+     * Get order_num
      *
      * @return integer 
      */
     public function getOrder()
     {
         return $this->order;
-    }
-    
-    /**
-     * Set order
-     *
-     * @param integer $order
-     * @return PaymentType
-     */
-    public function setOrder($order)
-    {
-        $this->order = $order;
-        return $this;
-    }
-    
-    /**
-     * Get enabled
-     *
-     * @return boolean 
-     */
-    public function getEnabled()
-    {
-        return $this->enabled;
     }
     
     /**
@@ -136,6 +158,16 @@ class PaymentMethod
     {
         $this->enabled = $enabled;
         return $this;
+    }
+    
+    /**
+     * Get enabled
+     *
+     * @return boolean 
+     */
+    public function getEnabled()
+    {
+        return $this->enabled;
     }
 
     public function __toString()

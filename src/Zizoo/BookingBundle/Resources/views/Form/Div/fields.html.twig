@@ -34,6 +34,7 @@
                 
                 $('#transaction_payment_method').change(function(){
                     var method = $(this).val();
+                    console.log(method);
                     selectPaymentMethod(method, true);
                 });
                 

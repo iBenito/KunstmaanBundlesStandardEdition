@@ -1,5 +1,6 @@
 parameters:
-    zizoo_booking.cut_amount: 0.1
+    zizoo_booking.cut_amount: 0.12
+    zizoo_booking.allow_bookings: true
 #    zizoo_booking.example.class: Zizoo\BookingBundle\Example
 
 services:
@@ -19,6 +20,8 @@ services:
             
     zizoo_booking.twig.booking_extension:
         class: Zizoo\BookingBundle\Twig\BookingExtension
+        arguments:
+            bookingAent:    "@zizoo_booking_booking_agent"
         tags:
             - { name: twig.extension }
             

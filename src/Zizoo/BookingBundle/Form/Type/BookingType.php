@@ -5,7 +5,6 @@ namespace Zizoo\BookingBundle\Form\Type;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\DependencyInjection\Container;
@@ -32,15 +31,41 @@ class BookingType extends AbstractType
                     ->orderBy('m.order', 'ASC')
                     ->where('m.enabled = TRUE');
             },
+            'attr'  => array('class' => 'gray small'),
+            'label' => 'Payment Method',
         ));
         
+        $builder->add('instalment_option', 'entity', array(
+            'class' => 'ZizooBookingBundle:InstalmentOption',
+            'required'  => true,
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('o')
+                    ->orderBy('o.order', 'ASC')
+                    ->where('o.enabled = TRUE');
+            },
+            'attr'          => array('class' => 'gray small'),
+            'expanded'      => true,
+            'multiple'      => false,
+            'label'         => 'Instalment Options'
+        ));    
+            
+//        $builder->add('instalment_option', 'choice', array(
+//            'required'          => true,
+//            'choices'           => array(
+//                                    'one'       => 'I want to pay the full booking amount upon approval',
+//                                    'multiple'  => 'I want to pay the 50% of the booking amount upon approval and the rest later'                                    
+//            ),
+//            'expanded'          => true,
+//            'multiple'          => false,
+//            'label'             => 'Instalment Options'
+//        ));
+            
         $builder->add('message_to_owner', new MessageToOwnerType(), array('label' => 'Message to owner'));
             
-        $builder->add('credit_card', new CreditCardType(), array('label'    => 'Credit Card'));
+        $builder->add('credit_card', new CreditCardType(), array('label'    => false));
         
-        $builder->add('billing', new BillingAddressType($this->container->get('doctrine.orm.entity_manager')), array('label' => 'Billing Address'));
+        $builder->add('billing', new BillingType(), array('label' => false));
         
-        //$builder->add('terms', 'checkbox', array('property_path' => 'termsAccepted', 'label' => 'zizoo_user.label.terms'));
         $builder->add('custom_fields', new CustomFieldsType(), array('label' => ' '));
         
     }

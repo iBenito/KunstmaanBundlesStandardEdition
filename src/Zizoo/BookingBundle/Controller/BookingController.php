@@ -5,6 +5,7 @@ namespace Zizoo\BookingBundle\Controller;
 use Zizoo\BookingBundle\Entity\Booking;
 use Zizoo\BookingBundle\Entity\Payment;
 use Zizoo\BookingBundle\Form\Model\Booking as BookingForm;
+use Zizoo\BookingBundle\Form\Model\Billing as BillingForm;
 use Zizoo\BookingBundle\Form\Type\BookingType;
 use Zizoo\ReservationBundle\Entity\Reservation;
 use Zizoo\BoatBundle\Form\Model\BookBoat;
@@ -126,26 +127,13 @@ class BookingController extends Controller
         
         // Get list of countries
         $countries = $em->getRepository('ZizooAddressBundle:Country')->findAll();
-        
-        // Generate Braintree Transparent Redirect (TR) data. Used when JavaScript not enabled.
-        $trData = \Braintree_TransparentRedirect::transactionData(
-            array(
-                'transaction' => array(
-                    'type'      => \Braintree_Transaction::SALE,
-                    'amount'    => $bookingAgent->priceToPayNow($totalPrice['total']),
-                    'customerId'    => $user->getID(),
-                    'options'       => array(
-                        'storeInVaultOnSuccess'             => true,
-                        'addBillingAddressToPaymentMethod'  => true
-                    ),
-                ),
-                'redirectUrl' => $this->generateUrl('ZizooBookingBundle_book', array(), true)
-            )
-        );
-        
+                
         // Create form
+        $bookingForm = new BookingForm();
+        $billingForm = new BillingForm($user->getProfile());
+        $bookingForm->setBilling($billingForm);
         $bookingType = $this->container->get('zizoo_booking.booking_type');
-        $form = $this->createForm($bookingType);
+        $form = $this->createForm($bookingType, $bookingForm);
         $errors = array();
         
         $braintreeTransactionKind = $request->query->get('kind', null);
@@ -190,11 +178,30 @@ class BookingController extends Controller
             }
         }
         
+        // Generate Braintree Transparent Redirect (TR) data. Used when JavaScript not enabled.
+        $trData = \Braintree_TransparentRedirect::transactionData(
+            array(
+                'transaction' => array(
+                    'type'      => \Braintree_Transaction::SALE,
+                    'amount'    => $bookingAgent->priceToPayNow($totalPrice['total'], true),
+                    'customerId'    => $user->getID(),
+                    'options'       => array(
+                        'storeInVaultOnSuccess'             => true,
+                        'addBillingAddressToPaymentMethod'  => true
+                    ),
+                ),
+                'redirectUrl' => $this->generateUrl('ZizooBookingBundle_book', array(), true)
+            )
+        );
+        
+        $cut = $this->container->getParameter('zizoo_booking.cut_amount');
+        $v = $form->createView();
         $clientSideBraintreeKey = $this->container->getParameter('braintree_client_side_key');
         return $this->render('ZizooBookingBundle:Booking:book.html.twig', array('boat'              => $boat,
                                                                                 'book_boat'         => $bookBoat,
                                                                                 'total_price'       => $totalPrice,
-                                                                                'price_to_pay_now'  => $bookingAgent->priceToPayNow($totalPrice['total']),
+                                                                                'cut'               => $cut,
+                                                                                'price_to_pay_now'  => $bookingAgent->priceToPayNow($totalPrice['total'], $bookingForm->getInstalmentOption()=='one'),
                                                                                 'client_key'        => $clientSideBraintreeKey,
                                                                                 'tr_data'           => $trData,
                                                                                 'braintree_action'  => \Braintree_TransparentRedirect::url(),

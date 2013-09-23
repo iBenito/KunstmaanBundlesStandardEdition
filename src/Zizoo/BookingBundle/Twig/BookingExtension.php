@@ -4,9 +4,16 @@ namespace Zizoo\BookingBundle\Twig;
 
 use Zizoo\BookingBundle\Entity\Payment;
 use Zizoo\BookingBundle\Entity\Booking;
+use Zizoo\BookingBundle\Service\BookingAgent;
+
 
 class BookingExtension extends \Twig_Extension
 {
+    protected $bookingAgent;
+    
+    public function __construct(BookingAgent $bookingAgent) {
+        $this->bookingAgent = $bookingAgent;
+    }
     
     public function getFilters()
     {
@@ -15,7 +22,8 @@ class BookingExtension extends \Twig_Extension
             'Booking_amountPaid'        => new \Twig_Filter_Method($this, 'amountPaid'),
             'Booking_amountOutstanding' => new \Twig_Filter_Method($this, 'amountOutstanding'),
             'Booking_numberOfDays'      => new \Twig_Filter_Method($this, 'numberOfDays'),
-            'Booking_simplePrice'             => new \Twig_Filter_Method($this, 'displaySimplePrice'),
+            'Booking_simplePrice'       => new \Twig_Filter_Method($this, 'displaySimplePrice'),
+            'Booking_priceToPayNow'     => new \Twig_Filter_Method($this, 'priceToPayNow'),
         );
     }
     
@@ -56,6 +64,11 @@ class BookingExtension extends \Twig_Extension
         if (!$from || !$to) return '...';
         $interval = $from->diff($to);
         return $interval->days;
+    }
+    
+    public function priceToPayNow(Booking $booking, $fullAmountUpfront)
+    {
+        
     }
     
     public function getName()

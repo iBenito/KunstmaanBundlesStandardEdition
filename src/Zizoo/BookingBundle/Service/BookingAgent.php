@@ -28,9 +28,13 @@ class BookingAgent {
         $this->container = $container;
     }
     
-    public static function priceToPayNow($price)
+    public static function priceToPayNow($price, $fullAmountUpfront)
     {
-        return number_format($price/2, 2);
+        if ($fullAmountUpfront===true){
+            return $price;
+        } else {
+            return $price/2;
+        }
     }
      
     private function makePayment(Booking $booking, $amount, $providerId, $flush=true, $provider=Payment::PROVIDER_BRAINTREE, $status=Payment::BRAINTREE_STATUS_INITIAL)
@@ -240,7 +244,7 @@ class BookingAgent {
         try {
             $result = \Braintree_Transaction::sale(array(
                 'customerId'    => $user->getID(),
-                'amount'        => $this->priceToPayNow($price),
+                'amount'        => $this->priceToPayNow($price, $booking->getInstalmentOption()=='one'),
                 'creditCard'    => array(
                     'cardholderName'        => $booking->getCreditCard()->getCardHolder(),
                     'number'                => $booking->getCreditCard()->getCreditCardNumber(),

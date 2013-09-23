@@ -13,6 +13,7 @@ class Booking
     protected $billingAddress;
     protected $customFields;
     protected $message;
+    protected $instalmentOption;
     
     public function getCustomFields()
     {
@@ -66,6 +67,17 @@ class Booking
     public function setMessageToOwner($message)
     {
         $this->message = $message;
+        return $this;
+    }
+    
+    public function getInstalmentOption()
+    {
+        return $this->instalmentOption;
+    }
+    
+    public function setInstalmentOption($instalmentOption)
+    {
+        $this->instalmentOption;
         return $this;
     }
 }

@@ -60,7 +60,7 @@
             </div>
             <!-- end:summary -->  
         </form>
-        {% if valid == true  %}
+        {% if valid == true %}
             <form id="booking_form" action="{{ book_url }}" method="get">
                 <input name="zizoo_boat_book[reservation_from]" type="hidden" value="{{ form.vars.value.reservationRange.reservationFrom is empty ? "" : form.vars.value.reservationRange.reservationFrom|date }}" autocomplete="off" />
                 <input name="zizoo_boat_book[reservation_to]" type="hidden" value="{{ form.vars.value.reservationRange.reservationTo is empty ? "" : form.vars.value.reservationRange.reservationTo|date }}" autocomplete="off" />
@@ -73,7 +73,7 @@
 
         <div id="booking_coming_soon" style="display: none">
             <h1>Hold tight!</h1>
-            <h2>Booking functionality is coming soon!</h2>
+            <h2>Booking functionality is not available right now.</h2>
         </div>
        
     </div>
@@ -127,9 +127,12 @@
         });
         
         $('#booking_form').submit(function(){
+            {% if bookings_allowed == true %}
             //window.location.href = $('#booking_form').attr('action');
-            openBookingComingSoonDialog();
-            return false;
+            {% else %}
+                openBookingComingSoonDialog();
+                return false;
+            {% endif %}
         });
 
         $("#booking_price_container input[type='radio'], #booking_price_container input[type='checkbox']").checkBox();
