@@ -23,7 +23,7 @@ class Boat extends BaseEntity
     protected $charter;
     
     /**
-     * @ORM\Column(type="text", nullable=TRUE)
+     * @ORM\Column(type="string", length=400, nullable=TRUE)
      */
     protected $title;
     

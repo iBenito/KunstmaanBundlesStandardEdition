@@ -27,10 +27,10 @@ class AddressType extends AbstractType
             ->add('locality', 'text', array('label' => array( 'value' => 'zizoo_address.label.locality',
                                                                     'class' => 'location'),
                                             'property_path' => 'locality'))
-            ->add('sub_locality', 'text', array('required' => false,
-                                                'label'     => array(   'value' => 'zizoo_address.label.sub_locality',
-                                                                        'class' => 'location'),
-                                                'property_path' => 'subLocality'))
+//            ->add('sub_locality', 'text', array('required' => false,
+//                                                'label'     => array(   'value' => 'zizoo_address.label.sub_locality',
+//                                                                        'class' => 'location'),
+//                                                'property_path' => 'subLocality'))
             ->add('country', 'entity', array(
                                             'class' => 'ZizooAddressBundle:Country',
                                             'query_builder' => function(EntityRepository $er) {

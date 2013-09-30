@@ -349,7 +349,9 @@ listed in a beautiful way.
         $(document).ready(function(){
 
             $(".more a").click(function() {
-                $(this).parent().next(".expand").show();
+                $(this).parent().next(".expand").slideToggle(200, "easeInQuad");
+                console.debug(this.val);
+                $(this).html(($(this).text() == 'Less') ? 'Read on..' : 'Less');
                 return false;
             });
         });

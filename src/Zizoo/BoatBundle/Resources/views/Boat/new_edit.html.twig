@@ -34,6 +34,7 @@
         $(document).ready(function(){
             $( "#zizoo_boat_default_price_choice_nullable_value" ).attr('placeholder', 'per day');
             $( "#zizoo_boat_length" ).attr('placeholder', 'in metres');
+            $( "#zizoo_boat_water_capacity" ).attr('placeholder', 'in litres');
             $('#zizoo_boat_crew_optional input[name="zizoo_boat[crew_optional]"]').change(changeCrew).change();
             {% if boat.id is not null %}
                 changed = false;

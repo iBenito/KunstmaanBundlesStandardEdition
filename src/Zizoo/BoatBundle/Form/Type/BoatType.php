@@ -26,7 +26,8 @@ class BoatType extends AbstractType
                                                                             'has_property_path'     => 'hasDefaultPrice', 
                                                                             'value_property_path'   => 'defaultPrice',
                                                                             'data_class'            => $options['data_class'],
-                                                                            'label'                 => 'Default price'))
+                                                                            'label'                 => array('value' => 'Default Price (€)',
+                                                                                                             'help'  => 'Only if there is a constant price for all periods <br/> otherwise set prices per specific dates/periods in the "Price" field')))
             ->add('minimum_days_choice', 'zizoo_number_nullable', array(    'required'              => $options['required'], 
                                                                             'has_property_path'     => 'hasMinimumDays', 
                                                                             'value_property_path'   => 'minimumDays',
@@ -38,28 +39,29 @@ class BoatType extends AbstractType
             ->add('length', 'number', array('required'  => $options['required']))
             ->add('hull_material', 'text', array('required'  => $options['required']))
             ->add('water_capacity', 'number', array('required'  => $options['required']))
-            ->add('cabins', 'number', array('required'  => $options['required']))
-            ->add('berths', 'number', array('required'  => $options['required']))
-            ->add('bathrooms', 'number', array('required'  => $options['required']))
-            ->add('toilets', 'number', array('required'  => $options['required']))
-            ->add('showers', 'number', array('required'  => $options['required']))
-            ->add('nr_guests', 'number', array('required'  => $options['required']))
-            ->add('crew', new BoatCrewType(), array('label'             => 'Crew',
-                                                    'required'          => $options['required']))
-            ->add('address', 'zizoo_address', array('label'             => false,
-                                                    'property_path'     => 'address',
-                                                    'validation_groups' => $options['validation_groups'],
-                                                    'data_class'        => 'Zizoo\AddressBundle\Entity\BoatAddress',
-                                                    'map_show'          => $options['map_show'],
-                                                    'map_update'        => $options['map_update'],
-                                                    'map_drag'          => $options['map_drag'],
-                                                    'required'          => $options['required']))
+            ->add('cabins', 'number', array('required'  => $options['required'],'label' => '# of Cabins'))
+            ->add('berths', 'number', array('required'  => $options['required'],'label' => '# of Berths'))
+            ->add('bathrooms', 'number', array('required'  => $options['required'],'label' => '# of Bathrooms'))
+            ->add('toilets', 'number', array('required'  => $options['required'],'label' => '# of Toilets'))
+            ->add('showers', 'number', array('required'  => $options['required'],'label' => '# of Showers'))
+            ->add('nr_guests', 'number', array('required'  => $options['required'],'label' => '# of Guests'))
+            ->add('crew', new BoatCrewType(), array('required'  => $options['required'],
+                                                    'label' => array('value' => 'Crew',
+                                                                     'help'  => 'Crew Info')))
             ->add('engine_type', 'entity', array(
                 'class'     => 'ZizooBoatBundle:EngineType',
                 'property'  => 'name',
                 'required'  => $options['required']))
-            ->add('fuel', 'text', array('required'  => $options['required']))
-            ->add('fuel_capacity', 'number', array('required'  => $options['required']));
+            ->add('fuel', 'text', array('required'  => $options['required'],'label' => 'Fuel Type'))
+            ->add('fuel_capacity', 'number', array('required'  => $options['required']))
+            ->add('address', 'zizoo_address', array('label'             => false,
+                'property_path'     => 'address',
+                'validation_groups' => $options['validation_groups'],
+                'data_class'        => 'Zizoo\AddressBundle\Entity\BoatAddress',
+                'map_show'          => $options['map_show'],
+                'map_update'        => $options['map_update'],
+                'map_drag'          => $options['map_drag'],
+                'required'          => $options['required']));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
