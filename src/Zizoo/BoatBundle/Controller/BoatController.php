@@ -259,7 +259,9 @@ class BoatController extends Controller
         $boat->setHasDefaultPrice(false);
         $boat->setHasMinimumDays(false);
         
-        $form = $this->createForm(new BoatType(), $boat, array('validation_groups' => array('boat_create'), 'required' => false));
+        $form = $this->createForm(new BoatType(), $boat, array('validation_groups'  => array('boat_create'), 
+                                                                'required'          => false,
+                                                                'map_update'        => true));
         
         if ($request->isMethod('post')){
             $form->bind($request);
