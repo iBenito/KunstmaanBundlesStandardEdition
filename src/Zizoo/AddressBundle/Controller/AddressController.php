@@ -66,7 +66,7 @@ class AddressController extends Controller
         $pagination->setCustomParameters(array(
             'view'          => $view,
             'order_options' => array(
-                                        'date'  => 'Date',
+                                        'date'  => 'Date added',
                                         'price' => 'Price'
                                     ),
             'order_by'      => $orderBy,

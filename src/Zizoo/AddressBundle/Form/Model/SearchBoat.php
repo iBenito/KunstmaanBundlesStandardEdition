@@ -63,6 +63,9 @@ class SearchBoat
     
     public function setReservationFrom($from)
     {
+        if ($from instanceof \DateTime){
+            $from = $from->setTime(12,0,0);
+        }
         $this->reservation_from = $from;
         return $this;
     }
@@ -74,6 +77,9 @@ class SearchBoat
     
     public function setReservationTo($to)
     {
+        if ($to instanceof \DateTime){
+            $to = $to->setTime(23,59,59);
+        }
         $this->reservation_to = $to;
         return $this;
     }

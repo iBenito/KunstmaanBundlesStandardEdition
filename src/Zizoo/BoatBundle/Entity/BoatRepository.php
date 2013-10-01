@@ -7,11 +7,13 @@ use Zizoo\CharterBundle\Entity\Charter;
 use Zizoo\BoatBundle\Extensions\DoctrineExtensions\CustomWalker\SortableNullsWalker;
 use Zizoo\AddressBundle\Form\Model\SearchBoat;
 use Zizoo\AddressBundle\Form\Model\FilterBoat;
+use Zizoo\ReservationBundle\Entity\Reservation;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\Query\Expr;
 /**
  * BoatRepository
  *
@@ -56,15 +58,24 @@ class BoatRepository extends EntityRepository
                    ->select('boat, image, address, country, reservation, price, boat_type, equipment')
                    ->leftJoin('boat.image', 'image')
                    ->leftJoin('boat.address', 'address')
-                   ->leftJoin('boat.reservation', 'reservation')
                    ->leftJoin('boat.price', 'price')
                    ->leftJoin('boat.address', 'boat_address')
                    ->leftJoin('address.country', 'country')
+                   ->leftJoin('boat.reservation', 'reservation')
                    ->leftJoin('boat.boatType', 'boat_type')
                    ->leftJoin('boat.equipment', 'equipment');
         
-        // Optionally search by boat location or boat availability location
         $firstWhere = true;
+        // If check-in and check-out are defined and "available only" is true, don't get boats with reservation (accepted, self, hold) for specified dates
+        $reservationStatus = array(Reservation::STATUS_ACCEPTED, Reservation::STATUS_SELF, Reservation::STATUS_HOLD);
+        if ($searchBoat->getReservationFrom() && $searchBoat->getReservationTo() && $filterBoat && $filterBoat->getAvailableOnly()){
+            $qb->where('(reservation.check_in >= :res_to OR reservation.check_out <= :res_from) OR reservation.status NOT IN ('.  implode(',', $reservationStatus).') OR reservation.id IS NULL')
+                    ->setParameter('res_to', $searchBoat->getReservationTo())
+                    ->setParameter('res_from', $searchBoat->getReservationFrom());
+            $firstWhere = false;
+        }
+        
+        // Optionally search by boat location or boat availability location
         if ($searchBoat->getLocation()){
             $qb->where('address.locality = :search')
                ->orWhere('address.subLocality = :search')
@@ -215,22 +226,29 @@ class BoatRepository extends EntityRepository
 //            $sortableNullsWalker = SortableNullsWalker::NULLS_FIRST;
 //        }
 
+        
         if ($orderBy=='price'){
-            $hintArray = array(
-                            'reservation.id'    => SortableNullsWalker::NULLS_FIRST,
-                            'boat.lowestPrice'  => 'asc'
-                        );
-        } else {
-            $hintArray = array(
-                            'reservation.id'    => SortableNullsWalker::NULLS_FIRST,
-                            'boat.created'      => 'desc'
-                        );
+//            $qb->addOrderBy('reservation.id, boat.lowestPrice', 'asc');
+//            $hintArray = array(
+//                            'reservation.id'    => SortableNullsWalker::NULLS_LAST,
+//                            'boat.lowestPrice'  => 'asc'
+//                        );
+            $qb->addOrderBy('boat.lowestPrice', 'asc');
+        }  else {
+            // Date
+//            $qb->addOrderBy('reservation.id, boat.created', 'desc');
+//            $hintArray = array(
+//                            'reservation.id'    => SortableNullsWalker::NULLS_FIRST,
+//                            'boat.created, boat.id'      => 'desc'
+//                        );
+            $qb->addOrderBy('boat.created', 'desc');
         }
         
-        return $qb->getQuery()
-                  ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'Zizoo\BoatBundle\Extensions\DoctrineExtensions\CustomWalker\SortableNullsWalker')
-                  ->setHint('SortableNullsWalker.fields',
-                        $hintArray);
+//        return $qb->getQuery()
+//                  ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'Zizoo\BoatBundle\Extensions\DoctrineExtensions\CustomWalker\SortableNullsWalker')
+//                  ->setHint('SortableNullsWalker.fields',
+//                        $hintArray);
+        return $qb->getQuery();
     }
     
     /**

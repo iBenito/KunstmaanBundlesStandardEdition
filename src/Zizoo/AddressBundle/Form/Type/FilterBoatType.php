@@ -19,6 +19,16 @@ class FilterBoatType extends AbstractType
         $em                 = $this->container->get('doctrine.orm.entity_manager');
         $minMaxBoatValues   = $em->getRepository('ZizooBoatBundle:Boat')->getMaxBoatValues();
         
+        $builder->add('available_only', 'choice', array(
+                                                'choices'   => array('true' => 'Only show available'),
+                                                'required'  => false,
+                                                'expanded'  => true,
+                                                'multiple'  => true,
+                                                'label'     => array(   'value' => 'Availability',
+                                                                        'class' => 'filter',
+                                                                        'help'  => ' Only show boats which are available<br/>for specified dates ')
+        ));
+        
         $builder->add('boat_type', 'entity', array(
                                                     'class'     => 'ZizooBoatBundle:BoatType',
                                                     'multiple'  => true,

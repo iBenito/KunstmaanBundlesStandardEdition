@@ -122,18 +122,22 @@ class Messenger {
     public function sendRegistrationEmail(User $to){
         $link = $this->container->get('router')->generate('ZizooBaseBundle_homepage', array(), true);
         $twig = $this->container->get('twig');
-        $template = $twig->loadTemplate('ZizooUserBundle:Email:welcome.html.twig');
+
+        $templateHtml   = $twig->loadTemplate('ZizooUserBundle:Email:welcome.html.twig');
+        $templateTxt    = $twig->loadTemplate('ZizooUserBundle:Email:welcome.txt.twig');
+        
         $context = array(   'link'      => $link,
                             'recipient' => $to);
-        $subject = $template->renderBlock('subject', $context);
-        $textBody = $template->renderBlock('body_text', $context);
-        $htmlBody = $template->renderBlock('body_html', $context);
+        
+        $subject = $templateHtml->renderBlock('subject', $context);
+        $textBody = $templateTxt->render($context);
+        $htmlBody = $templateHtml->render($context);
 
         $from = $this->container->getParameter('email_register');
         $name = $this->container->hasParameter('email_register_name') ? $this->container->getParameter('email_register_name') : null;
         $email = \Swift_Message::newInstance()
             ->setSubject($subject)
-            ->setFrom($this->container->getParameter('email_register'))
+            ->setFrom($from, $name)
             ->setTo($to->getEmail());
 
         if (!empty($htmlBody)) {

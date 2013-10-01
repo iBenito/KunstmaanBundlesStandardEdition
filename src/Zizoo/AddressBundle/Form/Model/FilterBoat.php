@@ -3,6 +3,8 @@ namespace Zizoo\AddressBundle\Form\Model;
 
 class FilterBoat
 {
+    protected $available_only;
+    
     protected $boat_type;
   
     protected $crew;
@@ -19,6 +21,17 @@ class FilterBoat
     protected $equipment;
 
 
+    public function getAvailableOnly()
+    {
+        return count($this->available_only)>0;
+    }
+    
+    public function setAvailableOnly($availableOnly)
+    {
+        $this->available_only = $availableOnly;
+        return $this;
+    }
+    
     public function getBoatType()
     {
         return $this->boat_type;
