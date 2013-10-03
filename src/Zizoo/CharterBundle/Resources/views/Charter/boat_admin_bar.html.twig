@@ -16,7 +16,7 @@
                 </figcaption>
             </figure>
             <div class="left">
-                ?? Reviews
+                {#?? Reviews#}
             </div>
             <div class="right">
                 from <strong>{{ boat.lowestPrice|number_format(2) }} &euro;</strong>
@@ -49,15 +49,15 @@
             {% if boat.active %}
                 <li><a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" class="button blue medium view_btn">View</a></li>
             {% else %}
-                <li><a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" class="button blue disabled medium view_btn">View</a></li>
+                <li><a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" class="button blue medium disabled view_btn">View</a></li>
             {% endif %}
-            <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterEditBoat', {id: boat.id}) }}" class="button blue medium">Edit</a></li>
-            <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterEditPriceBoat', {id: boat.id}) }}" class="button blue light">Calendar</a></li>
+            <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterEditBoat', {id: boat.id}) }}" class="button blue medium light">Edit</a></li>
+            <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterEditPriceBoat', {id: boat.id}) }}" class="button medium blue light">Calendar</a></li>
             <li>
                 {% if boat.deleted is null %}
-                    <a href="{{ path('ZizooBaseBundle_Dashboard_CharterDeleteBoat', {id: boat.id}) }}" class="button blue light">Delete</a>
+                    <a href="{{ path('ZizooBaseBundle_Dashboard_CharterDeleteBoat', {id: boat.id}) }}" class="button medium red light">Delete</a>
                 {% else %}
-                    <a href="{{ path('ZizooBaseBundle_Dashboard_CharterDeleteBoat', {id: boat.id}) }}" class="button red medium">Undelete</a>
+                    <a href="{{ path('ZizooBaseBundle_Dashboard_CharterDeleteBoat', {id: boat.id}) }}" class="button medium red">Undelete</a>
                 {% endif %}
                 </a>
             </li>
