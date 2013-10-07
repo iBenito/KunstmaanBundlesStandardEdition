@@ -670,7 +670,7 @@
     top: 0;
     left: 0;
     max-width: 140px;
-    overflow: hidden;
+    overflow: visible;
     min-width: 140px;
     height: 100%;
     font: italic 14px/36px 'Asap', Arial;
@@ -3240,6 +3240,7 @@ a:hover .icon.add {
     color: #fff;
     padding: 5px;
     background: url(../images/black-70.png);
+    background-repeat: repeat !important;
     border-radius: 5px;
     z-index: 999;
     visibility: hidden;

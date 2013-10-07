@@ -26,12 +26,6 @@ class BoatValidator extends ConstraintValidator
         }
         
         if ($boat->getCrewOptional()){
-            if (!$boat->getNumCrew()){
-                $this->context->addViolationAt('numCrew', $constraint->messageNumCrew, array(), null);
-            }
-            if (!is_int($boat->getNumCrew())){
-                $this->context->addViolationAt('numCrew', $constraint->messageNumCrew, array(), null);
-            }
             if (!$boat->getCrewPrice()){
                 $this->context->addViolationAt('crewPrice', $constraint->messageCrewPrice, array(), null);
             }

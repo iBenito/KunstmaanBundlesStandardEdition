@@ -19,12 +19,8 @@ class BoatCrewType extends AbstractType
                                                         'multiple'      => false,
                                                         'choices'       => array(false => 'Included', true => 'Optional'),
                                                         'property_path' => 'crewOptional'))
-                
-            ->add('num_crew', 'number', array(  'label'         => 'Number of crew members provided:',
-                                                'required'      => true,
-                                                'property_path' => 'numCrew'))
-                
-            ->add('crew_price', 'number', array('label'         => 'Total crew price per day (€):',
+
+            ->add('crew_price', 'number', array('label'         => 'Total price per day (€):',
                                                 'required'      => true,
                                                 'property_path' => 'crewPrice'));
     }

@@ -1,5 +1,9 @@
 {% set step = app.session.get('step') %}
 
+{% block tabs %}
+    {{ render(controller('ZizooBaseBundle:Dashboard:charterTabs', { 'current': 'boats' })) }}
+{% endblock %}
+
 {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['calendar_route'], 'routes': routes }  %}
 
 {% block javascripts %}
