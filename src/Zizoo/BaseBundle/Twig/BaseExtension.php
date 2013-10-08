@@ -66,6 +66,7 @@ class BaseExtension extends \Twig_Extension
         if ($completeness <= $max){
             $output[] = '<span class="icon cross"></span>'.PHP_EOL;
         }
+        $output[] = '<a href="#" class="help"><span class="tooltip">Complete Profile Requires:</br></br>- Profile Details</br>- Profile Picture</br>- Verification</span></a>'.PHP_EOL;
         $output[] = '</h4>'.PHP_EOL;
         $output[] = '<ul class="clearfix">'.PHP_EOL;
 

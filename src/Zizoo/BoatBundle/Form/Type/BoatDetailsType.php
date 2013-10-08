@@ -14,8 +14,10 @@ class BoatDetailsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title')
-            ->add('description')
+            ->add('title', 'text', array('label' => array('value' => 'Title',
+                                                           'help' => 'Add an appealing title to market your boat')))
+            ->add('description', 'textarea', array('label' => array('value' => 'Description',
+                                                           'help' => 'A catchy description makes your boat more attractive')))
             ->add('amenities', 'entity', array(
                 'class'     => 'ZizooBoatBundle:Amenities',
                 'multiple'  => true,

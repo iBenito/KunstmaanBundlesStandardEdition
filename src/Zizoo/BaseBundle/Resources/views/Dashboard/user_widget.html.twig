@@ -2,16 +2,18 @@
 
 <!-- start:avatar -->
 <div class="avatar">
-    <figure id="user_avatar">
-        {% if user.profile.avatar|length > 0 %}
-            <img src="{{ asset(user.profile.avatar.first|pictureWebPath|imagine_filter('thumb_190x_')) }}" alt="{{ user.profile.firstName }} {{ user.profile.lastName }}" class="large" id="avatar_img" />
-        {% else %}
-            <img src="{{ asset('bundles/zizoobase/images/default/avatar-user.png'|imagine_filter('thumb_190x_')) }}" alt="Profile avatar not set" id="avatar_img" />
-        {% endif %}
-        <figcaption>
-            {{ user.profile.firstName }} {{ user.profile.lastName }}
-        </figcaption>
-    </figure>
+    <a href="{{ path('ZizooProfileBundle_Profile_Show', {username: user.username}) }}" title="View Profile">
+        <figure id="user_avatar">
+            {% if user.profile.avatar|length > 0 %}
+                <img src="{{ asset(user.profile.avatar.first|pictureWebPath|imagine_filter('thumb_190x_')) }}" alt="{{ user.profile.firstName }} {{ user.profile.lastName }}" class="large" id="avatar_img" />
+            {% else %}
+                <img src="{{ asset('bundles/zizoobase/images/default/avatar-user.png'|imagine_filter('thumb_190x_')) }}" alt="Profile avatar not set" id="avatar_img" />
+            {% endif %}
+            <figcaption>
+                {{ user.profile.firstName }} {{ user.profile.lastName }}
+            </figcaption>
+        </figure>
+    </a>
     <section class="completeness">
         {{ completeness|completeness }}
     </section>

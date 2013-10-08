@@ -16,17 +16,17 @@
             </td>
             <td>
                 <table id="{{ id }}_table_inner" class="{% if form.crew_optional.vars.value[1] == false %}hidden{% endif %}">
-                    <tr>
-                        <td>{{ form_label(form.num_crew) }}</td>
-                        <td>{{ form_widget(form.num_crew) }}</td>
-                        {% if form.num_crew.vars.errors|length > 0 %}
-                        <tr>
-                            <td colspan="2">
-                                {{ form_errors(form.num_crew) }}
-                            </td>
-                        </tr>
-                        {% endif %}
-                    </tr>
+                    {#<tr>#}
+                        {#<td>{{ form_label(form.num_crew) }}</td>#}
+                        {#<td>{{ form_widget(form.num_crew) }}</td>#}
+                        {#{% if form.num_crew.vars.errors|length > 0 %}#}
+                        {#<tr>#}
+                            {#<td colspan="2">#}
+                                {#{{ form_errors(form.num_crew) }}#}
+                            {#</td>#}
+                        {#</tr>#}
+                        {#{% endif %}#}
+                    {#</tr>#}
                     <tr>
                         <td>{{ form_label(form.crew_price) }}</td>
                         <td>{{ form_widget(form.crew_price) }}</td>

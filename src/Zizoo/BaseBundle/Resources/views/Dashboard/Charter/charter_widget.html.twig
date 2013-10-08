@@ -2,16 +2,18 @@
 
 <!-- start:avatar -->
 <div class="avatar">
-    <figure id="charter_logo">
-        {% if charter.logo is not null %}
-            <img src="{{ asset(charter.logo|pictureWebPath) }}" alt="{{ charter.charterName }}" class="large" id="logo_img" />
-        {% else %}
-            <img src="{{ asset('bundles/zizoobase/images/default/avatar-user.png'|imagine_filter('thumb_190x_')) }}" alt="Charter logo not set" id="logo_img" />
-        {% endif %}
-        <figcaption>
-            {{ charter.charterName }}
-        </figcaption>
-    </figure>
+    <a href="{{ path('ZizooCharterBundle_Charter_Show', {id: charter.id}) }}" title="View Profile">
+        <figure id="charter_logo">
+            {% if charter.logo is not null %}
+                <img src="{{ asset(charter.logo|pictureWebPath) }}" alt="{{ charter.charterName }}" class="large" id="logo_img" />
+            {% else %}
+                <img src="{{ asset('bundles/zizoobase/images/default/avatar-user.png'|imagine_filter('thumb_190x_')) }}" alt="Charter logo not set" id="logo_img" />
+            {% endif %}
+            <figcaption>
+                {{ charter.charterName }}
+            </figcaption>
+        </figure>
+    </a>
     <section class="completeness">
         {{ completeness|completeness }}
     </section>

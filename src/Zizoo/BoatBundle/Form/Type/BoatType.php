@@ -46,8 +46,13 @@ class BoatType extends AbstractType
             ->add('showers', 'number', array('required'  => $options['required'],'label' => '# of Showers'))
             ->add('nr_guests', 'number', array('required'  => $options['required'],'label' => '# of Guests'))
             ->add('crew', new BoatCrewType(), array('required'  => $options['required'],
-                                                    'label' => array('value' => 'Crew',
-                                                                     'help'  => 'Crew Info')))
+                                                    'label' => array('value' => 'Skipper',
+                                                                     'help'  => 'Included: This boat can only be rented with the provided skipper</br>
+                                                                                 Optional: This boat can be rented with or without the skipper</br>
+                                                                                 </br>
+                                                                                 If Optional is seleceted, comlete:</br>
+                                                                                    - number of crew members provided</br>
+                                                                                    - total crew price per day')))
             ->add('engine_type', 'entity', array(
                 'class'     => 'ZizooBoatBundle:EngineType',
                 'property'  => 'name',

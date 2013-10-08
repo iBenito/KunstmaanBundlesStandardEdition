@@ -23,13 +23,13 @@
         "liip/imagine-bundle": "*",
         "knplabs/knp-paginator-bundle": "*",
         "braintree/braintree_php": "dev-master",
-        "friendsofsymfony/message-bundle": "dev-master",
+        "friendsofsymfony/message-bundle": "1.2.0",
         "punkave/symfony2-file-uploader-bundle": "dev-master",
         "egeloen/google-map-bundle": "*",
         "willdurand/geocoder": "dev-master",
         "mtdowling/cron-expression": "1.0.*",
-        "jms/serializer-bundle": "dev-master",
-        "lankit/datatables-bundle": "e7f6b855e648ee7473d424c349d3f40fbdd3cb06"
+        "gergelypolonkai/smssender": "dev-master",
+        "gergelypolonkai/smssender-bundle": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*"

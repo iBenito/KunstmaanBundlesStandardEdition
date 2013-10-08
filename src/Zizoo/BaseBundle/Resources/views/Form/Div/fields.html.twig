@@ -3,14 +3,14 @@
 {% block form_label %}
 {% spaceless %}
     {% set default_class = block_prefixes|parentBlockPrefix %}
-    
+
     {% set default_class = form|rootLabel(default_class) %}
-    
+
     {% if label is not sameas(false) %}
         {% if not compound %}
             {% set label_attr = label_attr|merge({'for': id}) %}
         {% endif %}
-        
+
         {% if required %}
             {% if label['class'] is defined %}
                 {% set class_attr = (label_attr.class|default(default_class) ~ ' required')|trim ~ ' ' ~ label['class']|trim %}
