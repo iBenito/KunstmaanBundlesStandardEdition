@@ -26,6 +26,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use LanKit\DatatablesBundle\Datatables\Datatable;
+
 class CharterController extends Controller
 {
     /**
@@ -342,6 +344,22 @@ class CharterController extends Controller
         }        
     }
 
+    public function bookingsJson2Action()
+    {
+        $datatable = $this->get('lankit_datatables')->getDatatable('ZizooReservationBundle:Reservation');
+
+         // The default type for all joins is inner. Change it to left if desired.
+        $datatable->setDefaultJoinType(Datatable::JOIN_LEFT);
+
+        // Can set JOIN_LEFT or JOIN_INNER on a per-column basis
+        //$datatable->setJoinType('customer', Datatable::JOIN_INNER);
+
+        // Add the $datatable variable, or other needed variables, to the callback scope
+        
+        
+        return $datatable->getSearchResults();
+    }
+    
     public function bookingsJsonAction() {
          $user       = $this->getUser();
         $charter    = $user->getCharter();
@@ -362,8 +380,8 @@ class CharterController extends Controller
                                                     boat.id as boat_id, 
                                                     boat.name as boat_name, 
                                                     reservation.created as created,
-                                                    reservation.check_in as check_in, 
-                                                    reservation.check_out as check_out, 
+                                                    reservation.checkIn as check_in, 
+                                                    reservation.checkOut as check_out, 
                                                     guest.id as guest_id,
                                                     guest.username as guest_username,
                                                     reservation.status as reservation_status,
@@ -393,6 +411,7 @@ class CharterController extends Controller
 
         return new JsonResponse($result);
     }
+   
     
     /**
      * @Template()
@@ -401,109 +420,160 @@ class CharterController extends Controller
     {
         $user       = $this->getUser();
         $charter    = $user->getCharter();
+        $request    = $this->getRequest();
+        $em         = $this->getDoctrine()->getManager();
         
         if (!$charter) {
             return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
         }
         
-        $router     = $this->container->get('router');
-        $grid       = $this->container->get('jq_grid_custom');
-        
-        //OPTIONAL
-        $grid->setGetDataFunction(function($grid){ CharterController::getBookingsData($grid); });
-        $grid->setName('grid_bookings');
-        $grid->setCaption('Bookings');
-        $grid->setOptions(array('height' => 'auto', 
-                            'width' => '910',
-                            'resizeStop'    => 'resizeColumn',
-                            'jsonReader' => array(  'repeatitems' => false, 
-                                                    'root' => 'rows'
-                                            )
-                         ));
-        $grid->setRouteForced($router->generate('ZizooCharterBundle_Charter_Bookings'));
-        $grid->setHideIfEmpty(false);
-
-        //MANDATORY
-        $em = $this->getDoctrine()->getManager();
-
-        $qb = $em->createQueryBuilder()->from('ZizooReservationBundle:Reservation', 'reservation')
-                                        ->leftJoin('reservation.booking', 'booking')
-                                        ->leftJoin('reservation.boat', 'boat')
-                                        ->leftJoin('boat.charter', 'charter')
-                                        ->leftJoin('reservation.guest', 'guest')
-                                        ->select('reservation.id as reservation_id, 
-                                                    boat.id as boat_id, 
-                                                    boat.name as boat_name, 
-                                                    reservation.created as created,
-                                                    reservation.check_in as check_in, 
-                                                    reservation.check_out as check_out, 
-                                                    guest.id as guest_id,
-                                                    guest.username as guest_username,
-                                                    reservation.status as reservation_status,
-                                                    reservation.hours_to_respond as hours_to_respond,
-                                                    reservation
-                                                    ')
-                                        ->where('charter.id = :charter_id')
-                                        ->setParameter('charter_id', $charter->getId())
-                                        ->groupBy('reservation.id')
-                                        ;
-        
-        
-        $grid->setSource($qb);
-                
-        $extraJS = "";
-        
-        //COLUMNS DEFINITION
-        //public function getReservations(Charter $charter=null, User $user=null, Boat $boat=null, \DateTime $from=null, \DateTime $to=null, $statusArr=null, Reservation $exceptReservation=null)
-        $reservations = $em->getRepository('ZizooReservationBundle:Reservation')->getReservations($charter);
+        // Get predefined search options
         $reservationOptions = array();
-        $reservationOptions[''] = 'All';
+        $boatOptions = array();
         $guestOptions = array();
-        $guestOptions[''] = 'All';
-        foreach ($reservations as $reservation){
-            $reservationOptions[$reservation->getId()] = $reservation->getId();
-            if (!array_key_exists($reservation->getGuest()->getUsername(), $guestOptions)){
-                $guestOptions[$reservation->getGuest()->getUsername()] = $reservation->getGuest()->getUsername();
+        $statusOptions = array();
+        if (!$request->isXmlHttpRequest()){
+            $qb = $em->createQueryBuilder()->from('ZizooReservationBundle:Reservation', 'reservation')
+                                            ->leftJoin('reservation.booking', 'booking')
+                                            ->leftJoin('reservation.boat', 'boat')
+                                            ->leftJoin('boat.charter', 'charter')
+                                            ->leftJoin('reservation.guest', 'guest')
+                                            ->select('DISTINCT reservation.id as reservation_id')
+                                            ->where('charter.id = :charter_id')
+                                            ->setParameter('charter_id', $charter->getId());
+
+            $options = $qb->getQuery()->getResult();
+            foreach ($options as $option){
+                $reservationOptions[$option['reservation_id']] = $option['reservation_id'];
+            }
+            
+            $qb = $em->createQueryBuilder()->from('ZizooBoatBundle:Boat', 'boat')
+                                            ->leftJoin('boat.charter', 'charter')
+                                            ->select('DISTINCT boat.id as boat_id, boat.name as boat_name')
+                                            ->where('charter.id = :charter_id')
+                                            ->setParameter('charter_id', $charter->getId());
+
+            $options = $qb->getQuery()->getResult();
+            foreach ($options as $option){
+                $boatOptions[$option['boat_id']] = $option['boat_name'];
+            }
+            
+            $qb = $em->createQueryBuilder()->from('ZizooReservationBundle:Reservation', 'reservation')
+                                            ->leftJoin('reservation.booking', 'booking')
+                                            ->leftJoin('reservation.boat', 'boat')
+                                            ->leftJoin('boat.charter', 'charter')
+                                            ->leftJoin('reservation.guest', 'guest')
+                                            ->select('DISTINCT guest.id as guest_id, guest.username as guest_name')
+                                            ->where('charter.id = :charter_id')
+                                            ->setParameter('charter_id', $charter->getId());
+
+            $options = $qb->getQuery()->getResult();
+            foreach ($options as $option){
+                $guestOptions[$option['guest_id']] = $option['guest_name'];
+            }
+            
+            $reservationAgent = $this->get('zizoo_reservation_reservation_agent');
+            for ($i=0; $i<Reservation::NUM_STATUS; $i++){
+                $statusOptions[$i] = $reservationAgent->statusToString($i);
             }
         }
-        $grid->addColumn('Booking', array('name' => 'reservation_id', 'jsonmap' => 'cell.0', 'index' => 'booking.id', 'hidden' => false, 'width' => '70', 'sortable' => true, 'search' => true, 'searchoptions' => array('dataInit' => 'function(elem){ createBookingSearch(elem); }')));
         
-        $boats = $em->getRepository('ZizooBoatBundle:Boat')->getCharterBoats($charter);
-        $boatOptions = array();
-        $boatOptions[''] = 'All';
-        foreach ($boats as $boat){
-            $boatOptions[$boat->getName()] = $boat->getName();
+        // Define columns
+        $columns = array(
+            'booking'  => array(
+                'title'             => 'Booking',
+                'property'          => 'id',
+                'bSortable'         => true,
+                'search'            => array(
+                                                'options' => $reservationOptions
+                )
+                                               
+            ),
+            'boat_id' => array(
+                'title'             => 'Boat Id',
+                'property'          => 'boat.id',
+                'bSortable'         => true,
+                'search'            => true,
+                'visible'           => false
+            ),
+            'boat_name' => array(
+                'title'             => 'Boat',
+                'property'          => 'boat.name',
+                'bSortable'         => true,
+                'search'            => array(
+                                                'target'            => 'boat_id',
+                                                'options'           => $boatOptions,
+                                                'initial_option'    => $request->get('boat', '')
+                )
+            ),
+            'guest_id' => array(
+                'title'             => 'Guest ID',
+                'property'          => 'guest.id',
+                'bSortable'         => true,
+                'search'            => true,
+                'visible'           => false
+            ),
+            'guest_name' => array(
+                'title'             => 'Guest',
+                'property'          => 'guest.username',
+                'bSortable'         => true,
+                'search'            => array(
+                                                'target'            => 'guest_id',
+                                                'options'           => $guestOptions,
+                                                'initial_option'    => $request->get('guest', '')
+                )
+            ),
+            'created' => array(
+                'title'             => 'Created',
+                'property'          => 'created',
+                'bSortable'         => true,
+                'search'            => false,
+                'render'            => 'renderDate'
+            ),
+            'check_in' => array(
+                'title'             => 'Check-In',
+                'property'          => 'checkIn',
+                'bSortable'         => true,
+                'search'            => false,
+                'render'            => 'renderDate'
+            ),
+            'check_out' => array(
+                'title'             => 'Check-Out',
+                'property'          => 'checkOut',
+                'bSortable'         => true,
+                'search'            => false,
+                'render'            => 'renderDate'
+            ),
+            'status_id' => array(
+                'title'             => 'Status ID',
+                'property'          => 'status',
+                'bSortable'         => false,
+                'search'            => true,
+                'visible'           => false
+            ),
+            'status' => array(
+                'title'             => 'Status',
+                'property'          => 'status',
+                'bSortable'         => false,
+                'render'            => 'renderStatus',
+                'search'            => array(
+                                                'target'            => 'status_id',
+                                                'options'           => $statusOptions,
+                                                'initial_option'    => $request->get('status', '')
+                )
+            )
+        );
+        // Create datatable
+        $datatable  = $this->get('zizoo_datatables.datatable');
+        $datatable->setColumns($columns);
+        $datatable->setClass('ZizooReservationBundle:Reservation');
+        
+        $viewData = $datatable->render();
+        if (!$request->isXmlHttpRequest()){
+            $viewData['status_options'] = json_encode($statusOptions);
         }
-        $grid->addColumn('Boat Id', array('name' => 'boat_id', 'jsonmap' => 'cell.1', 'index' => 'boat.id', 'hidden' => true, 'width' => '0', 'sortable' => false, 'search' => false));
-        $grid->addColumn('Boat', array('name' => 'boat_name', 'jsonmap' => 'cell.2', 'index' => 'boat.name', 'width' => '150', 'sortable' => true, 'search' => true, 'searchoptions' => array('dataInit' => 'function(elem){ createBoatSearch(elem); }')));
         
-        $grid->addColumn('Created', array('name' => 'created', 'jsonmap' => 'cell.3.date', 'index' => 'booking.created', 'width' => '100', 'formatter' => 'date', 'formatoptions' => array( 'srcformat' => 'Y-m-d H:i:s', 'newformat' => 'd/m/Y' ), 'datepicker' => true, 'sortable' => true, 'search' => true));
-        $grid->addColumn('Check-In', array('name' => 'check_in', 'jsonmap' => 'cell.4.date', 'index' => 'reservation.check_in', 'width' => '100', 'formatter' => 'date', 'formatoptions' => array( 'srcformat' => 'Y-m-d H:i:s', 'newformat' => 'd/m/Y' ), 'datepicker' => true, 'sortable' => true, 'search' => true));
-        $grid->addColumn('Check-Out', array('name' => 'check_out', 'jsonmap' => 'cell.5.date', 'index' => 'reservation.check_out', 'width' => '100', 'formatter' => 'date', 'formatoptions' => array( 'srcformat' => 'Y-m-d H:i:s', 'newformat' => 'd/m/Y' ), 'datepicker' => true, 'sortable' => true, 'search' => true));
-        
-        $grid->addColumn('Guest Id', array('name' => 'guest_id', 'jsonmap' => 'cell.6', 'index' => 'guest.id', 'hidden' => true, 'width' => '0', 'sortable' => false, 'search' => false));
-        $grid->addColumn('Guest', array('name' => 'guest_username', 'jsonmap' => 'cell.7', 'index' => 'guest.username', 'width' => '150', 'sortable' => true, 'search' => true, 'searchoptions' => array('dataInit' => 'function(elem){ createGuestSearch(elem); }')));
-        
-        $reservationAgent = $this->get('zizoo_reservation_reservation_agent');
-        $statusOptions = array();
-        $statusOptions[''] = 'All';
-        for ($i=1; $i<=Reservation::NUM_STATUS; $i++){
-            $statusOptions[''.$i.''] = $reservationAgent->statusToString($i);
-        }
-        $grid->addColumn('Status', array('name' => 'reservation_status', 'jsonmap' => 'cell.8', 'index' => 'reservation.status', 'width' => '100', 'sortable' => false, 'search' => true, 'searchoptions' => array('dataInit' => 'function(elem){ createStatusSearch(elem); }')));
-        
-        $grid->addColumn('Hours', array('name' => 'hours_to_respond', 'jsonmap' => 'cell.9', 'index' => 'reservation.hours_to_respond', 'width' => '75', 'sortable' => false, 'search' => false));
-        
-        $grid->setExtraParams(array(    'bookingOptions'    => $reservationOptions,
-                                        'boatOptions'       => $boatOptions,
-                                        'guestOptions'      => $guestOptions,
-                                        'statusOptions'     => $statusOptions,
-                                        'loadComplete'      => 'loadComplete',
-                                        'extraJS'           => $extraJS));
-        
-        
-       return $grid->render();
-        
+        return $viewData;
     }
     
     

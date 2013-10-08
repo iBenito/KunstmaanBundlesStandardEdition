@@ -146,8 +146,8 @@ class RegistrationController extends Controller
      */
     public function submittedAction(){
         $request = $this->getRequest();
-        
-        return $this->render('ZizooUserBundle:Registration:submitted.html.twig', array( 'ajax' => $request->isXmlHttpRequest() ));
+        $ajax = $request->isXmlHttpRequest();
+        return $this->render('ZizooUserBundle:Registration:submitted.html.twig', array( 'ajax' => $ajax ));
     }
     
     /**
@@ -502,12 +502,12 @@ class RegistrationController extends Controller
         try {
             $obj = $facebook->api('/me');
         } catch (FacebookApiException $e){
-            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'ZizooUserBundle_register',
+            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'ZizooUserBundle_login_facebook',
                                                                                           'ajax'    => $ajax));
         }
 
         if (!array_key_exists('id', $obj)){
-            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'ZizooUserBundle_register',
+            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array( 'action'  => 'ZizooUserBundle_login_facebook',
                                                                                           'ajax'    => $ajax));
         }
         
@@ -517,15 +517,15 @@ class RegistrationController extends Controller
             // User with Facebook UID already exists - log in
             if ($ajax){
                 $this->doLogin($alreadyExistsUser);
-                return $this->render('ZizooUserBundle:Registration:forward.html.twig', array(   'action' => 'ZizooBaseBundle_Dashboard_UserDashboard',
+                return $this->render('ZizooUserBundle:Registration:forward.html.twig', array(   'action' => 'ZizooUserBundle_login',
                                                                                                 'ajax'    => $ajax));
             } else {
-                return $this->doLogin($alreadyExistsUser, $this->generateUrl('ZizooUserBundle_forward', array('action'  => 'ZizooBaseBundle_Dashboard_UserDashboard',
+                return $this->doLogin($alreadyExistsUser, $this->generateUrl('ZizooUserBundle_forward', array('action'  => 'ZizooUserBundle_login',
                                                                                               'ajax'    => $ajax)));
             }
         } else if ($loggedInUser && $alreadyExistsUser && $loggedInUser->getID() == $alreadyExistsUser->getID()){
             // User with Facebook UID already exists and is already logged in - idiot!
-            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array('action' => 'ZizooBaseBundle_Dashboard_UserDashboard',
+            return $this->render('ZizooUserBundle:Registration:forward.html.twig', array('action' => 'ZizooUserBundle_login',
                                                                                          'ajax'    => $ajax));
         } else if ($loggedInUser && $alreadyExistsUser && $loggedInUser->getID() != $alreadyExistsUser->getID()){
             // User with Facebook UID already exists but another user is already logged in - what to do?

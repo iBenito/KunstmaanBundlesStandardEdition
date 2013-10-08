@@ -21,11 +21,13 @@ class AppKernel extends Kernel
             new JMS\AopBundle\JMSAopBundle(),
             new JMS\DiExtraBundle\JMSDiExtraBundle($this),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle,
             new Liip\ImagineBundle\LiipImagineBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new FOS\MessageBundle\FOSMessageBundle(),
             new PunkAve\FileUploaderBundle\PunkAveFileUploaderBundle(),
             new Ivory\GoogleMapBundle\IvoryGoogleMapBundle(),
+            new LanKit\DatatablesBundle\LanKitDatatablesBundle(),
             new Zizoo\BaseBundle\ZizooBaseBundle(),
             new Zizoo\BoatBundle\ZizooBoatBundle(),
             new Zizoo\UserBundle\ZizooUserBundle(),
@@ -42,6 +44,7 @@ class AppKernel extends Kernel
             new Zizoo\CharterBundle\ZizooCharterBundle(),
             new Zizoo\EventBundle\ZizooEventBundle(),
             new Zizoo\MediaBundle\ZizooMediaBundle(),
+            new Zizoo\DatatablesBundle\ZizooDatatablesBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

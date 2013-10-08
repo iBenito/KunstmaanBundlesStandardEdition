@@ -444,8 +444,10 @@ class DashboardController extends Controller {
      */
     public function charterBookingsAction()
     {
-        $request    = $this->getRequest();
-        $response   = $this->forward('ZizooCharterBundle:Charter:bookings', array(), array('redirect_route' => $request->get('_route')));
+        $request                    = $this->getRequest();
+        $params                     = $request->query->all();
+        $params['redirect_route']   =    $request->get('_route');
+        $response   = $this->forward('ZizooCharterBundle:Charter:bookings', array(), $params);
         
         if ($response->isRedirect()){
             return $this->redirect($response->headers->get('Location'));
@@ -453,12 +455,16 @@ class DashboardController extends Controller {
         
         $user = $this->getUser();
         $charter = $user->getCharter();
-        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter.html.twig', array(
-            'title'     => 'My Bookings',
-            'current'   => 'bookings',
-            'id'        => $charter->getId(),
-            'response'  => $response->getContent()
-        ));
+        if ($response instanceof JsonResponse) {
+            return $response;
+        } else{
+            return $this->render('ZizooBaseBundle:Dashboard:Charter/charter.html.twig', array(
+                'title'     => 'My Bookings',
+                'current'   => 'bookings',
+                'id'        => $charter->getId(),
+                'response'  => $response->getContent()
+            ));
+        }
     }
     
     /**

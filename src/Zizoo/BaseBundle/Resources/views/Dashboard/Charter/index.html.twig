@@ -19,7 +19,7 @@
                 {% set num_alerts = num_alerts + unreadMessages %}
                 {% endif %}
                 {% if reservationRequests > 0 %}
-                <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}"><span class="circle red">{{ reservationRequests }}</span>New Requests</a></li>
+                <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterBookings') }}"><span class="circle red">{{ reservationRequests }}</span>New Requests</a></li>
                 {% set num_alerts = num_alerts + reservationRequests %}
                 {% endif %}
                 {% if receivedPayments > 0 %}

@@ -108,3 +108,9 @@ ZizooCharterBundle_Charter_BookingsJson:
     defaults: { _controller: ZizooCharterBundle:Charter:bookingsJson }
     requirements:
         _method:  GET
+        
+ZizooCharterBundle_Charter_Bookings2Json:
+    pattern:  /bookings_data2
+    defaults: { _controller: ZizooCharterBundle:Charter:bookingsJson2 }
+    requirements:
+        _method:  GET

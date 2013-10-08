@@ -69,7 +69,7 @@ class BoatRepository extends EntityRepository
         // If check-in and check-out are defined and "available only" is true, don't get boats with reservation (accepted, self, hold) for specified dates
         $reservationStatus = array(Reservation::STATUS_ACCEPTED, Reservation::STATUS_SELF, Reservation::STATUS_HOLD);
         if ($searchBoat->getReservationFrom() && $searchBoat->getReservationTo() && $filterBoat && $filterBoat->getAvailableOnly()){
-            $qb->where('(reservation.check_in >= :res_to OR reservation.check_out <= :res_from) OR reservation.status NOT IN ('.  implode(',', $reservationStatus).') OR reservation.id IS NULL')
+            $qb->where('(reservation.checkIn >= :res_to OR reservation.checkOut <= :res_from) OR reservation.status NOT IN ('.  implode(',', $reservationStatus).') OR reservation.id IS NULL')
                     ->setParameter('res_to', $searchBoat->getReservationTo())
                     ->setParameter('res_from', $searchBoat->getReservationFrom());
             $firstWhere = false;

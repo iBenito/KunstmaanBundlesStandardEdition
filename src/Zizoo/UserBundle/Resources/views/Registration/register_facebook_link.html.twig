@@ -13,33 +13,35 @@
 
 {% block body %}
 
-    <div class="facebook_register" id="{% if ajax %}facebook_register_inner_ajax{% else %}facebook_register_inner{% endif %}">
-        <input type="hidden" value="ongoing" id="status" />
-        <div id="fb_profile">
-            <img src="https://graph.facebook.com/{{ data['id'] }}/picture?redirect=true" />
-            <span>{{ data['name'] }}</span>
-            <span><a href="{{ facebook.logoutURL({ next: url('ZizooUserBundle_register', {'relogin': 'true'}) }) }}">Not you?</a></span>
+    <div>
+        <div class="facebook_register" id="{% if ajax %}facebook_register_inner_ajax{% else %}facebook_register_inner{% endif %}">
+            <input type="hidden" value="ongoing" id="status" />
+            <div id="fb_profile">
+                <img src="https://graph.facebook.com/{{ data['id'] }}/picture?redirect=true" />
+                <span>{{ data['name'] }}</span>
+                <span><a href="{{ facebook.logoutURL({ next: url('ZizooUserBundle_register', {'relogin': 'true'}) }) }}">Not you?</a></span>
+            </div>
+            <div>
+                <form action="{{ path('ZizooUserBundle_register_facebook_link')}}" method="post" {{ form_enctype(form) }} class="facebook_register_form">
+                    {{ form_errors(form) }}
+
+                    <div>
+                        {{ form_label(form.user.username) }}
+                        {{ form_errors(form.user.username) }}
+                        {% if unconfirmed_username %}
+                            <ul>
+                                <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooUserBundle_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
+                            </ul>
+                        {% endif %}
+                        {{ form_widget(form.user.username) }}
+                    </div>
+
+                    {{ form_rest(form) }}
+
+                    <input type="submit" />
+                </form>
+            </div
         </div>
-        <div>
-            <form action="{{ path('ZizooUserBundle_register_facebook_link')}}" method="post" {{ form_enctype(form) }} class="facebook_register_form">
-                {{ form_errors(form) }}
-
-                <div>
-                    {{ form_label(form.user.username) }}
-                    {{ form_errors(form.user.username) }}
-                    {% if unconfirmed_username %}
-                        <ul>
-                            <li>It looks like you have previously registered with Zizoo but not completed it by clicking on the link in the confirmation email. Maybe it landed in your spam folder? To resend the confirmation email, <a href="{{ path('ZizooUserBundle_resend_confirmation', {email: unconfirmed_user.getEmail})}}">click here</a>.</li>
-                        </ul>
-                    {% endif %}
-                    {{ form_widget(form.user.username) }}
-                </div>
-
-                {{ form_rest(form) }}
-
-                <input type="submit" />
-            </form>
-        </div
     </div>
     <script type="text/javascript">
         $(document).ready(function(){
