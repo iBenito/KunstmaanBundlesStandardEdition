@@ -3248,6 +3248,7 @@ a:hover .icon.add {
     opacity: 0;
     -webkit-transition: opacity 200ms ease;
     transition: opacity 200ms ease;
+    height: auto !important;
 }
 
 .tooltip:after {
