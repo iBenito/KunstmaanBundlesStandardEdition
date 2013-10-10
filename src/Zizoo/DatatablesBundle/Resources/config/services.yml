@@ -1,0 +1,18 @@
+parameters:
+      zizoo_datatables.base.class: Zizoo\DatatablesBundle\Datatables\Datatable
+      
+      zizoo_datatables.twig_extension.class: Zizoo\DatatablesBundle\Twig\DatatablesExtension
+
+services:
+      zizoo_datatables.datatable:
+          class: %zizoo_datatables.base.class%
+          arguments: ["@service_container"]
+     
+          
+      zizoo_datatables.twig_extension:
+          class: %zizoo_datatables.twig_extension.class%
+          arguments: ["@router"]
+          tags:
+            - { name: twig.extension }
+            
+           

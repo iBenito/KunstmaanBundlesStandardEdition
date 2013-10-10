@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "ea065dd333aa366480135a3658b6d3d5",
+    "hash": "147b3d01710cbe6a9dad155fbbee5bbd",
     "packages": [
         {
             "name": "braintree/braintree_php",
@@ -583,19 +583,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineMigrationsBundle.git",
-                "reference": "3db446747fa70dedb7adbd5413cd87bb5a4ad1bb"
+                "reference": "1a7f58d7639cf65b8fcae56fd9a8f4e42a41a27c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineMigrationsBundle/zipball/3db446747fa70dedb7adbd5413cd87bb5a4ad1bb",
-                "reference": "3db446747fa70dedb7adbd5413cd87bb5a4ad1bb",
+                "url": "https://api.github.com/repos/doctrine/DoctrineMigrationsBundle/zipball/1a7f58d7639cf65b8fcae56fd9a8f4e42a41a27c",
+                "reference": "1a7f58d7639cf65b8fcae56fd9a8f4e42a41a27c",
                 "shasum": ""
             },
             "require": {
                 "doctrine/doctrine-bundle": "~1.0",
                 "doctrine/migrations": "*",
                 "php": ">=5.3.2",
-                "symfony/framework-bundle": ">=2.1.0,<2.4-dev"
+                "symfony/framework-bundle": "~2.1"
             },
             "type": "symfony-bundle",
             "autoload": {
@@ -628,7 +628,7 @@
                 "migrations",
                 "schema"
             ],
-            "time": "2013-09-03 20:38:48"
+            "time": "2013-10-02 14:42:48"
         },
         {
             "name": "doctrine/inflector",
@@ -876,16 +876,16 @@
         },
         {
             "name": "egeloen/google-map",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/egeloen/ivory-google-map.git",
-                "reference": "651b0851a01d34a11de5d548ac810211f15af1a7"
+                "reference": "c7f4bdb614b7fc0f2f16b34f5bf548b2ae4fd729"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/egeloen/ivory-google-map/zipball/651b0851a01d34a11de5d548ac810211f15af1a7",
-                "reference": "651b0851a01d34a11de5d548ac810211f15af1a7",
+                "url": "https://api.github.com/repos/egeloen/ivory-google-map/zipball/c7f4bdb614b7fc0f2f16b34f5bf548b2ae4fd729",
+                "reference": "c7f4bdb614b7fc0f2f16b34f5bf548b2ae4fd729",
                 "shasum": ""
             },
             "require": {
@@ -904,7 +904,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1-dev"
+                    "dev-master": "1.2-dev"
                 }
             },
             "autoload": {
@@ -926,25 +926,25 @@
             "keywords": [
                 "google map"
             ],
-            "time": "2013-08-22 16:54:46"
+            "time": "2013-10-09 16:12:17"
         },
         {
             "name": "egeloen/google-map-bundle",
-            "version": "2.1.1",
+            "version": "2.1.2",
             "target-dir": "Ivory/GoogleMapBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/egeloen/IvoryGoogleMapBundle.git",
-                "reference": "86b217c836b48f8cadb47669bb407035abd0a042"
+                "reference": "267ce10e1ee7bfc424c67b0e336d401c018095af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/egeloen/IvoryGoogleMapBundle/zipball/86b217c836b48f8cadb47669bb407035abd0a042",
-                "reference": "86b217c836b48f8cadb47669bb407035abd0a042",
+                "url": "https://api.github.com/repos/egeloen/IvoryGoogleMapBundle/zipball/267ce10e1ee7bfc424c67b0e336d401c018095af",
+                "reference": "267ce10e1ee7bfc424c67b0e336d401c018095af",
                 "shasum": ""
             },
             "require": {
-                "egeloen/google-map": "1.1.*",
+                "egeloen/google-map": "1.2.*",
                 "php": ">=5.3.0",
                 "symfony/framework-bundle": ">=2.1"
             },
@@ -981,27 +981,27 @@
             "keywords": [
                 "google map"
             ],
-            "time": "2013-08-22 17:01:52"
+            "time": "2013-10-09 16:17:16"
         },
         {
             "name": "friendsofsymfony/message-bundle",
-            "version": "dev-master",
+            "version": "v1.2.0",
             "target-dir": "FOS/MessageBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSMessageBundle.git",
-                "reference": "0891050e6303ab3f2390579875308afa56fc3347"
+                "reference": "df1e0eea3108c73d2e3f747c9fab4b6ca3e3b25c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSMessageBundle/zipball/0891050e6303ab3f2390579875308afa56fc3347",
-                "reference": "0891050e6303ab3f2390579875308afa56fc3347",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSMessageBundle/zipball/df1e0eea3108c73d2e3f747c9fab4b6ca3e3b25c",
+                "reference": "df1e0eea3108c73d2e3f747c9fab4b6ca3e3b25c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
-                "symfony/framework-bundle": "~2.1",
-                "symfony/twig-bundle": "~2.1"
+                "symfony/framework-bundle": ">=2.1,<2.3-dev",
+                "symfony/twig-bundle": ">=2.1,<2.3-dev"
             },
             "suggest": {
                 "doctrine/doctrine-bundle": "dev-master",
@@ -1035,7 +1035,80 @@
                 "messaging",
                 "symfony"
             ],
-            "time": "2013-09-06 08:54:23"
+            "time": "2013-04-12 00:26:30"
+        },
+        {
+            "name": "gergelypolonkai/smssender",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gergelypolonkai/smssender.git",
+                "reference": "0d8da5a8e45f1d76734f3ecd0f076506e5ee2212"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gergelypolonkai/smssender/zipball/0d8da5a8e45f1d76734f3ecd0f076506e5ee2212",
+                "reference": "0d8da5a8e45f1d76734f3ecd0f076506e5ee2212",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "GergelyPolonkai\\SmsSender": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Gergely Polonkai",
+                    "email": "gergely@polonkai.eu"
+                }
+            ],
+            "description": "SMS Sender class to interact with gergelypolonkai/smsgateway",
+            "homepage": "https://github.com/gergelypolonkai/smssender",
+            "keywords": [
+                "sms"
+            ],
+            "time": "2012-10-06 23:37:37"
+        },
+        {
+            "name": "gergelypolonkai/smssender-bundle",
+            "version": "dev-master",
+            "target-dir": "GergelyPolonkai/SmsSenderBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gergelypolonkai/smssender-bundle.git",
+                "reference": "fdde9b5bfa032355ecafc284996c6e8553a3c0dd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gergelypolonkai/smssender-bundle/zipball/fdde9b5bfa032355ecafc284996c6e8553a3c0dd",
+                "reference": "fdde9b5bfa032355ecafc284996c6e8553a3c0dd",
+                "shasum": ""
+            },
+            "require": {
+                "gergelypolonkai/smssender": "dev-master",
+                "symfony/framework-bundle": "2.*"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "GergelyPolonkai\\SmsSenderBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Gergely Polonkai",
+                    "email": "gergely@polonkai.eu"
+                }
+            ],
+            "description": "Symfony2 bundle to interact with gergelypolonkai/smssender",
+            "homepage": "https://github.com/gergelypolonkai/smssender-bundle",
+            "time": "2012-12-20 18:13:08"
         },
         {
             "name": "imagine/imagine",
@@ -1450,143 +1523,6 @@
             "time": "2013-02-18 08:46:41"
         },
         {
-            "name": "jms/serializer",
-            "version": "0.13.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/schmittjoh/serializer.git",
-                "reference": "9e0fcd00a374e9ad484687628c6c25ab1083ea5a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/serializer/zipball/9e0fcd00a374e9ad484687628c6c25ab1083ea5a",
-                "reference": "9e0fcd00a374e9ad484687628c6c25ab1083ea5a",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/annotations": "1.*",
-                "jms/metadata": "~1.1",
-                "jms/parser-lib": "1.*",
-                "php": ">=5.3.2",
-                "phpcollection/phpcollection": ">=0.1,<0.3-dev"
-            },
-            "require-dev": {
-                "doctrine/orm": ">=2.1,<2.4-dev",
-                "symfony/filesystem": "2.*",
-                "symfony/form": ">=2.1,<2.2-dev",
-                "symfony/translation": ">=2.0,<2.2-dev",
-                "symfony/validator": ">=2.0,<2.2-dev",
-                "symfony/yaml": "2.*",
-                "twig/twig": ">=1.8,<2.0-dev"
-            },
-            "suggest": {
-                "symfony/yaml": "Required if you'd like to serialize data to YAML format."
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.13-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "JMS\\Serializer": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache2"
-            ],
-            "authors": [
-                {
-                    "name": "Johannes M. Schmitt",
-                    "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
-                    "role": "Developer of wrapped JMSSerializerBundle"
-                }
-            ],
-            "description": "Library for (de-)serializing data of any complexity; supports XML, JSON, and YAML.",
-            "homepage": "http://jmsyst.com/libs/serializer",
-            "keywords": [
-                "deserialization",
-                "jaxb",
-                "json",
-                "serialization",
-                "xml"
-            ],
-            "time": "2013-07-29 13:39:49"
-        },
-        {
-            "name": "jms/serializer-bundle",
-            "version": "dev-master",
-            "target-dir": "JMS/SerializerBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/schmittjoh/JMSSerializerBundle.git",
-                "reference": "0c98dc74502b729ce473d387cf72fd294dae5b0e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/JMSSerializerBundle/zipball/0c98dc74502b729ce473d387cf72fd294dae5b0e",
-                "reference": "0c98dc74502b729ce473d387cf72fd294dae5b0e",
-                "shasum": ""
-            },
-            "require": {
-                "jms/serializer": "~0.11",
-                "php": ">=5.3.2",
-                "symfony/framework-bundle": "~2.1"
-            },
-            "require-dev": {
-                "doctrine/doctrine-bundle": "*",
-                "doctrine/orm": "*",
-                "symfony/browser-kit": "*",
-                "symfony/class-loader": "*",
-                "symfony/css-selector": "*",
-                "symfony/finder": "*",
-                "symfony/form": "*",
-                "symfony/process": "*",
-                "symfony/twig-bundle": "*",
-                "symfony/validator": "*",
-                "symfony/yaml": "*"
-            },
-            "suggest": {
-                "jms/di-extra-bundle": "Required to get lazy loading (de)serialization visitors, ~1.3"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.13-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "JMS\\SerializerBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache2"
-            ],
-            "authors": [
-                {
-                    "name": "Johannes M. Schmitt",
-                    "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
-                    "role": "Developer of wrapped JMSSerializerBundle"
-                }
-            ],
-            "description": "Allows you to easily serialize, and deserialize data of any complexity",
-            "homepage": "http://jmsyst.com/bundles/JMSSerializerBundle",
-            "keywords": [
-                "deserialization",
-                "jaxb",
-                "json",
-                "serialization",
-                "xml"
-            ],
-            "time": "2013-09-09 07:25:33"
-        },
-        {
             "name": "knplabs/knp-components",
             "version": "1.2.3",
             "source": {
@@ -1778,53 +1714,6 @@
             "time": "2013-07-19 00:03:27"
         },
         {
-            "name": "lankit/datatables-bundle",
-            "version": "v0.2.1",
-            "target-dir": "LanKit/DatatablesBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/LanKit/DatatablesBundle.git",
-                "reference": "f9cadfeeef4adb152c97e88d539e69ee32512d80"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/LanKit/DatatablesBundle/zipball/f9cadfeeef4adb152c97e88d539e69ee32512d80",
-                "reference": "f9cadfeeef4adb152c97e88d539e69ee32512d80",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/doctrine-bundle": "~1.0",
-                "doctrine/orm": "~2.0",
-                "symfony/framework-bundle": "~2.0"
-            },
-            "suggest": {
-                "jms/serializer-bundle": "Advanced JSON encoding capabilities, recommended."
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-0": {
-                    "LanKit\\DatatablesBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Chad Sikorra",
-                    "email": "Chad.Sikorra@gmail.com"
-                }
-            ],
-            "description": "DataTables.js server-side processing for Doctrine Entities",
-            "keywords": [
-                "LanKit",
-                "LanKitDatatables",
-                "datatables"
-            ],
-            "time": "2013-06-09 12:40:29"
-        },
-        {
             "name": "liip/imagine-bundle",
             "version": "v0.16.0",
             "target-dir": "Liip/ImagineBundle",
@@ -1982,56 +1871,6 @@
             "time": "2013-04-05 18:55:56"
         },
         {
-            "name": "phpcollection/phpcollection",
-            "version": "0.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/schmittjoh/php-collection.git",
-                "reference": "acb02a921bb364f360ce786b13455345063c4a07"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/php-collection/zipball/acb02a921bb364f360ce786b13455345063c4a07",
-                "reference": "acb02a921bb364f360ce786b13455345063c4a07",
-                "shasum": ""
-            },
-            "require": {
-                "phpoption/phpoption": "1.*"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.2-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "PhpCollection": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache2"
-            ],
-            "authors": [
-                {
-                    "name": "Johannes M. Schmitt",
-                    "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
-                    "role": "Developer of wrapped JMSSerializerBundle"
-                }
-            ],
-            "description": "General-Purpose Collection Library for PHP",
-            "keywords": [
-                "collection",
-                "list",
-                "map",
-                "sequence",
-                "set"
-            ],
-            "time": "2013-01-23 15:16:14"
-        },
-        {
             "name": "phpoption/phpoption",
             "version": "1.3.0",
             "source": {
@@ -2125,12 +1964,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/punkave/symfony2-file-uploader-bundle.git",
-                "reference": "c3d92f612531245a39eb210a77669c6ac9123747"
+                "reference": "862d1b2b5ebb02c8bbf7cf92409b43620d7278a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punkave/symfony2-file-uploader-bundle/zipball/c3d92f612531245a39eb210a77669c6ac9123747",
-                "reference": "c3d92f612531245a39eb210a77669c6ac9123747",
+                "url": "https://api.github.com/repos/punkave/symfony2-file-uploader-bundle/zipball/862d1b2b5ebb02c8bbf7cf92409b43620d7278a4",
+                "reference": "862d1b2b5ebb02c8bbf7cf92409b43620d7278a4",
                 "shasum": ""
             },
             "require": {
@@ -2178,7 +2017,7 @@
                 "upload",
                 "uploader"
             ],
-            "time": "2013-09-11 12:06:36"
+            "time": "2013-10-03 16:08:32"
         },
         {
             "name": "sensio/distribution-bundle",
@@ -2548,16 +2387,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.2.8",
+            "version": "v2.2.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "e80fc4aa253529fe0100ead61c41ae22bee5f030"
+                "reference": "6a5c6c0d76014cd54cf8bd82a96b75d7589d8029"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/e80fc4aa253529fe0100ead61c41ae22bee5f030",
-                "reference": "e80fc4aa253529fe0100ead61c41ae22bee5f030",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/6a5c6c0d76014cd54cf8bd82a96b75d7589d8029",
+                "reference": "6a5c6c0d76014cd54cf8bd82a96b75d7589d8029",
                 "shasum": ""
             },
             "require": {
@@ -2643,7 +2482,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2013-09-26 07:49:44"
+            "time": "2013-10-10 12:15:43"
         },
         {
             "name": "twig/extensions",
@@ -2694,16 +2533,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.13.2",
+            "version": "v1.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "6d6a1009427d1f398c9d40904147bf9f723d5755"
+                "reference": "224fc55635d544a2ec8edb3592be18db5a093f59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/6d6a1009427d1f398c9d40904147bf9f723d5755",
-                "reference": "6d6a1009427d1f398c9d40904147bf9f723d5755",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/224fc55635d544a2ec8edb3592be18db5a093f59",
+                "reference": "224fc55635d544a2ec8edb3592be18db5a093f59",
                 "shasum": ""
             },
             "require": {
@@ -2712,7 +2551,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.13-dev"
+                    "dev-master": "1.14-dev"
                 }
             },
             "autoload": {
@@ -2739,7 +2578,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-08-03 15:35:31"
+            "time": "2013-10-03 06:41:20"
         },
         {
             "name": "willdurand/geocoder",
@@ -2747,12 +2586,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/geocoder-php/Geocoder.git",
-                "reference": "c122f1c4b2c52d6b52e1c2544522b0c0c9315453"
+                "reference": "21e562a5ad595c6fee7a33ae90e0b42dc8866c23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/geocoder-php/Geocoder/zipball/c122f1c4b2c52d6b52e1c2544522b0c0c9315453",
-                "reference": "c122f1c4b2c52d6b52e1c2544522b0c0c9315453",
+                "url": "https://api.github.com/repos/geocoder-php/Geocoder/zipball/21e562a5ad595c6fee7a33ae90e0b42dc8866c23",
+                "reference": "21e562a5ad595c6fee7a33ae90e0b42dc8866c23",
                 "shasum": ""
             },
             "require": {
@@ -2802,7 +2641,7 @@
                 "geocoding",
                 "geoip"
             ],
-            "time": "2013-09-16 08:30:31"
+            "time": "2013-10-04 09:53:22"
         }
     ],
     "packages-dev": [
@@ -3182,10 +3021,10 @@
         "doctrine/doctrine-fixtures-bundle": 20,
         "doctrine/doctrine-migrations-bundle": 20,
         "braintree/braintree_php": 20,
-        "friendsofsymfony/message-bundle": 20,
         "punkave/symfony2-file-uploader-bundle": 20,
         "willdurand/geocoder": 20,
-        "jms/serializer-bundle": 20
+        "gergelypolonkai/smssender": 20,
+        "gergelypolonkai/smssender-bundle": 20
     },
     "platform": {
         "php": ">=5.3.3"

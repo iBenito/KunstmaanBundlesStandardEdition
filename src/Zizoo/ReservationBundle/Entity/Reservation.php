@@ -76,9 +76,9 @@ class Reservation extends BaseEntity
     protected $reason;
     
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true, name="hours_to_respond")
      */
-    protected $hours_to_respond;
+    protected $hoursToRespond;
 
     
     public function __construct()
@@ -319,13 +319,13 @@ class Reservation extends BaseEntity
     
     public function setHoursToRespond($hoursToRespond)
     {
-        $this->hours_to_respond = $hoursToRespond;
+        $this->hoursToRespond = $hoursToRespond;
         return $this;
     }
     
     public function getHoursToRespond()
     {
-        return $this->hours_to_respond;
+        return $this->hoursToRespond;
     }
     
     protected $test;

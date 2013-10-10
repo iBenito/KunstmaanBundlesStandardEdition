@@ -474,8 +474,10 @@ class DashboardController extends Controller {
      */
     public function charterPaymentsAction()
     {
-        $request    = $this->getRequest();
-        $response   = $this->forward('ZizooCharterBundle:Charter:payments', array(), array('redirect_route' => $request->get('_route')));
+        $request                    = $this->getRequest();
+        $params                     = $request->query->all();
+        $params['redirect_route']   =    $request->get('_route');
+        $response   = $this->forward('ZizooCharterBundle:Charter:payments', array(), $params);
         
         if ($response->isRedirect()){
             return $this->redirect($response->headers->get('Location'));
@@ -483,12 +485,16 @@ class DashboardController extends Controller {
         
         $user = $this->getUser();
         $charter = $user->getCharter();
-        return $this->render('ZizooBaseBundle:Dashboard:Charter/charter.html.twig', array(
-            'title'     => 'My Payments',
-            'current'   => 'payments',
-            'id'        => $charter->getId(),
-            'response'  => $response->getContent()
-        ));
+        if ($response instanceof JsonResponse) {
+            return $response;
+        } else {
+            return $this->render('ZizooBaseBundle:Dashboard:Charter/charter.html.twig', array(
+                'title'     => 'My Payments',
+                'current'   => 'payments',
+                'id'        => $charter->getId(),
+                'response'  => $response->getContent()
+            ));
+        }
     }
     
     
