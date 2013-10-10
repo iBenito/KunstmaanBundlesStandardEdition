@@ -784,16 +784,18 @@ class CharterController extends Controller
             'total'    => array(
                 'title'             => 'Total',
                 'property'          => 'cost',
-                'callback'          => function($field, $val, $reservation){
-                    return $val;
+                'callback'          => function($field, $val, $booking){
+                    $val = floatval($val);
+                    return number_format($val, 2);
                 }
             ),
             'received'    => array(
                 'title'             => 'Received',
                 'property'          => 'payment.amount',
                 'sql_function'      => 'SUM',
-                'callback'          => function($field, $val, $reservation){
-                    return $val;
+                'callback'          => function($field, $val, $booking){
+                    $val = floatval($val);
+                    return number_format($val, 2);
                 }
             )
         );

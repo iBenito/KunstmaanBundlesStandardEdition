@@ -69,7 +69,7 @@ class Datatable
      */
     protected $templating;
     
-    protected $totalCount;
+    protected $displayCount;
     
     public function __construct(Container $container)
     {
@@ -304,6 +304,41 @@ class Datatable
         return $items;
     }
     
+    /**
+     * @return int Total query results before searches/filtering
+     */
+    public function getCountAllResults()
+    {
+        $joins = array();
+        foreach ($this->columns as $alias => $column){
+            $property = $column['property'];
+            $joinParts = explode('.', $property);
+            $numParts = count($joinParts);
+
+            if ($numParts==1){
+                // root field
+                $property = $this->rootEntity . '.' . $property;
+            } else {
+                // join found
+                $this->populateJoins($joins, array_slice($joinParts, 0, $numParts-1));
+            }
+
+        }
+
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $qb = $em->createQueryBuilder()->from($this->class, $this->rootEntity);
+        $this->createJoins($qb, $this->rootEntity, $joins, $this->joinTypes);
+        $qb->select($this->rootEntity);
+
+        if (!empty($this->callbacks['WhereBuilder']))  {
+            foreach ($this->callbacks['WhereBuilder'] as $callback) {
+                $callback($qb);
+            }
+        }
+
+        return count($qb->getQuery()->getResult());
+    }
+    
     public function getResults($hydrationMode=Query::HYDRATE_OBJECT)
     {
         $this->setParameters();
@@ -333,9 +368,9 @@ class Datatable
 
                 $results[] =  $result;
             }
-            $this->totalCount = $items->count();
+            $this->displayCount = $items->count();
         } catch (\Exception $e){
-            $this->totalCount = 0;
+            $this->displayCount = 0;
         }
         
         return $results;
@@ -364,8 +399,8 @@ class Datatable
                 
                 $outputHeader = array(
                     "sEcho" => (int) $request->get('sEcho'),
-                    "iTotalRecords" => $this->totalCount,
-                    "iTotalDisplayRecords" => count($results)
+                    "iTotalRecords" => $this->getCountAllResults(),
+                    "iTotalDisplayRecords" => $this->displayCount
                 );
                 
                 $content = array_merge($outputHeader, array('aaData' => $results));
