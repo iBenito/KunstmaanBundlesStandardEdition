@@ -429,7 +429,8 @@ class CharterController extends Controller
             ),
             'boat_id' => array(
                 'visible'           => false,
-                'property'          => 'boat.id'
+                'property'          => 'boat.id',
+                'search'            => true
             ),
             'boat_name' => array(
                 'title'             => 'Boat',
@@ -475,15 +476,19 @@ class CharterController extends Controller
                 'search'            => array(
                                                 'options'           => $statusOptions,
                                                 'initial_option'    => $request->get('status', null)
-                )
-            ),
-            'hours_to_respond'    => array(
-                'title'             => 'T',
-                'property'          => 'hoursToRespond',
+                ),
                 'callback'          => function($field, $val, $reservation) use ($reservationAgent){
+                    $statusString = $reservationAgent->statusToString($val);
                     $hours = $reservationAgent->hoursToRespond($reservation);
-                    return $hours?$hours:'-';
-                }
+                    if ($reservation->getStatus() == Reservation::STATUS_REQUESTED && $hours){
+                        if ($hours >= 0){
+                            return "$statusString (expires in $hours)";
+                        } else {
+                            return "$statusString (expires soon)";
+                        }
+                    }
+                    return $statusString;
+                }  
             )
         );
         

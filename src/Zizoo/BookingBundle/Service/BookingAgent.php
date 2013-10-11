@@ -375,16 +375,18 @@ class BookingAgent {
     {
         $payments = $booking->getPayment();
         $amountPaid = 0;
-        foreach ($payments as $payment){
-            switch ($payment->getProvider()){
-                case Payment::PROVIDER_BRAINTREE:
-                    if ($payment->getProviderStatus()!=Payment::BRAINTREE_STATUS_SETTLED) continue;
-                    break;
-                case Payment::PROVIDER_BANK_TRANSFER:
-                    if ($payment->getProviderStatus()!=Payment::BANK_TRANSFER_SETTLED) continue;
-                    break;
+        if ($payments){
+            foreach ($payments as $payment){
+                switch ($payment->getProvider()){
+                    case Payment::PROVIDER_BRAINTREE:
+                        if ($payment->getProviderStatus()!=Payment::BRAINTREE_STATUS_SETTLED) continue;
+                        break;
+                    case Payment::PROVIDER_BANK_TRANSFER:
+                        if ($payment->getProviderStatus()!=Payment::BANK_TRANSFER_SETTLED) continue;
+                        break;
+                }
+                $amountPaid += $payment->getAmount();
             }
-            $amountPaid += $payment->getAmount();
         }
         return $amountPaid >= $booking->getCost();
     }
