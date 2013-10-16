@@ -59,8 +59,8 @@ class BillingType extends AbstractType
             'data_class' => 'Zizoo\BookingBundle\Form\Model\Billing',
             'cascade_validation' => true,
             'validation_groups' => function(FormInterface $form) {
-                $data = $form->getParent()->getData();
-                if ($data->getPaymentMethod()->getID()=='credit_card') {
+                $data = $form->getParent()->getData()->getPaymentMethod();
+                if ($data['method']=='credit_card') {
                     return array('booking.credit_card');
                 } else {
                     return array('booking.bank_transfer');

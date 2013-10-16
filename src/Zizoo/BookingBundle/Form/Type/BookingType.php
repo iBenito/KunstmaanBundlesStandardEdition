@@ -23,17 +23,7 @@ class BookingType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {        
-        $builder->add('payment_method', 'entity', array(
-            'class' => 'ZizooBookingBundle:PaymentMethod',
-            'required'  => true,
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('m')
-                    ->orderBy('m.order', 'ASC')
-                    ->where('m.enabled = TRUE');
-            },
-            'attr'  => array('class' => 'gray small'),
-            'label' => 'Payment Method',
-        ));
+        $builder->add('payment_method', 'zizoo_payment_method', array('required' => 'true', 'label' => false));
         
         $builder->add('instalment_option', 'entity', array(
             'class' => 'ZizooBookingBundle:InstalmentOption',
@@ -51,8 +41,6 @@ class BookingType extends AbstractType
             
         $builder->add('message_to_owner', new MessageToOwnerType(), array('label' => 'Message to owner'));
             
-        $builder->add('credit_card', new CreditCardType(), array('label'    => false));
-        
         $builder->add('billing', new BillingType(), array('label' => false));
         
         $builder->add('custom_fields', new CustomFieldsType($this->container), array('label' => false));
@@ -66,13 +54,29 @@ class BookingType extends AbstractType
             'cascade_validation' => true,
             'validation_groups' => function(FormInterface $form) {
                 $data = $form->getData();
-                if ($data->getPaymentMethod()->getID()=='credit_card') {
+                $paymentMethod = $data->getPaymentMethod();
+                if ($paymentMethod['method']=='credit_card') {
                     return array('booking.credit_card');
                 } else {
                     return array('booking.bank_transfer');
                 }
             },
+//            'allowed_methods' => array(),
+//            'default_method'  => null,
+//            'predefined_data' => array(),
         ));
+            
+//        $resolver->setRequired(array(
+//            'amount',
+//            'currency',
+//        ));
+        
+//        $resolver->setAllowedTypes(array(
+//            'allowed_methods' => 'array',
+//            'amount'          => array('numeric', 'closure'),
+//            'currency'        => 'string',
+//            'predefined_data' => 'array',
+//        ));
     }
     
     public function getName()

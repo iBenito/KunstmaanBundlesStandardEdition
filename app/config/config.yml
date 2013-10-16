@@ -121,6 +121,9 @@ fos_message:
         handler:            zizoo_message.reply_form.handler
         model:              Zizoo\MessageBundle\Form\Model\ReplyMessage
 
+jms_payment_core:
+    secret: someS3cretP4ssw0rd
+
 #knp_paginator:
 #    template:
 #        pagination: ZizooBaseBundle:Elements:pagination_sliding.html.twig

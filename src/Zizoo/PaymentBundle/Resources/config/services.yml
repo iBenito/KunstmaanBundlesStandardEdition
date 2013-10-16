@@ -1,0 +1,39 @@
+parameters:
+#    zizoo_payment.example.class: Zizoo\PaymentBundle\Example
+
+services:
+    payment.plugin.braintree:
+        class: Zizoo\PaymentBundle\Plugin\BraintreePlugin
+        tags: [{name: payment.plugin}]
+        
+    payment.plugin.bank_transfer:
+        class: Zizoo\PaymentBundle\Plugin\BankTransferPlugin
+        tags: [{name: payment.plugin}]
+  
+    zizoo_payment.plugin.braintree:
+        class: Zizoo\BookingBundle\Service\BraintreeBookingAgent
+        tags: [{name: zizoo_payment.plugin, jms_payment_plugin: payment.plugin.braintree, processes: credit_card}]
+        arguments: ["@doctrine.orm.entity_manager", "@payment.plugin_controller"]
+        
+    zizoo_payment.plugin.bank_transfer:
+        class: Zizoo\BookingBundle\Service\BankTransferBookingAgent
+        tags: [{name: zizoo_payment.plugin, jms_payment_plugin: payment.plugin.bank_transfer, processes: bank_transfer}]
+        arguments: ["@doctrine.orm.entity_manager", "@payment.plugin_controller"]
+          
+   
+    zizoo_payment.payment_method_type:
+        class:  Zizoo\PaymentBundle\Form\Type\PaymentMethodType
+        tags:
+            - { name: form.type, alias: zizoo_payment_method }
+        
+    zizoo_payment.credit_card:
+        class: Zizoo\BookingBundle\Form\Type\CreditCardType
+        tags:
+            - { name: form.type, alias: credit_card }
+            - { name: zizoo_payment.method_form_type }
+
+    zizoo_payment.bank_transfer:
+        class: Zizoo\BookingBundle\Form\Type\BankTransferType
+        tags:
+            - { name: form.type, alias: bank_transfer }
+            - { name: zizoo_payment.method_form_type }

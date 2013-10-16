@@ -254,7 +254,7 @@
                                 <h3>Your Details</h3>
                                 <div class="left">
                                 {{ form_row(form.billing) }}
-                                {{ form_row(form.payment_method) }}
+                                {{ form_row(form.payment_method.method) }}
                                 </div>
                                 <div class="right">
                                     <div class="options">
@@ -270,7 +270,7 @@
                                 <section id="credit-card" class="clearfix">
                                     <div class="left">
                                         <h3>Credit Card Information</h3>
-                                        {{ form_row(form.credit_card) }}
+                                        {{ form_row(form.payment_method.data_credit_card) }}
                                     </div>
                                     <div class="right">
                                         <div class="information">
@@ -483,11 +483,11 @@
                             });
                             
                             
-                            $('#transaction_payment_method').change(function(){
+                            $('#transaction_payment_method_method').change(function(){
                                 var method = $(this).val();
                                 selectPaymentMethod(method, true);
                             });
-                            selectPaymentMethod($('#transaction_payment_method').val(), false);
+                            selectPaymentMethod($('#transaction_payment_method_method').val(), false);
                             
                             $('#transaction_instalment_option input[name="transaction[instalment_option]"]').change(function(){
                                 var option = $('#transaction_instalment_option input[name="transaction[instalment_option]"]:checked').val();

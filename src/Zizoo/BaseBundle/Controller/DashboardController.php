@@ -37,6 +37,9 @@ class DashboardController extends Controller {
     private $userMessageRoutes = array( 'view_thread_route'     => 'ZizooBaseBundle_Dashboard_ViewThread',
                                         'inbox_route'           => 'ZizooBaseBundle_Dashboard_Inbox');
     
+    private $bookingRoutes = array( 'bookings'      => 'ZizooBaseBundle_Dashboard_CharterBookings',
+                                    'view_booking'  => 'ZizooBaseBundle_Dashboard_CharterViewBooking' );
+    
     private function isCharterRoute($url)
     {
         $pattern = '/^\/charter\/|^\/app_dev\.php\/charter\//';
@@ -446,8 +449,44 @@ class DashboardController extends Controller {
     {
         $request                    = $this->getRequest();
         $params                     = $request->query->all();
-        $params['redirect_route']   =    $request->get('_route');
+        $params['redirect_route']   = $request->get('_route');
         $response   = $this->forward('ZizooCharterBundle:Charter:bookings', array(), $params);
+        
+        if ($response->isRedirect()){
+            return $this->redirect($response->headers->get('Location'));
+        }
+        
+        $user = $this->getUser();
+        $charter = $user->getCharter();
+        if ($response instanceof JsonResponse) {
+            return $response;
+        } else{
+            return $this->render('ZizooBaseBundle:Dashboard:Charter/charter.html.twig', array(
+                'title'     => 'My Bookings',
+                'current'   => 'bookings',
+                'id'        => $charter->getId(),
+                'response'  => $response->getContent()
+            ));
+        }
+    }
+    
+    
+    /**
+     * Display Charter View Booking
+     *
+     * @return Response
+     */
+    public function charterViewBookingAction($id)
+    {
+        $request    = $this->getRequest();
+        
+        $params = $request->query->all();
+        $params['routes'] = $this->bookingRoutes;
+        
+        $messageController = $request->attributes->get('charter_controller');
+        
+        $response   = $this->forward($messageController, array('id' => $id), $params);
+        
         
         if ($response->isRedirect()){
             return $this->redirect($response->headers->get('Location'));

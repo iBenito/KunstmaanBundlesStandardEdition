@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Reservation extends BaseEntity
 {
+    const STATUS_INITIAL    = 0;
     const STATUS_REQUESTED  = 1;
     const STATUS_ACCEPTED   = 2;
     const STATUS_EXPIRED    = 3;

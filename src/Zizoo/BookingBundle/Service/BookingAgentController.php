@@ -6,6 +6,9 @@ use Zizoo\BookingBundle\Entity\Booking;
 use Zizoo\BookingBundle\Form\Model\Booking as BookingForm;
 use Zizoo\BookingBundle\Exception\InvalidBookingException;
 use Zizoo\BookingBundle\Entity\PaymentMethod;
+use Zizoo\BookingBundle\Service\BookingAgentInterface;
+use Zizoo\BookingBundle\Service\Exception\PluginNotFoundException;
+use Zizoo\BookingBundle\Service\Exception\FunctionNotSupportedException;
 
 use Zizoo\ReservationBundle\Entity\Reservation;
 
@@ -16,16 +19,23 @@ use Zizoo\UserBundle\Entity\User;
 
 use Symfony\Component\DependencyInjection\Container;
 
-class BookingAgent {
+class BookingAgentController {
     
     private $em;
     private $messenger;
     private $container;
+    private $plugins;
     
     public function __construct($em, $messenger, $container) {
         $this->em = $em;
         $this->messenger = $messenger;
         $this->container = $container;
+        $this->plugins   = array();
+    }
+    
+    public function addPlugin(BookingAgentInterface $plugin)
+    {
+        $this->plugins[] = $plugin;
     }
     
     public static function priceToPayNow($price, $fullAmountUpfront)
@@ -275,56 +285,96 @@ class BookingAgent {
         return $this->processBraintreeResult($result, $boat, $price, $user, $bookBoat, $initialPaymentMethod);
     }
     
-    private function bankTransferMakeBooking(User $user, BookingForm $booking, $price, BookBoat $bookBoat, Boat $boat, PaymentMethod $initialPaymentMethod)
+    private function getPlugin($paymentMethod)
     {
-        // Start transaction on Zizoo
-        $reservationAgent   = $this->container->get('zizoo_reservation_reservation_agent');
-        $reservation        = $reservationAgent->makeReservation($boat, $bookBoat, $price, $user, false);
-        $booking            = $this->storeBooking($user, $reservation, $price, $initialPaymentMethod, $bookBoat->getCrew(), false);
-        //$payment            = $this->makePayment($booking, $booking->getCost(), $result->transaction->id, false);
-        
-        // End transaction
-        $this->em->flush();
-        
-        return $booking;
+        foreach ($this->plugins as $plugin) {
+            try {
+                if ($plugin->processes($paymentMethod)) {
+                    return $plugin;
+                }
+            } catch (FunctionNotSupportedException $e){
+            }
+        }
+
+        throw new PluginNotFoundException(sprintf('There is no plugin that processes payments for "%s".', $paymentMethod));
     }
     
-    public function makeBooking(User $user, BookingForm $bookingForm, $price, BookBoat $bookBoat, Boat $boat)
+    //public function makeBooking(User $user, BookingForm $bookingForm, $price, BookBoat $bookBoat, Boat $boat)
+    public function makeBooking(User $user, Boat $boat, \DateTime $reservationFrom, \DateTime $reservationTo, $price, $numGuests, $crew, $paymentMethod)
     {
         if (!$this->container->hasParameter('zizoo_booking.allow_bookings') || $this->container->getParameter('zizoo_booking.allow_bookings') !== true){
             throw new InvalidBookingException('Bookings are currently not possible');
         }
-        $booking = null;
-        $paymentMethod = $bookingForm->getPaymentMethod();
-        if ($paymentMethod->getId()=='credit_card'){
-            $booking =  $this->braintreeMakeBooking($user, $bookingForm, $price, $bookBoat, $boat, $paymentMethod);
-        } else if ($paymentMethod->getId()=='bank_transfer'){
-            $booking = $this->bankTransferMakeBooking($user, $bookingForm, $price, $bookBoat, $boat, $paymentMethod);
-        } else {
-            throw new InvalidBookingException("Payment method '".$paymentMethod->getName()."' not supported yet");
+        $plugin         = $this->getPlugin($paymentMethod['method']);
+        $em                 = $this->container->get('doctrine.orm.entity_manager');
+        $reservationAgent   = $this->container->get('zizoo_reservation_reservation_agent');
+        
+        
+       
+        // Create reservation (status: request)
+        $reservation    = $reservationAgent->makeReservation($boat, $reservationFrom, $reservationTo, $numGuests, $price, $user);
+        $booking        = $plugin->makeBooking($reservation, $user, $price, $crew);
+        $payment        = $this->addPayment($booking, $paymentMethod, $price);
+        
+        $autoAccept = false;
+        if ($autoAccept===true){
+            //$payment = $this->processPayment($payment, $price);
+            $this->acceptBooking($booking);
         }
         
-        $composer       = $this->container->get('zizoo_message.composer');
-        $sender         = $this->container->get('fos_message.sender');
-        $messageTypeRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooMessageBundle:MessageType');
-        
-        $thread = $composer->newThread()
-                            ->setSender($user)
-                            ->addRecipient($boat->getCharter()->getAdminUser())
-                            ->setSubject($bookingForm->getMessageToOwner()->getSubject())
-                            ->setBody($bookingForm->getMessageToOwner()->getBody())
-                            ->setBooking($booking);
-        
-        
-        $message = $thread->getMessage()
-                            ->setMessageType($messageTypeRepo->findOneById('enquiry'));
-        
-        
-        $thread->setBooking($booking);
-        
-        $sender->send($message);
-        
+        $em->flush();
+
         return $booking;
+    }
+    
+    public function addPayment(Booking $booking, $paymentMethod, $amount)
+    {
+        $plugin         = $this->getPlugin($paymentMethod['method']);
+        $data           = array_key_exists('data_'.$paymentMethod['method'], $paymentMethod) ? $paymentMethod['data_'.$paymentMethod['method']] : array();
+        $payment        = $plugin->addPayment($booking, $amount);   
+        
+        return $payment;
+    }
+    
+//    public function processPayment(Payment $payment, $amount)
+//    {
+//        $plugin         = $this->getPlugin($payment->getPaymentInstruction()->getPaymentSystemName());
+//        $payment        = $plugin->processPayment($payment, $amount);
+//        
+//        return $payment;
+//    }
+    
+    public function acceptBooking(Booking $booking)
+    {
+        $allPaymentsSuccessful = true;
+        $successfulPayments = new \Doctrine\Common\Collections\ArrayCollection();
+        $payments = $booking->getPayment();
+        foreach ($payments as $payment){
+            // Only handle new paymetns
+            if ($payment->getStatus()!=Payment::STATUS_NEW) continue;
+            $instruction    = $payment->getPaymentInstruction();
+            $plugin         = $this->getPlugin($instruction->getPaymentSystemName());
+            $payment = $plugin->processPayment($payment);
+            if ($payment->getStatus()==Payment::STATUS_SUCCESS) {
+                $successfulPayments->add($payment);
+            } else {
+                $allPaymentsSuccessful = false;
+            }
+            
+        }
+        if ($allPaymentsSuccessful){
+            try {
+                $reservationAgent   = $this->container->get('zizoo_reservation_reservation_agent');
+                $reservationAgent->acceptReservation($booking->getReservation(), true);
+            } catch (Zizoo\ReservationBundle\Exception\InvalidReservationException $e){
+                foreach ($successfulPayments as $successfulPayment){
+                    $instruction    = $successfulPayment->getPaymentInstruction();
+                    $plugin         = $this->getPlugin($instruction->getPaymentSystemName());
+                    $payment        = $plugin->reversePayment($successfulPayment);
+                }
+            }
+        }
+        return $allPaymentsSuccessful;
     }
     
     public function PaymentStatusToString(Payment $payment)

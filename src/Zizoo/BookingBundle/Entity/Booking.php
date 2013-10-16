@@ -60,8 +60,9 @@ class Booking extends BaseEntity
     protected $payout;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Zizoo\BookingBundle\Entity\PaymentMethod")
-     * @ORM\JoinColumn(name="intial_payment_method_id", referencedColumnName="id", nullable=false)
+     * @var string
+     * 
+     * @ORM\Column(name="initial_payment_method", type="string", length=100)
      */
     private $initialPaymentMethod;
     
@@ -84,6 +85,7 @@ class Booking extends BaseEntity
     {
         $this->setCreated(new \DateTime());
         $this->setUpdated(new \DateTime());
+        $this->setStatus(Booking::STATUS_OUTSTANDING);
     }
 
 
@@ -260,10 +262,10 @@ class Booking extends BaseEntity
     /**
      * Set initial payment method
      *
-     * @param \Zizoo\BookingBundle\Entity\PaymentMethod $initialPaymentMethod
+     * @param $initialPaymentMethod
      * @return Booking
      */
-    public function setInitialPaymentMethod(PaymentMethod $initialPaymentMethod)
+    public function setInitialPaymentMethod($initialPaymentMethod)
     {
         $this->initialPaymentMethod = $initialPaymentMethod;
         return $this;
@@ -272,7 +274,6 @@ class Booking extends BaseEntity
     /**
      * Get initial payment method
      *
-     * @return \Zizoo\BookingBundle\Entity\PaymentMethod 
      */
     public function getInitialPaymentMethod()
     {

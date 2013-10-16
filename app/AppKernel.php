@@ -26,6 +26,7 @@ class AppKernel extends Kernel
             new FOS\MessageBundle\FOSMessageBundle(),
             new PunkAve\FileUploaderBundle\PunkAveFileUploaderBundle(),
             new Ivory\GoogleMapBundle\IvoryGoogleMapBundle(),
+            new JMS\Payment\CoreBundle\JMSPaymentCoreBundle,
             new Zizoo\BaseBundle\ZizooBaseBundle(),
             new Zizoo\BoatBundle\ZizooBoatBundle(),
             new Zizoo\UserBundle\ZizooUserBundle(),
@@ -43,6 +44,7 @@ class AppKernel extends Kernel
             new Zizoo\EventBundle\ZizooEventBundle(),
             new Zizoo\MediaBundle\ZizooMediaBundle(),
             new Zizoo\DatatablesBundle\ZizooDatatablesBundle(),
+            new Zizoo\PaymentBundle\ZizooPaymentBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

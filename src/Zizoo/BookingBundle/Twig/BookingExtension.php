@@ -4,14 +4,14 @@ namespace Zizoo\BookingBundle\Twig;
 
 use Zizoo\BookingBundle\Entity\Payment;
 use Zizoo\BookingBundle\Entity\Booking;
-use Zizoo\BookingBundle\Service\BookingAgent;
+use Zizoo\BookingBundle\Service\BookingAgentController;
 
 
 class BookingExtension extends \Twig_Extension
 {
     protected $bookingAgent;
     
-    public function __construct(BookingAgent $bookingAgent) {
+    public function __construct(BookingAgentController $bookingAgent) {
         $this->bookingAgent = $bookingAgent;
     }
     

@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityRepository;
 class PaymentRepository extends EntityRepository
 {
     
-    public function getPayments($charter=null, $providerStatuses = null)
+    public function getPayments($charter=null, $statuses = null)
     {
         $qb = $this->createQueryBuilder('payment')
                    ->leftJoin('payment.booking', 'booking')
@@ -30,33 +30,46 @@ class PaymentRepository extends EntityRepository
             $firstWhere = false;
         }
 
-        if ($providerStatuses){
-            if (!is_array($providerStatuses)){
-                throw new \Exception('status must be null or an array of arrays');
+        if ($statuses){
+            if (!is_array($statuses)){
+                throw new \Exception('status must be null or an array');
             }
-            $dqlArr = array();
-            foreach ($providerStatuses as $provider => $statuses){
-                $dqlStr = ' (payment.provider = ' . $provider . ' ';
-                $innerDqlArr = array();
-                foreach ($statuses as $status){
-                    $innerDqlArr[] = 'payment.providerStatus = ' . $status;
-                }
-                if (count($innerDqlArr)>0){
-                    $dqlStr .= 'AND (' . implode(' OR ', $innerDqlArr) . ') ';
-                }
-                $dqlStr .= ') ';
-                $dqlArr[] = $dqlStr;
+            if ($firstWhere){
+                $qb->where('payment.status IN (:statuses)');
+                $firstWhere = false;
+            } else {
+                $qb->andWhere('payment.status IN (:statuses)');
             }
-            if (count($dqlArr)>0){
-                $dqlStr = '('. implode(' OR ', $dqlArr) .')';
-                if ($firstWhere){
-                    $qb->where($dqlStr);
-                    $firstWhere = false;
-                } else {
-                    $qb->andWhere($dqlStr);
-                }
-            }
+            $qb->setParameter('statuses', $statuses);
         }
+        
+//        if ($providerStatuses){
+//            if (!is_array($providerStatuses)){
+//                throw new \Exception('status must be null or an array of arrays');
+//            }
+//            $dqlArr = array();
+//            foreach ($providerStatuses as $provider => $statuses){
+//                $dqlStr = ' (payment.provider = ' . $provider . ' ';
+//                $innerDqlArr = array();
+//                foreach ($statuses as $status){
+//                    $innerDqlArr[] = 'payment.providerStatus = ' . $status;
+//                }
+//                if (count($innerDqlArr)>0){
+//                    $dqlStr .= 'AND (' . implode(' OR ', $innerDqlArr) . ') ';
+//                }
+//                $dqlStr .= ') ';
+//                $dqlArr[] = $dqlStr;
+//            }
+//            if (count($dqlArr)>0){
+//                $dqlStr = '('. implode(' OR ', $dqlArr) .')';
+//                if ($firstWhere){
+//                    $qb->where($dqlStr);
+//                    $firstWhere = false;
+//                } else {
+//                    $qb->andWhere($dqlStr);
+//                }
+//            }
+//        }
 
         return $qb->getQuery()
                   ->getResult();
@@ -64,15 +77,21 @@ class PaymentRepository extends EntityRepository
 
     public function getOutstandingPayments($charter)
     {
-        return $this->getPayments($charter);
+        $status = array(
+            Payment::STATUS_PENDING
+        );
+        return $this->getPayments($charter, $status);
     }
 
     public function getSettledPayments($charter)
     {
-        $providerStatuses = array(
-            Payment::PROVIDER_BRAINTREE         => array(Payment::BRAINTREE_STATUS_SETTLED),
-            Payment::PROVIDER_BANK_TRANSFER     => array(Payment::BANK_TRANSFER_SETTLED)
+//        $providerStatuses = array(
+//            Payment::PROVIDER_BRAINTREE         => array(Payment::BRAINTREE_STATUS_SETTLED),
+//            Payment::PROVIDER_BANK_TRANSFER     => array(Payment::BANK_TRANSFER_SETTLED)
+//        );
+        $status = array(
+            Payment::STATUS_SUCCESS
         );
-        return $this->getPayments($charter, $providerStatuses);
+        return $this->getPayments($charter, $status);
     }
 }

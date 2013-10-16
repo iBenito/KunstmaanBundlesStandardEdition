@@ -3,6 +3,9 @@
 namespace Zizoo\BookingBundle\Entity;
 
 use Zizoo\BaseBundle\Entity\BaseEntity;
+
+use JMS\Payment\CoreBundle\Entity\PaymentInstruction;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -13,17 +16,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Payment extends BaseEntity
 {
-    
-   const PROVIDER_BRAINTREE                             = 0;
-   const PROVIDER_BANK_TRANSFER                         = 1;
-   
-   const BRAINTREE_STATUS_INITIAL                       = 0;
-   const BRAINTREE_STATUS_SUBMITTED_FOR_SETTLEMENT      = 1;
-   const BRAINTREE_STATUS_SETTLED                       = 2;
-   const BRAINTREE_STATUS_VOID                          = 3;
-   
-   const BANK_TRANSFER_INITIAL                          = 0;
-   const BANK_TRANSFER_SETTLED                          = 1;
+    const STATUS_NEW = 1;
+    const STATUS_PENDING = 2;
+    const STATUS_SUCCESS = 3;
+    const STATUS_UNKNOWN = 4;
     
     /**
      * @ORM\ManyToOne(targetEntity="Zizoo\BookingBundle\Entity\Booking", inversedBy="payment")
@@ -41,43 +37,20 @@ class Payment extends BaseEntity
     /**
      * @var int
      *
-     * @ORM\Column(name="provider", type="integer", nullable=false)
+     * @ORM\Column(name="settled", type="integer", nullable=false)
      */
-    private $provider;
+    private $status;
     
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="provider_status", type="integer", nullable=false)
-     */
-    private $providerStatus;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="provider_id", type="text")
-     */
-    private $providerId;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Zizoo\BookingBundle\Entity\PaymentMethod")
-     * @ORM\JoinColumn(name="payment_method_id", referencedColumnName="id", nullable=false)
-     */
-    private $paymentMethod;
     
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="settled", type="boolean", nullable=false)
-     */
-    private $settled;
+    /** @ORM\OneToOne(targetEntity="\JMS\Payment\CoreBundle\Entity\PaymentInstruction") */
+    private $paymentInstruction;
     
     
     public function __construct() {
         $now = new \DateTime();
         $this->setCreated($now);
         $this->setUpdated($now);
-        $this->settled = false;
+        $this->status = Payment::STATUS_UNKNOWN;
     }
     
     /**
@@ -114,51 +87,6 @@ class Payment extends BaseEntity
         return $this->amount;
     }
 
-    /**
-     * Set provider
-     *
-     * @param integer $provider
-     * @return Payment
-     */
-    public function setProvider($provider)
-    {
-        $this->provider = $provider;
-    
-        return $this;
-    }
-
-    /**
-     * Get provider
-     *
-     * @return integer 
-     */
-    public function getProvider()
-    {
-        return $this->provider;
-    }
-
-    /**
-     * Set providerStatus
-     *
-     * @param integer $providerStatus
-     * @return Payment
-     */
-    public function setProviderStatus($providerStatus)
-    {
-        $this->providerStatus = $providerStatus;
-    
-        return $this;
-    }
-
-    /**
-     * Get providerStatus
-     *
-     * @return integer 
-     */
-    public function getProviderStatus()
-    {
-        return $this->providerStatus;
-    }
 
     /**
      * Set booking
@@ -183,51 +111,6 @@ class Payment extends BaseEntity
         return $this->booking;
     }
 
-    /**
-     * Set providerId
-     *
-     * @param $providerId
-     * @return Payment
-     */
-    public function setProviderId($providerId)
-    {
-        $this->providerId = $providerId;
-    
-        return $this;
-    }
-
-    /**
-     * Get providerId
-     *
-     * @return 
-     */
-    public function getProviderId()
-    {
-        return $this->providerId;
-    }
-    
-    /**
-     * Set payment method
-     *
-     * @param \Zizoo\BookingBundle\Entity\PaymentMethod $paymentMethod
-     * @return Payment
-     */
-    public function setPaymentMethod($paymentMethod)
-    {
-        $this->paymentMethod = $paymentMethod;
-        return $this;
-    }
-    
-    /**
-     * Get payment method
-     *
-     * @return \Zizoo\BookingBundle\Entity\PaymentMethod 
-     */
-    public function getPaymentMethod()
-    {
-        return $this->paymentMethod;
-    }
-    
     public function setSettled($settled)
     {
         $this->settled = $settled;
@@ -237,5 +120,15 @@ class Payment extends BaseEntity
     public function getSettled()
     {
         return $this->settled;
+    }
+    
+    public function getPaymentInstruction()
+    {
+        return $this->paymentInstruction;
+    }
+
+    public function setPaymentInstruction(PaymentInstruction $instruction)
+    {
+        $this->paymentInstruction = $instruction;
     }
 }

@@ -119,13 +119,11 @@ class ReservationAgent {
         return $this->makeReservationWithStatus($boat, $from, $to, 0, 0, $boat->getCharter()->getAdminUser(), Reservation::STATUS_SELF, null, $flush);
     }
     
-    public function makeReservation(Boat $boat, BookBoat $bookBoat, $cost, User $guest, $flush=false)
+    //public function makeReservation(Boat $boat, BookBoat $bookBoat, $cost, User $guest, $flush=false)
+    public function makeReservation(Boat $boat, $from, $to, $numGuests, $cost, User $guest)
     {
-        $reservationRange = $bookBoat->getReservationRange();
-        $from = $reservationRange->getReservationFrom();
-        $to   = $reservationRange->getReservationTo();     
         $setHoursToRespond = $this->container->getParameter('zizoo_reservation.reservation_request_response_hours');
-        return $this->makeReservationWithStatus($boat, $from, $to, $bookBoat->getNumGuests(), $cost, $guest, Reservation::STATUS_REQUESTED, $setHoursToRespond, $flush);
+        return $this->makeReservationWithStatus($boat, $from, $to, $numGuests, $cost, $guest, Reservation::STATUS_REQUESTED, $setHoursToRespond);
         
     }
     
@@ -141,9 +139,8 @@ class ReservationAgent {
             throw new InvalidReservationException('Unable to accept reservation');
         }
         
-        $bankTransferPaymentMethod = $this->em->getRepository('ZizooBookingBundle:PaymentMethod')->findOneById('bank_transfer');
         $booking = $reservation->getBooking();
-        if ($booking->getInitialPaymentMethod()==$bankTransferPaymentMethod){
+        if ($booking->getInitialPaymentMethod()=='bank_transfer'){
             $reservation->setStatus(Reservation::STATUS_HOLD);
         } else {
             $reservation->setStatus(Reservation::STATUS_ACCEPTED);
@@ -157,7 +154,7 @@ class ReservationAgent {
     public function denyReservation(Reservation $reservation, $flush)
     {
         if ($reservation->getStatus()!=Reservation::STATUS_REQUESTED){
-            throw new InvalidReservationException('Unable to accept reservation');
+            throw new InvalidReservationException('Unable to deny reservation');
         }
         
         $reservation->setStatus(Reservation::STATUS_DENIED);

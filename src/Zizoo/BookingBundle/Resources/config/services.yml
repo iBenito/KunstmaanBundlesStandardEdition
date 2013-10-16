@@ -5,7 +5,7 @@ parameters:
 
 services:
     zizoo_booking_booking_agent:
-        class:  Zizoo\BookingBundle\Service\BookingAgent
+        class:  Zizoo\BookingBundle\Service\BookingAgentController
         arguments: 
             entityManager:  "@doctrine.orm.entity_manager"
             messenger:      "@messenger"

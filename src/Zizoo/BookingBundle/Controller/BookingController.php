@@ -58,7 +58,7 @@ class BookingController extends Controller
         
         //$form->setData($booking);
         $trans = $request->request->get('transaction');
-        $trans['credit_card'] = null;
+        $trans['payment_method']['data_credit_card'] = null;
         $request->request->set('transaction', $trans);
         $form->bind($request);
         return $form;
@@ -149,10 +149,39 @@ class BookingController extends Controller
             if ($form->isValid()){
                 
                 try {
-                    $booking = $bookingAgent->makeBooking($user, $bookingForm, $intendedPrice, $bookBoat, $boat);
+                    $reservationRange   = $bookBoat->getReservationRange();
+                    $from               = $reservationRange->getReservationFrom();
+                    $to                 = $reservationRange->getReservationTo();
+                    $numGuests          = $bookBoat->getNumGuests();
+                    $crew               = $bookBoat->getCrew();
+                    $paymentMethod      = $bookingForm->getPaymentMethod();
+
+                    $booking = $bookingAgent->makeBooking($user, $boat, $from, $to, $intendedPrice, $numGuests, $crew, $paymentMethod);
                     // Reservation and payment successful
                     $session->remove('boat');
                     $session->remove('price');
+                    
+                    $composer       = $this->container->get('zizoo_message.composer');
+                    $sender         = $this->container->get('fos_message.sender');
+                    $messageTypeRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooMessageBundle:MessageType');
+
+                    $thread = $composer->newThread()
+                                        ->setSender($user)
+                                        ->addRecipient($boat->getCharter()->getAdminUser())
+                                        ->setSubject($bookingForm->getMessageToOwner()->getSubject())
+                                        ->setBody($bookingForm->getMessageToOwner()->getBody())
+                                        ->setBooking($booking);
+
+
+                    $message = $thread->getMessage()
+                                        ->setMessageType($messageTypeRepo->findOneById('enquiry'));
+
+
+                    $thread->setBooking($booking);
+
+                    $sender->send($message);
+                    
+                    
                     return $this->redirect($this->generateUrl('ZizooBookingBundle_view_booking', array('id' => $booking->getID())));
                 } catch (\Exception $e){
                     $errors[] = $e->getMessage();

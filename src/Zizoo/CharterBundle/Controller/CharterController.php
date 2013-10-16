@@ -410,6 +410,8 @@ class CharterController extends Controller
             }
         }
         
+        
+        
         // Define columns
         $columns = array(
             'booking_id'  => array(
@@ -418,8 +420,10 @@ class CharterController extends Controller
                 'sortable'          => true,
                 'search'            => array(
                                                 'options'           => $reservationOptions,
-                                                'initial_option'    => $request->get('booking', null)
-                )
+                                                'initial_option'    => $request->get('booking', null)),
+                'function'           => function($field, $val, $reservation) {
+                    
+                }
                                                
             ),
             'charter_id' => array(
@@ -482,7 +486,7 @@ class CharterController extends Controller
                     $hours = $reservationAgent->hoursToRespond($reservation);
                     if ($reservation->getStatus() == Reservation::STATUS_REQUESTED && $hours){
                         if ($hours >= 0){
-                            return "$statusString (expires in $hours)";
+                            return "$statusString (expires in $hours hours)";
                         } else {
                             return "$statusString (expires soon)";
                         }
@@ -926,27 +930,30 @@ class CharterController extends Controller
     
     public function viewBookingAction($id)
     {
+        $request    = $this->getRequest();
         $em         = $this->getDoctrine()->getManager();
         $user       = $this->getUser();
         $charter    = $user->getCharter();
         
+        $routes     = $request->query->get('routes');
+        
         if (!$charter){
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
+            return $this->redirect($this->generateUrl($routes['view_bookings']));
         }
         
-        $reservation   = $em->getRepository('ZizooReservationBundle:Reservation')->find($id);
-        if (!$reservation){
-            return $this->redirect($this->generateUrl('ZizooCharterBundle_Charter_Bookings'));
+        $booking   = $em->getRepository('ZizooBooingBundle:Booking')->find($id);
+        if (!$booking){
+            return $this->redirect($this->generateUrl($routes['view_bookings']));
         }
         
-        $boat   = $reservation->getBoat();
+        $boat   = $booking->getReservation()->getBoat();
         //if ($boat->getCharter()->getAdminUser()!=$user) {
         if (!$boat || !$boat->getCharter()->getUsers()->contains($user)){
             throw $this->createNotFoundException('Unable to find Boat entity.');
         }
         
-        return $this->render('ZizooCharterBundle:Charter:view_reservation.html.twig', array(
-            'reservation'       => $reservation
+        return $this->render('ZizooCharterBundle:Charter:view_booking.html.twig', array(
+            'booking'       => $booking
         ));
     }
     

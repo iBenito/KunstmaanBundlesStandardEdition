@@ -29,7 +29,8 @@
         "willdurand/geocoder": "dev-master",
         "mtdowling/cron-expression": "1.0.*",
         "gergelypolonkai/smssender": "dev-master",
-        "gergelypolonkai/smssender-bundle": "dev-master"
+        "gergelypolonkai/smssender-bundle": "dev-master",
+        "jms/payment-core-bundle": "master-dev"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*"
