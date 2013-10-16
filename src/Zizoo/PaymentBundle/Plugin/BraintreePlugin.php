@@ -101,6 +101,7 @@ class BraintreePlugin extends AbstractPlugin
             $transaction->setReasonCode(PluginInterface::REASON_CODE_SUCCESS);
             $transaction->setReferenceNumber($result->transaction->id);
         } else {
+            $transaction->setReferenceNumber($result->transaction->id);
             $transaction->setReasonCode($result->message);
             throw new InvalidPaymentInstructionException();
         }
