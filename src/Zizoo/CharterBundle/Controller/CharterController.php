@@ -36,9 +36,33 @@ class CharterController extends Controller
      */
     public function showAction($id) 
     {
-        $charter    = $this->getDoctrine()->getManager()->getRepository('ZizooCharterBundle:Charter')->findOneById($id);
+        $charter = $this->getDoctrine()->getManager()->getRepository('ZizooCharterBundle:Charter')->findOneById($id);
+        $charterAddress = $charter->getAddress();
+
+        if ($charterAddress){
+            $map = $this->get('ivory_google_map.map');
+            $map->setHtmlContainerId('map');
+            $map->setAsync(true);
+            $map->setAutoZoom(false);
+
+            if ($charterAddress->getLat() && $charterAddress->getLng()){
+                $map->setCenter($charterAddress->getLat(), $charterAddress->getLng(), true);
+            }
+            $map->setMapOption('zoom', 6);
+            $map->setMapOption('disableDefaultUI', true);
+            $map->setMapOption('zoomControl', true);
+            $map->setMapOption('scrollwheel', false);
+            $map->setStylesheetOptions(array(
+                'width' => '100%',
+                'height' => '0'
+            ));
+        }
+        else {
+            $map = NULL;
+        }
 
         return $this->render('ZizooCharterBundle:Charter:show.html.twig', array(
+            'map'     => $map,
             'charter' => $charter
         ));
     }
@@ -191,8 +215,10 @@ class CharterController extends Controller
                 $address    = $charter->getAddress();
                 $charter->setLogo(null);
 
-                $em->persist($charter);
                 $em->persist($address);
+                $address->setCharter($charter);
+                $em->persist($charter);
+                $charter->setAddress($address);
                 
                 $em->flush();
                 $this->get('session')->setFlash('notice', 'Your charter profile was updated!');

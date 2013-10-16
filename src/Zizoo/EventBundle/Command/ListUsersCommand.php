@@ -25,12 +25,13 @@ class ListUsersCommand extends ContainerAwareCommand
     {
         $container  = $this->getContainer();
         $em         = $container->get('doctrine.orm.entity_manager');
-        
+
         $users       = $em->getRepository('ZizooUserBundle:User')->findAll();
 
         foreach ($users as $user){
             $output->writeln($user->getEmail());
         }
+
     }
 }
 ?>

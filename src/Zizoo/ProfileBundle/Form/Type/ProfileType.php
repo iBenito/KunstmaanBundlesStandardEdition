@@ -31,7 +31,7 @@ class ProfileType extends AbstractType
             ->add('languages', 'entity', array(
                 'class' => 'ZizooAddressBundle:Language',
                 'multiple'  => true,
-                'attr'  => array('title'=>'select'),
+                'attr'  => array('title'=>'select', 'no-select-box-it'=>'no-select-box-it'),
                 'property' => 'name',
                 'label' => array('value' => 'zizoo_profile.label.languages', 'class' => 'languages')))
             ->add('avatar', 'zizoo_media_collection', array(    'type'              => 'zizoo_media',
