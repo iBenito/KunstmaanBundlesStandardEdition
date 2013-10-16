@@ -201,16 +201,18 @@
 
                 <!-- start:avatar -->
                 <div class="avatar">
-                    <figure>
-                        {% if boat.charter.logo is not null %}
-                            <img src="{{ asset(charter.logo|pictureWebPath) }}" alt="{{ charter.charterName }}" class="large" id="logo_img" />
-                        {% else %}
-                            <img src="{{ asset('bundles/zizoobase/images/default/avatar-user.png'|imagine_filter('thumb_190x_')) }}" alt="Charter logo not set" id="logo_img" />
-                        {% endif %}
-                        <figcaption>
-                            {{ boat.charter.charterName }}
-                        </figcaption>
-                    </figure>
+                    <a href="{{ path('ZizooCharterBundle_Charter_Show', {id: boat.charter.id}) }}" title="View Profile">
+                        <figure>
+                            {% if boat.charter.logo is not null %}
+                                <img src="{{ asset(boat.charter.logo|pictureWebPath) }}" alt="{{ boat.charter.charterName }}" class="large" id="logo_img" />
+                            {% else %}
+                                <img src="{{ asset('bundles/zizoobase/images/default/avatar-user.png'|imagine_filter('thumb_190x_')) }}" alt="Charter logo not set" id="logo_img" />
+                            {% endif %}
+                            <figcaption>
+                                {{ boat.charter.charterName }}
+                            </figcaption>
+                        </figure>
+                    </a>
                     <div id="message_coming_soon" style="display: none">
                         <h1>Hold tight!</h1>
                         <h2>Messaging functionality is coming soon!</h2>

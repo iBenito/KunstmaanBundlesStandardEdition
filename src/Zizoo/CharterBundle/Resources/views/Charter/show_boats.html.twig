@@ -1,10 +1,29 @@
-<div id="charter_boats">
+<div id="grid">
     {% for i in 0..page_size-1 %}
         {% if i < boats|length %}
             {% set boat = boats[i] %}
             <div class="boat">
-                <h3>{{ boat.name }}</h3>
-                <div class="price-container">{{ boat|displayFromPrice|raw }}</div>
+                <div class="box">
+                    <a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" class="boat white clearfix">
+                        <figure>
+                            {% if boat.image.first != false %}
+                                <img src="{{ asset(boat.image.first|pictureWebPath|imagine_filter('thumb_218x114')) }}" alt="" />
+                            {% else %}
+                                <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg'|imagine_filter('thumb_218x114')) }}" alt="" />
+                            {% endif %}
+
+                            <figcaption class="clearfix">
+                                {{ boat.title }}<span class="icon minus"></span>
+                            </figcaption>
+                        </figure>
+                        <div class="left">
+                            ?? Reviews
+                        </div>
+                        <div class="right">
+                            from <strong>{{ boat|displayAmount(boat.lowestPrice) }} &euro;</strong>
+                        </div>
+                    </a>
+                </div>
             </div>
         {% endif %}
     {% endfor %}
@@ -25,7 +44,7 @@
             $.ajax({
                 url: $(this).attr('href'),
                 success: function(data){
-                    $('#charter_boats').append($(data).find('.boat'));
+                    $('#grid').append($(data).find('.box'));
                     $('#show_more_boats_link').attr('href', $(data).find('#show_more_boats_link'));
                     $('#boats_loading').hide();
                     if ($(data).find('#more_boats').val()=='true') $(this).show();
