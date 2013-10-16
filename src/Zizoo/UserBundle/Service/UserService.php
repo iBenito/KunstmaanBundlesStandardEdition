@@ -19,11 +19,12 @@ class UserService
         $this->em = $em;
         $this->container = $container;
         
-        require_once $this->container->getParameter('braintree_path').'/lib/Braintree.php';
-        \Braintree_Configuration::environment($this->container->getParameter('braintree_environment'));
-        \Braintree_Configuration::merchantId($this->container->getParameter('braintree_merchant_id'));
-        \Braintree_Configuration::publicKey($this->container->getParameter('braintree_public_key'));
-        \Braintree_Configuration::privateKey($this->container->getParameter('braintree_private_key'));
+        $braintree = $this->container->getParameter('zizoo_payment.braintree');
+        require_once $braintree['path'].'/lib/Braintree.php';
+        \Braintree_Configuration::environment($braintree['environment']);
+        \Braintree_Configuration::merchantId($braintree['merchant_id']);
+        \Braintree_Configuration::publicKey($braintree['public_key']);
+        \Braintree_Configuration::privateKey($braintree['private_key']);
     }
     
     public function confirmUser($token, $email){

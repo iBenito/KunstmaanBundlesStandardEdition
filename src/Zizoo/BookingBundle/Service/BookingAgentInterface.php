@@ -8,7 +8,7 @@ use Zizoo\UserBundle\Entity\User;
 interface BookingAgentInterface 
 {
     function makeBooking(Reservation $reservation, User $user, $cost, $crew);
-    function addPayment(Booking $booking, $amount);
+    function addPayment(Booking $booking, $amount, $data);
 //    function cancelBooking();
 //    function cancelPayment();
     function processes($paymentMethod);
