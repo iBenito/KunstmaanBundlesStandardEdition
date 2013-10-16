@@ -182,7 +182,8 @@
                 url: '{{ path('ZizooUserBundle_register') }}',
                 data: $('#register_inner_ajax .register_form').serialize(),
                 success: function(data, textStatus, XHR){
-                    $('#register_inner_ajax').html($(data).find('#register_inner_ajax'));
+                    $('#register_inner_ajax').html('').append($(data).find('#register_inner_ajax').children());
+                    if ($(data).find('#register_inner_ajax').hasClass('submitted')) $('#register_inner_ajax').addClass('submitted');
                     $('#register_inner_ajax .register_facebook_btn').click(function(){
                         window.open($(this).attr('href'), 'Register with Facebook', "height=200,width=200");
                         return false;
@@ -190,6 +191,7 @@
                     $('#register_hidden .register-table .button').click(function(){
                         $(this).parents('div.register').find('.register_email_container').slideToggle(200, 'easeInQuad', function() {
                             //$(this).find('input[type="text"]:first').focus();
+                            $(window).resize();
                         });
                         return false;
                      });
@@ -217,6 +219,7 @@
                         $('#register_hidden .register-table .button').click(function(){
                             $(this).parents('div.register').find('.register_email_container').slideToggle(200, 'easeInQuad', function() {
                                 //$(this).find('input[type="text"]:first').focus();
+                                $(window).resize();
                             });
                             return false;
                          });
@@ -299,6 +302,7 @@
             type: 'get',
             url: '{{ path('ZizooUserBundle_register_facebook_link') }}',
             success: function(data, textStatus, XHR){
+                console.log($(data).find('#facebook_register_inner_ajax'));
                 $('#facebook_register_hidden').removeClass('empty').html($(data).find('#facebook_register_inner_ajax'));
                 $.unblockUI();
                 openFacebookRegisterDialog();
@@ -337,6 +341,7 @@
         //closeLoginDialog();
         closeAllDialogs();
     }
+    
     
     $(document).ready(function(){
         

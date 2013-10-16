@@ -1,0 +1,122 @@
+{% block datatable_html_header %}
+{% set show_search_row = false %}
+{% spaceless %}
+<thead>
+    <tr>
+        {% for column in datatable.columns %}
+            <th>{% if column.title is defined %}{{ column.title }}{% endif %}</th> 
+        {% endfor %}
+    </tr>
+
+    <tr class="search-row">
+        {% for key, column in datatable.columns %}
+            <th>
+            {% if column.search is defined and column.search != false %}
+                {% if column.search.options is defined and column.search.options != false %}
+                    <select id="{{ key }}_search" no-select-box-it>
+                        <option value="">All</option>
+                        {% for option_key, entry in column.search.options %}
+                            {% if column.search.initial_option is defined and column.search.initial_option == option_key and column.search.initial_option is not null%}
+                            <option value="{{ option_key }}" selected="selected">{{ entry }}</option>
+                            {% else %}
+                            <option value="{{ option_key }}">{{ entry }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                {% else %}
+                    <input type="text" id="{{ key }}_search" />
+                {% endif %}
+            {% endif %}
+            </th>
+        {% endfor %}
+    </tr>
+</thead>
+{% endspaceless %}
+{% endblock datatable_html_header %}
+
+{% block datatable_html %}
+{% spaceless %}
+<table id="{{datatable.id|raw}}">
+    {{ block('datatable_html_header') }}
+</table>
+{% endspaceless %}
+{% endblock datatable_html %}
+
+{% block datatable_column_defs %}
+{% spaceless %}
+    
+{% endspaceless %}
+{% endblock datatable_column_defs %}
+
+{% block datatable_javascript %}
+<script type="text/javascript" src="{{ asset('bundles/zizoodatatables/js/jQuery.dataTables.js') }}"></script>
+<script src="{{ asset('bundles/zizoodatatables/js/zizoo-datatables.js') }}"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        var initialFilter = new Array();
+        {% for key, column in datatable.columns %}
+            {% if column.search is defined and column.search != false %}
+                {% if column.search.initial_option is defined and column.search.initial_option != false %}
+                    {% if column.search.target is defined %}
+                        {% for key2, column2 in datatable.columns %}
+                            {% if key2 == column.search.target %}
+                                initialFilter[{{ loop.index0 }}] = { "sSearch" :  "{{  column.search.initial_option }}" };
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        initialFilter[{{ loop.index0 }}] = { "sSearch" :  "{{  column.search.initial_option }}" };
+                    {% endif %}
+                {% endif %}
+                {% if column.search.options is defined and column.search.options != false %}
+                    $('#{{ key }}_search').click(function(e){
+                        e.stopPropagation();
+                    });
+                    $('#{{ key }}_search').change(function(){
+                        var target = '{% if column.search.target is defined %}{{ column.search.target }}{% else %}{{ key }}{% endif %}';
+                        var columns = oTable_{{datatable.id|raw}}.fnSettings().aoColumns;
+                        var i;
+                        for (i=0; i<columns.length; i++){
+                            if (columns[i].id == target){
+                                oTable_{{datatable.id|raw}}.fnFilter( $(this).val(), i );
+                                break;
+                            }
+                        }
+                        
+                    });
+                {% endif %}
+            {% endif %}
+            
+        {% endfor %}
+                
+        $('#{{datatable.id|raw}}').dataTable({
+            'sPaginationType': 'zizoo_pagination',
+            'sAjaxSource': '{{ datatable.url }}',
+            'bProcessing': true,
+            'bServerSide': true,
+            'aoColumns': {{ datatable_aoColumns(datatable)|raw }},
+            'aoSearchCols': initialFilter,
+            'fnServerParams': function ( aoData ) {
+            },
+            'iDisplayLength': 20,
+            'aLengthMenu': [[5, 10, 20, 50, 100, -1], [5, 10, 20, 50, 100, 'All']],
+            'sDom': 'rt<"bottom"ilp>'
+        });
+
+        
+        var oTable_{{datatable.id|raw}} = $('#{{datatable.id|raw}}').dataTable();
+        var oTable_{{datatable.id|raw}}_settings = oTable_{{datatable.id|raw}}.fnSettings();
+        
+        {% for key, column in datatable.columns %}
+            {% if column.render is defined and column.render != false %}
+                oTable_{{datatable.id|raw}}_settings.aoColumns[{{ loop.index0 }}].fnRender = {{ column.render|raw }};
+            {% endif %}
+        {% endfor %}
+    });
+</script>
+{% endblock datatable_javascript %}
+
+
+{% block datatable %}
+    {{ block("datatable_html") }}
+    {{ block("datatable_javascript") }}
+{% endblock datatable %}    

@@ -39,14 +39,14 @@ class Reservation extends BaseEntity
     protected $booking;
     
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="check_in")
      */
-    protected $check_in;
+    protected $checkIn;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="check_out")
      */
-    protected $check_out;
+    protected $checkOut;
 
     /**
      * @ORM\Column(type="integer")
@@ -76,9 +76,9 @@ class Reservation extends BaseEntity
     protected $reason;
     
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true, name="hours_to_respond")
      */
-    protected $hours_to_respond;
+    protected $hoursToRespond;
 
     
     public function __construct()
@@ -106,7 +106,7 @@ class Reservation extends BaseEntity
      */
     public function setCheckIn($checkIn)
     {
-        $this->check_in = $checkIn;
+        $this->checkIn = $checkIn;
     
         return $this;
     }
@@ -118,7 +118,7 @@ class Reservation extends BaseEntity
      */
     public function getCheckIn()
     {
-        return $this->check_in;
+        return $this->checkIn;
     }
 
     /**
@@ -129,7 +129,7 @@ class Reservation extends BaseEntity
      */
     public function setCheckOut($checkOut)
     {
-        $this->check_out = $checkOut;
+        $this->checkOut = $checkOut;
     
         return $this;
     }
@@ -141,7 +141,7 @@ class Reservation extends BaseEntity
      */
     public function getCheckOut()
     {
-        return $this->check_out;
+        return $this->checkOut;
     }
 
     /**
@@ -319,13 +319,26 @@ class Reservation extends BaseEntity
     
     public function setHoursToRespond($hoursToRespond)
     {
-        $this->hours_to_respond = $hoursToRespond;
+        $this->hoursToRespond = $hoursToRespond;
         return $this;
     }
     
     public function getHoursToRespond()
     {
-        return $this->hours_to_respond;
+        return $this->hoursToRespond;
+    }
+    
+    protected $test;
+    
+    public function getTest()
+    {
+        return $this->test;
+    }
+    
+    public function setTest($test)
+    {
+        $this->test = $test;
+        return $this;
     }
         
 }

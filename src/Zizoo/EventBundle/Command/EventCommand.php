@@ -62,7 +62,7 @@ class EventCommand extends ContainerAwareCommand
                 var_dump($e->getMessage());
             }
         }
-        
+        return 4;
     }
 }
 ?>

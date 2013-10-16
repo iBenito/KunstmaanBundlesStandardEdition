@@ -9,6 +9,15 @@
 
 {% block body %}
 
+    <style type="text/css">
+            #instalments {
+                display: none;
+            }
+            #instalments .instalment-option {
+                display: none;
+            }
+    </style>
+    
     <!-- start:content -->
     <div id="content">
         <div class="container clearfix">
@@ -219,6 +228,23 @@
                     
                     <form id="tr_booking_form" method="post" action="{{ braintree_action }}" class="form">
                         <input type="hidden" name="tr_data" value="{{ tr_data }}" />
+                        
+                        <!-- start:include -->
+                        <section class="include">
+                            <h2>Include Message to Owner</h2>
+
+                            <!-- start:messages -->
+                            <ul class="messages">
+                                <li class="message">
+                                   {{ form_widget(form.message_to_owner) }}
+
+                                </li>
+                            </ul>
+                            <!-- end:messages -->
+
+                        </section>
+                        <!-- end:include -->
+                    
                         <!-- start:payment -->
                         <section class="payment">
                             <h2>Payment</h2>
@@ -317,8 +343,8 @@
                                 <div class="clearfix">
                                 {{ form_row(form.instalment_option) }}
                                 </div>
-                                <div class="payment-options instalment clearfix">
-                                    <div class="instalment-option-one">
+                                <div class="payment-options instalment clearfix" id="instalments">
+                                    <div class="instalment-option-one instalment-option" id="half_now_half_later">
 
                                         <div class="left">
                                             <h4>First Instalment</h4>
@@ -339,7 +365,7 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <div class="instalment-option-multiple">
+                                    <div class="instalment-option-multiple instalment-option" id="full">
                                         <h4>First and only payment</h4>
                                         <p>
                                             (paid upon approval of the request by the Boat Owner)
@@ -355,6 +381,23 @@
                             
                         </section>
                         <!-- end:payment -->
+                        
+                        <section class="policies">
+                            <h2>Policies</h2>
+                            <ul>
+                                <li><a href="#">Cancelation Policy</a></li>
+                                <li><a href="#">Boat Rules</a></li>
+                            </ul>
+                        </section>
+                        
+                        <div class="book-it">
+                            <div class="row">
+                                {{ form_row(form.custom_fields) }}
+                                <button class="button orange big" type="submit">Book It</button>
+                            </div>
+                            {{ form_rest(form) }}
+                        </div>
+                        
                     </form>
             
                     <div id="errors">
@@ -400,7 +443,6 @@
                         }
                         
                         function selectPaymentMethod(method, animate){
-                            console.log(method);
                             if (method=='credit_card'){
                                 if (animate){
                                     $('#credit-card').slideDown();
@@ -409,6 +451,8 @@
                                     $('#credit-card').show();
                                     $('#bank').hide();
                                 }
+                                $('#credit-card').find('input, select').attr('required', 'required');
+                                $('#bank').find('input, select').attr('required', null);
                             } else {
                                 if (animate){
                                     $('#credit-card').slideUp();
@@ -417,7 +461,16 @@
                                     $('#credit-card').hide();
                                     $('#bank').show();
                                 }
+                                $('#credit-card').find('input, select').attr('required', null);
+                                $('#bank').find('input, select').attr('required', 'required');
                             }
+                        }
+                        
+                        function selectInstalmentOption(option, animate){
+                           if (option==null) return true;
+                           $('#instalments .instalment-option:not([id="'+option+'"])').attr('required', null).hide();
+                           $('#instalments .instalment-option#'+option).attr('required', 'required').show();
+                           $('#instalments').show();
                         }
 
                         $(document).ready(function(){            
@@ -434,8 +487,13 @@
                                 var method = $(this).val();
                                 selectPaymentMethod(method, true);
                             });
-
                             selectPaymentMethod($('#transaction_payment_method').val(), false);
+                            
+                            $('#transaction_instalment_option input[name="transaction[instalment_option]"]').change(function(){
+                                var option = $('#transaction_instalment_option input[name="transaction[instalment_option]"]:checked').val();
+                                selectInstalmentOption(option, true);
+                            });
+                            selectInstalmentOption($('#transaction_instalment_option input[name="transaction[instalment_option]"]:checked').val(), false);
                             
                             $('#details, #how').show();
 

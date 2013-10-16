@@ -1,4 +1,4 @@
-<?php
+v<?php
 
 namespace Zizoo\EventBundle\Entity;
 

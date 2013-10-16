@@ -1,4 +1,4 @@
-$.fn.dataTableExt.oPagination.zizo_pagination = {
+$.fn.dataTableExt.oPagination.zizoo_pagination = {
 
     "fnInit": function ( oSettings, nPaging, fnCallbackDraw )
     {

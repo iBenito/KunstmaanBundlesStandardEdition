@@ -19,7 +19,7 @@
                 {% set num_alerts = num_alerts + unreadMessages %}
                 {% endif %}
                 {% if reservationRequests > 0 %}
-                <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}"><span class="circle red">{{ reservationRequests }}</span>New Requests</a></li>
+                <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterBookings') }}"><span class="circle red">{{ reservationRequests }}</span>New Requests</a></li>
                 {% set num_alerts = num_alerts + reservationRequests %}
                 {% endif %}
                 {% if receivedPayments > 0 %}
@@ -64,9 +64,9 @@
             <section class="links">
                 <h2>My Bookings</h2>
                 <ul>
-                    <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}">{{ reservationRequests }} Pending Requests</a></li>
-                    <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}">{{ upcomingRequests }} Bookings Next 7 Days</a></li>
-                    <li><a href="{{ path('ZizooCharterBundle_Charter_Bookings') }}">{{ acceptedRequests }} Total Bookings</a></li>
+                    <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterBookings') }}">{{ reservationRequests }} Pending Requests</a></li>
+                    <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterBookings') }}">{{ upcomingRequests }} Bookings Next 7 Days</a></li>
+                    <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterBookings') }}">{{ acceptedRequests }} Total Bookings</a></li>
                 </ul>
             </section>
             <!-- end:links -->
@@ -84,8 +84,8 @@
                 <h2>My Payments</h2>
 
                 <ul>
-                    <li><a href="{{ path('ZizooCharterBundle_Charter_Payments') }}">{{ outstandingPayments }} Outstanding Payments</a></li>
-                    <li><a href="{{ path('ZizooCharterBundle_Charter_Payments') }}">{{ receivedPayments }} Payments Received</a></li>
+                    <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterPayments') }}">{{ outstandingPayments }} Outstanding Payments</a></li>
+                    <li><a href="{{ path('ZizooBaseBundle_Dashboard_CharterPayments') }}">{{ receivedPayments }} Payments Received</a></li>
                 </ul>
             </section>
             <!-- end:links -->

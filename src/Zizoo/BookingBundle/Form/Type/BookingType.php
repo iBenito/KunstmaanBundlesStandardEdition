@@ -49,24 +49,13 @@ class BookingType extends AbstractType
             'label'         => 'Instalment Options'
         ));    
             
-//        $builder->add('instalment_option', 'choice', array(
-//            'required'          => true,
-//            'choices'           => array(
-//                                    'one'       => 'I want to pay the full booking amount upon approval',
-//                                    'multiple'  => 'I want to pay the 50% of the booking amount upon approval and the rest later'                                    
-//            ),
-//            'expanded'          => true,
-//            'multiple'          => false,
-//            'label'             => 'Instalment Options'
-//        ));
-            
         $builder->add('message_to_owner', new MessageToOwnerType(), array('label' => 'Message to owner'));
             
         $builder->add('credit_card', new CreditCardType(), array('label'    => false));
         
         $builder->add('billing', new BillingType(), array('label' => false));
         
-        $builder->add('custom_fields', new CustomFieldsType(), array('label' => ' '));
+        $builder->add('custom_fields', new CustomFieldsType($this->container), array('label' => false));
         
     }
        

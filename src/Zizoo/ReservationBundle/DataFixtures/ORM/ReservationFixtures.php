@@ -74,7 +74,7 @@ class ReservationFixtures implements OrderedFixtureInterface, SharedFixtureInter
         $cost = $reservationAgent->getTotalPrice($boat1, $from, $to, true);
         
         //public function makeReservation(Boat $boat, BookBoat $bookBoat, $cost, User $guest, $flush=false)
-        //$reservation = $reservationAgent->makeReservation($boat1, $bookBoat, $cost, $user1, true);        
+        $reservation = $reservationAgent->makeReservation($boat1, $bookBoat, $cost, $user1, true);
     }
 
     public function getOrder()
