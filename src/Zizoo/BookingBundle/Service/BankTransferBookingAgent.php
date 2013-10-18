@@ -11,9 +11,9 @@ use JMS\Payment\CoreBundle\PluginController\Result;
 class BankTransferBookingAgent extends AbstractBookingAgent
 {
     
-    public function addPayment(Booking $booking, $amount)
+    public function addPayment(Booking $booking, $amount, $extendedData)
     {
-        $payment        = $this->initializePayment($booking, $amount);
+        $payment        = $this->initializePayment($booking, $amount, $extendedData);
         $instruction    = $payment->getPaymentInstruction();
         
         $this->em->flush();

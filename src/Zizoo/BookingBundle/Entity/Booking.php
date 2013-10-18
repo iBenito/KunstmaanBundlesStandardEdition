@@ -21,7 +21,14 @@ class Booking extends BaseEntity
      * @ORM\JoinColumn(name="reservation_id", referencedColumnName="id", nullable=false)
      */
     protected $reservation;
-        
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="reference", type="string", length=255)
+     */
+    private $reference;
+
     /**
      * @ORM\Column(type="smallint")
      */
@@ -97,6 +104,29 @@ class Booking extends BaseEntity
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set Reference
+     *
+     * @param string $reference
+     * @return Booking
+     */
+    public function setReference($reference)
+    {
+        $this->reference = $reference;
+
+        return $this;
+    }
+
+    /**
+     * Get Reference
+     *
+     * @return string
+     */
+    public function getReference()
+    {
+        return $this->reference;
     }
 
     /**

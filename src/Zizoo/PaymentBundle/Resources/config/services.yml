@@ -5,6 +5,7 @@ services:
     payment.plugin.braintree:
         class: Zizoo\PaymentBundle\Plugin\BraintreePlugin
         tags: [{name: payment.plugin}]
+        arguments: ["@zizoo_user_user_service", %zizoo_payment.braintree%, false]
         
     payment.plugin.bank_transfer:
         class: Zizoo\PaymentBundle\Plugin\BankTransferPlugin

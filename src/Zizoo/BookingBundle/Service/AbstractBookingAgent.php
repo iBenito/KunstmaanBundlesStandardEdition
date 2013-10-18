@@ -51,7 +51,10 @@ abstract class AbstractBookingAgent implements BookingAgentInterface
     
     function makeBooking(Reservation $reservation, User $user, $cost, $crew)
     {
+        $reference = date("Ymd").$user->getId().$reservation->getBoat()->getId().'ZIZOO';
+
         $booking = new Booking();
+        $booking->setReference($reference);
         $booking->setCost($cost);
         $booking->setPayoutAmount($cost);
         $booking->setRenter($user);
@@ -67,7 +70,7 @@ abstract class AbstractBookingAgent implements BookingAgentInterface
         return $booking;
     }
     
-    protected function initializePayment(Booking $booking, $amount)
+    protected function initializePayment(Booking $booking, $amount, $extendedData=null)
     {
         // Create (Zizoo) payment and add to booking
         $payment = new Payment();
@@ -76,7 +79,7 @@ abstract class AbstractBookingAgent implements BookingAgentInterface
         $booking->addPayment($payment);
         
         // Create JMS PaymentInstruction and connect to Zizoo payment
-        $instruction = new PaymentInstruction($amount, 'EUR', $this->id);
+        $instruction = new PaymentInstruction($amount, 'EUR', $this->id, $extendedData);
         $payment->setPaymentInstruction($instruction);
         $instruction->setState(PaymentInstruction::STATE_VALID);
         $this->em->persist($instruction);
@@ -86,7 +89,7 @@ abstract class AbstractBookingAgent implements BookingAgentInterface
     }
 
 
-    function addPayment(Booking $booking, $amount)
+    function addPayment(Booking $booking, $amount, $data)
     {
         throw new FunctionNotSupportedException('addPayment() is not supported by this plugin.');
     }

@@ -24,5 +24,14 @@ class ZizooPaymentExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+        
+        // process the configuration
+        $processedConfig = $this->processConfiguration(
+            new Configuration(),
+            $configs
+        );
+
+        $container->setParameter('zizoo_payment.braintree', $processedConfig['braintree']);
+        
     }
 }

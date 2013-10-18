@@ -53,6 +53,9 @@ class ProfileController extends Controller
                 $profile = $editForm->getData();
                 //setting the updated field manually for file upload DO NOT REMOVE
                 $profile->setUpdated(new \DateTime());
+                $address = $profile->getAddress();
+                $em->persist($address);
+                $address->setProfile($profile);
 
                 $avatars = $profile->getAvatar();
 

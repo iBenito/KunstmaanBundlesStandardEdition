@@ -39,10 +39,10 @@ class BookingExtension extends \Twig_Extension
         $amountPaid = 0;
         $payments = $booking->getPayment();
         foreach ($payments as $payment){
-            if ($payment->getProviderStatus() >= Payment::BRAINTREE_STATUS_SUBMITTED_FOR_SETTLEMENT)
-            {
-                $amountPaid += $payment->getAmount();
-            }
+//            if ($payment->getProviderStatus() >= Payment::BRAINTREE_STATUS_SUBMITTED_FOR_SETTLEMENT)
+//            {
+//                $amountPaid += $payment->getAmount();
+//            }
         }
         return $amountPaid;
     }

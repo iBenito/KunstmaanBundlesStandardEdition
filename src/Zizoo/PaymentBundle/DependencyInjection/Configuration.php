@@ -24,6 +24,40 @@ class Configuration implements ConfigurationInterface
         // configure your bundle. See the documentation linked above for
         // more information on that topic.
 
+        
+        $rootNode
+            ->children()
+                ->arrayNode('braintree')
+                    ->children()
+                        ->scalarNode('path')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                            ->end()
+                        ->scalarNode('environment')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                            ->end()
+                        ->scalarNode('merchant_id')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                            ->end()
+                        ->scalarNode('public_key')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                            ->end()
+                        ->scalarNode('private_key')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                            ->end()
+                        ->scalarNode('client_side_key')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                            ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+        
         return $treeBuilder;
     }
 }

@@ -70,8 +70,8 @@ class ProfileType extends AbstractType
             'cascade_validation'    => true,
             'validation_groups'     => array('Default', 'avatars'),
             'map_show'              => true,
-            'map_update'            => false,
-            'map_drag'              => false
+            'map_update'            => true,
+            'map_drag'              => true
         ));
     }
 

@@ -84,8 +84,7 @@ input[type="number"]::-webkit-inner-spin-button{
  */
 
 #header {
-    position: fixed;
-    width: 100%;
+    position: relative;
     background: -moz-linear-gradient(top, #47c2d2 50%, #45bccb 50%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#47c2d2), color-stop(50%,#45bccb));
     background: -webkit-linear-gradient(top, #47c2d2 50%,#45bccb 50%);
@@ -394,7 +393,6 @@ input[type="number"]::-webkit-inner-spin-button{
 #slideshow {
     position: relative;
     height: 450px;
-    margin-top: 76px;
     -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.3);
     -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.3);
     box-shadow: 0 1px 1px rgba(0,0,0,0.3);
@@ -940,7 +938,7 @@ input[type="number"]::-webkit-inner-spin-button{
  */
 
 #content {
-    padding: 100px 0 20px 0;
+    padding: 40px 0 20px 0;
 }
 
 /**
@@ -3037,4 +3035,9 @@ input[type="number"]::-webkit-inner-spin-button{
 
 .register_email_container {
     padding: 25px 0 0 0;
+}
+
+.dataTable a {
+    color: #47c2d2;
+    text-decoration: underline;
 }
