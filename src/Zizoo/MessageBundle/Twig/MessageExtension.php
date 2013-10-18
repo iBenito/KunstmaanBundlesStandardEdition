@@ -42,7 +42,7 @@ class MessageExtension extends \Twig_Extension
             if ($userCharter && $userCharter->getId() == $charter->getId()){
                 $userIsCharterRep = true;
             }
-            if ($senderUser && $senderCharter->getId() == $charter->getId()){
+            if ($senderCharter && $senderCharter->getId() == $charter->getId()){
                 $senderIsCharterRep = true;
             }
         }
