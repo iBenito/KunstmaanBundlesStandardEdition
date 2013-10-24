@@ -446,8 +446,8 @@ class CharterController extends Controller
                 $statusOptions[$i] = $reservationAgent->statusToString($i);
             }
         }
-        
-        
+
+        $router     = $this->container->get('router');
         
         // Define columns
         $columns = array(
@@ -455,10 +455,6 @@ class CharterController extends Controller
                 'title'             => 'Booking',
                 'property'          => 'id',
                 'sortable'          => true,
-//                'sAjaxSource'       => $this->generateUrl('ZizooBookingBundle_view_booking'),
-//                'fnServerParams'    => function ( aoData ) {
-//                    aoData.push( { 'name": "id", "value": $val } );
-//                }
                 'search'            => array(
                                                 'options'           => $reservationOptions,
                                                 'initial_option'    => $request->get('booking', null)),
