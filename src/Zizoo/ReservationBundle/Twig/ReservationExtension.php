@@ -23,8 +23,10 @@ class ReservationExtension extends \Twig_Extension
     }
     
     public function numberOfDays(Reservation $reservation){
-        $from   = $reservation->getCheckIn();
-        $to     = $reservation->getCheckOut();
+        $from   = clone $reservation->getCheckIn();
+        $to     = clone $reservation->getCheckOut();
+        $from->setTime(0,0,0);
+        $to->setTime(0,0,0);
         if (!$from || !$to) return '...';
         $interval = $from->diff($to);
         return $interval->days;

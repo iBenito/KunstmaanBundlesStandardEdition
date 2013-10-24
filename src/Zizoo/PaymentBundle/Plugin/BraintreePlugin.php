@@ -100,8 +100,9 @@ class BraintreePlugin extends AbstractPlugin
             $transaction->setResponseCode(PluginInterface::RESPONSE_CODE_SUCCESS);
             $transaction->setReasonCode(PluginInterface::REASON_CODE_SUCCESS);
             $transaction->setReferenceNumber($result->transaction->id);
+            
         } else {
-            $transaction->setReferenceNumber($result->transaction->id);
+            //$transaction->setReferenceNumber($result->transaction->id);
             $transaction->setReasonCode($result->message);
             throw new InvalidPaymentInstructionException();
         }
@@ -126,7 +127,10 @@ class BraintreePlugin extends AbstractPlugin
         $this->checkBraintreeCustomer();
         
         try {
-            $result = \Braintree_Transaction::submitForSettlement($transaction->getReferenceNumber());
+            $transactionId = $transaction->getPayment()->getApproveTransaction()->getReferenceNumber();
+            $result = \Braintree_Transaction::submitForSettlement($transactionId);
+        } catch (\InvalidArgumentException $e){
+            throw new InvalidPaymentInstructionException($e->getMessage());  
         } catch (\Exception $e){
             throw new BlockedException('There was an error with the payment provider');
         }

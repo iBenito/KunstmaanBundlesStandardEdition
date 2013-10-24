@@ -79,6 +79,18 @@ ZizooCharterBundle_Charter_ViewBooking:
     requirements:
         _method:  GET|POST
         
+ZizooCharterBundle_CharterAcceptBooking:
+    pattern:  /account/bookings/{id}/accept
+    defaults: { _controller: ZizooCharterBundle:Charter:acceptBooking }
+    requirements:
+        _method:  GET|POST
+        
+ZizooCharterBundle_CharterDenyBooking:
+    pattern:  /account/bookings/{id}/accept
+    defaults: { _controller: ZizooCharterBundle:Charter:denyBooking }
+    requirements:
+        _method:  GET|POST
+        
 ZizooCharterBundle_Charter_Payments:
     pattern:  /account/payments/view
     defaults: { _controller: ZizooCharterBundle:Charter:payments }

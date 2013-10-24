@@ -29,7 +29,7 @@ class MessageController extends BaseController
         
         $qb = $this->getProvider()->getThreadsQueryBuilder();
         
-        $page     = $request->attributes->get('page', 1);
+        $page     = $request->query->get('page', 1);
         $pageSize = $request->query->get('page_size', 10);
         
         $paginator  = $this->container->get('knp_paginator');

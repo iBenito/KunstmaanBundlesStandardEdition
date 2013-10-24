@@ -54,11 +54,15 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $em             = $this->container->get('doctrine.orm.entity_manager');
         $boatTypeRepo   = $em->getRepository('ZizooBoatBundle:BoatType');   
         $equipmentRepo  = $em->getRepository('ZizooBoatBundle:Equipment');   
+        $engineTypeRepo = $em->getRepository('ZizooBoatBundle:EngineType');
         $countryRepo    = $em->getRepository('ZizooAddressBundle:Country');
         
         $equipmentMainsailFurling   = $equipmentRepo->findOneById('mainsail_furning');
         $equipmentBattenedMainsail  = $equipmentRepo->findOneById('battened_mainsail');
         $equipmentTeakDeck          = $equipmentRepo->findOneById('teak_deck');
+        
+        $engineTypeInboard      = $engineTypeRepo->findOneById('inboard');
+        $engineTypeOutboard     = $engineTypeRepo->findOneById('outboard');
         
         $charter1 = $manager->merge($this->getReference('charter-1'));
         $charter2 = $manager->merge($this->getReference('charter-2'));
@@ -85,7 +89,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat1Address->setPostcode('54321');
         $boat1Address->setCountry($countryRepo->findOneByIso('HR'));
         
-        $boat1 = $boatService->createBoat($boat1, $boat1Address, $boatTypeRepo->findOneByName('Yacht'), $charter1, new ArrayCollection(array($equipmentBattenedMainsail, $equipmentMainsailFurling)));
+        $boat1 = $boatService->createBoat($boat1, $boat1Address, $boatTypeRepo->findOneByName('Yacht'), $charter1, new ArrayCollection(array($equipmentBattenedMainsail, $equipmentMainsailFurling)), $engineTypeInboard);
 
         $manager->persist($boat1);
         $this->addReference('boat-1', $boat1);
@@ -113,7 +117,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat2Address->setProvince('Some spanish province');
         $boat2Address->setCountry($countryRepo->findOneByIso('ES'));
         
-        $boat2 = $boatService->createBoat($boat2, $boat2Address, $boatTypeRepo->findOneByName('Yacht'), $charter1);
+        $boat2 = $boatService->createBoat($boat2, $boat2Address, $boatTypeRepo->findOneByName('Yacht'), $charter1, null, $engineTypeInboard);
         $manager->persist($boat2);
         
         $this->addReference('boat-2', $boat2);
@@ -142,7 +146,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat3Address->setCountry($countryRepo->findOneByIso('GB'));   
         
 
-        $boat3 = $boatService->createBoat($boat3, $boat3Address, $boatTypeRepo->findOneByName('Yacht'), $charter2);
+        $boat3 = $boatService->createBoat($boat3, $boat3Address, $boatTypeRepo->findOneByName('Yacht'), $charter2, null, $engineTypeInboard);
         $manager->persist($boat3);
         
         
@@ -170,7 +174,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat4Address->setPostcode('BS1 5QA');
         $boat4Address->setCountry($countryRepo->findOneByIso('GB'));
         
-        $boat4 = $boatService->createBoat($boat4, $boat4Address, $boatTypeRepo->findOneByName('Yacht'), $charter2);
+        $boat4 = $boatService->createBoat($boat4, $boat4Address, $boatTypeRepo->findOneByName('Yacht'), $charter2, null, $engineTypeInboard);
         $manager->persist($boat4);
         
         $this->addReference('boat-4', $boat4);
@@ -199,7 +203,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat5Address->setPostcode('HR 21450');
         $boat5Address->setCountry($countryRepo->findOneByIso('HR'));
         
-        $boat5 = $boatService->createBoat($boat5, $boat5Address, $boatTypeRepo->findOneByName('Sailboat'), $charter1);
+        $boat5 = $boatService->createBoat($boat5, $boat5Address, $boatTypeRepo->findOneByName('Sailboat'), $charter1, null, $engineTypeInboard);
         $manager->persist($boat5);
         
         $this->addReference('boat-5', $boat5);
@@ -226,7 +230,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat6Address->setPostcode('80073');
         $boat6Address->setCountry($countryRepo->findOneByIso('IT'));
         
-        $boat6 = $boatService->createBoat($boat6, $boat6Address, $boatTypeRepo->findOneByName('Sailboat'), $charter2);
+        $boat6 = $boatService->createBoat($boat6, $boat6Address, $boatTypeRepo->findOneByName('Sailboat'), $charter2, null, $engineTypeInboard);
         $manager->persist($boat6);
         
         $this->addReference('boat-6', $boat6);
@@ -253,7 +257,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat7Address->setPostcode('730 04');
         $boat7Address->setCountry($countryRepo->findOneByIso('GR'));
         
-        $boat7 = $boatService->createBoat($boat7, $boat7Address, $boatTypeRepo->findOneByName('Sailboat'), $charter2);
+        $boat7 = $boatService->createBoat($boat7, $boat7Address, $boatTypeRepo->findOneByName('Sailboat'), $charter2, null, $engineTypeOutboard);
         $manager->persist($boat7);
         
         $this->addReference('boat-7', $boat7);
@@ -281,7 +285,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat8Address->setPostcode('07410');
         $boat8Address->setCountry($countryRepo->findOneByIso('ES'));
         
-        $boat8 = $boatService->createBoat($boat8, $boat8Address, $boatTypeRepo->findOneByName('Yacht'), $charter1);
+        $boat8 = $boatService->createBoat($boat8, $boat8Address, $boatTypeRepo->findOneByName('Yacht'), $charter1, null, $engineTypeOutboard);
         $manager->persist($boat8);
         
         $this->addReference('boat-8', $boat8);
@@ -308,7 +312,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat9Address->setPostcode('730 04');
         $boat9Address->setCountry($countryRepo->findOneByIso('GR'));
         
-        $boat9 = $boatService->createBoat($boat9, $boat9Address, $boatTypeRepo->findOneByName('Sailboat'), $charter2);
+        $boat9 = $boatService->createBoat($boat9, $boat9Address, $boatTypeRepo->findOneByName('Sailboat'), $charter2, null, $engineTypeOutboard);
         $manager->persist($boat9);
         
         $this->addReference('boat-9', $boat9);
@@ -335,7 +339,7 @@ class BoatFixtures implements OrderedFixtureInterface, SharedFixtureInterface, C
         $boat10Address->setPostcode('291 00');
         $boat10Address->setCountry($countryRepo->findOneByIso('GR'));
         
-        $boat10 = $boatService->createBoat($boat10, $boat10Address, $boatTypeRepo->findOneByName('Sailboat'), $charter1);
+        $boat10 = $boatService->createBoat($boat10, $boat10Address, $boatTypeRepo->findOneByName('Sailboat'), $charter1, null, $engineTypeOutboard);
         $manager->persist($boat10);
         
         $this->addReference('boat-10', $boat10);

@@ -274,7 +274,7 @@ class BoatController extends Controller
 
                 /* Boat creation is done by Boat Service class */
                 $boatService = $this->get('boat_service');
-                $boatCreated = $boatService->createBoat($boat, $boat->getAddress(), $boat->getBoatType(), $charter, null, true);
+                $boatCreated = $boatService->createBoat($boat, $boat->getAddress(), $boat->getBoatType(), $charter, null, null, true);
 
                 $overrideUrl = $request->request->get('override_url', null);
                 if ($overrideUrl){

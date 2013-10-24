@@ -37,8 +37,10 @@ class DashboardController extends Controller {
     private $userMessageRoutes = array( 'view_thread_route'     => 'ZizooBaseBundle_Dashboard_ViewThread',
                                         'inbox_route'           => 'ZizooBaseBundle_Dashboard_Inbox');
     
-    private $bookingRoutes = array( 'bookings'      => 'ZizooBaseBundle_Dashboard_CharterBookings',
-                                    'view_booking'  => 'ZizooBaseBundle_Dashboard_CharterViewBooking' );
+    private $bookingRoutes = array( 'bookings'          => 'ZizooBaseBundle_Dashboard_CharterBookings',
+                                    'view_booking'      => 'ZizooBaseBundle_Dashboard_CharterViewBooking',
+                                    'accept_booking'    => 'ZizooBaseBundle_Dashboard_CharterAcceptBooking',
+                                    'deny_booking'      => 'ZizooBaseBundle_Dashboard_CharterDenyBooking');
     
     private function isCharterRoute($url)
     {
@@ -185,11 +187,10 @@ class DashboardController extends Controller {
         }
         
         $user = $this->getUser();
-        $charter = $user->getCharter();
         return $this->render('ZizooBaseBundle:Dashboard:inbox.html.twig', array(
             'title'     => 'My Inbox',
             'current'   => 'inbox',
-            'id'        => $charter->getId(),
+            'id'        => $user->getId(),
             'response'  => $response->getContent()
         ));
         
@@ -476,21 +477,25 @@ class DashboardController extends Controller {
      *
      * @return Response
      */
-    public function charterViewBookingAction($id)
+    public function charterBookingAction($id)
     {
         $request    = $this->getRequest();
         
         $params = $request->query->all();
         $params['routes'] = $this->bookingRoutes;
         
-        $messageController = $request->attributes->get('charter_controller');
+        $charterController = $request->attributes->get('charter_controller');
         
-        $response   = $this->forward($messageController, array('id' => $id), $params);
+        $response   = $this->forward($charterController, array('id' => $id), $params);
         
         
         if ($response->isRedirect()){
             return $this->redirect($response->headers->get('Location'));
         }
+        
+        $headers    = $response->headers;
+        $bookingRef = $headers->get('x-zizoo-booking-ref');
+        $title      = 'Booking ' . $bookingRef;
         
         $user = $this->getUser();
         $charter = $user->getCharter();
@@ -498,7 +503,7 @@ class DashboardController extends Controller {
             return $response;
         } else{
             return $this->render('ZizooBaseBundle:Dashboard:Charter/charter.html.twig', array(
-                'title'     => 'My Bookings',
+                'title'     => $title,
                 'current'   => 'bookings',
                 'id'        => $charter->getId(),
                 'response'  => $response->getContent()

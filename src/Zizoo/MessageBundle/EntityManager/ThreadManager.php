@@ -41,7 +41,7 @@ class ThreadManager extends BaseThreadManager
             // sort by date of last message written by an other participant
             //->orderBy('tm.lastMessageDate', 'DESC')
                 
-            ->orderBy('t.createdAt, t.id', 'DESC')
+            ->orderBy('t.createdAt', 'DESC')
         ;
         return $qb;
     }

@@ -1,3 +1,4 @@
+<section>
 {% if thread.booking and thread.booking.reservation %}
     {% if thread.booking.reservation.guest == user %}
         <p>You sent a reservation request for boat {{ thread.booking.reservation.boat.id }}</p>
@@ -15,7 +16,7 @@
     {% elseif thread.booking.reservation.boat.charter == charter %}
         <p>You received reservation request for boat {{ thread.booking.reservation.boat.id }}</p>
         {% if thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_REQUESTED') %}
-            <p>Please <a href="{{ path('ZizooReservationBundle_view', {id: thread.booking.reservation.id}) }}">respond to the request</a>.</p>
+            <p>Please <a href="{{ path('ZizooBaseBundle_Dashboard_CharterViewBooking', {id: thread.booking.id}) }}">respond to the request</a>.</p>
         {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') %}
             <p>You accepted the request.</p>
         {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_EXPIRED') %}
@@ -27,6 +28,7 @@
         {% endif %}
     {% endif %}
 {% endif %}
+</section>
 
 <section class="thread">
     <div class="reply">

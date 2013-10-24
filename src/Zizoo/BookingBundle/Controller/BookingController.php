@@ -185,7 +185,9 @@ class BookingController extends Controller
 
                     $extraData = $this->createExtraData($bookingForm);
                     
-                    $booking = $bookingAgent->makeBooking($user, $boat, $from, $to, $intendedPrice, $numGuests, $crew, $paymentMethod['method'], $extraData);
+                    $instalmentOption = $bookingForm->getInstalmentOption();
+                    
+                    $booking = $bookingAgent->makeBooking($user, $boat, $from, $to, $intendedPrice, $numGuests, $crew, $paymentMethod['method'], $instalmentOption, $extraData);
                     // Reservation and payment successful
                     $session->remove('boat');
                     $session->remove('price');

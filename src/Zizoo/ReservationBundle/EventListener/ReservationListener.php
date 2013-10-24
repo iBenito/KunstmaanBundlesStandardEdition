@@ -22,8 +22,8 @@ class ReservationListener
     private function handleReservationEntity(Reservation $reservation)
     {
         $boat               = $reservation->getBoat();
-        $from               = $reservation->getCheckIn();
-        $until              = $reservation->getCheckOut();
+        $from               = clone $reservation->getCheckIn();
+        $until              = clone $reservation->getCheckOut();
         
         $interval = $from->diff($until);
         $now = new \DateTime();
@@ -44,7 +44,7 @@ class ReservationListener
         } 
         
         // Ensure that the boat is booked for the specified minimum number of days
-        if ($boat->getMinimumDays() && $interval->days < $boat->getMinimumDays() && $reservation->getStatus()!=Reservation::STATUS_SELF){
+        if ($boat->getMinimumDays() && $interval->days+1 < $boat->getMinimumDays() && $reservation->getStatus()!=Reservation::STATUS_SELF){
             throw new InvalidReservationException('Boat must be booked for a minimum of '.$boat->getMinimumDays().' days.');
         }
         

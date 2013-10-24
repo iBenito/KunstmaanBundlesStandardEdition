@@ -77,7 +77,7 @@ class Booking
     
     public function setInstalmentOption($instalmentOption)
     {
-        $this->instalmentOption;
+        $this->instalmentOption = $instalmentOption;
         return $this;
     }
 }

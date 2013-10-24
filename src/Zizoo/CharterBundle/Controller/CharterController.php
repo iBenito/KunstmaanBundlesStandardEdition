@@ -6,6 +6,11 @@ use Zizoo\CharterBundle\Form\Type\CharterRegistrationType;
 use Zizoo\CharterBundle\Entity\CharterRepository;
 use Zizoo\CharterBundle\Entity\CharterLogo;
 
+use Zizoo\CharterBundle\Form\Type\AcceptBookingType;
+use Zizoo\CharterBundle\Form\Type\DenyBookingType;
+use Zizoo\CharterBundle\Form\Model\AcceptBooking;
+use Zizoo\CharterBundle\Form\Model\DenyBooking;
+
 use Zizoo\BillingBundle\Form\Type\PayoutSettingsType;
 use Zizoo\BillingBundle\Form\Model\PayoutSettings;
 use Zizoo\BillingBundle\Form\Type\BankAccountType;
@@ -457,26 +462,26 @@ class CharterController extends Controller
                 'search'            => array(
                                                 'options'           => $reservationOptions,
                                                 'initial_option'    => $request->get('booking', null)),
-                'callback'           => function($field, $val, $reservation) {
-                    $reference = $reservation->getBooking()->getReference();
-                    $url = "<a href=".$this->generateUrl('ZizooBookingBundle_view_booking', array('id' => $val)).">".$reference."</a>";
+                'callback'           => function($field, $val, $booking) {
+                    $reference = $booking->getReference();
+                    $url = "<a href=".$this->generateUrl('ZizooBaseBundle_Dashboard_CharterViewBooking', array('id' => $val)).">".$reference."</a>";
                     return $url;
                 }
                                                
             ),
             'charter_id' => array(
                 'visible'           => false,
-                'property'          => 'boat.charter.id',
+                'property'          => 'reservation.boat.charter.id',
                 'search'            => true
             ),
             'boat_id' => array(
                 'visible'           => false,
-                'property'          => 'boat.id',
+                'property'          => 'reservation.boat.id',
                 'search'            => true
             ),
             'boat_name' => array(
                 'title'             => 'Boat',
-                'property'          => 'boat.name',
+                'property'          => 'reservation.boat.name',
                 'search'            => array(
                                                 'target'            => 'boat_id',
                                                 'options'           => $boatOptions,
@@ -485,12 +490,12 @@ class CharterController extends Controller
             ),
             'guest_id' => array(
                 'visible'           => false,
-                'property'          => 'guest.id',
+                'property'          => 'reservation.guest.id',
                 'search'            => true
             ),
             'guest_name' => array(
                 'title'             => 'Guest',
-                'property'          => 'guest.username',
+                'property'          => 'reservation.guest.username',
                 'search'            => array(
                                                 'target'            => 'guest_id',
                                                 'options'           => $guestOptions,
@@ -499,28 +504,29 @@ class CharterController extends Controller
             ),
             'created' => array(
                 'title'             => 'Created',
-                'property'          => 'created',
+                'property'          => 'reservation.created',
                 'bSortable'         => true
             ),
             'check_in' => array(
                 'title'             => 'Check-In',
-                'property'          => 'checkIn',
+                'property'          => 'reservation.checkIn',
                 'bSortable'         => true
             ),
             'check_out' => array(
                 'title'             => 'Check-Out',
-                'property'          => 'checkOut',
+                'property'          => 'reservation.checkOut',
                 'bSortable'         => true
             ),
             'status'    => array(
                 'title'             => 'Status',
-                'property'          => 'status',
+                'property'          => 'reservation.status',
                 'search'            => array(
                                                 'options'           => $statusOptions,
                                                 'initial_option'    => $request->get('status', null)
                 ),
-                'callback'          => function($field, $val, $reservation) use ($reservationAgent){
+                'callback'          => function($field, $val, $booking) use ($reservationAgent){
                     $statusString = $reservationAgent->statusToString($val);
+                    $reservation    = $booking->getReservation();
                     $hours = $reservationAgent->hoursToRespond($reservation);
                     if ($reservation->getStatus() == Reservation::STATUS_REQUESTED && $hours){
                         if ($hours >= 0){
@@ -534,7 +540,7 @@ class CharterController extends Controller
             )
         );
         
-        $class = 'ZizooReservationBundle:Reservation';
+        $class = 'ZizooBookingBundle:Booking';
         
         $datatable = $this->get('zizoo_datatables.datatable');
         $datatable->setClass($class);
@@ -966,34 +972,283 @@ class CharterController extends Controller
         }
     }
     
+    
+    
+    /**
+     * View booking.
+     * @param type $id
+     */
     public function viewBookingAction($id)
     {
         $request    = $this->getRequest();
         $em         = $this->getDoctrine()->getManager();
         $user       = $this->getUser();
         $charter    = $user->getCharter();
+        $ajax       = $request->isXmlHttpRequest();
         
         $routes     = $request->query->get('routes');
         
         if (!$charter){
-            return $this->redirect($this->generateUrl($routes['view_bookings']));
+            return $this->redirect($this->generateUrl($routes['bookings']));
         }
         
-        $booking   = $em->getRepository('ZizooBooingBundle:Booking')->find($id);
+        $booking   = $em->getRepository('ZizooBookingBundle:Booking')->find($id);
         if (!$booking){
-            return $this->redirect($this->generateUrl($routes['view_bookings']));
+            return $this->redirect($this->generateUrl($routes['bookings']));
         }
         
-        $boat   = $booking->getReservation()->getBoat();
-        //if ($boat->getCharter()->getAdminUser()!=$user) {
-        if (!$boat || !$boat->getCharter()->getUsers()->contains($user)){
-            throw $this->createNotFoundException('Unable to find Boat entity.');
+        $reservation = $booking->getReservation();
+        if (!$reservation){
+            return $this->redirect($this->generateUrl($routes['bookings']));
         }
+        
+        $boat   = $reservation->getBoat();
+        if (!$boat || !$boat->getCharter()->getUsers()->contains($user)){
+             return $this->redirect($this->generateUrl($routes['bookings']));
+        }
+                
+        $reservationStatus  = $reservation->getStatus();
+        $showControls       = $reservationStatus==Reservation::STATUS_REQUESTED;
+        
+        $headers = array();
+        $headers['x-zizoo-booking-ref'] = $booking->getReference();
+        $response = new Response('', 200, $headers);
+        
+        $reservationAgent   = $this->get('zizoo_reservation_reservation_agent');
+        $statusString = $reservationAgent->statusToString($reservation->getStatus());
+        $hours = $reservationAgent->hoursToRespond($reservation);
+        if ($reservation->getStatus() == Reservation::STATUS_REQUESTED && $hours){
+            if ($hours >= 0){
+                $statusString = "$statusString (expires in $hours hours)";
+            } else {
+                $statusString = "$statusString (expires soon)";
+            }
+        }
+        
         
         return $this->render('ZizooCharterBundle:Charter:view_booking.html.twig', array(
-            'booking'       => $booking
-        ));
+            'booking'       => $booking,
+            'status'        => $statusString,
+            'show_controls' => $showControls,
+            'ajax'          => $ajax,
+            'routes'        => $routes
+        ), $response);
     }
+    
+    /**
+     * Accept booking request. User must confirm denial of other overlapping booking requests.
+     * @param type $id
+     */
+    public function acceptBookingRequestAction($id)
+    {
+        $request    = $this->getRequest();
+        $em         = $this->getDoctrine()->getManager();
+        $user       = $this->getUser();
+        $charter    = $user->getCharter();
+        $ajax       = $request->isXmlHttpRequest();
+        
+        $routes     = $request->query->get('routes');
+        
+        if (!$charter){
+            return $this->redirect($this->generateUrl($routes['bookings']));
+        }
+        
+        $booking   = $em->getRepository('ZizooBookingBundle:Booking')->find($id);
+        if (!$booking){
+            return $this->redirect($this->generateUrl($routes['bookings']));
+        }
+        
+        $reservation = $booking->getReservation();
+        if (!$reservation){
+            return $this->redirect($this->generateUrl($routes['bookings']));
+        }
+        
+        $boat   = $reservation->getBoat();
+        if (!$boat || !$boat->getCharter()->getUsers()->contains($user)){
+             return $this->redirect($this->generateUrl($routes['bookings']));
+        }
+        
+        $bookingAgent       = $this->get('zizoo_booking_booking_agent');
+        $trans              = $this->get('translator');
+        
+        $thread             = $em->getRepository('ZizooMessageBundle:Thread')->findOneByBooking($booking);
+        
+        $overlappingReservationRequests = $em->getRepository('ZizooReservationBundle:Reservation')
+                                                ->getReservations($charter, $user, $reservation->getBoat(), 
+                                                                    $reservation->getCheckIn(), $reservation->getCheckOut(),
+                                                                    array(Reservation::STATUS_REQUESTED), $reservation);
+        
+        $form = $this->createForm(new AcceptBookingType(), new AcceptBooking($overlappingReservationRequests));
+        
+        if ($request->isMethod('post')){
+            if ($request->request->get('accept', null)){
+                $form->bind($request);
+                if ($form->isValid()){
+                    $acceptReservation = $form->getData();
+                    
+                    try {
+                        // Reject any overlapping reservation requests
+                        foreach ($overlappingReservationRequests as $overlappingReservationRequest){
+                            $bookingAgent->denyBooking($overlappingReservationRequest->getBooking());
+                            $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_reservation.request_denied_success'));
+                        }
+
+                    } catch (\Exception $e){
+                        $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_reservation.request_denied_error'));
+                        return $this->redirect($this->generateUrl($routes['view_booking'], array('id' => $id)));
+                    }
+                    
+                    try {
+                        // Accept reservation request
+                        $bookingAgent->acceptBooking($booking, false);
+
+                        $composer           = $this->container->get('zizoo_message.composer');
+                        $sender             = $this->container->get('fos_message.sender');
+                        $messageTypeRepo    = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooMessageBundle:MessageType');
+                        
+                        if ($thread){
+                            // Send accept message
+                            $thread = $composer->reply($thread)
+                                                ->setSender($user)
+                                                ->setBody($acceptReservation->getAcceptMessage());
+                            if ($user != $charter->getAdminUser()){
+                                //$thread->addRecipient($charter->getAdminUser());
+                            }
+                            $message =  $thread->getMessage()
+                                                ->setMessageType($messageTypeRepo->findOneById('accepted'));
+
+                            $sender->send($message);
+                        }
+                        
+                        // Send deny message for each denied reservation request
+                        foreach ($overlappingReservationRequests as $overlappingReservationRequest){
+                            $thread = $em->getRepository('ZizooMessageBundle:Thread')->findOneByReservation($overlappingReservationRequest);
+                            if ($thread){
+                                $thread = $composer->reply($thread)
+                                                    ->setSender($user)
+                                                    ->setBody($acceptReservation->getDenyReservation()->getDenyMessage());
+
+                                $message =  $thread->getMessage()
+                                                    ->setMessageType($messageTypeRepo->findOneById('declined'));
+
+                                $sender->send($message);
+                            }
+                        }
+                        
+                        $em->flush();
+                        $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_reservation.request_accepted_success'));
+                        return $this->redirect($this->generateUrl($routes['view_booking'], array('id' => $id)));
+                        
+                    } catch (\Exception $e){
+                        $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_reservation.request_accepted_error'));
+                        return $this->redirect($this->generateUrl($routes['view_booking'], array('id' => $id)));
+                    }
+                } else {
+                    //return $this->redirect($this->generateUrl('ZizooReservationBundle_view', array('id' => $id)));
+                }
+            }
+        }
+        
+        $headers = array();
+        $headers['x-zizoo-booking-ref'] = $booking->getReference();
+        $response = new Response('', 200, $headers);
+        
+        return $this->render('ZizooCharterBundle:Charter:accept_booking.html.twig', array(
+            'booking'                           => $booking,
+            'form'                              => $form->createView(),
+            'overlap_requested_reservations'    => $overlappingReservationRequests,
+            'ajax'                              => $ajax,
+            'routes'                            => $routes
+        ), $response);
+        
+    }
+    
+    public function denyBookingRequestAction($id)
+    {
+        $request    = $this->getRequest();
+        $em         = $this->getDoctrine()->getManager();
+        $user       = $this->getUser();
+        $charter    = $user->getCharter();
+        $ajax       = $request->isXmlHttpRequest();
+        
+        $routes     = $request->query->get('routes');
+        
+        if (!$charter){
+            return $this->redirect($this->generateUrl($routes['bookings']));
+        }
+        
+        $booking   = $em->getRepository('ZizooBookingBundle:Booking')->find($id);
+        if (!$booking){
+            return $this->redirect($this->generateUrl($routes['bookings']));
+        }
+        
+        $reservation = $booking->getReservation();
+        if (!$reservation){
+            return $this->redirect($this->generateUrl($routes['bookings']));
+        }
+        
+        $boat   = $reservation->getBoat();
+        if (!$boat || !$boat->getCharter()->getUsers()->contains($user)){
+             return $this->redirect($this->generateUrl($routes['bookings']));
+        }
+        
+        $reservationAgent   = $this->get('zizoo_reservation_reservation_agent');
+        $bookingAgent       = $this->get('zizoo_booking_booking_agent');
+        $trans              = $this->get('translator');
+        
+        $thread             = $em->getRepository('ZizooMessageBundle:Thread')->findOneByBooking($booking);
+        
+        $form = $this->createForm(new DenyBookingType(), new DenyBooking());
+        
+        if ($request->isMethod('post')){
+            $form->bind($request);
+            if ($form->isValid()){
+                if ($request->request->get('deny', null)){
+                    try {
+                        $bookingAgent->denyBooking($booking, true);
+
+                        if ($thread){
+                            $composer       = $this->container->get('zizoo_message.composer');
+                            $sender         = $this->container->get('fos_message.sender');
+                            $messageTypeRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooMessageBundle:MessageType');
+
+                            $denyBooking = $form->getData();
+
+                            $thread = $composer->reply($thread)
+                                                ->setSender($user)
+                                                ->setBody($denyBooking->getDenyMessage());
+
+                            $message =  $thread->getMessage()
+                                                ->setMessageType($messageTypeRepo->findOneById('declined'));
+
+                            $sender->send($message);
+                        }
+
+                        $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_reservation.request_denied_success'));
+                        return $this->redirect($this->generateUrl($routes['view_booking'], array('id' => $id)));
+                    } catch (\Exception $e){
+                        $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_reservation.request_denied_error'));
+                        return $this->redirect($this->generateUrl($routes['view_booking'], array('id' => $id)));
+                    }
+                } else {
+                    return $this->redirect($this->generateUrl($routes['view_booking'], array('id' => $id)));
+                }
+            }
+        }
+        
+        $headers = array();
+        $headers['x-zizoo-booking-ref'] = $booking->getReference();
+        $response = new Response('', 200, $headers);
+        
+        return $this->render('ZizooCharterBundle:Charter:deny_booking.html.twig', array(
+            'booking'       => $booking,
+            'form'          => $form->createView(),
+            'ajax'          => $ajax,
+            'routes'        => $routes
+        ), $response);
+        
+    }
+    
     
     public function setLogoAction()
     {

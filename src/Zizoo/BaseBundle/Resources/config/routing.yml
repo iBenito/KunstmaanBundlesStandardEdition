@@ -152,17 +152,24 @@ ZizooBaseBundle_Dashboard_CharterBookings:
         
 ZizooBaseBundle_Dashboard_CharterViewBooking:
     pattern:  /charter/account/dashboard/bookings/{id}
-    defaults: { _controller: ZizooBaseBundle:Dashboard:charterViewBooking, charter_controller: ZizooCharterBundle:Charter:viewBooking }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBooking, charter_controller: ZizooCharterBundle:Charter:viewBooking }
     requirements:
         _method:  GET|POST
         id: \d+
         
 ZizooBaseBundle_Dashboard_CharterAcceptBooking:
     pattern:  /charter/account/dashboard/bookings/{id}/accept
-    defaults: { _controller: ZizooBaseBundle:Dashboard:charterViewBooking, charter_controller: ZizooCharterBundle:Charter:acceptBooking }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBooking, charter_controller: ZizooCharterBundle:Charter:acceptBookingRequest }
     requirements:
         _method:  GET|POST
         id: \d+
+        
+ZizooBaseBundle_Dashboard_CharterDenyBooking:
+    pattern:  /charter/account/dashboard/bookings/{id}/deny
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBooking, charter_controller: ZizooCharterBundle:Charter:denyBookingRequest }
+    requirements:
+        _method:  GET|POST
+        id: \d+ 
                         
 ZizooBaseBundle_Dashboard_CharterPayments:
     pattern:  /charter/account/dashboard/payments
