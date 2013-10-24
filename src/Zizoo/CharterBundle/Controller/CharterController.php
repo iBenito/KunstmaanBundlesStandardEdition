@@ -441,8 +441,8 @@ class CharterController extends Controller
                 $statusOptions[$i] = $reservationAgent->statusToString($i);
             }
         }
-        
-        
+
+        $router     = $this->container->get('router');
         
         // Define columns
         $columns = array(
@@ -450,16 +450,12 @@ class CharterController extends Controller
                 'title'             => 'Booking',
                 'property'          => 'id',
                 'sortable'          => true,
-//                'sAjaxSource'       => $this->generateUrl('ZizooBookingBundle_view_booking'),
-//                'fnServerParams'    => function ( aoData ) {
-//                    aoData.push( { 'name": "id", "value": $val } );
-//                }
                 'search'            => array(
                                                 'options'           => $reservationOptions,
                                                 'initial_option'    => $request->get('booking', null)),
-                'callback'           => function($field, $val, $reservation) {
+                'callback'           => function($field, $val, $reservation) use ($router) {
                     $reference = $reservation->getBooking()->getReference();
-                    $url = "<a href=".$this->generateUrl('ZizooBookingBundle_view_booking', array('id' => $val)).">".$reference."</a>";
+                    $url = "<a href=".$router->generate('ZizooBookingBundle_view_booking', array('id' => $val)).">".$reference."</a>";
                     return $url;
                 }
                                                
