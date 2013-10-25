@@ -496,9 +496,9 @@
                             
                             $('#transaction_instalment_option input[name="transaction[instalment_option]"]').change(function(){
                                 var option = $('#transaction_instalment_option input[name="transaction[instalment_option]"]:checked').val();
-                                //selectInstalmentOption(option, true);
+                                selectInstalmentOption(option, true);
                             });
-                            //selectInstalmentOption($('#transaction_instalment_option input[name="transaction[instalment_option]"]:checked').val(), false);
+                            selectInstalmentOption($('#transaction_instalment_option input[name="transaction[instalment_option]"]:checked').val(), false);
                             
                             $('#details, #how').show();
 
