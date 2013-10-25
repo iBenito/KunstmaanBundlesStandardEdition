@@ -42,6 +42,8 @@ class ProfileController extends Controller
         $user       = $this->getUser();
         $profile    = $user->getProfile();
         
+        $routes     = $request->query->get('routes');
+        
         $profileType = $this->get('zizoo_profile.profile_type');
         $editForm = $this->createForm($profileType, $profile, array('validation_groups' => 'Default'));
         
@@ -70,7 +72,7 @@ class ProfileController extends Controller
                 $em->flush();
                 
                 $this->get('session')->setFlash('notice', 'Your profile was updated!');
-                return $this->redirect($this->generateUrl($request->query->get('redirect_route')));
+                return $this->redirect($this->generateUrl($routes['profile_route']));
             }
         }
    

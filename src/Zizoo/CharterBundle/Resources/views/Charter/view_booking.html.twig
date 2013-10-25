@@ -59,14 +59,14 @@
                                         <td>Status:</td>
                                         <td>{{ status }}
                                             {% if show_controls ==true %}
-                                            <form action="{{ path(routes['accept_booking'], {id: booking.id}) }}" method="get">
+                                            <form action="{{ path(routes['accept_booking_route'], {id: booking.id}) }}" method="get">
                                                 <input type="submit" name="accept" id="accept_btn" value="Accept" />
                                             </form>
-                                            <form action="{{ path(routes['deny_booking'], {id: booking.id}) }}" method="get">
+                                            <form action="{{ path(routes['deny_booking_route'], {id: booking.id}) }}" method="get">
                                                 <input type="submit" name="deny" id="deny_btn" value="Deny" />
                                             </form>
                                             {% endif %}
-                                            <a href="{{ path('ZizooBaseBundle_Dashboard_CharterViewThread', {id: booking.thread.id}) }}">View Convervsation</a>
+                                            <a href="{{ path(routes['view_thread_route'], {threadId: booking.thread.id}) }}">View Convervsation</a>
                                         </td>
                                     </tr>
                                     <tr>

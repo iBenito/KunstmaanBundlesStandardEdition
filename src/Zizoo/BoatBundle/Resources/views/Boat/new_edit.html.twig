@@ -4,14 +4,14 @@
     {{ render(controller('ZizooBaseBundle:Dashboard:charterTabs', { 'current': 'boats' })) }}
 {% endblock %}
 
-{% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['edit_route'], 'routes': routes }  %}
+{% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['boat_edit_route'], 'routes': routes }  %}
 
 <div class="content">
     {% if step != "" %}
         <h1>Step {{ step }}</h1>
     {% endif %}
 
-    {% set formPath = boat.id is null ? path(routes['new_route']) : path(routes['edit_route'], { 'id': boat.id }) %}
+    {% set formPath = boat.id is null ? path(routes['boat_new_route']) : path(routes['boat_edit_route'], { 'id': boat.id }) %}
     <form class="form" action="{{ formPath }}" method="post" {{ form_enctype(form) }}>
 
         {{ form_widget(form) }}

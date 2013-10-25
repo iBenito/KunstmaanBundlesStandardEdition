@@ -21,7 +21,8 @@
 
             <!-- start:sidebar -->
             <aside id="sidebar" class="left clearfix">
-                {% render controller('ZizooBaseBundle:Dashboard:widget', {route: app.request.attributes.get('_route'), showUser: app.request.query.get('show_user')}) %}
+                
+                {% render controller('ZizooBaseBundle:Dashboard:widget', {route: app.request.attributes.get('_route'), routeParams: app.request.attributes.get('_route_params'), showUser: app.request.query.get('show_user')}) %}
             </aside>
             <!-- end:sidebar -->
         </div>

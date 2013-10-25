@@ -1,0 +1,100 @@
+{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
+
+{% block tabs %}
+{{ render(controller('ZizooBaseBundle:Dashboard:userTabs', { 'current': 'index' })) }}
+{% endblock %}
+
+{% block content %}
+    <div class="content">
+        <h1>Dashboard</h1>
+
+        <!-- start:links -->
+        <section class="links">
+            <h2>Alerts</h2>
+            {% set num_alerts = 0 %}
+            <ul>
+                {% if unreadMessages > 0 %}
+                <li><a href="{{ path('ZizooBaseBundle_Dashboard_Inbox') }}"><span class="circle red">{{ unreadMessages }}</span>Unread messages</a></li>
+                {% set num_alerts = num_alerts + unreadMessages %}
+                {% endif %}
+                <li><a href="{{ path('ZizooBaseBundle_Dashboard_Trips') }}"><span class="circle red">2</span>Payment due</a></li>
+                <li><a href="{{ path('ZizooBaseBundle_Dashboard_Trips') }}"><span class="circle red">1</span>Payment overdue</a></li>
+                <!--<li><a href=""><span class="circle red">3</span>Reviews due</a></li>-->
+            </ul>
+        </section>
+        <!-- end:links -->
+
+    </div>
+{% endblock %}
+{% block sub_content %}
+    <!-- start:section -->
+    <div class="section">
+
+        <div class="content">
+
+            <!-- start:inbox -->
+            <section class="inbox excerpt">
+                <h2>Messages</h2>
+
+                <!-- start:messagess -->
+                <ul class="messages">
+                    {% for thread in latestThreads %}
+                        {% include "ZizooBaseBundle:Dashboard:User/index_thread_view.html.twig" with { thread: thread } %}
+                    {% endfor %}
+                </ul>
+                <!-- end:messagess -->
+
+                <!-- start:more -->
+                <div class="more">
+                    <a href="{{ path('ZizooBaseBundle_Dashboard_Inbox') }}">All Messages</a>
+                </div>
+                <!-- end:more -->
+
+            </section>
+            <!-- end:inbox -->
+
+            <!-- start:upcoming -->
+            <section class="upcoming">
+                <h2>Upcoming Trips</h2>
+
+                {% if upcoming_bookings|length > 0 %}
+                    {% for booking in upcoming_bookings %}
+                        {% set boat = booking.reservation.boat %}
+                        <article>
+                            <header>
+                                <h3>{{ boat.address.locality }} | {{ booking.reservation.checkIn|date('M d, Y') }}</h3>
+                            </header>
+                            <div class="background clearfix">
+                                {% set boat_url = path('ZizooBoatBundle_Boat_Show', {id: boat.id}) %}
+                                <a href="{{ boat_url }}" title="Hvar">
+                                    {% if boat.image.first != false %}
+                                        <img src="{{ asset(boat.image.first|pictureWebPath|imagine_filter('thumb_218x114')) }}" alt="" />
+                                    {% else %}
+                                        <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg'|imagine_filter('thumb_218x114')) }}" alt="" />
+                                    {% endif %}
+                                </a>
+                                <p>
+                                    <strong>Boat:</strong> {{ boat.name }}<br>
+                                    <strong>Homeport:</strong> {{ boat.address.locality }}, {{ boat.address.country.printableName }}<br>
+                                </p>
+                            </div>
+                        </article>
+                    {% endfor %}
+                {% else %}
+                    <p>No upcoming trips.</p>
+                {% endif %}
+                
+                
+            </section>
+            <!-- end:upcoming -->
+
+            <!-- start:more -->
+            <div class="more">
+                <a href="{{ path('ZizooBaseBundle_Dashboard_Trips') }}">Show More</a>
+            </div>
+            <!-- end:more -->
+
+        </div>
+    </div>
+    <!-- end:section -->
+{% endblock %}

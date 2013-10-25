@@ -151,7 +151,7 @@ class CharterController extends Controller
             );
             $pagination->setCustomParameters(array('itemName' => 'Boats'));
         } catch (\Exception $e){
-            return $this->redirect($this->generateUrl($routes['complete_route']));
+            return $this->redirect($this->generateUrl($routes['boats_route']));
         }
         
         $page_sizes = array(
@@ -227,7 +227,7 @@ class CharterController extends Controller
                 
                 $em->flush();
                 $this->get('session')->setFlash('notice', 'Your charter profile was updated!');
-                return $this->redirect($this->generateUrl($request->query->get('redirect_route')));
+                return $this->redirect($this->generateUrl($request->query->get('profile_route')));
             }
             
         }
@@ -254,17 +254,13 @@ class CharterController extends Controller
         \Braintree_Configuration::merchantId($braintree['merchant_id']);
         \Braintree_Configuration::publicKey($braintree['public_key']);
         \Braintree_Configuration::privateKey($braintree['private_key']);
-//        require_once $this->container->getParameter('braintree_path').'/lib/Braintree.php';
-//        \Braintree_Configuration::environment($this->container->getParameter('braintree_environment'));
-//        \Braintree_Configuration::merchantId($this->container->getParameter('braintree_merchant_id'));
-//        \Braintree_Configuration::publicKey($this->container->getParameter('braintree_public_key'));
-//        \Braintree_Configuration::privateKey($this->container->getParameter('braintree_private_key'));
-        
+
+        $routes = $request->query->get('routes');
         $em                 = $this->getDoctrine()->getManager();
         $userService        = $this->container->get('zizoo_user_user_service');
         $trans              = $this->get('translator');
         $payoutSettingsType = new PayoutSettingsType();
-        
+                
         $form = $this->createForm($payoutSettingsType);
         
         $user               = $this->getUser();
@@ -309,12 +305,12 @@ class CharterController extends Controller
                         );
                     } else {
                         $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_billing.payout_settings_not_changed'));
-                        return $this->redirect($this->generateUrl($request->query->get('redirect_route')));
+                        return $this->redirect($this->generateUrl($routes['payout_settings_route']));
                     }
 
                     if ($updateResult->success){
                         $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_billing.payout_settings_changed'));
-                        return $this->redirect($this->generateUrl($request->query->get('redirect_route')));
+                        return $this->redirect($this->generateUrl($routes['payout_settings_route']));
                     } else {
                         $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_billing.payout_settings_not_changed'));
                     }
@@ -390,6 +386,7 @@ class CharterController extends Controller
         $charter    = $user->getCharter();
         $request    = $this->getRequest();
         $em         = $this->getDoctrine()->getManager();
+        $routes     = $request->query->get('routes');
         
         if (!$charter) {
             return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
@@ -458,9 +455,9 @@ class CharterController extends Controller
                 'search'            => array(
                                                 'options'           => $reservationOptions,
                                                 'initial_option'    => $request->get('booking', null)),
-                'callback'           => function($field, $val, $booking) {
+                'callback'           => function($field, $val, $booking) use ($routes) {
                     $reference = $booking->getReference();
-                    $url = "<a href=".$this->generateUrl('ZizooBaseBundle_Dashboard_CharterViewBooking', array('id' => $val)).">".$reference."</a>";
+                    $url = "<a href=".$this->generateUrl($routes['view_booking_route'], array('id' => $val)).">".$reference."</a>";
                     return $url;
                 }
                                                
@@ -985,29 +982,29 @@ class CharterController extends Controller
         $routes     = $request->query->get('routes');
         
         if (!$charter){
-            return $this->redirect($this->generateUrl($routes['bookings']));
+            return $this->redirect($this->generateUrl($routes['bookings_route']));
         }
         
         $booking   = $em->getRepository('ZizooBookingBundle:Booking')->find($id);
         if (!$booking){
-            return $this->redirect($this->generateUrl($routes['bookings']));
+            return $this->redirect($this->generateUrl($routes['bookings_route']));
         }
         
         $reservation = $booking->getReservation();
         if (!$reservation){
-            return $this->redirect($this->generateUrl($routes['bookings']));
+            return $this->redirect($this->generateUrl($routes['bookings_route']));
         }
         
         $boat   = $reservation->getBoat();
         if (!$boat || !$boat->getCharter()->getUsers()->contains($user)){
-             return $this->redirect($this->generateUrl($routes['bookings']));
+             return $this->redirect($this->generateUrl($routes['bookings_route']));
         }
                 
         $reservationStatus  = $reservation->getStatus();
         $showControls       = $reservationStatus==Reservation::STATUS_REQUESTED;
         
         $headers = array();
-        $headers['x-zizoo-booking-ref'] = $booking->getReference();
+        $headers['x-zizoo-title'] = 'Booking <strong>' . $booking->getReference() . '</strong>';
         $response = new Response('', 200, $headers);
         
         $reservationAgent   = $this->get('zizoo_reservation_reservation_agent');
@@ -1046,22 +1043,22 @@ class CharterController extends Controller
         $routes     = $request->query->get('routes');
         
         if (!$charter){
-            return $this->redirect($this->generateUrl($routes['bookings']));
+            return $this->redirect($this->generateUrl($routes['bookings_route']));
         }
         
         $booking   = $em->getRepository('ZizooBookingBundle:Booking')->find($id);
         if (!$booking){
-            return $this->redirect($this->generateUrl($routes['bookings']));
+            return $this->redirect($this->generateUrl($routes['bookings_route']));
         }
         
         $reservation = $booking->getReservation();
         if (!$reservation){
-            return $this->redirect($this->generateUrl($routes['bookings']));
+            return $this->redirect($this->generateUrl($routes['bookings_route']));
         }
         
         $boat   = $reservation->getBoat();
         if (!$boat || !$boat->getCharter()->getUsers()->contains($user)){
-             return $this->redirect($this->generateUrl($routes['bookings']));
+             return $this->redirect($this->generateUrl($routes['bookings_route']));
         }
         
         $bookingAgent       = $this->get('zizoo_booking_booking_agent');
@@ -1091,7 +1088,7 @@ class CharterController extends Controller
 
                     } catch (\Exception $e){
                         $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_reservation.request_denied_error'));
-                        return $this->redirect($this->generateUrl($routes['view_booking'], array('id' => $id)));
+                        return $this->redirect($this->generateUrl($routes['view_booking_route'], array('id' => $id)));
                     }
                     
                     try {
@@ -1133,11 +1130,11 @@ class CharterController extends Controller
                         
                         $em->flush();
                         $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_reservation.request_accepted_success'));
-                        return $this->redirect($this->generateUrl($routes['view_booking'], array('id' => $id)));
+                        return $this->redirect($this->generateUrl($routes['view_booking_route'], array('id' => $id)));
                         
                     } catch (\Exception $e){
                         $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_reservation.request_accepted_error'));
-                        return $this->redirect($this->generateUrl($routes['view_booking'], array('id' => $id)));
+                        return $this->redirect($this->generateUrl($routes['view_booking_route'], array('id' => $id)));
                     }
                 } else {
                     //return $this->redirect($this->generateUrl('ZizooReservationBundle_view', array('id' => $id)));
@@ -1146,7 +1143,7 @@ class CharterController extends Controller
         }
         
         $headers = array();
-        $headers['x-zizoo-booking-ref'] = $booking->getReference();
+        $headers['x-zizoo-title'] = 'Booking ' . $booking->getReference();
         $response = new Response('', 200, $headers);
         
         return $this->render('ZizooCharterBundle:Charter:accept_booking.html.twig', array(
@@ -1175,17 +1172,17 @@ class CharterController extends Controller
         
         $booking   = $em->getRepository('ZizooBookingBundle:Booking')->find($id);
         if (!$booking){
-            return $this->redirect($this->generateUrl($routes['bookings']));
+            return $this->redirect($this->generateUrl($routes['bookings_route']));
         }
         
         $reservation = $booking->getReservation();
         if (!$reservation){
-            return $this->redirect($this->generateUrl($routes['bookings']));
+            return $this->redirect($this->generateUrl($routes['bookings_route']));
         }
         
         $boat   = $reservation->getBoat();
         if (!$boat || !$boat->getCharter()->getUsers()->contains($user)){
-             return $this->redirect($this->generateUrl($routes['bookings']));
+             return $this->redirect($this->generateUrl($routes['bookings_route']));
         }
         
         $reservationAgent   = $this->get('zizoo_reservation_reservation_agent');
@@ -1221,19 +1218,19 @@ class CharterController extends Controller
                         }
 
                         $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_reservation.request_denied_success'));
-                        return $this->redirect($this->generateUrl($routes['view_booking'], array('id' => $id)));
+                        return $this->redirect($this->generateUrl($routes['view_booking_route'], array('id' => $id)));
                     } catch (\Exception $e){
                         $this->get('session')->getFlashBag()->add('error', $trans->trans('zizoo_reservation.request_denied_error'));
-                        return $this->redirect($this->generateUrl($routes['view_booking'], array('id' => $id)));
+                        return $this->redirect($this->generateUrl($routes['view_booking_route'], array('id' => $id)));
                     }
                 } else {
-                    return $this->redirect($this->generateUrl($routes['view_booking'], array('id' => $id)));
+                    return $this->redirect($this->generateUrl($routes['view_booking_route'], array('id' => $id)));
                 }
             }
         }
         
         $headers = array();
-        $headers['x-zizoo-booking-ref'] = $booking->getReference();
+        $headers['x-zizoo-title'] = 'Booking ' . $booking->getReference();
         $response = new Response('', 200, $headers);
         
         return $this->render('ZizooCharterBundle:Charter:deny_booking.html.twig', array(

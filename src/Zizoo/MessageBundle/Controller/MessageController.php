@@ -61,7 +61,6 @@ class MessageController extends BaseController
         $request                = $this->container->get('request');
         
         $routes         = $request->query->get('routes');
-        
         $user           = $this->container->get('security.context')->getToken()->getUser();
         $charter        = $user->getCharter();
         
@@ -79,7 +78,7 @@ class MessageController extends BaseController
         }
         
         if ($message = $formHandler->process($form)) {
-            $url = $this->container->get('router')->generate($routes['view_thread_route'], array('id' => $message->getThread()->getId()), array(
+            $url = $this->container->get('router')->generate($routes['view_thread_route'], array('threadId' => $message->getThread()->getId()), array(
                 'threadId'      => $message->getThread()->getId(),
                 'message_types' => $messageTypesArr,
                 'user'          => $user,
@@ -95,8 +94,7 @@ class MessageController extends BaseController
             if ($participant->getId() == $user->getId()) continue;
             $participantsArr[] = $participant->getProfile()->getFirstName();
         }
-        $headers['x-zizoo-thread-subject'] = $thread->getSubject();
-        $headers['x-zizoo-thread-participants'] = implode(',', $participantsArr);
+        $headers['x-zizoo-title'] = 'Conversation "' . $thread->getSubject() . '" with ' . implode(',', $participantsArr);
         $response = new Response('', 200, $headers);
         
         return $this->container->get('templating')->renderResponse('FOSMessageBundle:Message:thread.html.twig', array(

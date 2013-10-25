@@ -21,18 +21,18 @@ class Provider extends BaseProvider
      *
      * @return array of ThreadInterface
      */
-    public function getThreads()
+    public function getThreads($limit=null)
     {
         $participant = $this->getAuthenticatedParticipant();
 
-        return $this->threadManager->findParticipantThreads($participant);
+        return $this->threadManager->findParticipantThreads($participant, $limit);
     }
     
-    public function getThreadsQueryBuilder()
+    public function getThreadsQueryBuilder($limit=null)
     {
         $participant = $this->getAuthenticatedParticipant();
 
-        return $this->threadManager->getParticipantThreadsQueryBuilder($participant);
+        return $this->threadManager->getParticipantThreadsQueryBuilder($participant, $limit);
     }
     
 }

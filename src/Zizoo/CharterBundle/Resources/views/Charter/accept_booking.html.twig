@@ -9,11 +9,11 @@
             </ul>
         {% endif %}
 
-        <form action="{{ path(routes['accept_booking'], {id: booking.id}) }}" method="post">
+        <form action="{{ path(routes['accept_booking_route'], {id: booking.id}) }}" method="post">
             {{ form_widget(form) }}
             <input type="submit" name="accept" value="Accept" />
         </form>
-        <form action="{{ path(routes['view_booking'], {id: booking.id}) }}" method="post">
+        <form action="{{ path(routes['view_booking_route'], {id: booking.id}) }}" method="post">
             <input type="submit" name="cancel" value="Cancel" />
         </form>
     </div>

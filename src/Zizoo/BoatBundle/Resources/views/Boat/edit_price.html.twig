@@ -4,7 +4,7 @@
     {{ render(controller('ZizooBaseBundle:Dashboard:charterTabs', { 'current': 'boats' })) }}
 {% endblock %}
 
-{% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['calendar_route'], 'routes': routes }  %}
+{% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['boat_calendar_route'], 'routes': routes }  %}
 
 {% block javascripts %}
     <script type="text/javascript" src="{{ asset('js/datepick/jquery.datepick.js') }}"></script>
@@ -40,7 +40,7 @@
     </div>
     
     {% if step != "" %}
-        <a href="{{ path(routes['complete_route']) }}" class="button blue large">Complete</a>
+        <a href="{{ path(routes['boats_route']) }}" class="button blue large">Complete</a>
     {% endif %}
     
     <style type="text/css">

@@ -67,52 +67,60 @@ ZizooBaseBundle_Dashboard_Widget:
     requirements:
         _method:  GET
 
+# USER (shared dashboard action)
 ZizooBaseBundle_Dashboard_Profile:
     pattern:  /account/dashboard/profile
-    defaults: { _controller: ZizooBaseBundle:Dashboard:profile }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:user, other_controller: ZizooProfileBundle:Profile:edit, title: 'My Profile', tab: profile }
     requirements:
         _method:  GET|POST
 
 ZizooBaseBundle_Dashboard_Skills:
     pattern:  /account/dashboard/skills
-    defaults: { _controller: ZizooBaseBundle:Dashboard:skills }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:user, other_controller: ZizooCrewBundle:Skills:add, title: 'My Skills', tab: skills }
     requirements:
         _method:  GET
 
 ZizooBaseBundle_Dashboard_Trips:
     pattern:  /account/dashboard/trips
-    defaults: { _controller: ZizooBaseBundle:Dashboard:trips }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:user, other_controller: ZizooBookingBundle:Booking:viewAllBookings, title: 'My Trips', tab: bookings }
+    requirements:
+        _method:  GET
+        
+ZizooBaseBundle_Dashboard_ViewTrip:
+    pattern:  /account/dashboard/trips/{id}
+    defaults: { _controller: ZizooBaseBundle:Dashboard:user, other_controller: ZizooBookingBundle:Booking:viewBooking, tab: bookings }
     requirements:
         _method:  GET
         
 ZizooBaseBundle_Dashboard_Inbox:
     pattern:  /account/dashboard/inbox
-    defaults: { _controller: ZizooBaseBundle:Dashboard:inbox, message_controller: ZizooMessageBundle:Message:inbox }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:user, other_controller: ZizooMessageBundle:Message:inbox, title: 'My Inbox', tab: inbox }
     requirements:
         _method:  GET
         
 ZizooBaseBundle_Dashboard_ViewThread:
-    pattern:  /account/dashboard/inbox/{id}
-    defaults: { _controller: ZizooBaseBundle:Dashboard:viewThread, message_controller: FOSMessageBundle:Message:thread }
+    pattern:  /account/dashboard/inbox/{threadId}
+    defaults: { _controller: ZizooBaseBundle:Dashboard:user, other_controller: FOSMessageBundle:Message:thread, view: 'user', tab: inbox }
     requirements:
         _method:  GET|POST
-        id: \d+
+        threadId: \d+
         
 ZizooBaseBundle_Dashboard_AccountSettings:
     pattern:  /account/dashboard/settings
-    defaults: { _controller: ZizooBaseBundle:Dashboard:accountSettings }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:user, other_controller: ZizooUserBundle:User:accountSettings, title: 'Account Settings', tab: account }
     requirements:
         _method:  GET|POST
    
 ZizooBaseBundle_Dashboard_VerifyFacebook:
     pattern:  /account/dashboard/verify-facebook
-    defaults: { _controller: ZizooBaseBundle:Dashboard:verifyFacebook }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:user, other_controller: ZizooUserBundle:Verification:verifyFacebook, title: 'Verify Facebook' }
     requirements:
         _method:  GET|POST
         
+        
 ZizooBaseBundle_Dashboard_UnverifyFacebook:
     pattern:  /account/dashboard/unverify-facebook
-    defaults: { _controller: ZizooBaseBundle:Dashboard:unverifyFacebook }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:user, other_controller: ZizooUserBundle:Verification:unverifyFacebook, title: 'Unverify Facebook' }
     requirements:
         _method:  GET|POST
     
@@ -124,76 +132,75 @@ ZizooBaseBundle_Dashboard_CharterDashboard:
     defaults: { _controller: ZizooBaseBundle:Dashboard:indexCharter }
     requirements:
         _method:  GET
-        
+
+# CHARTER (shared dashboard action)
 ZizooBaseBundle_Dashboard_CharterProfile:
     pattern:  /charter/account/dashboard/profile
-    defaults: { _controller: ZizooBaseBundle:Dashboard:charterProfile }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charter, other_controller: ZizooCharterBundle:Charter:profile, title: 'My Profile', tab: profile }
     requirements:
-        _method:  GET|POST    
-        
+        _method:  GET|POST 
+
 ZizooBaseBundle_Dashboard_CharterInbox:
     pattern:  /charter/account/dashboard/inbox
-    defaults: { _controller: ZizooBaseBundle:Dashboard:charterInbox, message_controller: ZizooMessageBundle:Message:inbox }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charter, other_controller: ZizooMessageBundle:Message:inbox, title: 'My Inbox', tab: inbox }
     requirements:
         _method:  GET
         
 ZizooBaseBundle_Dashboard_CharterViewThread:
-    pattern:  /charter/account/dashboard/inbox/{id}
-    defaults: { _controller: ZizooBaseBundle:Dashboard:charterViewThread, message_controller: FOSMessageBundle:Message:thread }
+    pattern:  /charter/account/dashboard/inbox/{threadId}
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charter, other_controller: FOSMessageBundle:Message:thread, view: 'charter', tab: inbox }
     requirements:
         _method:  GET|POST
-        id: \d+
-        
+        threadId: \d+
+          
 ZizooBaseBundle_Dashboard_CharterBookings:
     pattern:  /charter/account/dashboard/bookings
-    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBookings }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charter, other_controller: ZizooCharterBundle:Charter:bookings, title: 'My Bookings', tab: bookings }
     requirements:
         _method:  GET
         
 ZizooBaseBundle_Dashboard_CharterViewBooking:
     pattern:  /charter/account/dashboard/bookings/{id}
-    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBooking, charter_controller: ZizooCharterBundle:Charter:viewBooking }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charter, other_controller: ZizooCharterBundle:Charter:viewBooking, tab: bookings }
     requirements:
         _method:  GET|POST
         id: \d+
         
 ZizooBaseBundle_Dashboard_CharterAcceptBooking:
     pattern:  /charter/account/dashboard/bookings/{id}/accept
-    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBooking, charter_controller: ZizooCharterBundle:Charter:acceptBookingRequest }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charter, other_controller: ZizooCharterBundle:Charter:acceptBookingRequest, tab: bookings }
     requirements:
         _method:  GET|POST
         id: \d+
         
 ZizooBaseBundle_Dashboard_CharterDenyBooking:
     pattern:  /charter/account/dashboard/bookings/{id}/deny
-    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBooking, charter_controller: ZizooCharterBundle:Charter:denyBookingRequest }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charter, other_controller: ZizooCharterBundle:Charter:denyBookingRequest, tab: bookings }
     requirements:
         _method:  GET|POST
         id: \d+ 
                         
 ZizooBaseBundle_Dashboard_CharterPayments:
     pattern:  /charter/account/dashboard/payments
-    defaults: { _controller: ZizooBaseBundle:Dashboard:charterPayments }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charter, other_controller: ZizooCharterBundle:Charter:payments, title: 'My Payments', tab: payments }
     requirements:
         _method:  GET
         
 ZizooBaseBundle_Dashboard_CharterPayoutSettings:
     pattern:  /charter/account/dashboard/payout-settings
-    defaults: { _controller: ZizooBaseBundle:Dashboard:charterPayoutSettings }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charter, other_controller: ZizooCharterBundle:Charter:payoutSettings, title: 'Payout Settings', tab: settings }
     requirements:
         _method:  GET|POST
        
-        
-
-# CHARTER BOATS
 ZizooBaseBundle_Dashboard_CharterBoats:
     pattern:  /charter/account/dashboard/boats/{page}
-    defaults: { _controller: ZizooBaseBundle:Dashboard:charterBoats, page: 1 }
+    defaults: { _controller: ZizooBaseBundle:Dashboard:charter, page: 1, other_controller: ZizooCharterBundle:Charter:boats, tab: boats }
     requirements:
         _method:  GET
         page: \d+
-        
+                
 
+# CHARTER BOAT (shared dashboard action)
 ZizooBaseBundle_Dashboard_CharterNewBoat:
     pattern:  /charter/account/dashboard/boat/new
     defaults: { _controller: ZizooBaseBundle:Dashboard:charterBoat, boat_controller: ZizooBoatBundle:Boat:new }

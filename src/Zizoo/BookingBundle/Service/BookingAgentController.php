@@ -58,7 +58,7 @@ class BookingAgentController {
     {
         $payments = new \Doctrine\Common\Collections\ArrayCollection();
         $pattern = $instalmentOption->getPattern();
-        $checkTotal = 0;
+        $checkTotal = 0.0;
         $parts = explode(';', $pattern);
         foreach ($parts as $part){
             $p = explode(':', $part);
@@ -69,7 +69,7 @@ class BookingAgentController {
                     $x = intval($p[1]);
                     if (!is_int($x)) throw new \Exception('Invalid instalment option pattern: ' . $pattern);
                     $x /= 100;
-                    $checkTotal += $x;
+                    $checkTotal += floatval($x);
                     $payment = new Payment();
                     $payment->setAmount(round($x*$total, 2));
                     $payments->add($payment);
@@ -78,7 +78,7 @@ class BookingAgentController {
                     $x = intval($p[1]);
                     if (!is_int($x)) throw new \Exception('Invalid instalment option pattern: ' . $pattern);
                     $x /= 100;
-                    $checkTotal += $x;
+                    $checkTotal += floatval($x);
                     $payment = new Payment();
                     $payment->setAmount(round($x*$total, 2));
                     $payment->setDateDue($checkIn->modify('-5 days'));

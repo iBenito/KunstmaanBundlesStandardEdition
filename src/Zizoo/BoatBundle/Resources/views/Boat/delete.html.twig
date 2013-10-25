@@ -1,11 +1,11 @@
 {% block content %}
-    {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['delete_route'], 'routes': routes }  %}
+    {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['boat_delete_route'], 'routes': routes }  %}
 
     <div class="content">
         {% if can_be_deleted %}
             {% if boat.deleted is not null %}
                 <p>Are you sure you want to undelete this boat?</p>
-                <form action="{{ path(routes['delete_route'], { 'id': boat.id }) }}" method="post">
+                <form action="{{ path(routes['boat_delete_route'], { 'id': boat.id }) }}" method="post">
                     {{ form_widget(form) }}
                     <button type="submit" class="button blue small" id="delete_btn">Yes</button>
                 </form>
@@ -28,7 +28,7 @@
                     {% endif %}
 
                     <p>Are you sure you want to delete this boat?</p><br />
-                    <form action="{{ path(routes['delete_route'], { 'id': boat.id }) }}" method="post">
+                    <form action="{{ path(routes['boat_delete_route'], { 'id': boat.id }) }}" method="post">
                         {{ form_widget(form) }}
                         <button type="submit" class="button blue small" id="delete_btn">Yes</button>
                     </form>
@@ -40,7 +40,7 @@
 
 
 
-        <form action="{{ path(routes['complete_route']) }}" method="get">
+        <form action="{{ path(routes['boats_route']) }}" method="get">
             <button type="submit" class="button blue small" id="cancel_btn">Cancel</button>
         </form>
         <br />

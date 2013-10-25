@@ -1,102 +1,148 @@
-{% extends 'ZizooBookingBundle::layout.html.twig' %}
-{% trans_default_domain "labels" %}
+{% block content %}
+    <!-- start:confirmation -->
+    <section id="confirmation" class="section">
 
-{% block title %}Your booking{% endblock %}
+        <div>
+            <div class="entry">
+                <p>
+                    Thank you for booking at Zizoo. Shortly you will receive an email with the booking details and confirmation.
+                </p>
+                <p>
+                    The Boat Owner should confirm or reject your booking within 24 hours period, otherwise the booking will be automatically canceled and you will have to repeat the process.
+                </p>
+                <p>
+                    Once the booking is approved you will receive the Confirmation email with additional details and contacts of the Boat Owner.
+                </p>
+                <p>
+                    The cancellation policy is subjected to specific Boat Owner’s Terms and Conditions and it is stated on Boat profile for every boat listed.
+                </p>
+            </div>
+        </div>
+    </section>
+    <!-- end:confirmation -->
+    
+    <!-- start:details -->
+    <section id="details" class="section">
+        <div class="clearfix">
+            <!-- start:trip table -->
+            <section class="trip-table">
+                <h2>Details</h2>
+                <div class="clearfix">
 
-{% block body %}
+                    <div class="column">
 
-    <div id="content">
-        <div class="container clearfix">
+                        <div class="table">
+                            <table>
+                                <tr>
+                                    <td>Reference:</td>
+                                    <td>{{ booking.reference }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Created:</td>
+                                    <td>{{ booking.created|date }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Boat:</td>
+                                    <td><a href="{{ path('ZizooBoatBundle_Boat_Show', {id: booking.reservation.boat.id}) }}">{{ booking.reservation.boat.name }}</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Check In</td>
+                                    <td>{{ booking.reservation.checkIn|date }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Check Out</td>
+                                    <td>{{ booking.reservation.checkOut|date }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Nights</td>
+                                    <td>{{ booking.reservation|Reservation_numberOfDays }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Guests</td>
+                                    <td>{{ booking.reservation.nrGuests }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Status:</td>
+                                    <td>{{ status }}<br />
+                                        <a href="{{ path(routes['view_thread_route'], {threadId: booking.thread.id}) }}">View Convervsation</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
 
-            <!-- start:confirmation -->
-            <section id="confirmation" class="section">
-                <header>
-                    <h1>Zizoo Confirmation</h1>
-                </header>
-
-                <div class="content">
-                    <h2>Booking Reference: <strong>{{ booking.reference }}</strong></h2>
-                    <div class="entry">
-                        <p>
-                            Thank you for booking at Zizoo. Shortly you will receive an email with the booking details and confirmation.
-                        </p>
-                        <p>
-                            The Boat Owner should confirm or reject your booking within 24 hours period, otherwise the booking will be automatically canceled and you will have to repeat the process.
-                        </p>
-                        <p>
-                            Once the booking is approved you will receive the Confirmation email with additional details and contacts of the Boat Owner.
-                        </p>
-                        <p>
-                            The cancellation policy is subjected to specific Boat Owner’s Terms and Conditions and it is stated on Boat profile for every boat listed.
-                        </p>
+                        <div class="table">
+                            <table>
+                                <tr>
+                                    <td class="{{ booking.crew==true?'available':'' }}">Skipper</td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
 
-                    <!-- start:trips -->
-                    <div class="trips">
+                    <div class="column">
 
-                        <article class="trip clearfix">
-                            <div class="box">
-                                {% set boat_url = path('ZizooBoatBundle_Boat_Show', {id: boat.id}) %}
-                                <a href="{{ boat_url }}" class="boat gray clearfix">
-                                    <figure>
-                                        {% if boat.image.first != false %}
-                                            <img src="{{ asset(boat.image.first|pictureWebPath|imagine_filter('thumb_218x114')) }}" alt="" />
-                                        {% else %}
-                                            <img src="{{ asset('bundles/zizoobase/images/temp/galeon.jpg'|imagine_filter('thumb_218x114')) }}" alt="" />
-                                        {% endif %}
-                                        <figcaption class="clearfix">
-                                            {{ boat.name }} <span class="icon {{ booking.crew==true?'plus':'minus' }}"></span>
-                                        </figcaption>
-                                    </figure>
-                                    <div class="left">
-                                        {# 24 Reviews #}
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="info">
-                                <h3>{{ boat.address.locality }}</h3>
-                                <span class="price">{{ booking|BookBoat_price( booking.cost )|raw }} &euro;</span>
-                                <time datetime="{{ booking.reservation.checkIn|date(constant('DATE_W3C')) }}">{{ booking.reservation.checkIn|date('M d, Y') }} &ndash; {{ booking.reservation.checkOut|date('M d, Y') }}</time>
-                                <div class="overall clearfix">
-                                    {#
-                                    <div class="column">
-                                        Overall Rating
-                                        <div class="ratings big"><span class="r4 r5"></span></div>
-                                    </div>
-                                    <div class="column">
-                                        Value
-                                        <div class="ratings"><span class="r4"></span></div>
-                                    </div>
-                                    <div class="column">
-                                        Service
-                                        <div class="ratings"><span class="r3"></span></div>
-                                    </div>
-                                    <div class="column">
-                                        Location
-                                        <div class="ratings"><span class="r2 r3"></span></div>
-                                    </div>
-                                    <div class="column">
-                                        Food
-                                        <div class="ratings"><span class="r5"></span></div>
-                                    </div>
-                                    <div class="column">
-                                        Clear
-                                        <div class="ratings"><span class="r1"></span></div>
-                                    </div>
-                                    #}
-                                </div>
-                            </div>
-                        </article>
+                        <div class="table">
+                            <table>
+                                <tr>
+                                    <td>Total</td>
+                                    <td>{{ booking|Booking_displayPrice }} &euro;</td>
+                                </tr>
+                                <tr>
+                                    <td>Received</td>
+                                    <td>{{ booking|Booking_amountPaid }} &euro;</td>
+                                </tr>
+                            </table>
+                        </div>
 
+                        <div class="table">
+                            <table>
+                                <tr class="total">
+                                    <td>Outstanding</td>
+                                    <td><strong>{{ booking|Booking_amountOutstanding }} &euro;</strong></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
-                    <!-- end:trips -->
 
                 </div>
             </section>
-            <!-- end:confirmation -->
-
+            <!-- end:trip table -->
         </div>
-    </div>
+
+        <div class="clearfix">
+            <section class="trip-table">
+                <h2>Payments</h2>
+                <div id="payments">
+                    <table>
+                        {% if booking.payment|length == 0 %}
+                            <tr>
+                                <td colspan="3">There have not been any payments yet.</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td>Date Due</td>
+                                <td>Payment Method</td>
+                                <td>Status</td>
+                                <td>Amount</td>
+                            </tr>
+                            {% for payment in booking.payment %}
+                                <tr>
+                                    <td>{{ payment.dateDue is not null ? payment.dateDue|date : 'Upon approval' }}</td>
+                                    <td>{{ payment.paymentInstruction is not null ? payment.paymentInstruction.paymentSystemName : 'N/A' }}</td>
+                                    <td>{{ payment.status}}</td>
+                                    <td>{{ booking|Booking_simplePrice(payment.amount)}} &euro;</td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </table>
+                </div>
+            </section>
+        </div>
+    </section>
 
     <br />
 

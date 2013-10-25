@@ -280,7 +280,7 @@ class BoatController extends Controller
                 if ($overrideUrl){
                     $url = $this->generateUrl($overrideUrl, array('id' => $boatCreated->getId()));
                 } else {
-                    $url = $this->generateUrl($routes['details_route'], array('id' => $boatCreated->getId()));
+                    $url = $this->generateUrl($routes['boat_details_route'], array('id' => $boatCreated->getId()));
                 } 
                 
                 return $this->redirect($url);
@@ -337,9 +337,9 @@ class BoatController extends Controller
                 if ($overrideUrl){
                     $url = $overrideUrl;
                 } else if ($step){
-                    $url = $this->generateUrl($routes['details_route'], array('id' => $id));
+                    $url = $this->generateUrl($routes['boat_details_route'], array('id' => $id));
                 } else {
-                    $url = $this->generateUrl($routes['edit_route'], array('id' => $id));
+                    $url = $this->generateUrl($routes['boat_edit_route'], array('id' => $id));
                 }
                 
                 return $this->redirect($url);
@@ -393,9 +393,9 @@ class BoatController extends Controller
                 if ($overrideUrl){
                     $url = $overrideUrl;
                 } else if ($step){
-                    $url = $this->generateUrl($routes['photos_route'], array('id' => $id));
+                    $url = $this->generateUrl($routes['boat_photos_route'], array('id' => $id));
                 } else {
-                    $url = $this->generateUrl($routes['details_route'], array('id' => $id));
+                    $url = $this->generateUrl($routes['boat_details_route'], array('id' => $id));
                 }
                 
                 return $this->redirect($url);
@@ -450,9 +450,9 @@ class BoatController extends Controller
                 if ($overrideUrl){
                     $url = $overrideUrl;
                 } else if ($step){
-                    $url = $this->generateUrl($routes['calendar_route'], array('id' => $id));
+                    $url = $this->generateUrl($routes['boat_calendar_route'], array('id' => $id));
                 } else {
-                    $url = $this->generateUrl($routes['photos_route'], array('id' => $id));
+                    $url = $this->generateUrl($routes['boat_photos_route'], array('id' => $id));
                 }
     
                 return $this->redirect($url);
@@ -583,14 +583,14 @@ class BoatController extends Controller
                     } catch (DBALException $e){
                         $this->container->get('session')->getFlashBag()->add('error', 'Something went wrong');
                     }
-                    return $this->redirect($this->generateUrl($routes['calendar_route'], array('id' => $id), $request->query->all()));
+                    return $this->redirect($this->generateUrl($routes['boat_calendar_route'], array('id' => $id), $request->query->all()));
                 } else if ($availability->getType()=='unavailability'){
                     try {
                         $reservationAgent->makeReservationForSelf($boat, $from, $to, true);
                     } catch (InvalidReservationException $e){
                         $this->container->get('session')->getFlashBag()->add('error', $e->getMessage());
                     }
-                    return $this->redirect($this->generateUrl($routes['calendar_route'], array('id' => $id), $request->query->all()));
+                    return $this->redirect($this->generateUrl($routes['boat_calendar_route'], array('id' => $id), $request->query->all()));
                 }
             }
             
@@ -671,7 +671,7 @@ class BoatController extends Controller
                     $this->container->get('session')->getFlashBag()->add('error', $boat->getName() . ' was not deleted successfully, because ' . $e->getMessage());
                 }
                 
-                return $this->redirect($this->generateUrl($routes['complete_route']));
+                return $this->redirect($this->generateUrl($routes['boats_route']));
             }
         }
 

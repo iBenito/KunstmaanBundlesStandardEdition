@@ -34,7 +34,7 @@
     <div class="reply">
         <ul class="messages">
             <li class="message sender">
-                <form class="form" action="{{ path(routes['view_thread_route'], {id: thread.id}) }}" method="post">
+                <form class="form" action="{{ path(routes['view_thread_route'], {threadId: thread.id}) }}" method="post">
                     <div class="article clearfix">
                         <div class="image">
                             {% if view == 'charter' %}

@@ -1,5 +1,5 @@
 {% block content %}
-    {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['active_route'], 'routes': routes }  %}
+    {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['boat_active_route'], 'routes': routes }  %}
 
     <div class="content">
         <input type="hidden" class="boat_active" value="{{ boat.active }}" />
