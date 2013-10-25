@@ -1,7 +1,0 @@
-{% extends 'ZizooBaseBundle:Dashboard:base.html.twig' %}
-    
-{% block dashboard_page_title %}Add Boat - Step 1{% endblock %}
-
-{% block content %}
-    {% render controller('ZizooBoatBundle:Boat:boatFormWidget', { 'boat': boat, 'formAction': formAction, 'formRedirect': formRedirect }) %}
-{% endblock %}
