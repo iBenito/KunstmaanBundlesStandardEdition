@@ -1,0 +1,7 @@
+parameters:
+    class.twilio.service: Services_Twilio
+
+services:
+    zizoo_sms.twilio:
+        class: %class.twilio.service%
+        arguments: [%twilio.sid%, %twilio.token%]

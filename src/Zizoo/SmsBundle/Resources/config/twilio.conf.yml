@@ -1,0 +1,8 @@
+parameters:
+    twilio.number: '+43720883866'
+    twilio.sid: ACe376a51afa7f05c049f742c71ee5468c
+    twilio.token: 3cfa00e641400c03d45439119464719e
+
+    twilio.test.number: '+15005550006'
+    twilio.test.sid: AC10d989f0514340e95555b92689bd3ffd
+    twilio.test.token: ff3c24534174a8bc685bfcbd094758b8
