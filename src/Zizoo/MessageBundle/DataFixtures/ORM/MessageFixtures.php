@@ -1,6 +1,6 @@
 <?php
 
-namespace Zizoo\BoatBundle\DataFixtures\ORM;
+namespace Zizoo\MessageBundle\DataFixtures\ORM;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;

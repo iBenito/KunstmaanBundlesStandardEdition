@@ -420,6 +420,12 @@
                                 var clone = $(el).clone();
                                 if ($(clone).attr('type')=='checkbox'){
                                     $(clone).attr('style', 'display: none');
+                                } else if ($(clone).attr('type')=='radio'){
+                                    $(clone).attr('style', 'display: none');
+                                    if ($(clone).hasClass('ui-helper-hidden-accessible')){
+                                        var selected = ($(clone).is(':checked') ? 'checked' : null);
+                                        $(clone).attr('checked', selected);
+                                    }
                                 } else {
                                     $(clone).attr('type', 'hidden');
                                 }
@@ -490,9 +496,9 @@
                             
                             $('#transaction_instalment_option input[name="transaction[instalment_option]"]').change(function(){
                                 var option = $('#transaction_instalment_option input[name="transaction[instalment_option]"]:checked').val();
-                                selectInstalmentOption(option, true);
+                                //selectInstalmentOption(option, true);
                             });
-                            selectInstalmentOption($('#transaction_instalment_option input[name="transaction[instalment_option]"]:checked').val(), false);
+                            //selectInstalmentOption($('#transaction_instalment_option input[name="transaction[instalment_option]"]:checked').val(), false);
                             
                             $('#details, #how').show();
 

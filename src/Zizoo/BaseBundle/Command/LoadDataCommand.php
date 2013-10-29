@@ -17,6 +17,7 @@ use Zizoo\BoatBundle\Entity\BoatType;
 use Zizoo\BoatBundle\Entity\EngineType;
 use Zizoo\CrewBundle\Entity\SkillType;
 use Zizoo\BookingBundle\Entity\PaymentMethod;
+use Zizoo\BookingBundle\Entity\InstalmentOption;
 use Zizoo\BillingBundle\Entity\PayoutMethod;
 
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
@@ -379,6 +380,25 @@ class LoadDataCommand extends ContainerAwareCommand
         }
     }
     
+    private function loadInstalmentOptions()
+    {
+        $getInstalmentOptions = file_get_contents(dirname(__FILE__).'/Data/instalment_options.json');
+       
+        $instalmentOptions = json_decode($getInstalmentOptions);
+        
+        foreach ($instalmentOptions as $i)
+        {
+            $instalmentOption = new InstalmentOption();
+            $instalmentOption->setId($i->id);
+            $instalmentOption->setName($i->name);
+            $instalmentOption->setPattern($i->pattern);
+            $instalmentOption->setOrder($i->order);
+            $instalmentOption->setEnabled(true);
+            
+            $this->em->persist($instalmentOption);
+        }
+    }
+    
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         
@@ -401,6 +421,7 @@ class LoadDataCommand extends ContainerAwareCommand
         $this->loadEngineTypes();
         $this->loadSkillTypes();
         $this->loadPaymentMethods();
+        $this->loadInstalmentOptions();
         $this->loadPayoutMethods();
         $this->loadGroups();
         $this->loadMessageTypes();

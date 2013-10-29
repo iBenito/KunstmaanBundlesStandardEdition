@@ -22,9 +22,9 @@ class ProfileController extends Controller
      * 
      * @return Response
      */
-    public function showAction($username) 
+    public function showAction($id)
     {
-        $user   = $this->getDoctrine()->getManager()->getRepository('ZizooUserBundle:User')->findOneByUsername($username);
+        $user   = $this->getDoctrine()->getManager()->getRepository('ZizooUserBundle:User')->findOneById($id);
 
         return $this->render('ZizooProfileBundle:Profile:show.html.twig', array(
             'user' => $user
@@ -42,9 +42,19 @@ class ProfileController extends Controller
         $user       = $this->getUser();
         $profile    = $user->getProfile();
         
+        $routes     = $request->query->get('routes');
+        
         $profileType = $this->get('zizoo_profile.profile_type');
         $editForm = $this->createForm($profileType, $profile, array('validation_groups' => 'Default'));
-        
+
+        $verified = $profile->getVerification()->getVerified();
+        if ($verified){
+            $verificationForm = NULL;
+        }
+        else{
+            $verificationType = $this->get('zizoo_verify.verify_type');
+            $verificationForm = $this->createForm($verificationType);
+        }
         if ($request->isMethod('post')){
             $editForm->bind($request);
 
@@ -70,12 +80,13 @@ class ProfileController extends Controller
                 $em->flush();
                 
                 $this->get('session')->setFlash('notice', 'Your profile was updated!');
-                return $this->redirect($this->generateUrl($request->query->get('redirect_route')));
+                return $this->redirect($this->generateUrl($routes['profile_route']));
             }
         }
    
         return $this->render('ZizooProfileBundle:Profile:edit.html.twig',array(
-            'edit_form'     => $editForm->createView()
+            'edit_form'     => $editForm->createView(),
+            'verification_form'     => $verificationForm->createView()
         ));
     }
     

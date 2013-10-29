@@ -1,15 +1,24 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+{% block body %}
+    {% if message %}
+        <p> {{ message }}</p>
+    {% endif %}
 
-        <!-- start:page title -->
-        <title>ZIZOO The Sea Awaits - Boat Rentals made Easy</title>
-        <!-- end:page title -->
-    </head>
-    <body>
-        {% block body %}
-            Hello dear {{ name }}!
-        {% endblock %}
-    </body>
-</html>
+    <h3>{{ profile.phone }}</h3>
+
+    {% if profile_verified %}
+        Verified!
+    {% else %}
+        {% if verification_form %}
+            <form class="form" method="post" {{ form_enctype(verification_form) }}>
+
+                {{ form_widget(verification_form) }}
+
+                <button type="submit" class="button blue small right">Submit</button>
+            </form>
+            <a href="{{ path('ZizooSmsBundle_Default_SendCode', {profileId: profile.id}) }}" title="Resend Code">Resend Code</a>
+        {% else %}
+            <a href="{{ path('ZizooSmsBundle_Default_SendCode', {profileId: profile.id}) }}" title="Send Code">Send Code</a>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

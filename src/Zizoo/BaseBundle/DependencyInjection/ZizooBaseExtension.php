@@ -24,5 +24,8 @@ class ZizooBaseExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+        
+        $container->setParameter('zizoo_base.dashboard_routes.user_routes', $config['dashboard_routes']['user_routes']);
+        $container->setParameter('zizoo_base.dashboard_routes.charter_routes', $config['dashboard_routes']['charter_routes']);
     }
 }

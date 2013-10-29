@@ -1,0 +1,11 @@
+{% block body %}
+    <div class="deny_reservation" id="{% if ajax %}deny_reservation_inner_ajax{% else %}deny_reservation_inner{% endif %}">
+        <form action="{{ path(routes['deny_booking_route'], {id: booking.id}) }}" method="post">
+            {{ form_widget(form) }}
+            <input type="submit" name="deny" value="Deny" />
+        </form>
+        <form action="{{ path(routes['view_booking_route'], {id: booking.id}) }}" method="post">
+            <input type="submit" name="cancel" value="Cancel" />
+        </form>
+    </div>
+{% endblock %}

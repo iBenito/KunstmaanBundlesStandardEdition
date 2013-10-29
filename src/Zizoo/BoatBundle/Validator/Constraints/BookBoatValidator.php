@@ -31,8 +31,10 @@ class BookBoatValidator extends ConstraintValidator
         $reservationRange   = $bookBoat->getReservationRange();
         if ($reservationRange){
             
-            $from               = $reservationRange->getReservationFrom();
-            $to                 = $reservationRange->getReservationTo();
+            $from               = clone $reservationRange->getReservationFrom();
+            $to                 = clone $reservationRange->getReservationTo();
+            $from->setTime(0,0,0);
+            $to->setTime(0,0,0);
             $interval           = $from->diff($to);
             
             $now = new \DateTime();

@@ -49,6 +49,9 @@ abstract class AbstractBookingAgent implements BookingAgentInterface
         return true;
     }
     
+    
+    // Overriding methods
+    
     function makeBooking(Reservation $reservation, User $user, $cost, $crew)
     {
         $reference = date("Ymd").$user->getId().$reservation->getBoat()->getId().'ZIZOO';
@@ -70,16 +73,13 @@ abstract class AbstractBookingAgent implements BookingAgentInterface
         return $booking;
     }
     
-    protected function initializePayment(Booking $booking, $amount, $extendedData=null)
+    protected function initializePaymentInstruction(Booking $booking, Payment $payment, $extendedData=null)
     {
-        // Create (Zizoo) payment and add to booking
-        $payment = new Payment();
-        $payment->setAmount((float)$amount);
         $payment->setBooking($booking);
         $booking->addPayment($payment);
         
         // Create JMS PaymentInstruction and connect to Zizoo payment
-        $instruction = new PaymentInstruction($amount, 'EUR', $this->id, $extendedData);
+        $instruction = new PaymentInstruction($payment->getAmount(), 'EUR', $this->id, $extendedData);
         $payment->setPaymentInstruction($instruction);
         $instruction->setState(PaymentInstruction::STATE_VALID);
         $this->em->persist($instruction);
@@ -87,21 +87,26 @@ abstract class AbstractBookingAgent implements BookingAgentInterface
         
         return $payment;
     }
+    
+    public function createPaymentInstruction(Booking $booking, Payment $payment, $extendedData)
+    {
+        throw new FunctionNotSupportedException('createPaymentInstruction() is not supported by this plugin.');
+    }
 
 
+    function processPayment(Payment $payment)
+    {
+        throw new FunctionNotSupportedException('processPayment() is not supported by this plugin.');
+    }
+    
+    function reversePayment(Payment $payment)
+    {
+        throw new FunctionNotSupportedException('reversePayment() is not supported by this plugin.');
+    }
+    
     function addPayment(Booking $booking, $amount, $data)
     {
         throw new FunctionNotSupportedException('addPayment() is not supported by this plugin.');
-    }
-    
-    function cancelBooking(Booking $booking)
-    {
-        throw new FunctionNotSupportedException('cancelBooking() is not supported by this plugin.');
-    }
-    
-    function cancelPayment(Booking $booking)
-    {
-        throw new FunctionNotSupportedException('cancelPayment() is not supported by this plugin.');
     }
     
     function processes($paymentMethod)

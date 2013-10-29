@@ -4,7 +4,7 @@
     {{ render(controller('ZizooBaseBundle:Dashboard:charterTabs', { 'current': 'boats' })) }}
 {% endblock %}
 
-{% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['photos_route'], 'routes': routes }  %}
+{% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['boat_photos_route'], 'routes': routes }  %}
 
 <div class="content">
     {% if step != "" %}
@@ -18,7 +18,7 @@
 
     <h2>Boat Gallery</h2>
 
-    <form class="form" action="{{ path(routes['photos_route'], { 'id': boat.id }) }}" method="post" {{ form_enctype(form) }}>
+    <form class="form" action="{{ path(routes['boat_photos_route'], { 'id': boat.id }) }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
         
         {% if step != "" %}

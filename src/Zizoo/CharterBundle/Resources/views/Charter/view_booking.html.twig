@@ -1,0 +1,164 @@
+{% block body %}
+
+    <!-- start:content -->
+    <div>
+        
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+            <div class="flash-notice">
+                {{ flashMessage}}
+            </div>
+        {% endfor %}
+
+        {% for flashMessage in app.session.flashbag.get('error') %}
+            <div class="flash-error">
+                {{ flashMessage}}
+            </div>
+        {% endfor %}
+        
+        <!-- start:details -->
+        <section id="details" class="section">
+            <div class="clearfix">
+                <!-- start:trip table -->
+                <section class="trip-table">
+                    <h2>Details</h2>
+                    <div class="clearfix">
+
+                        <div class="column">
+
+                            <div class="table">
+                                <table>
+                                    <tr>
+                                        <td>Reference:</td>
+                                        <td>{{ booking.reference }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Created:</td>
+                                        <td>{{ booking.created|date }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Boat:</td>
+                                        <td><a href="{{ path('ZizooBoatBundle_Boat_Show', {id: booking.reservation.boat.id}) }}">{{ booking.reservation.boat.name }}</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Check In</td>
+                                        <td>{{ booking.reservation.checkIn|date }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Check Out</td>
+                                        <td>{{ booking.reservation.checkOut|date }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Nights</td>
+                                        <td>{{ booking.reservation|Reservation_numberOfDays }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Guests</td>
+                                        <td>{{ booking.reservation.nrGuests }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Status:</td>
+                                        <td>{{ status }}
+                                            {% if show_controls ==true %}
+                                            <form action="{{ path(routes['accept_booking_route'], {id: booking.id}) }}" method="get">
+                                                <input type="submit" name="accept" id="accept_btn" value="Accept" />
+                                            </form>
+                                            <form action="{{ path(routes['deny_booking_route'], {id: booking.id}) }}" method="get">
+                                                <input type="submit" name="deny" id="deny_btn" value="Deny" />
+                                            </form>
+                                            {% endif %}
+                                            <a href="{{ path(routes['view_thread_route'], {threadId: booking.thread.id}) }}">View Convervsation</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="table">
+                                <table>
+                                    <tr>
+                                        <td class="{{ booking.crew==true?'available':'' }}">Skipper</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="column">
+
+                            <div class="table">
+                                <table>
+                                    <tr>
+                                        <td>Total</td>
+                                        <td>{{ booking|Booking_displayPrice }} &euro;</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Received</td>
+                                        <td>{{ booking|Booking_amountPaid }} &euro;</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="table">
+                                <table>
+                                    <tr class="total">
+                                        <td>Outstanding</td>
+                                        <td><strong>{{ booking|Booking_amountOutstanding }} &euro;</strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+                <!-- end:trip table -->
+            </div>
+                
+            <div class="clearfix">
+                <section class="trip-table">
+                    <h2>Payments</h2>
+                    <div id="payments">
+                        <table>
+                            {% if booking.payment|length == 0 %}
+                                <tr>
+                                    <td colspan="3">There have not been any payments yet.</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td>Date Due</td>
+                                    <td>Payment Method</td>
+                                    <td>Status</td>
+                                    <td>Amount</td>
+                                </tr>
+                                {% for payment in booking.payment %}
+                                    <tr>
+                                        <td>{{ payment.dateDue is not null ? payment.dateDue|date : 'Upon approval' }}</td>
+                                        <td>{{ payment.paymentInstruction is not null ? payment.paymentInstruction.paymentSystemName : 'N/A' }}</td>
+                                        <td>{{ payment.status}}</td>
+                                        <td>{{ booking|Booking_simplePrice(payment.amount)}} &euro;</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </section>
+                  
+    </div>
+
+    <style type="text/css">
+        
+    </style>
+        
+    <script type="text/javascript">
+        
+        
+        $(document).ready(function(){
+            
+        });
+        
+    </script>
+    
+{% endblock %}

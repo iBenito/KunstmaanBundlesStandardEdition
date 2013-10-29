@@ -42,4 +42,33 @@ class BookingRepository extends EntityRepository
     {
         return $this->getCharterBookings($charter, Booking::STATUS_PAID);
     }
+    
+    public function getUpcomingUserBookings($user, $limit=null)
+    {
+        $status = array(
+            \Zizoo\ReservationBundle\Entity\Reservation::STATUS_ACCEPTED,
+            \Zizoo\ReservationBundle\Entity\Reservation::STATUS_HOLD
+        );
+        $qb = $this->createQueryBuilder('booking')
+                   ->leftJoin('booking.reservation', 'reservation')
+                   ->leftJoin('reservation.boat', 'boat')
+                   ->leftJoin('reservation.guest', 'guest')
+                   ->leftJoin('boat.charter', 'charter')
+                   ->select('booking')
+                   ->where('guest = :guest')
+                        ->setParameter('guest', $user)
+                   ->andWhere('reservation.status IN (:status)')
+                        ->setParameter('status', $status);
+
+        $qb->orderBy('reservation.checkIn', 'ASC');
+        
+        if ($limit!==null){
+            $qb->setFirstResult(0);
+            $qb->setMaxResults($limit);
+        }
+        
+
+        return $qb->getQuery()
+                  ->getResult();
+    }
 }

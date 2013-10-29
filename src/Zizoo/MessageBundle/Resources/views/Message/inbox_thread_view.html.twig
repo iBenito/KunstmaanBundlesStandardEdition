@@ -4,7 +4,7 @@
 {% set unread               = thread.isReadByParticipant(user) == false %}
 {% set num_unread_messages  = thread|numUnreadMessageInThread(user) %}
 <li class="message sender {% if unread %}unread{% endif %}" thread-id="{{ thread.id }}">
-    <a href="{{ path(routes['view_thread_route'], {id: thread.id}) }}">
+    <a href="{{ path(routes['view_thread_route'], {threadId: thread.id}) }}">
         <article class="article clearfix">
             <div class="image">
                 {% if last_message_sender.profile.avatar|length > 0 %}

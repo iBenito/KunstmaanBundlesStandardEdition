@@ -4,7 +4,7 @@
     {{ render(controller('ZizooBaseBundle:Dashboard:charterTabs', { 'current': 'boats' })) }}
 {% endblock %}
 
-{% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['calendar_route'], 'routes': routes }  %}
+{% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['boat_calendar_route'], 'routes': routes }  %}
 
 {% block javascripts %}
     <script type="text/javascript" src="{{ asset('js/datepick/jquery.datepick.js') }}"></script>
@@ -40,7 +40,7 @@
     </div>
     
     {% if step != "" %}
-        <a href="{{ path(routes['complete_route']) }}" class="button blue large">Complete</a>
+        <a href="{{ path(routes['boats_route']) }}" class="button blue large">Complete</a>
     {% endif %}
     
     <style type="text/css">
@@ -97,7 +97,7 @@
         }
         
         #dashboard #availability-calendar .ui-datepicker td .day_available-day_requested {
-            background: 0 -49px;
+            background-position: 0 -49px;
         }
         
         #dashboard #availability-calendar .ui-datepicker td .day_available-day_unavailable {
@@ -115,7 +115,7 @@
         }
         
         #dashboard #availability-calendar .ui-datepicker td .day_reserved-day_requested {
-            background: -62px -49px;
+            background-position: -62px -49px;
         }
         
         #dashboard #availability-calendar .ui-datepicker td .day_reserved-day_unavailable {
@@ -133,7 +133,7 @@
         }
         
         #dashboard #availability-calendar .ui-datepicker td .day_requested-day_reserved {
-            background: -124px -49px;
+            background-position: -124px -49px;
         }
         
         #dashboard #availability-calendar .ui-datepicker td .day_requested-day_unavailable {
@@ -169,7 +169,7 @@
         }
         
         #dashboard #availability-calendar .ui-datepicker td .day_booked-day_reserved {
-            background: -249px -49px;
+            background-position: -249px -49px;
         }
         
         #dashboard #availability-calendar .ui-datepicker td .day_booked-day_requested {

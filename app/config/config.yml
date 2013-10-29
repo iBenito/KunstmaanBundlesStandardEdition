@@ -124,6 +124,39 @@ fos_message:
 jms_payment_core:
     secret: someS3cretP4ssw0rd
 
+zizoo_base:
+    dashboard_routes:
+        user_routes:  
+            profile_route:              ZizooBaseBundle_Dashboard_Profile
+            skills_route:               ZizooBaseBundle_Dashboard_Skills
+            bookings_route:             ZizooBaseBundle_Dashboard_Trips
+            view_booking_route:         ZizooBaseBundle_Dashboard_ViewTrip
+            inbox_route:                ZizooBaseBundle_Dashboard_Inbox
+            view_thread_route:          ZizooBaseBundle_Dashboard_ViewThread
+            account_settings_route:     ZizooBaseBundle_Dashboard_AccountSettings
+            verify_facebook_route:      ZizooBaseBundle_Dashboard_VerifyFacebook
+            unverify_facebook_route:    ZizooBaseBundle_Dashboard_UnverifyFacebook
+            verify_phone_route:         ZizooBaseBundle_Dashboard_VerifyPhone
+
+        charter_routes:  
+            profile_route:              ZizooBaseBundle_Dashboard_CharterProfile
+            bookings_route:             ZizooBaseBundle_Dashboard_CharterBookings
+            view_booking_route:         ZizooBaseBundle_Dashboard_CharterViewBooking
+            accept_booking_route:       ZizooBaseBundle_Dashboard_CharterAcceptBooking
+            deny_booking_route:         ZizooBaseBundle_Dashboard_CharterDenyBooking
+            inbox_route:                ZizooBaseBundle_Dashboard_CharterInbox
+            view_thread_route:          ZizooBaseBundle_Dashboard_CharterViewThread
+            payments_route:             ZizooBaseBundle_Dashboard_CharterPayments
+            payout_settings_route:      ZizooBaseBundle_Dashboard_CharterPayoutSettings
+            boats_route:                ZizooBaseBundle_Dashboard_CharterBoats
+            boat_new_route:             ZizooBaseBundle_Dashboard_CharterNewBoat
+            boat_edit_route:            ZizooBaseBundle_Dashboard_CharterEditBoat
+            boat_details_route:         ZizooBaseBundle_Dashboard_CharterEditDetailsBoat
+            boat_photos_route:          ZizooBaseBundle_Dashboard_CharterEditPhotosBoat
+            boat_calendar_route:        ZizooBaseBundle_Dashboard_CharterEditPriceBoat
+            boat_delete_route:          ZizooBaseBundle_Dashboard_CharterDeleteBoat
+            boat_active_route:          ZizooBaseBundle_Dashboard_CharterActiveBoat
+
 #knp_paginator:
 #    template:
 #        pagination: ZizooBaseBundle:Elements:pagination_sliding.html.twig

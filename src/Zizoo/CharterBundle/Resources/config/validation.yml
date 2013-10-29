@@ -35,4 +35,15 @@ Zizoo\CharterBundle\Entity\CharterLogo:
                 match:   true
                 message: Only png and jpeg images are allowed
                 groups: [logo]
+
                  
+                 
+Zizoo\CharterBundle\Form\Model\DenyBooking:
+    properties:
+        denyMessage:
+            - NotBlank: { message: zizoo_reservation.error.deny_reservation_message_not_blank }
+
+Zizoo\CharterBundle\Form\Model\AcceptBooking:
+    properties:
+        acceptMessage:
+            - NotBlank: { message: zizoo_reservation.error.accept_reservation_message_not_blank }

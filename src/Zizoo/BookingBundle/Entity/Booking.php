@@ -58,8 +58,12 @@ class Booking extends BaseEntity
      * @ORM\OneToMany(targetEntity="Zizoo\BookingBundle\Entity\Payment", mappedBy="booking")
      */
     protected $payment;
-    
-    
+
+    /**
+     * @ORM\OneToOne(targetEntity="Zizoo\SmsBundle\Entity\BookingSmsVerify", mappedBy="booking", cascade={"persist", "remove"})
+     */
+    protected $verification;
+
     /**
      * @ORM\ManyToOne(targetEntity="Zizoo\BillingBundle\Entity\Payout", inversedBy="booking")
      * @ORM\JoinColumn(name="payout_id", referencedColumnName="id")
@@ -264,6 +268,29 @@ class Booking extends BaseEntity
     public function getPayment()
     {
         return $this->payment;
+    }
+
+    /**
+     * Set verification
+     *
+     * @param \Zizoo\SmsBundle\Entity\BookingSmsVerify $verification
+     * @return Booking
+     */
+    public function setVerification(\Zizoo\SmsBundle\Entity\BookingSmsVerify $verification = null)
+    {
+        $this->verification = $verification;
+
+        return $this;
+    }
+
+    /**
+     * Get verification
+     *
+     * @return \Zizoo\SmsBundle\Entity\BookingSmsVerify
+     */
+    public function getVerification()
+    {
+        return $this->verification;
     }
 
     /**

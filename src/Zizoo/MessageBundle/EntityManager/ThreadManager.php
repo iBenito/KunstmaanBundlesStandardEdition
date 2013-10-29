@@ -16,7 +16,7 @@ use Doctrine\ORM\Query\Builder;
 class ThreadManager extends BaseThreadManager
 {
     
-    public function getParticipantThreadsQueryBuilder(ParticipantInterface $participant)
+    public function getParticipantThreadsQueryBuilder(ParticipantInterface $participant, $limit=null)
     {
         $qb         = $this->repository->createQueryBuilder('t');
         
@@ -41,14 +41,20 @@ class ThreadManager extends BaseThreadManager
             // sort by date of last message written by an other participant
             //->orderBy('tm.lastMessageDate', 'DESC')
                 
-            ->orderBy('t.createdAt, t.id', 'DESC')
+            ->orderBy('t.createdAt', 'DESC')
         ;
+        
+        if ($limit!==null){
+            $qb->setFirstResult(0);
+            $qb->setMaxResults($limit);
+        }
+        
         return $qb;
     }
     
-    public function findParticipantThreads(ParticipantInterface $participant)
+    public function findParticipantThreads(ParticipantInterface $participant, $limit=null)
     {
-        return $this->getParticipantThreadsQueryBuilder($participant)
+        return $this->getParticipantThreadsQueryBuilder($participant, $limit)
             ->getQuery()
             ->execute();
     }

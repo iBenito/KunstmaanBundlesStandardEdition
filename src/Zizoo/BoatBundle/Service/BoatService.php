@@ -6,6 +6,7 @@ use Zizoo\BoatBundle\Entity\BoatType;
 use Zizoo\BoatBundle\Entity\Price;
 use Zizoo\BoatBundle\Entity\BoatImage;
 use Zizoo\BoatBundle\Entity\Equipment;
+use Zizoo\BoatBundle\Entity\EngineType;
 
 use Zizoo\CharterBundle\Entity\Charter;
 use Zizoo\AddressBundle\Entity\BoatAddress;
@@ -167,10 +168,11 @@ class BoatService {
              
     }
     
-    public function createBoat(Boat $boat, BoatAddress $address, BoatType $boatType = null, Charter $charter, ArrayCollection $equipment=null, $flush=false){
+    public function createBoat(Boat $boat, BoatAddress $address, BoatType $boatType = null, Charter $charter, ArrayCollection $equipment=null, EngineType $engineType=null, $flush=false){
 
         $boat->setBoatType($boatType);
         $boat->setCharter($charter);
+        $boat->setEngineType($engineType);
         //$address->fetchGeo();
         $address->setBoat($boat);
         $boat->setAddress($address);
@@ -184,6 +186,7 @@ class BoatService {
         
         $this->em->persist($address);
         $this->em->persist($boat);
+        $this->em->persist($engineType);
         if ($flush) $this->em->flush();
         
         return $boat;

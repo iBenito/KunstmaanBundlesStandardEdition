@@ -1,0 +1,37 @@
+{% set last_message         = thread.lastMessage %}
+{% set last_message_sender  = last_message.sender %}
+{% set last_message_type    = last_message.messageType %}
+{% set unread               = thread.isReadByParticipant(user) == false %}
+{% set num_unread_messages  = thread|numUnreadMessageInThread(user) %}
+<li class="message sender {% if unread %}unread{% endif %}" thread-id="{{ thread.id }}">
+    <a href="{{ path(routes['view_thread_route'], {threadId: thread.id}) }}">
+        <article class="article clearfix">
+            <div class="image">
+                {% if last_message_sender.profile.avatar|length > 0 %}
+                    <img src="{{ asset(last_message_sender.profile.avatar.first|pictureWebPath|imagine_filter('thumb_50x50')) }}" alt="" />
+                {% else %}
+                    <img src="{{ asset('bundles/zizoobase/images/default/avatar.png'|imagine_filter('thumb_50x50')) }}" alt="" />
+                {% endif %}
+                {{ last_message_sender.profile.firstName }}
+            </div>
+            <div class="background">
+                <h2>{{ thread.subject }} {% if num_unread_messages>0 %}<span class="circle red">{{ num_unread_messages }}</span>{% endif %}</h2>
+                <p>
+                    {{ last_message.body }}
+                </p>
+            </div>
+            <footer class="clearfix">
+                <div class="left">
+                    <time datetime="{{ last_message.createdAt|date(constant('DATE_W3C')) }}">{{ last_message.createdAt|date('G:ia / M d, Y') }}</time>
+                </div>
+                <div class="right">
+                    {% if last_message_type is not null %}
+                        {{ last_message_type.name }}
+                    {% else %}
+                        General
+                    {% endif %}
+                </div>
+            </footer>
+        </article>
+    </a>
+</li>

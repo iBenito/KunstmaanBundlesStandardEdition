@@ -24,23 +24,52 @@ class BookingController extends Controller
     
     public function viewAllBookingsAction()
     {
-        $user = $this->getUser();
-        $em = $this->getDoctrine()->getManager();
-        $bookings = $em->getRepository('ZizooBookingBundle:Booking')->findByRenter($user->getId());
-        return $this->render('ZizooBookingBundle:Booking:view_all_bookings.html.twig', array('bookings'       => $bookings));
+        $user       = $this->getUser();
+        $em         = $this->getDoctrine()->getManager();
+        $request    = $this->getRequest();
+        $routes     = $request->query->get('routes');
+        $bookings   = $em->getRepository('ZizooBookingBundle:Booking')->findByRenter($user->getId());
+        return $this->render('ZizooBookingBundle:Booking:view_all_bookings.html.twig', array(   'bookings'      => $bookings,
+                                                                                                'routes'        => $routes));
     }
     
     public function viewBookingAction($id)
     {
-        $user   = $this->getUser();
-        $em     = $this->getDoctrine()->getManager();
-        $booking = $em->getRepository('ZizooBookingBundle:Booking')->findOneById($id);
-        $charterUser = $booking->getReservation()->getBoat()->getCharter()->getUsers()->contains($user);
-        if (!$booking || ($booking->getRenter()!=$user && !$charterUser)){
-            return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_UserDashboard'));
+        $user       = $this->getUser();
+        $em         = $this->getDoctrine()->getManager();
+        $booking    = $em->getRepository('ZizooBookingBundle:Booking')->findOneById($id);
+        $request    = $this->getRequest();
+        $routes     = $request->query->get('routes');
+        
+        if (!$booking || ($booking->getRenter()!=$user)){
+            return $this->redirect($this->generateUrl($routes['bookings_route']));
         }
         
-        return $this->render('ZizooBookingBundle:Booking:view_booking.html.twig', array('booking' => $booking, 'boat' => $booking->getReservation()->getBoat()));
+        $reservation = $booking->getReservation();
+        if (!$reservation){
+            return $this->redirect($this->generateUrl($routes['bookings_route']));
+        }
+        
+        $headers = array();
+        $headers['x-zizoo-title'] = 'Booking <strong>' . $booking->getReference() . '</strong>';
+        $response = new Response('', 200, $headers);
+        
+        $reservationAgent   = $this->get('zizoo_reservation_reservation_agent');
+        $statusString = $reservationAgent->statusToString($reservation->getStatus());
+        $hours = $reservationAgent->hoursToRespond($reservation);
+        if ($reservation->getStatus() == Reservation::STATUS_REQUESTED && $hours){
+            if ($hours >= 0){
+                $statusString = "$statusString (expires in $hours hours)";
+            } else {
+                $statusString = "$statusString (expires soon)";
+            }
+        }
+        
+        return $this->render('ZizooBookingBundle:Booking:view_booking.html.twig', array(
+            'booking'   => $booking, 
+            'status'    => $statusString,
+            'routes'    => $routes
+        ), $response);
     }
     
     
@@ -64,19 +93,6 @@ class BookingController extends Controller
         $request->request->set('transaction', $trans);
         $form->bind($request);
         return $form;
-    }
-    
-    private function handleBookingError($bookingError)
-    {
-        if (is_array($bookingError)){
-            if (array_key_exists('error', $bookingError)){
-                return $bookingError['error'];
-            } else {
-                // Shouldn't happen, but handle anyway?
-            }
-        } else {
-            // Shouldn't happen, but handle anyway?
-        }
     }
     
     private function createExtraData(BookingForm $bookingForm)
@@ -185,7 +201,9 @@ class BookingController extends Controller
 
                     $extraData = $this->createExtraData($bookingForm);
                     
-                    $booking = $bookingAgent->makeBooking($user, $boat, $from, $to, $intendedPrice, $numGuests, $crew, $paymentMethod['method'], $extraData);
+                    $instalmentOption = $bookingForm->getInstalmentOption();
+                    
+                    $booking = $bookingAgent->makeBooking($user, $boat, $from, $to, $intendedPrice, $numGuests, $crew, $paymentMethod['method'], $instalmentOption, $extraData);
                     // Reservation and payment successful
                     $session->remove('boat');
                     $session->remove('price');
@@ -211,7 +229,7 @@ class BookingController extends Controller
                     $sender->send($message);
                     
                     
-                    return $this->redirect($this->generateUrl('ZizooBookingBundle_view_booking', array('id' => $booking->getID())));
+                    return $this->redirect($this->generateUrl('ZizooBaseBundle_Dashboard_ViewTrip', array('id' => $booking->getID())));
                 } catch (\Exception $e){
                     $errors[] = $e->getMessage();
                     $form = $this->clearCreditCardData($bookingType, $bookingForm, $request);

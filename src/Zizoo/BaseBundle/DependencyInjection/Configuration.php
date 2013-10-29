@@ -24,6 +24,49 @@ class Configuration implements ConfigurationInterface
         // configure your bundle. See the documentation linked above for
         // more information on that topic.
 
+        $rootNode
+            ->children()
+                ->arrayNode('dashboard_routes')
+                    ->children()
+                        ->arrayNode('user_routes')
+                            ->children()
+                                ->scalarNode('profile_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('skills_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('bookings_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('view_booking_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('inbox_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('view_thread_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('account_settings_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('verify_facebook_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('unverify_facebook_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('verify_phone_route')->isRequired()->cannotBeEmpty()->end()
+                            ->end()
+                        ->end() // end user routes
+                        ->arrayNode('charter_routes')
+                            ->children()
+                                ->scalarNode('profile_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('bookings_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('view_booking_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('accept_booking_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('deny_booking_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('inbox_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('view_thread_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('payments_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('payout_settings_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('boats_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('boat_new_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('boat_edit_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('boat_details_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('boat_photos_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('boat_calendar_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('boat_delete_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('boat_active_route')->isRequired()->cannotBeEmpty()->end()
+                            ->end()
+                        ->end() // end charter routes
+                    ->end() // end dashboard routes
+            ->end()
+        ;
+        
         return $treeBuilder;
     }
 }

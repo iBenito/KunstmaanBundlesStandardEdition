@@ -296,6 +296,8 @@ class UserController extends Controller
         $user = $this->getUser();
         $form = $this->createForm(new AccountSettingsType(), null, array('label' => false));
         
+        $routes = $request->query->get('routes');
+        
         // If submit
         if ($request->isMethod('POST')) {
             $form->bind($request);
@@ -310,7 +312,7 @@ class UserController extends Controller
                     $existingUser = $this->getDoctrine()->getRepository('ZizooUserBundle:User')->findOneByEmail($newEmail);
                     if ($existingUser){
                         $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.error.email_taken'));
-                        return $this->redirect($this->generateUrl($request->query->get('redirect_route')));
+                        return $this->redirect($this->generateUrl($routes['account_settings_route']));
                     }
 
                     $userService    = $this->get('zizoo_user_user_service');
@@ -336,7 +338,7 @@ class UserController extends Controller
 
                 }
 
-                return $this->redirect($this->generateUrl($request->query->get('redirect_route')));
+                return $this->redirect($this->generateUrl($routes['account_settings_route']));
 
             }
    
@@ -352,8 +354,8 @@ class UserController extends Controller
         
         return $this->render('ZizooUserBundle:User:account_settings.html.twig',
             array(
-                'form' => $form->createView(),
-                'searchForm' => $searchForm->createView()
+                'form'          => $form->createView(),
+                'searchForm'    => $searchForm->createView()
             )
         );
     }

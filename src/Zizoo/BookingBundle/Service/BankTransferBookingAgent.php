@@ -11,9 +11,9 @@ use JMS\Payment\CoreBundle\PluginController\Result;
 class BankTransferBookingAgent extends AbstractBookingAgent
 {
     
-    public function addPayment(Booking $booking, $amount, $extendedData)
+    public function createPaymentInstruction(Booking $booking, Payment $payment, $extendedData)
     {
-        $payment        = $this->initializePayment($booking, $amount, $extendedData);
+        $payment        = $this->initializePaymentInstruction($booking, $payment, $extendedData);
         $instruction    = $payment->getPaymentInstruction();
         
         $this->em->flush();
@@ -75,10 +75,15 @@ class BankTransferBookingAgent extends AbstractBookingAgent
         if ($jmsPayments->count()!=1) throw new \Exception('Too many or too few payments: one expected!');
         foreach ($jmsPayments as $jmsPayment){
             if ($jmsPayment->getState()==PaymentInterface::STATE_APPROVED){
-                $result = $this->ppc->reverseDeposit($jmsPayment->getId(), $jmsPayment->getTargetAmount());
-            } else if ($jmsPayment->getState()==PaymentInterface::STATE_DEPOSITED){
-                $result = $this->ppc->reverseDeposit($jmsPayment->getId(), $jmsPayment->getTargetAmount());
                 $result = $this->ppc->reverseApproval($jmsPayment->getId(), $jmsPayment->getTargetAmount());
+            } else if ($jmsPayment->getState()==PaymentInterface::STATE_DEPOSITED){
+                $result = $this->ppc->reverseApproval($jmsPayment->getId(), $jmsPayment->getTargetAmount());
+                $result = $this->ppc->reverseDeposit($jmsPayment->getId(), $jmsPayment->getTargetAmount());
+            }
+            if ($result->getStatus()==Result::STATUS_SUCCESS){
+                $payment->setStatus(Payment::STATUS_VOID);
+            } else {
+                $payment->setStatus(Payment::STATUS_FAILED);
             }
             
         }

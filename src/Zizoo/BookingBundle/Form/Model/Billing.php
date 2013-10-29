@@ -24,12 +24,14 @@ class Billing
             $this->lastName         = $profile->getLastName();
             
             $profileAddress         = $profile->getAddress();
-            $this->addressLine1     = $profileAddress->getAddressLine1();
-            $this->addressLine2     = $profileAddress->getAddressLine2();
-            $this->locality         = $profileAddress->getLocality();
-            $this->subLocality      = $profileAddress->getSubLocality();
-            $this->postcode         = $profileAddress->getPostcode();
-            $this->country          = $profileAddress->getCountry();
+            if ($profileAddress!==null){
+                $this->addressLine1     = $profileAddress->getAddressLine1();
+                $this->addressLine2     = $profileAddress->getAddressLine2();
+                $this->locality         = $profileAddress->getLocality();
+                $this->subLocality      = $profileAddress->getSubLocality();
+                $this->postcode         = $profileAddress->getPostcode();
+                $this->country          = $profileAddress->getCountry();
+            }
             
         }
     }

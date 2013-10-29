@@ -16,10 +16,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Payment extends BaseEntity
 {
-    const STATUS_NEW = 1;
-    const STATUS_PENDING = 2;
-    const STATUS_SUCCESS = 3;
-    const STATUS_UNKNOWN = 4;
+    const STATUS_NEW        = 1;
+    const STATUS_PENDING    = 2;
+    const STATUS_SUCCESS    = 3;
+    const STATUS_FAILED     = 4;
+    const STATUS_VOID       = 5;
     
     /**
      * @ORM\ManyToOne(targetEntity="Zizoo\BookingBundle\Entity\Booking", inversedBy="payment")
@@ -37,7 +38,7 @@ class Payment extends BaseEntity
     /**
      * @var int
      *
-     * @ORM\Column(name="settled", type="integer", nullable=false)
+     * @ORM\Column(name="status", type="integer", nullable=false)
      */
     private $status;
     
@@ -45,12 +46,17 @@ class Payment extends BaseEntity
     /** @ORM\OneToOne(targetEntity="\JMS\Payment\CoreBundle\Entity\PaymentInstruction") */
     private $paymentInstruction;
     
+    /**
+     * @ORM\Column(name="date_due", type="datetime", nullable=true)
+     */
+    private $dateDue;
+    
     
     public function __construct() {
         $now = new \DateTime();
         $this->setCreated($now);
         $this->setUpdated($now);
-        $this->status = Payment::STATUS_UNKNOWN;
+        $this->status = Payment::STATUS_NEW;
     }
     
     /**
@@ -111,15 +117,15 @@ class Payment extends BaseEntity
         return $this->booking;
     }
 
-    public function setSettled($settled)
+    public function setStatus($status)
     {
-        $this->settled = $settled;
+        $this->status = $status;
         return $this;
     }
     
-    public function getSettled()
+    public function getStatus()
     {
-        return $this->settled;
+        return $this->status;
     }
     
     public function getPaymentInstruction()
@@ -130,5 +136,16 @@ class Payment extends BaseEntity
     public function setPaymentInstruction(PaymentInstruction $instruction)
     {
         $this->paymentInstruction = $instruction;
+    }
+    
+    public function getDateDue()
+    {
+        return $this->dateDue;
+    }
+    
+    public function setDateDue($dateDue)
+    {
+        $this->dateDue = $dateDue;
+        return $this;
     }
 }

@@ -93,8 +93,8 @@ class BoatExtension extends \Twig_Extension
             $booking = $reservation->getBooking();
             $from   = clone $reservation->getCheckIn();
             $to     = clone $reservation->getCheckOut();
-            $from->setTime(0,0,0);
-            $to->setTime(23,59,59);
+            $from->setTime(12,0,0);
+            $to->setTime(11,59,59);
             
             do {
                 $arr[$from->format('Y')][$from->format('m')][$from->format('d')][$reservation->getStatus()][] = array(

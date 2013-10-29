@@ -2,6 +2,7 @@
 namespace Zizoo\MessageBundle\Service;
 
 use Zizoo\MessageBundle\Entity\Message;
+use Zizoo\MessageBundle\Entity\Thread;
 use Zizoo\MessageBundle\Entity\MessageRecipient;
 use Zizoo\ProfileBundle\Entity\Profile;
 use Zizoo\ProfileBundle\Entity\Profile\NotificationSettings;
@@ -25,7 +26,11 @@ class Messenger {
     }
         
     public function sendNotificationMessageEmail(Profile $from, Profile $to, Message $message){
-        $messageLink = $this->container->get('router')->generate('fos_message_inbox', array('messageId' => $message->getId()), true);
+        if ($to->getUser()->getCharter()){
+            $messageLink = $this->container->get('router')->generate('ZizooBaseBundle_Dashboard_CharterViewThread', array('threadId' => $message->getThread()->getId()), true);
+        } else {
+            $messageLink = $this->container->get('router')->generate('ZizooBaseBundle_Dashboard_ViewThread', array('threadId' => $message->getThread()->getId()), true);
+        }
         $twig = $this->container->get('twig');
         $templateHtml   = $twig->loadTemplate('ZizooMessageBundle:Email:new_message.html.twig');
         $templateTxt    = $twig->loadTemplate('ZizooMessageBundle:Email:new_message.txt.twig');

@@ -9,6 +9,7 @@ use Zizoo\BookingBundle\Entity\PaymentMethod;
 use Zizoo\BookingBundle\Service\BookingAgentInterface;
 use Zizoo\BookingBundle\Service\Exception\PluginNotFoundException;
 use Zizoo\BookingBundle\Service\Exception\FunctionNotSupportedException;
+use Zizoo\BookingBundle\Entity\InstalmentOption;
 
 use Zizoo\ReservationBundle\Entity\Reservation;
 
@@ -53,31 +54,100 @@ class BookingAgentController {
         throw new PluginNotFoundException(sprintf('There is no plugin that processes payments for "%s".', $paymentMethod));
     }
     
-    public function makeBooking(User $user, Boat $boat, \DateTime $reservationFrom, \DateTime $reservationTo, $price, $numGuests, $crew, $paymentMethod, $extraData=array())
+    public function createPaymentsFromInstalmentOption(InstalmentOption $instalmentOption, \DateTime $checkIn, $total)
+    {
+        $payments = new \Doctrine\Common\Collections\ArrayCollection();
+        $pattern = $instalmentOption->getPattern();
+        $checkTotal = 0.0;
+        $parts = explode(';', $pattern);
+        foreach ($parts as $part){
+            $p = explode(':', $part);
+            if (count($p)!=2) throw new \Exception('Invalid instalment option pattern: ' . $pattern);
+            switch ($p[0])
+            {
+                case 'S':
+                    $x = intval($p[1]);
+                    if (!is_int($x)) throw new \Exception('Invalid instalment option pattern: ' . $pattern);
+                    $x /= 100;
+                    $checkTotal += floatval($x);
+                    $payment = new Payment();
+                    $payment->setAmount(round($x*$total, 2));
+                    $payments->add($payment);
+                    break;
+                case 'E':
+                    $x = intval($p[1]);
+                    if (!is_int($x)) throw new \Exception('Invalid instalment option pattern: ' . $pattern);
+                    $x /= 100;
+                    $checkTotal += floatval($x);
+                    $payment = new Payment();
+                    $payment->setAmount(round($x*$total, 2));
+                    $payment->setDateDue($checkIn->modify('-5 days'));
+                    $payments->add($payment);
+                    break;
+                default:
+                    throw new \Exception('Invalid instalment option pattern: ' . $pattern);
+            }
+        }
+        
+        if ($checkTotal!==1.0) throw new \Exception('Invalid instalment option pattern: ' . $pattern);
+        
+        $roundedTotal = 0;
+        foreach ($payments as $payment){
+            $roundedTotal += $payment->getAmount();
+        }
+        $remainder = $roundedTotal - $total;
+        if ($remainder!==0.0){
+            $lastPayment = $payments->last();
+            $lastPayment->setAmount($lastPayment->getAmount()-$remainder);
+        }
+        
+        return $payments;
+    }
+    
+    public function makeBooking(User $user, Boat $boat, \DateTime $reservationFrom, \DateTime $reservationTo, $price, $numGuests, $crew, $initialPaymentMethod, InstalmentOption $instalmentOption, $extraData=array())
     {
         if (!$this->container->hasParameter('zizoo_booking.allow_bookings') || $this->container->getParameter('zizoo_booking.allow_bookings') !== true){
             throw new InvalidBookingException('Bookings are currently not possible');
         }
-        $plugin         = $this->getPlugin($paymentMethod);
+        $plugin         = $this->getPlugin($initialPaymentMethod);
         $em                 = $this->container->get('doctrine.orm.entity_manager');
         $reservationAgent   = $this->container->get('zizoo_reservation_reservation_agent');
         
-        
-       
         // Create reservation (status: request)
         $reservation    = $reservationAgent->makeReservation($boat, $reservationFrom, $reservationTo, $numGuests, $price, $user);
         $booking        = $plugin->makeBooking($reservation, $user, $price, $crew);
-        $payment        = $this->addPayment($booking, $paymentMethod, $price, $extraData);
+        
+        $payments       = $this->createPaymentsFromInstalmentOption($instalmentOption, clone $reservationFrom, $price);
+        
+        foreach ($payments as $payment){
+            if ($payment->getDateDue()===null){
+                $payment = $this->createPaymentInstruction($booking, $payment, $initialPaymentMethod, $extraData);
+            }
+            $booking->addPayment($payment);
+            $payment->setBooking($booking);
+            $em->persist($payment);
+        }
         
         $autoAccept = false;
         if ($autoAccept===true){
-            //$payment = $this->processPayment($payment, $price);
             $this->acceptBooking($booking);
         }
         
         $em->flush();
 
         return $booking;
+    }
+    
+    private function createPaymentInstruction(Booking $booking, Payment $payment, $paymentMethod, $extraData, $flush=false)
+    {
+        $plugin         = $this->getPlugin($paymentMethod);
+        $extendedData   = $this->createExtendedData($extraData);
+        $payment        = $plugin->createPaymentInstruction($booking, $payment, $extendedData);   
+        
+        if ($flush===true){
+            $this->em->flush();
+        }
+        return $payment;
     }
     
     private function createExtendedData($extraData)
@@ -93,31 +163,26 @@ class BookingAgentController {
         return $extendedData;
     }
     
-    public function addPayment(Booking $booking, $paymentMethod, $amount, $extraData)
+    public function addPayment(Booking $booking, $paymentMethod, $amount, $extraData, $flush=false)
     {
         $plugin         = $this->getPlugin($paymentMethod);
         $extendedData   = $this->createExtendedData($extraData);
         $payment        = $plugin->addPayment($booking, $amount, $extendedData);   
         
+        if ($flush===true){
+            $this->em->flush();
+        }
         return $payment;
     }
-    
-//    public function processPayment(Payment $payment, $amount)
-//    {
-//        $plugin         = $this->getPlugin($payment->getPaymentInstruction()->getPaymentSystemName());
-//        $payment        = $plugin->processPayment($payment, $amount);
-//        
-//        return $payment;
-//    }
-    
-    public function acceptBooking(Booking $booking)
+        
+    public function acceptBooking(Booking $booking, $flush=false)
     {
         $allPaymentsSuccessful = true;
         $successfulPayments = new \Doctrine\Common\Collections\ArrayCollection();
         $payments = $booking->getPayment();
         foreach ($payments as $payment){
-            // Only handle new paymetns
-            if ($payment->getStatus()!=Payment::STATUS_NEW) continue;
+            // Only handle new payments and payments due immediately
+            if ($payment->getStatus()!=Payment::STATUS_NEW || $payment->getDateDue()!==null) continue;
             $instruction    = $payment->getPaymentInstruction();
             $plugin         = $this->getPlugin($instruction->getPaymentSystemName());
             $payment = $plugin->processPayment($payment);
@@ -125,9 +190,9 @@ class BookingAgentController {
                 $successfulPayments->add($payment);
             } else {
                 $allPaymentsSuccessful = false;
-            }
-            
+            }   
         }
+        if ($successfulPayments->count()==0) $allPaymentsSuccessful = false;
         if ($allPaymentsSuccessful){
             try {
                 $reservationAgent   = $this->container->get('zizoo_reservation_reservation_agent');
@@ -139,8 +204,41 @@ class BookingAgentController {
                     $payment        = $plugin->reversePayment($successfulPayment);
                 }
             }
+            if ($flush===true){
+                $this->em->flush();
+            }
+        } else {
+            throw new Zizoo\ReservationBundle\Exception\InvalidReservationException();
         }
+        
         return $allPaymentsSuccessful;
+    }
+    
+    public function denyBooking(Booking $booking, $flush=false)
+    {
+        $allReversePaymentsSuccessful = true;
+        $successfulReversePayments = new \Doctrine\Common\Collections\ArrayCollection();
+        $payments = $booking->getPayment();
+        foreach ($payments as $payment){
+            // Only handle new payments
+            if ($payment->getStatus()!=Payment::STATUS_NEW || $payment->getDateDue()!==null) continue;
+            $instruction    = $payment->getPaymentInstruction();
+            $plugin         = $this->getPlugin($instruction->getPaymentSystemName());
+            $payment = $plugin->reversePayment($payment);
+            if ($payment->getStatus()==Payment::STATUS_SUCCESS) {
+                $successfulReversePayments->add($payment);
+            } else {
+                $allReversePaymentsSuccessful = false;
+            }   
+        }
+        if ($successfulReversePayments->count()==0) $allReversePaymentsSuccessful = false;
+        
+        $reservationAgent   = $this->container->get('zizoo_reservation_reservation_agent');
+        $reservationAgent->denyReservation($booking->getReservation(), false);
+        
+        if ($flush===true){
+            $this->em->flush();
+        }
     }
         
     
