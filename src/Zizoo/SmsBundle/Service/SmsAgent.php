@@ -53,7 +53,7 @@ class SmsAgent {
         $message = $twilioClient->account->messages->sendMessage(
             $from,
             $to,
-            "Ahoy from Zizoo! Enter ". $verify->getCode() . "on the Profile page to verify your account"
+            "Ahoy from Zizoo! Enter ". $verify->getCode() . " on the Profile page to verify your account!"
         );
 
         return $message->sid;

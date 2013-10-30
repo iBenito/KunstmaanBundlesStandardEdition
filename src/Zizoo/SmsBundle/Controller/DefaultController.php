@@ -46,11 +46,14 @@ class DefaultController extends Controller
             'profile' => $profile,
             'profile_verified' => $profileVerified,
             'verification_form' => $verificationFormView,
-            'message' => $message
+            'message' => $message,
+            'routes' => $routes
         ));
     }
 
-    public function sendCodeAction($profileId) {
+    public function sendCodeAction(Request $request, $profileId) {
+        $routes     = $request->query->get('routes');
+        $message = null;
         $profile   = $this->getDoctrine()->getManager()->getRepository('ZizooProfileBundle:Profile')->findOneById($profileId);
         $verificationAgent = $this->get('zizoo_verify.sms_agent');
 
@@ -62,6 +65,6 @@ class DefaultController extends Controller
             $message = $verificationAgent->createVerification('ZizooProfileBundle:Profile', $profileId, $profile->getPhone());
         }
 
-        return $this->redirect($this->generateUrl('ZizooSmsBundle_Default_Verify', array('message' => $message)));
+        return $this->redirect($this->generateUrl($routes['verify_phone_route'], array('message' => $message)));
     }
 }

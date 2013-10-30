@@ -15,9 +15,9 @@
 
                 <button type="submit" class="button blue small right">Submit</button>
             </form>
-            <a href="{{ path('ZizooSmsBundle_Default_SendCode', {profileId: profile.id}) }}" title="Resend Code">Resend Code</a>
+            <a href="{{ path(routes['verify_send_route'], {profileId: profile.id}) }}" title="Resend Code">Resend Code</a>
         {% else %}
-            <a href="{{ path('ZizooSmsBundle_Default_SendCode', {profileId: profile.id}) }}" title="Send Code">Send Code</a>
+            <a href="{{ path(routes['verify_send_route'], {profileId: profile.id}) }}" title="Send Code">Send Code</a>
         {% endif %}
     {% endif %}
 
