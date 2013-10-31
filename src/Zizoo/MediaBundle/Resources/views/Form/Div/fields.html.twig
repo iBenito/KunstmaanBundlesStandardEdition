@@ -17,7 +17,7 @@
             {% if part_of_collection == false %}
             <div id="{{ id }}_dropzone" class="{% if dropzone != false %}dropzone{% endif %} list">
             {% endif %}
-                    
+
                 {% if file_url is not null %}
 
                     <div id="{{ id }}_image_div_container" class="image_div_container">
@@ -35,7 +35,7 @@
                         </div>
                     </div>
                 {% endif %}
-                        
+
             {% if part_of_collection == false %}
             </div>
             {% endif %}
@@ -183,27 +183,32 @@
         }
         
         $(document).ready(function(){
-
             {% if dropzone != false %}
-                {{ id }}_dropzone_api = new Dropzone('#{{ id }}_dropzone', { 
-                    url:        '{{ path(dropzone['upload_url'], dropzone['upload_params']) }}',
-                    paramName:  '{{ dropzone['upload_param_name'] }}',
-                    success: function(file, response){
-                        eval('{{ dropzone['upload_success_js']|raw }}(file, response)');
-                    },
-                    error: function(file, response){
-                        eval('{{ dropzone['upload_error_js']|raw }}(file, response)');
-                        file.previewElement.classList.add("dz-error");
-                        return file.previewElement.querySelector("[data-dz-errormessage]").textContent = response;
-                    },
-                    enqueueForUpload: true,
-                    previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-success-mark\"><span>✔</span></div>\n  <div class=\"dz-error-mark\"><span>✘</span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
-                });
+            var selector = '#{{ id }}_dropzone';
+            {{ id }}_dropzone_api = new Dropzone('#{{ id }}_dropzone', {
+                url:        '{{ path(dropzone['upload_url'], dropzone['upload_params']) }}',
+                paramName:  '{{ dropzone['upload_param_name'] }}',
+                success: function(file, response){
+                    eval('{{ dropzone['upload_success_js']|raw }}(file, response, this)');
+                },
+                error: function(file, response){
+                    eval('{{ dropzone['upload_error_js']|raw }}(file, response, this)');
+                    file.previewElement.classList.add("dz-error");
+                    return file.previewElement.querySelector("[data-dz-errormessage]").textContent = response;
+                },
+                {% if dropzone['upload_params_cb'] is defined %}
+                sending: function(file, xhr, formData){
+                    eval('{{ dropzone['upload_params_cb']|raw }}(file, xhr, formData, this)');
+                },
+                {% endif %}
+                enqueueForUpload: true,
+                previewTemplate: '<div class="dz-preview dz-file-preview">\n  <div class="dz-details">\n    <div class="dz-filename"><span data-dz-name="data-dz-name"></span></div>\n    <div class="dz-size" data-dz-size="data-dz-size"></div>\n    <img data-dz-thumbnail="data-dz-thumbnail" />\n  </div>\n  <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress="data-dz-uploadprogress"></span></div>\n  <div class="dz-success-mark"><span>X</span></div>\n  <div class="dz-error-mark"><span>X</span></div>\n  <div class="dz-error-message"><span data-dz-errormessage="data-dz-errormessage"></span></div>\n</div>'
+            });
             {% endif %}
-            
+
             $('#{{ id }}_save_btn').click({{ id }}_saveCrop);
             $('#{{ id }}_cancel_btn').click({{ id }}_cancelCrop);
-            
+
             $('#{{ id }}').parents('form').submit(function(){
                 $('#{{ id }} > div.remove').remove();
                 return true;
@@ -352,7 +357,7 @@
         
         $(document).ready(function(){
             {% if dropzone != false %}
-                {{ id }}_dropzone_api = new Dropzone('#{{ id }}_list', { 
+                {{ id }}_dropzone_api = new Dropzone('#{{ id }}_list', {
                     url:        '{{ path(dropzone['upload_url'], dropzone['upload_params']) }}',
                     paramName:  '{{ dropzone['upload_param_name'] }}',
                     success: function(file, response){
@@ -364,13 +369,13 @@
                         return file.previewElement.querySelector("[data-dz-errormessage]").textContent = response;
                     },
                     enqueueForUpload: true,
-                    previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-success-mark\"><span>✔</span></div>\n  <div class=\"dz-error-mark\"><span>✘</span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
+                    previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-success-mark\"><span>?</span></div>\n  <div class=\"dz-error-mark\"><span>?</span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
                 });
             {% endif %}
-            
+
             $('#{{ id }}_save_btn').click({{ id }}_saveCrop);
             $('#{{ id }}_cancel_btn').click({{ id }}_cancelCrop);
-            
+
             {{ id }}_resort();
             
             

@@ -9,6 +9,7 @@ class BaseExtension extends \Twig_Extension
     {
         return array(
             'displayAmount'         => new \Twig_Filter_Method($this, 'displayAmount'),
+            'extractJavaScript'     => new \Twig_Filter_Method($this, 'extractJavaScript'),
             'parentBlockPrefix'     => new \Twig_Filter_Method($this, 'parentBlockPrefix'),
             'rootLabel'             => new \Twig_Filter_Method($this, 'rootLabel'),
             'absoluteAsset'         => new \Twig_Filter_Method($this, 'absoluteAsset'),
@@ -19,6 +20,28 @@ class BaseExtension extends \Twig_Extension
     public function displayAmount($dummy=null, $amount)
                 {
         return number_format($amount, 2);
+    }
+
+    public function extractJavaScript($html)
+    {
+        $htmlDom    = new \DOMDocument();
+        $jsDom      = new \DOMDocument();
+        $jsRoot     = new \DOMElement('div');
+        $jsDom->appendChild($jsRoot);
+
+        if ($htmlDom->loadXML($html)){
+            $scripts = $htmlDom->getElementsByTagName('script');
+            for ($i=0; $i<$scripts->length; $i++){
+                $script = $scripts->item($i);
+                $newScript = $jsDom->importNode($script, true);
+                $jsRoot->appendChild($newScript);
+                //$script->parentNode->removeChild($script);
+            }
+        }
+
+        $html   = $htmlDom->saveXML($htmlDom->documentElement);
+        $js     = htmlspecialchars_decode($jsDom->saveXML($jsDom->documentElement), ENT_QUOTES | ENT_SUBSTITUTE);
+        return array($html, $js);
     }
     
     public function parentBlockPrefix($blockPrefixes)

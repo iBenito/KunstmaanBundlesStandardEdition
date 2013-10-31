@@ -78,7 +78,7 @@ ZizooBaseBundle_Dashboard_Skills:
     pattern:  /account/dashboard/skills
     defaults: { _controller: ZizooBaseBundle:Dashboard:user, other_controller: ZizooCrewBundle:Skills:add, title: 'My Skills', tab: skills }
     requirements:
-        _method:  GET
+        _method:  GET|POST
 
 ZizooBaseBundle_Dashboard_Trips:
     pattern:  /account/dashboard/trips
@@ -127,6 +127,12 @@ ZizooBaseBundle_Dashboard_UnverifyFacebook:
 ZizooBaseBundle_Dashboard_VerifyPhone:
     pattern:  /account/dashboard/verify-phone
     defaults: { _controller: ZizooBaseBundle:Dashboard:user, other_controller: ZizooSmsBundle:Default:verify, title: 'Verify Phone' }
+    requirements:
+        _method:  GET|POST
+
+ZizooBaseBundle_Dashboard_VerifySend:
+    pattern:  /account/dashboard/verify-send/{profileId}
+    defaults: { _controller: ZizooBaseBundle:Dashboard:user, other_controller: ZizooSmsBundle:Default:sendCode, title: 'Send Code' }
     requirements:
         _method:  GET|POST
     

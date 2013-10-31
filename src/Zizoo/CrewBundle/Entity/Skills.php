@@ -12,7 +12,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Skills extends BaseEntity
 {
-        
     /**
      * @ORM\ManyToOne(targetEntity="Zizoo\UserBundle\Entity\User", inversedBy="skills")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
@@ -20,12 +19,12 @@ class Skills extends BaseEntity
     protected $user;
     
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\OneToOne(targetEntity="Zizoo\CrewBundle\Entity\SkillLicense", mappedBy="skill", cascade={"persist","remove"})
      */
     protected $license;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $experience;
 
@@ -49,6 +48,7 @@ class Skills extends BaseEntity
      */
     public function __construct()
     {
+        parent::__construct();
         $this->boats = new ArrayCollection();
     }
 
@@ -165,6 +165,17 @@ class Skills extends BaseEntity
     public function removeBoatTypes(\Zizoo\BoatBundle\Entity\BoatType $boatType)
     {
         $this->boatTypes->removeElement($boatType);
+    }
+
+    public function getBoatTypes()
+    {
+        return $this->boatTypes;
+    }
+
+    public function setBoatTypes($boatTypes)
+    {
+        $this->boatTypes = $boatTypes;
+        return $this;
     }
 
     /**

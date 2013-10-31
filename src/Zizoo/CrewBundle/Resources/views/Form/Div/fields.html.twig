@@ -1,0 +1,12 @@
+{% block zizoo_crewbundle_skillstype_widget %}
+{% spaceless %}
+    <div {{ block('widget_container_attributes') }}>
+        <input type="hidden" id="{{ id }}_skill" value="{{ form.vars.value is null ? '' :  form.vars.value.id }}" />
+        {% if form.parent is empty %}
+            {{ form_errors(form) }}
+        {% endif %}
+        {{ block('form_rows') }}
+        {{ form_rest(form) }}
+    </div>
+{% endspaceless %}
+{% endblock zizoo_crewbundle_skillstype_widget %}

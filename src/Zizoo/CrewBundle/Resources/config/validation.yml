@@ -1,0 +1,23 @@
+# src/Zizoo/CrewBundle/Resources/config/validation.yml
+Zizoo\CrewBundle\Entity\Skills:
+    properties:
+        skillType:
+            - NotNull: { message: zizoo_crew.error.skill_type_not_null, groups: [license] }
+            
+        license:
+            - NotNull: { message: zizoo_crew.error.skill_license_not_null, groups: [license] }
+            
+        experience:
+            - NotBlank: { message: zizoo_crew.error.skill_experience_not_blank, groups: [license] }
+            
+        boatTypes:
+            - NotNull: { message: zizoo_crew.error.skill_boat_types_not_null, groups: [license] }
+
+Zizoo\CrewBundle\Entity\SkillLicense:
+    properties:
+        mimeType:
+            - Regex:
+                pattern: "/(image\\/(png|jpeg))|(application\\/pdf)/"
+                match:   true
+                message: Only png, jpeg and pdf are allowed
+                groups: [license, skill_new_license]

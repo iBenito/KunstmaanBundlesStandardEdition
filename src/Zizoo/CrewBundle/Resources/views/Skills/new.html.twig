@@ -1,16 +1,25 @@
-<form action="{{ path('ZizooCrewBundle_Skills_Create') }}" method="post" {{ form_enctype(form) }}>
-    {{ form_widget(form) }}
+<form action="{{ path(url) }}" method="post" {{ form_enctype(form) }} class="form">
 
-    <ul class="skills" data-prototype="{{ form_widget(form.skills.vars.prototype)|e }}">
-        {# iterate over each existing tag and render its only field: name #}
-        {% for skill in form.skills %}
-            <li>{{ form_row(skill) }}</li>
-        {% endfor %}
-    </ul>
+    <div class="block borderless">
+        {% set dom = form_widget(form.skills.vars.prototype)|extractJavaScript %}
+        <ul class="skills" data-prototype="{{ dom[0]|e }}" data-js-prototype="{{ dom[1]|e }}">
+            {# iterate over each existing skill and render #}
+            {% for skill in form.skills %}
+                <li>
+                    {{ form_widget(skill) }}
+                    {{ form_errors(skill) }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 
-    <p>
-        <button type="submit">Save</button>
-    </p>
+    {{ form_errors(form) }}
+    {{ form_rest(form) }}
+
+    <div class="row right">
+        <button type="submit" class="button blue">Save</button>
+    </div>
+
 </form>
 
 <script type="text/javascript">
@@ -19,25 +28,101 @@
 
     // setup an "add a skill" link
     var $addSkillLink = $('<a href="#" class="add_skill_link">Add Skill</a>');
-    var $newLinkLi = $('<li></li>').append($addSkillLink);
+    var $newLinkLi = $('<div class="control"></div>').append($addSkillLink);
+    var uploadedFiles = new Array();
+
+    function removeUploadedFiles(index){
+        for (var i=0; i<uploadedFiles.length; i++){
+            eval('zizoo_crewbundle_skilltype_skills_'+index+'_license_dropzone_api.removeFile(uploadedFiles[i])');
+           // zizoo_charter_logo_dropzone_api.removeFile(uploadedFiles[i]);
+        }
+        uploadedFiles = new Array();
+    }
+
+    function getLicense(index){
+        $.ajax({
+            url:        '{{ path('ZizooCrewBundle_Skills_GetLicense') }}',
+            type:       'get',
+            success:    function(data, textStatus, XHR){
+                console.log(data)
+                //zizoo_crewbundle_skilltype_skills_0_license_image_div_container
+                var newImageDivContainer    = $(data).find('#zizoo_crewbundle_skilltype_skills_'+index+'_license_image_div_container');
+
+                $('#zizoo_crewbundle_skilltype_skills_'+index+'_license_image_div_container').html($(newImageDivContainer).html());
+               // $('#zizoo_charter_logo_container #zizoo_charter_logo').html($(newSkillLicense).html());
+                removeUploadedFiles(index);
+
+                var src = $(newImageDivContainer).find('.controls .full_url').val();
+                //$('#charter_logo #logo_img').attr('src', src).css('display', 'block');
+            }
+        });
+    }
+
+    function licenseUploadError(file, response, dropzone){
+
+    }
+
+    function licenseUploadSuccess(file, response, dropzone){
+        if (file!=null) uploadedFiles.push(file);
+        var clickableElements = dropzone.clickableElements;
+        var index = $(clickableElements[0]).parents('li').index();
+        var skillId = $('#zizoo_crewbundle_skilltype_skills_'+index+'_skill').val();
+        if (skillId=='') $('#zizoo_crewbundle_skilltype_skills_'+index+'_skill').val(response.skill_id);
+        getLicense(index);
+    }
+
+    function licensePreUpload(file, xhr, formData, dropzone){
+        var clickableElements = dropzone.clickableElements;
+        var index = $(clickableElements[0]).parents('li').index();
+        var skillId = $('#zizoo_crewbundle_skilltype_skills_'+index+'_skill').val();
+        formData.append('skill_id', skillId);
+    }
+
+    function licenseDelete(container){
+        var id  = $(container).find('.media_id').val();
+        $(container).find('.image_div').html('');
+        $.ajax({
+            url:            '{{ path('ZizooMediaBundle_Media_DeleteMedia') }}',
+            type:           'post',
+            data: {
+                id:             id,
+                entity_type:    'ZizooCrewBundle:SkillLicense'
+            },
+            success: function(data){
+            }
+        });
+    }
 
     function addSkillForm(collectionHolder, $newLinkLi) {
         // Get the data-prototype explained earlier
         var prototype = collectionHolder.data('prototype');
+        var jsPrototype = collectionHolder.data('js-prototype');
 
         // get the new index
         var index = collectionHolder.data('index');
 
         // Replace '__name__' in the prototype's HTML to
         // instead be a number based on how many items we have
-        var newForm = prototype.replace(/__name__/g, index);
+        var newForm     = prototype.replace(/__name__/g, index);
+        var newScript   = jsPrototype.replace(/__name__/g, index);
 
         // increase the index with one for the next item
         collectionHolder.data('index', index + 1);
 
-        // Display the form in the page in an li, before the "Add a tag" link li
-        var $newFormLi = $('<li></li>').append(newForm);
-        $newLinkLi.before($newFormLi);
+        // Display the form in the page in an li, before the "Add a skill" link li
+        var $newFormLi = $('<li></li>').append($(newForm).children());
+
+        collectionHolder.append($newFormLi);
+
+
+        $newFormLi.find('.row').each(function(index, row){
+           $(row).addClass('root').find('label, .row-content').addClass('root');
+        });
+        $newFormLi.find('select[multiple]').asmSelect();
+        $newFormLi.find('select:not([no-select-box-it])').selectBoxIt();
+
+        $('body').append(newScript);
+
 
         // add a delete link to the new form
         addSkillFormDeleteLink($newFormLi);
@@ -57,12 +142,13 @@
     }
 
     jQuery(document).ready(function() {
+
         // add the "add a skill" anchor and li to the skills ul
-        collectionHolder.append($newLinkLi);
+        collectionHolder.after($newLinkLi);
 
         // count the current form inputs we have (e.g. 2), use that as the new
         // index when inserting a new item (e.g. 2)
-        collectionHolder.data('index', collectionHolder.find(':input').length);
+        collectionHolder.data('index', collectionHolder.children('li').length);
 
         $addSkillLink.on('click', function(e) {
             // prevent the link from creating a "#" on the URL

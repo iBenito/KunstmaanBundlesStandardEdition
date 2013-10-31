@@ -14,6 +14,7 @@ use Imagine\Gd\Imagine;
 
 use Liip\ImagineBundle\Imagine\Cache\CacheClearer;
 
+use Zizoo\CrewBundle\Entity\SkillLicense;
 use Zizoo\ProfileBundle\Entity\Profile;
 use Zizoo\ProfileBundle\Entity\ProfileAvatar;
 
@@ -59,6 +60,11 @@ class MediaController extends Controller
             if (!$charter || !$charter->getBoats()->contains($boat)){
                 return new JsonResponse(array('error' => 'Not allowed'), 400);
             }
+        } else if ($mediaEntity instanceof SkillLicense){
+            $skill = $mediaEntity->getSkill();
+            if (!$user || !$user->getSkills()->contains($skill)){
+                return new JsonResponse(array('error' => 'Not allowed'), 400);
+            }
         }
         
         return $mediaEntity;
@@ -92,7 +98,12 @@ class MediaController extends Controller
             $boat->removeImage($mediaEntity);
             $boat->setUpdated($now);
             $em->persist($boat);
-        } else {
+        } else if ($mediaEntity instanceof SkillLicense){
+            $skill = $mediaEntity->getSkill();
+            $skill->setLicense(null);
+            $skill->setUpdated($now);
+            $em->persist($skill);
+        }else {
             return new JsonResponse(array('error' => 'Not allowed'), 400);
         }
         

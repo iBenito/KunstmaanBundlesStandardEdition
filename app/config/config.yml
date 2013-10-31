@@ -30,6 +30,7 @@ twig:
             - ZizooBookingBundle:Form:Div/fields.html.twig
             - ZizooMediaBundle:Form:Div/fields.html.twig
             - ZizooUserBundle:Form:Div/fields.html.twig
+            - ZizooCrewBundle:Form:Div/fields.html.twig
             - ZizooBaseBundle:Form:Div/fields.html.twig
             
 
@@ -137,6 +138,7 @@ zizoo_base:
             verify_facebook_route:      ZizooBaseBundle_Dashboard_VerifyFacebook
             unverify_facebook_route:    ZizooBaseBundle_Dashboard_UnverifyFacebook
             verify_phone_route:         ZizooBaseBundle_Dashboard_VerifyPhone
+            verify_send_route:          ZizooBaseBundle_Dashboard_VerifySend
 
         charter_routes:  
             profile_route:              ZizooBaseBundle_Dashboard_CharterProfile
