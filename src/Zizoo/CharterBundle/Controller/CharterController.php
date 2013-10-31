@@ -231,7 +231,7 @@ class CharterController extends Controller
             }
             
         }
-        
+
         return $this->render('ZizooCharterBundle:Charter:profile.html.twig',array(
             'form'   => $form->createView()
         ));
@@ -952,18 +952,22 @@ class CharterController extends Controller
         
         $reservation = $booking->getReservation();
         if (!$reservation){
-            return $this->redirect($this->generateUrl($routes['bookings_route']));
+            return $this->redirect($this->generateUrl($routes['view_booking_route'], array('id' => $id)));
+        }
+        
+        if ($reservation->getStatus()!==Reservation::STATUS_REQUESTED){
+            return $this->redirect($this->generateUrl($routes['view_booking_route'], array('id' => $id)));
         }
         
         $boat   = $reservation->getBoat();
         if (!$boat || !$boat->getCharter()->getUsers()->contains($user)){
-             return $this->redirect($this->generateUrl($routes['bookings_route']));
+             return $this->redirect($this->generateUrl($routes['view_booking_route'], array('id' => $id)));
         }
         
         $bookingAgent       = $this->get('zizoo_booking_booking_agent');
         $trans              = $this->get('translator');
         
-        $thread             = $em->getRepository('ZizooMessageBundle:Thread')->findOneByBooking($booking);
+        $thread             = $em->getRepository('ZizooMessageBundle:Thread')->findOneByReservation($reservation);
         
         $overlappingReservationRequests = $em->getRepository('ZizooReservationBundle:Reservation')
                                                 ->getReservations($charter, $user, $reservation->getBoat(), 
@@ -1076,19 +1080,23 @@ class CharterController extends Controller
         
         $reservation = $booking->getReservation();
         if (!$reservation){
-            return $this->redirect($this->generateUrl($routes['bookings_route']));
+            return $this->redirect($this->generateUrl($routes['view_booking_route'], array('id' => $id)));
+        }
+        
+        if ($reservation->getStatus()!==Reservation::STATUS_REQUESTED){
+            return $this->redirect($this->generateUrl($routes['view_booking_route'], array('id' => $id)));
         }
         
         $boat   = $reservation->getBoat();
         if (!$boat || !$boat->getCharter()->getUsers()->contains($user)){
-             return $this->redirect($this->generateUrl($routes['bookings_route']));
+             return $this->redirect($this->generateUrl($routes['view_booking_route'], array('id' => $id)));
         }
         
         $reservationAgent   = $this->get('zizoo_reservation_reservation_agent');
         $bookingAgent       = $this->get('zizoo_booking_booking_agent');
         $trans              = $this->get('translator');
         
-        $thread             = $em->getRepository('ZizooMessageBundle:Thread')->findOneByBooking($booking);
+        $thread             = $em->getRepository('ZizooMessageBundle:Thread')->findOneByReservation($reservation);
         
         $form = $this->createForm(new DenyBookingType(), new DenyBooking());
         

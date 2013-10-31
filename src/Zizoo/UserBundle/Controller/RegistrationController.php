@@ -295,7 +295,7 @@ class RegistrationController extends Controller
         
         if ($isPost) {
             
-            $form = $this->createForm(new FacebookNewRegistrationType());
+            $form = $this->createForm('zizoo_facebook_new_registration');
             $form->bind($request);
             
             $data = $form->getData();
@@ -372,7 +372,7 @@ class RegistrationController extends Controller
         $user->setPassword($pass_plain);
         $registration = new Registration();
         $registration->setUser($user);
-        $form = $this->createForm(new FacebookNewRegistrationType(), $registration);
+        $form = $this->createForm('zizoo_facebook_new_registration', $registration);
         return $this->render('ZizooUserBundle:Registration:register_facebook_new.html.twig', array('form'                   => $form->createView(), 
                                                                                                     'facebook'              => $facebook, 
                                                                                                     'data'                  => $obj, 
@@ -424,12 +424,12 @@ class RegistrationController extends Controller
         $user->setPassword($pass_plain);
         $registration = new Registration();
         $registration->setUser($user);
-        $form = $this->createForm(new FacebookLinkRegistrationType(), $registration);
+        $form = $this->createForm('zizoo_facebook_link_registration', $registration);
         
         
         if ($isPost) {        
             
-            $form = $this->createForm(new FacebookLinkRegistrationType());
+            $form = $this->createForm('zizoo_facebook_link_registration');
             $form->bind($request);
             $data = $form->getData();
             $linkUser = $data->getUser();

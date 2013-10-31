@@ -15,8 +15,21 @@
 {% endspaceless %}
 {% endblock zizoo_change_email_label %}
   
+{% block zizoo_invite_single_widget %}
+    {% spaceless %}
+    <div>
+    {{ form_widget(form) }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+        });
+    </script>
+    </div>
+    {% endspaceless %}
+{% endblock zizoo_invite_single_widget %}
+        
 {% block zizoo_invite_widget %}
-    <ul id="invite_emails" data-prototype="{{ form_widget(form.emails.vars.prototype)|e }}">
+    {% set prototype = form_widget(form.emails.vars.prototype)|extractJavaScript %}
+    <ul id="invite_emails" data-prototype="{{ prototype[0]|e }}" data-js-prototype="{{ prototype[1]|e }}">
         {# iterate over each existing tag and render its only field: name #}
         {% for email in form.emails %}
             <li>{{ form_row(email) }}</li>
@@ -35,21 +48,23 @@
 
         function addEmailForm(collectionHolder, $newLinkLi) {
             // Get the data-prototype explained earlier
-            var prototype = collectionHolder.data('prototype');
-
+            var prototype   = collectionHolder.data('prototype');
+            var jsPrototype = collectionHolder.data('js-prototype');
             // get the new index
             var index = collectionHolder.data('index');
 
             // Replace '__name__' in the prototype's HTML to
             // instead be a number based on how many items we have
-            var newForm = prototype.replace(/__name__/g, index);
-
+            var newForm     = prototype.replace(/__name__/g, index);
+            var newScript   = jsPrototype.replace(/__name__/g, index);
+            
             // increase the index with one for the next item
             collectionHolder.data('index', index + 1);
 
             // Display the form in the page in an li, before the "Add a tag" link li
             var $newFormLi = $('<li></li>').append(newForm);
             $newLinkLi.before($newFormLi);
+            $newFormLi.append(newScript);
             addEmailFormDeleteLink($newFormLi);
         }
         

@@ -1,13 +1,9 @@
 {# src/Zizoo/UserBundle/Resources/views/Registration/register.html.twig #}
-{% extends 'ZizooUserBundle::layout.html.twig' %}
-
 {% block javascripts %}
-    {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/zizoouser/js/register.js') }}"></script>
 {% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
     <link href="{{ asset('bundles/zizoouser/css/register.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
@@ -21,7 +17,7 @@
         {% endfor %}
         
         <div id="invite">
-            <form action="{{ path('ZizooUserBundle_invite')}}" method="post" {{ form_enctype(form) }} class="invite_form">
+            <form action="{{ path(routes['invite_route'])}}" method="post" {{ form_enctype(form) }} class="invite_form">
                 
                 <div>
                     {{ form_widget(form) }}

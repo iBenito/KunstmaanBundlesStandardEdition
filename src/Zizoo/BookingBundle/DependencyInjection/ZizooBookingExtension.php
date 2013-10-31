@@ -24,5 +24,8 @@ class ZizooBookingExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+        
+        $container->setParameter('zizoo_booking.allow_bookings', $config['allow_bookings']);
+        $container->setParameter('zizoo_booking.cut_amount', $config['cut_amount']);
     }
 }

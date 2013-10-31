@@ -13,12 +13,34 @@ Zizoo\BoatBundle\Form\Model\Availability:
 Zizoo\BoatBundle\Form\Model\ReservationRange:
     properties:
         reservation_from:
-            - Date: ~
-            - NotNull: ~
+            - Date: 
+                message: ~
+                groups: [book, messsage_owner]
+            - NotNull:
+                message: ~
+                groups: [book]
             
         reservation_to:
-            - Date: ~
-            - NotNull: ~
+            - Date: 
+                message: ~
+                groups: [book, messsage_owner]
+            - NotNull:
+                message:  ~
+                groups: [book]
+            
+
+Zizoo\BoatBundle\Form\Model\MessageOwner:
+    properties:
+        message:
+            - NotBlank:
+                message:  "You must enter a message to send to the owner"
+                groups: [message_owner]
+            - Length:
+                min: 15
+                max: 500
+                minMessage: "Your message must be at least {{ limit }} characters long"
+                maxMessage: "Your message cannot be longer than {{ limit }} characters"
+                groups: [message_owner]
 
 Zizoo\BoatBundle\Entity\Boat:
     constraints:

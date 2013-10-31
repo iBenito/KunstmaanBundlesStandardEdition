@@ -66,7 +66,7 @@
                                                 <input type="submit" name="deny" id="deny_btn" value="Deny" />
                                             </form>
                                             {% endif %}
-                                            <a href="{{ path(routes['view_thread_route'], {threadId: booking.thread.id}) }}">View Convervsation</a>
+                                            <a href="{{ path(routes['view_thread_route'], {threadId: booking.reservation.thread.id}) }}">View Convervsation</a>
                                         </td>
                                     </tr>
                                     <tr>
