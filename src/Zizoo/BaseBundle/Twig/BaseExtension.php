@@ -43,29 +43,7 @@ class BaseExtension extends \Twig_Extension
         $js     = htmlspecialchars_decode($jsDom->saveXML($jsDom->documentElement), ENT_QUOTES | ENT_SUBSTITUTE);
         return array($html, $js);
     }
-    
-    public function extractJavaScript($html)
-    {
-        $htmlDom    = new \DOMDocument();
-        $jsDom      = new \DOMDocument();
-        $jsRoot     = new \DOMElement('div');
-        $jsDom->appendChild($jsRoot);
-        
-        if ($htmlDom->loadXML($html)){
-            $scripts = $htmlDom->getElementsByTagName('script');
-            for ($i=0; $i<$scripts->length; $i++){
-                $script = $scripts->item($i);
-                $newScript = $jsDom->importNode($script, true);
-                $jsRoot->appendChild($newScript);
-                $script->parentNode->removeChild($script);
-            }
-        }
-
-        $html   = $htmlDom->saveXML($htmlDom->documentElement);
-        $js     = htmlspecialchars_decode($jsDom->saveXML($jsDom->documentElement), ENT_QUOTES | ENT_SUBSTITUTE);
-        return array($html, $js);
-    }
-    
+      
     public function parentBlockPrefix($blockPrefixes)
     {
         $numPrefixes = count($blockPrefixes);
