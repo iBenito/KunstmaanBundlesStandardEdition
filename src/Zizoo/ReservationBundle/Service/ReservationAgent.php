@@ -127,6 +127,11 @@ class ReservationAgent {
         
     }
     
+    public function makeEnquiryReservation(Boat $boat, $from, $to, $numGuests, User $guest)
+    {
+        return $this->makeReservationWithStatus($boat, $from, $to, $numGuests, 0, $guest, Reservation::STATUS_INITIAL);
+    }
+    
     public function removeReservationForSelf(Boat $boat, Reservation $reservation)
     {
         $this->em->remove($reservation->getAddress());

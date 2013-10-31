@@ -1,29 +1,29 @@
 <section>
-{% if thread.booking and thread.booking.reservation %}
-    {% if thread.booking.reservation.guest == user %}
-        <p>You sent a reservation request for boat {{ thread.booking.reservation.boat.id }}</p>
-        {% if thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_REQUESTED') %}
+{% if thread.reservation %}
+    {% if thread.reservation.guest == user %}
+        {% if thread.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_REQUESTED') %}
+            <p>You sent a <a href="{{ path('ZizooBaseBundle_Dashboard_ViewTrip', {id: thread.reservation.booking.id}) }}">reservation request</a> to the boat owner.</p>
             <p>Please wait for the boat owner to respond.</p>
-        {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') %}
-            <p>The request was accepted.</p>
-        {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_EXPIRED') %}
+        {% elseif thread.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') %}
+            <p>The request was accepted. You can view your <a href="{{ path('ZizooBaseBundle_Dashboard_ViewTrip', {id: thread.reservation.booking.id}) }}">trip</a> now.</p>
+        {% elseif thread.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_EXPIRED') %}
             <p>The request has expired.</p>
-        {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_DENIED') %}
+        {% elseif thread.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_DENIED') %}
             <p>The request was denied.</p>
-        {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') %}
-            <p>The request was tenatively accepted.</p>
+        {% elseif thread.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') %}
+            <p>The request was tenatively accepted. You can view your <a href="{{ path('ZizooBaseBundle_Dashboard_ViewTrip', {id: thread.reservation.booking.id}) }}">trip</a> now.</p>
         {% endif %}
-    {% elseif thread.booking.reservation.boat.charter == charter %}
-        <p>You received reservation request for boat {{ thread.booking.reservation.boat.id }}</p>
-        {% if thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_REQUESTED') %}
-            <p>Please <a href="{{ path('ZizooBaseBundle_Dashboard_CharterViewBooking', {id: thread.booking.id}) }}">respond to the request</a>.</p>
-        {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') %}
+    {% elseif thread.reservation.boat.charter == charter %}
+        {% if thread.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_REQUESTED') %}
+            <p>You received <a href="{{ path('ZizooBaseBundle_Dashboard_CharterViewBooking', {id: thread.reservation.booking.id}) }}">reservation request</a>.</p>
+            <p>Please <a href="{{ path('ZizooBaseBundle_Dashboard_CharterViewBooking', {id: thread.reservation.booking.id}) }}">respond to the request</a>.</p>
+        {% elseif thread.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') %}
             <p>You accepted the request.</p>
-        {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_EXPIRED') %}
+        {% elseif thread.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_EXPIRED') %}
             <p>The request has expired.</p>
-        {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_DENIED') %}
+        {% elseif thread.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_DENIED') %}
             <p>You denied the request.</p>
-        {% elseif thread.booking.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') %}
+        {% elseif thread.reservation.status == constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') %}
             <p>You tentatively accepted the request.</p>
         {% endif %}
     {% endif %}

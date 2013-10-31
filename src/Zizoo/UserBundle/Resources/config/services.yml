@@ -37,6 +37,18 @@ services:
         tags:
             - { name: form.type, alias: zizoo_registration }
             
+    zizoo_user.facebook_link_registration_type:
+        class:  Zizoo\UserBundle\Form\Type\Facebook\FacebookLinkRegistrationType
+        arguments: ["@service_container"]
+        tags:
+            - { name: form.type, alias: zizoo_facebook_link_registration }
+            
+    zizoo_user.facebook_new_registration_type:
+        class:  Zizoo\UserBundle\Form\Type\Facebook\FacebookNewRegistrationType
+        arguments: ["@service_container"]
+        tags:
+            - { name: form.type, alias: zizoo_facebook_new_registration }
+            
     # VALIDATORS
     zizoo_user.invite_single_validator:
         class: Zizoo\UserBundle\Validator\Constraints\InviteSingleValidator

@@ -7,8 +7,8 @@
     },
     {
         "id":       "half_now_half_later",
-        "name":     "I want to pay the booking in 2 equal installments",
-        "pattern":  "S:50;E:50",
+        "name":     "I want to pay the booking in 2 equal instalments",
+        "pattern":  "S:50;E(-30):50",
         "order":    1
     }
 ]

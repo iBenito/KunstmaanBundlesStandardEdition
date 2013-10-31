@@ -213,9 +213,8 @@
                             </figcaption>
                         </figure>
                     </a>
-                    <div id="message_coming_soon" style="display: none">
-                        <h1>Hold tight!</h1>
-                        <h2>Messaging functionality is coming soon!</h2>
+                    <div id="message_to_owner" style="display: none">
+                        {% render controller('ZizooBoatBundle:Boat:messageOwnerWidget', {id: boat.id, request:request, reservations: reservations, prices: prices}) %}
                     </div>
                     <a href="#" id="send_message_btn" class="button blue big" title="Send Message">Send Message</a>
                 </div>

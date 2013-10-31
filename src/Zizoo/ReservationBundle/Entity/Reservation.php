@@ -2,6 +2,7 @@
 namespace Zizoo\ReservationBundle\Entity;
 
 use Zizoo\BaseBundle\Entity\BaseEntity;
+use Zizoo\MessageBundle\Entity\Thread;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -81,7 +82,11 @@ class Reservation extends BaseEntity
      */
     protected $hoursToRespond;
 
-    
+    /**
+     * @ORM\OneToOne(targetEntity="Zizoo\MessageBundle\Entity\Thread", mappedBy="reservation")
+     **/
+    protected $thread;
+        
     public function __construct()
     {
         $this->setCreated(new \DateTime());
@@ -340,6 +345,17 @@ class Reservation extends BaseEntity
     {
         $this->test = $test;
         return $this;
+    }
+    
+    public function setThread(Thread $thread)
+    {
+        $this->thread = $thread;
+        return $this;
+    }
+    
+    public function getThread()
+    {
+        return $this->thread;
     }
         
 }

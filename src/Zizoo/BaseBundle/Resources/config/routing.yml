@@ -123,6 +123,12 @@ ZizooBaseBundle_Dashboard_UnverifyFacebook:
     defaults: { _controller: ZizooBaseBundle:Dashboard:user, other_controller: ZizooUserBundle:Verification:unverifyFacebook, title: 'Unverify Facebook' }
     requirements:
         _method:  GET|POST
+        
+ZizooBaseBundle_Dashboard_Invite:
+    pattern:  /account/dashboard/invite
+    defaults: { _controller: ZizooBaseBundle:Dashboard:user, other_controller: ZizooUserBundle:User:inviteFriends, title: 'Invite Users' }
+    requirements:
+        _method:  GET|POST
     
     
     
@@ -191,6 +197,12 @@ ZizooBaseBundle_Dashboard_CharterPayoutSettings:
     defaults: { _controller: ZizooBaseBundle:Dashboard:charter, other_controller: ZizooCharterBundle:Charter:payoutSettings, title: 'Payout Settings', tab: settings }
     requirements:
         _method:  GET|POST
+ 
+ZizooBaseBundle_Dashboard_CharterInvite:
+    pattern:  /charter/account/dashboard/invite
+    defaults: { _controller: ZizooBaseBundle:Dashboard:user, other_controller: ZizooUserBundle:User:inviteFriends, title: 'Invite Users' }
+    requirements:
+        _method:  GET|POST
        
 ZizooBaseBundle_Dashboard_CharterBoats:
     pattern:  /charter/account/dashboard/boats/{page}
@@ -248,3 +260,4 @@ ZizooBaseBundle_Dashboard_CharterActiveBoat:
     requirements:
         _method:  GET|POST
         id: \d+
+        

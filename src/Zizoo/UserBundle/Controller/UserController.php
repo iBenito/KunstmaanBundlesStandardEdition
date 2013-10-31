@@ -234,6 +234,8 @@ class UserController extends Controller
         $newInviteSingle->setEmail('');
         $newInvite->addEmail($newInviteSingle);
         
+        $routes = $request->query->get('routes');
+        
         $form       = $this->createForm('zizoo_invite', $newInvite);
         
         // If submit
@@ -252,13 +254,14 @@ class UserController extends Controller
                     $messenger->sendInvitationEmail($singleInvite->getEmail(), $user);
                     $this->get('session')->getFlashBag()->add('notice', $singleInvite->getEmail() . ' ' . $trans->trans('zizoo_user.friends_invited'));
                 }
-                return $this->redirect($this->generateUrl('ZizooUserBundle_invite', array('form' => $form)));
+                return $this->redirect($this->generateUrl($routes['invite_route'], array('form' => $form)));
             }
         }
-        
+    
         return $this->container->get('templating')->renderResponse('ZizooUserBundle:User:invite.html.twig', array(
-            'form'  => $form->createView(),
-            'ajax'  => $ajax
+            'form'      => $form->createView(),
+            'routes'    => $routes,
+            'ajax'      => $ajax
         ));
     }
     

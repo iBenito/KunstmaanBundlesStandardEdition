@@ -1,100 +1,55 @@
-<div id="booking_widget">
-    <div id="booking_widget_inner">
-        <form id="availability_form" action="{{ url }}" method="get" class="form">
-
-            <!-- start:price -->
-            <div class="price">
-                <table id="booking_price_container">
-                    <tbody>
-                        <tr>
-                            <td>Price</td>
-                            <td>{{ book_boat|BookBoat_price(subtotal)|raw}}</td>
-                        </tr>
-                        {% if boat.crewOptional == true %}
-                        <tr>
-                            <td><div id="crew_outer_container"><span id="crew_container" class="row">{{ form_widget(form.crew) }}</span> Crew {{ form_errors(form.crew) }}</div></td>
-                            <td>{{ book_boat|BookBoat_price(crew_price)|raw}}</td>
-                        </tr>
-                        {% endif %}
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>Total</td>
-                            <td>{{ book_boat|BookBoat_price(total)|raw}}</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-            <!-- end:price -->
-
-            <input type="hidden" name="url" value="{{ url }}" />
-            <input type="hidden" name="ajax_url" value="{{ ajax_url }}" />
-
-            <!-- start:summary -->
-            <div class="summary">
-                <ul class="clearfix">
-                    <li>
+<div id="message_owner_widget">
+    <div id="message_owner_widget_inner">
+        <form id="message_owner_form" action="{{ path('ZizooBoatBundle_message_owner_widget', {id: boat.id}) }}" method="get" class="form">
+            <table>
+                <tr>
+                    <td>
                         <span class="icon calendar black"></span>
                         <span class="field">{{ form_widget(form.reservation_range.reservation_from) }}</span>
                         {{ form_errors(form.reservation_range.reservation_from) }}
-                    </li>
-                    <li>
+                    </td>
+                    <td>
                         <span class="icon calendar black"></span>
                         <span class="field">{{ form_widget(form.reservation_range.reservation_to) }}</span>
                         {{ form_errors(form.reservation_range.reservation_to) }}
-                    </li>
-                    {% if form.reservation_range.vars.errors|length > 0 %}
-                    <li>
-                        {{ form_errors(form.reservation_range) }}
-                    </li>
-                    {% endif %}
-                    <li>
+                    </td>
+                    <td>
                         <span class="icon hash black"></span>
                         <span class="field">{{ form_widget(form.num_guests) }}</span>
                         {% if form.num_guests.vars.errors|length > 0 %}
                             {{ form_errors(form.num_guests) }}
                         {% endif %}
-                    </li>
-                    <li>
-                        {{ form_errors(form) }}
-                    </li>
-                </ul>
-                <noscript>
-                   <button type="submit" class="button orange big" title="Calculate">Calculate</button>
-                </noscript>
+                    </td>
+                </tr>
+                {% if form.reservation_range.vars.errors|length > 0 %}
+                <tr>
+                    <td colspan="2">
+                    {{ form_errors(form.reservation_range) }}
+                    </td>
+                </tr>
+                {% endif %}
+            </table>
+            <div>
+                {{ form_widget(form.message) }}
+                {{ form_errors(form.message) }}
             </div>
-            <!-- end:summary -->  
+            <button type="submit" id="send_message_now_btn" class="button orange big" title="Book it">Send Message</button>
         </form>
-        {% if valid == true %}
-            <form id="booking_form" action="{{ book_url }}" method="get">
-                <input name="zizoo_boat_book[reservation_from]" type="hidden" value="{{ form.vars.value.reservationRange.reservationFrom is empty ? "" : form.vars.value.reservationRange.reservationFrom|date }}" autocomplete="off" />
-                <input name="zizoo_boat_book[reservation_to]" type="hidden" value="{{ form.vars.value.reservationRange.reservationTo is empty ? "" : form.vars.value.reservationRange.reservationTo|date }}" autocomplete="off" />
-                <input name="zizoo_boat_book[num_guests]" type="hidden" value="{{ form.vars.value.numGuests }}" />
-                <button type="submit" id="book_btn" class="button orange big" title="Book it">Book It</button>
-            </form>
-        {% else %}
-           <button type="button" id="book_btn" disabled="disabled" class="button orange big" title="Book it">Book It</button>
-        {% endif %}
-
-        <div id="booking_coming_soon" style="display: none">
-            <h1>Hold tight!</h1>
-            <h2>Booking functionality is not available right now.</h2>
-        </div>
-       
     </div>
 </div>
-
+   
 <style type="text/css">
-    #crew_outer_container {
-        position: relative;
-        margin-bottom: 0;
-    }
-    #crew_container {
-        position: absolute;
-        left: -13px;
-    }
+#zizoo_message_owner_message {
+    width: 100%;
+    height: 300px;
+    resize: vertical;
+    -moz-box-sizing: border-box;
+}
+#message_owner_form table td {
+    vertical-align: top;
+}
 </style>
-
+   
 <script type="text/javascript">
 
     var bookingWidgetMappings = new Array({'original_state': {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') }}, 
@@ -110,39 +65,7 @@
     var bookingWidgetDefaultPrice       = {{ boat.hasDefaultPrice ? boat.defaultPrice : 'null' }};
     
     
-    
-    function openBookingComingSoonDialog(){
-        $('#booking_coming_soon').dialog({
-            modal: true,
-            closeOnEscape: false,
-            resizable: false,
-            width: 470,
-            maxWidth: 470,
-            fluid: true,
-            title: 'Coming Soon'
-        });
-    }
-    
-    function setup(){
-        $('#zizoo_boat_book_num_guests').change(function(){
-            reloadWidget();
-        });
-        $('#zizoo_boat_book_crew').change(function(){
-            reloadWidget();
-        });
-        
-        $('#booking_form').submit(function(){
-            {% if bookings_allowed == true %}
-            //window.location.href = $('#booking_form').attr('action');
-            {% else %}
-                openBookingComingSoonDialog();
-                return false;
-            {% endif %}
-        });
-
-        $("#booking_price_container input[type='radio'], #booking_price_container input[type='checkbox']").checkBox();
-
-        $('#booking_price_container, #book_btn').show();
+    function setupMessageOwner(){
 
         var clearBtnFnc1 = function(input) {
             setTimeout(function() {
@@ -222,7 +145,7 @@
             }
         });
         
-        $( "#zizoo_boat_book_reservation_range_reservation_from" ).datepick({
+        $( "#zizoo_message_owner_reservation_range_reservation_from" ).datepick({
             rangeSelect: false,
             changeMonth: false,
             defaultDate: "+1d",
@@ -236,13 +159,13 @@
             onSelect: function (dates){
                 if (dates.length>0){
                     var d = dates[0];
-                    if (this.id == 'zizoo_boat_book_reservation_range_reservation_from') {
+                    if (this.id == 'zizoo_message_owner_reservation_range_reservation_from') {
                         d = $.datepick.add(d, 1, 'd');
-                        $('#zizoo_boat_book_reservation_range_reservation_to').datepick('option', 'minDate', d || null); 
+                        $('#zizoo_message_owner_reservation_range_reservation_to').datepick('option', 'minDate', d || null); 
                     } 
                     else {
                         d = $.datepick.add(d, -1, 'd'); 
-                        $('#zizoo_boat_book_reservation_range_reservation_from').datepick('option', 'maxDate', d || null); 
+                        $('#zizoo_message_owner_reservation_range_reservation_from').datepick('option', 'maxDate', d || null); 
                     }
                 }
                 reloadWidget();
@@ -251,7 +174,7 @@
             renderer: $.datepick.themeRollerRenderer
         });
         
-        $( "#zizoo_boat_book_reservation_range_reservation_to" ).datepick({
+        $( "#zizoo_message_owner_reservation_range_reservation_to" ).datepick({
             rangeSelect: false,
             changeMonth: false,
             defaultDate: "+1d",
@@ -265,43 +188,39 @@
             onSelect: function (dates){
                 if (dates.length>0){
                     var d = dates[0];
-                    if (this.id == 'zizoo_boat_book_reservation_range_reservation_from') {
+                    if (this.id == 'zizoo_message_owner_reservation_range_reservation_from') {
                         d = $.datepick.add(d, 1, 'd');
-                        $('#zizoo_boat_book_reservation_range_reservation_to').datepick('option', 'minDate', d || null); 
+                        $('#zizoo_message_owner_reservation_range_reservation_to').datepick('option', 'minDate', d || null); 
                     } 
                     else {
                         d = $.datepick.add(d, -1, 'd'); 
-                        $('#zizoo_boat_book_reservation_range_reservation_from').datepick('option', 'maxDate', d || null); 
+                        $('#zizoo_message_owner_reservation_range_reservation_from').datepick('option', 'maxDate', d || null); 
                     }
                 }
                 reloadWidget();
             },
             onDate: $.datepick.zizoo_widget,
             renderer: $.datepick.themeRollerRenderer
+        });
+        
+        
+        jQuery('#message_owner_form').unbind('submit').submit(function(){
+            $('#message_owner_widget').block({ message: null });
+            $.ajax({
+                type: "POST",
+                url: jQuery('#message_owner_form').attr('action'),
+                data: $('#message_owner_form').serialize(),
+                success: function (data, textStatus, jqXHR){
+                    $('#message_owner_widget').html($(data).find('#message_owner_widget_inner'));
+                    setupMessageOwner();
+                    $('#message_owner_widget').unblock();
+                }
+            });
+
+            return false;
         });
     }
     
-    function reloadWidget(){
-        var dateFrom    = $('#zizoo_boat_book_reservation_range_reservation_from').datepick('getDate');
-        var dateUntil   = $('#zizoo_boat_book_reservation_range_reservation_to').datepick('getDate');
-        
-        if ($('#zizoo_boat_book_reservation_range_reservation_from').val()=='' || $('#zizoo_boat_book_reservation_range_reservation_to').val()=='') {
-            $('#booking_price').html('');
-            return;
-        }
-        $('#booking_widget').block({ message: null });
-       
-        $.ajax({
-            type: "POST",
-            url: '{{ ajax_url }}',
-            data: $('#availability_form').serialize(),
-            success: function (data, textStatus, jqXHR){
-                $('#booking_widget').html($(data).find('#booking_widget_inner'));
-                setup();
-                $('#booking_widget').unblock();
-            }
-        });
-    }
     
     function dateExists(dates, year, month, day){
         return (typeof dates[year]!='undefined' && typeof dates[year][month]!='undefined' && typeof dates[year][month][day]!='undefined');
@@ -310,7 +229,8 @@
     
     $(document).ready(function(){
     
-        setup();
+        
+        
     
     });
 </script>
