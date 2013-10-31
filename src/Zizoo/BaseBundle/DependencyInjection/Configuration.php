@@ -40,6 +40,7 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('verify_facebook_route')->isRequired()->cannotBeEmpty()->end()
                                 ->scalarNode('unverify_facebook_route')->isRequired()->cannotBeEmpty()->end()
                                 ->scalarNode('verify_phone_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('verify_send_route')->isRequired()->cannotBeEmpty()->end()
                             ->end()
                         ->end() // end user routes
                         ->arrayNode('charter_routes')

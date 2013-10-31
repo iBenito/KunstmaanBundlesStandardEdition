@@ -24,5 +24,13 @@ class ZizooSmsExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+
+        $env            = $config['twilio']['environment'];
+        $twilioConfig   = $config['twilio'][$env];
+
+        $container->setParameter('zizoo_sms.twilio.number',$twilioConfig['number']);
+        $container->setParameter('zizoo_sms.twilio.sid', $twilioConfig['sid']);
+        $container->setParameter('zizoo_sms.twilio.token', $twilioConfig['token']);
+
     }
 }

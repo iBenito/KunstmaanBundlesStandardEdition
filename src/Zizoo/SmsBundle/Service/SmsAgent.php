@@ -46,7 +46,7 @@ class SmsAgent {
     {
         $verify   = $this->em->getRepository('ZizooSmsBundle:SmsVerifyBase')->findOneById($verificationId);
 
-        $from = $this->container->getParameter('twilio.number');
+        $from = $this->container->getParameter('zizoo_sms.twilio.number');
         $to = $verify->getPhone();
 
         $twilioClient = $this->container->get('zizoo_sms.twilio');

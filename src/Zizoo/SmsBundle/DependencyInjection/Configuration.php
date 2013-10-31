@@ -24,6 +24,51 @@ class Configuration implements ConfigurationInterface
         // configure your bundle. See the documentation linked above for
         // more information on that topic.
 
+        $rootNode
+            ->children()
+                ->arrayNode('twilio')
+                    ->children()
+                        ->scalarNode('environment')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                            ->end()
+                        ->arrayNode('sandbox')
+                            ->children()
+                                ->scalarNode('number')
+                                    ->isRequired()
+                                    ->cannotBeEmpty()
+                                    ->end()
+                                ->scalarNode('sid')
+                                    ->isRequired()
+                                    ->cannotBeEmpty()
+                                    ->end()
+                                ->scalarNode('token')
+                                    ->isRequired()
+                                    ->cannotBeEmpty()
+                                    ->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('production')
+                            ->children()
+                                ->scalarNode('number')
+                                    ->isRequired()
+                                    ->cannotBeEmpty()
+                                    ->end()
+                                ->scalarNode('sid')
+                                    ->isRequired()
+                                    ->cannotBeEmpty()
+                                    ->end()
+                                ->scalarNode('token')
+                                    ->isRequired()
+                                    ->cannotBeEmpty()
+                                    ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+
         return $treeBuilder;
     }
 }

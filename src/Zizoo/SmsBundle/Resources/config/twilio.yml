@@ -4,4 +4,5 @@ parameters:
 services:
     zizoo_sms.twilio:
         class: %class.twilio.service%
-        arguments: [%twilio.sid%, %twilio.token%]
+        arguments: [%zizoo_sms.twilio.sid%, %zizoo_sms.twilio.token%]
+        #arguments: [%twilio.sid%, %twilio.token%]
