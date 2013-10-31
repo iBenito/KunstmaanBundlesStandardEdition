@@ -138,6 +138,8 @@ zizoo_base:
             unverify_facebook_route:    ZizooBaseBundle_Dashboard_UnverifyFacebook
             invite_route:               ZizooBaseBundle_Dashboard_Invite
             
+            verify_phone_route:         ZizooBaseBundle_Dashboard_VerifyPhone
+
         charter_routes:  
             profile_route:              ZizooBaseBundle_Dashboard_CharterProfile
             bookings_route:             ZizooBaseBundle_Dashboard_CharterBookings

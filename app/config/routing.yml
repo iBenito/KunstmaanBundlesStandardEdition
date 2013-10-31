@@ -1,3 +1,7 @@
+zizoo_sms:
+    resource: "@ZizooSmsBundle/Resources/config/routing.yml"
+    prefix:   /
+
 zizoo_datatables:
     resource: "@ZizooDatatablesBundle/Resources/config/routing.yml"
     prefix:   /

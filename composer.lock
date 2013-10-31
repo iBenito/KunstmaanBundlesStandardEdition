@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "c96a5b05e17da2d75986f745d6fe1f4f",
+    "hash": "851b3748816f12e34de091abf59c3d0b",
     "packages": [
         {
             "name": "braintree/braintree_php",
@@ -105,7 +105,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -371,7 +371,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/"
                 }
@@ -583,21 +583,26 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineMigrationsBundle.git",
-                "reference": "1a7f58d7639cf65b8fcae56fd9a8f4e42a41a27c"
+                "reference": "65bdcc9510c77c02f548e8da425826422ee4becf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineMigrationsBundle/zipball/1a7f58d7639cf65b8fcae56fd9a8f4e42a41a27c",
-                "reference": "1a7f58d7639cf65b8fcae56fd9a8f4e42a41a27c",
+                "url": "https://api.github.com/repos/doctrine/DoctrineMigrationsBundle/zipball/65bdcc9510c77c02f548e8da425826422ee4becf",
+                "reference": "65bdcc9510c77c02f548e8da425826422ee4becf",
                 "shasum": ""
             },
             "require": {
                 "doctrine/doctrine-bundle": "~1.0",
-                "doctrine/migrations": "*",
+                "doctrine/migrations": "~1.0@dev",
                 "php": ">=5.3.2",
                 "symfony/framework-bundle": "~2.1"
             },
             "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1.x-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Doctrine\\Bundle\\MigrationsBundle": ""
@@ -628,7 +633,7 @@
                 "migrations",
                 "schema"
             ],
-            "time": "2013-10-02 14:42:48"
+            "time": "2013-10-24 10:22:11"
         },
         {
             "name": "doctrine/inflector",
@@ -1036,79 +1041,6 @@
                 "symfony"
             ],
             "time": "2013-04-12 00:26:30"
-        },
-        {
-            "name": "gergelypolonkai/smssender",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/gergelypolonkai/smssender.git",
-                "reference": "0d8da5a8e45f1d76734f3ecd0f076506e5ee2212"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/gergelypolonkai/smssender/zipball/0d8da5a8e45f1d76734f3ecd0f076506e5ee2212",
-                "reference": "0d8da5a8e45f1d76734f3ecd0f076506e5ee2212",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "GergelyPolonkai\\SmsSender": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL"
-            ],
-            "authors": [
-                {
-                    "name": "Gergely Polonkai",
-                    "email": "gergely@polonkai.eu"
-                }
-            ],
-            "description": "SMS Sender class to interact with gergelypolonkai/smsgateway",
-            "homepage": "https://github.com/gergelypolonkai/smssender",
-            "keywords": [
-                "sms"
-            ],
-            "time": "2012-10-06 23:37:37"
-        },
-        {
-            "name": "gergelypolonkai/smssender-bundle",
-            "version": "dev-master",
-            "target-dir": "GergelyPolonkai/SmsSenderBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/gergelypolonkai/smssender-bundle.git",
-                "reference": "fdde9b5bfa032355ecafc284996c6e8553a3c0dd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/gergelypolonkai/smssender-bundle/zipball/fdde9b5bfa032355ecafc284996c6e8553a3c0dd",
-                "reference": "fdde9b5bfa032355ecafc284996c6e8553a3c0dd",
-                "shasum": ""
-            },
-            "require": {
-                "gergelypolonkai/smssender": "dev-master",
-                "symfony/framework-bundle": "2.*"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-0": {
-                    "GergelyPolonkai\\SmsSenderBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "Gergely Polonkai",
-                    "email": "gergely@polonkai.eu"
-                }
-            ],
-            "description": "Symfony2 bundle to interact with gergelypolonkai/smssender",
-            "homepage": "https://github.com/gergelypolonkai/smssender-bundle",
-            "time": "2012-12-20 18:13:08"
         },
         {
             "name": "imagine/imagine",
@@ -1715,12 +1647,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kriswallsmith/assetic.git",
-                "reference": "735cffd3982c6e8cdebe292d5db39d077f65890f"
+                "reference": "v1.1.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kriswallsmith/assetic/zipball/735cffd3982c6e8cdebe292d5db39d077f65890f",
-                "reference": "735cffd3982c6e8cdebe292d5db39d077f65890f",
+                "url": "https://api.github.com/repos/kriswallsmith/assetic/zipball/v1.1.2",
+                "reference": "v1.1.2",
                 "shasum": ""
             },
             "require": {
@@ -1840,12 +1772,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "f72392d0e6eb855118f5a84e89ac2d257c704abd"
+                "reference": "1.6.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/f72392d0e6eb855118f5a84e89ac2d257c704abd",
-                "reference": "f72392d0e6eb855118f5a84e89ac2d257c704abd",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1.6.0",
+                "reference": "1.6.0",
                 "shasum": ""
             },
             "require": {
@@ -2648,6 +2580,56 @@
             "time": "2013-10-15 19:17:38"
         },
         {
+            "name": "twilio/sdk",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twilio/twilio-php.git",
+                "reference": "d3cc7ab69811e28ac95e0ccaac9a62714c25da19"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/d3cc7ab69811e28ac95e0ccaac9a62714c25da19",
+                "reference": "d3cc7ab69811e28ac95e0ccaac9a62714c25da19",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.1"
+            },
+            "require-dev": {
+                "mockery/mockery": ">=0.7.2",
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Services_Twilio": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kevin Burke",
+                    "email": "kevin@twilio.com"
+                },
+                {
+                    "name": "Kyle Conroy",
+                    "email": "kyle+pear@twilio.com"
+                }
+            ],
+            "description": "A PHP wrapper for Twilio's API",
+            "homepage": "http://github.com/twilio/twilio-php",
+            "keywords": [
+                "api",
+                "sms",
+                "twilio"
+            ],
+            "time": "2013-10-23 20:17:51"
+        },
+        {
             "name": "willdurand/geocoder",
             "version": "dev-master",
             "source": {
@@ -3090,9 +3072,8 @@
         "braintree/braintree_php": 20,
         "punkave/symfony2-file-uploader-bundle": 20,
         "willdurand/geocoder": 20,
-        "gergelypolonkai/smssender": 20,
-        "gergelypolonkai/smssender-bundle": 20,
-        "jms/payment-core-bundle": 20
+        "jms/payment-core-bundle": 20,
+        "twilio/sdk": 20
     },
     "platform": {
         "php": ">=5.3.3"

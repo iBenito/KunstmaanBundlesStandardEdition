@@ -1,0 +1,24 @@
+{% block body %}
+    {% if message %}
+        <p> {{ message }}</p>
+    {% endif %}
+
+    <h3>{{ profile.phone }}</h3>
+
+    {% if profile_verified %}
+        Verified!
+    {% else %}
+        {% if verification_form %}
+            <form class="form" method="post" {{ form_enctype(verification_form) }}>
+
+                {{ form_widget(verification_form) }}
+
+                <button type="submit" class="button blue small right">Submit</button>
+            </form>
+            <a href="{{ path(routes['verify_send_route'], {profileId: profile.id}) }}" title="Resend Code">Resend Code</a>
+        {% else %}
+            <a href="{{ path(routes['verify_send_route'], {profileId: profile.id}) }}" title="Send Code">Send Code</a>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

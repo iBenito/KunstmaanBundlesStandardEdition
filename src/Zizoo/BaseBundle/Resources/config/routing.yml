@@ -129,6 +129,12 @@ ZizooBaseBundle_Dashboard_Invite:
     defaults: { _controller: ZizooBaseBundle:Dashboard:user, other_controller: ZizooUserBundle:User:inviteFriends, title: 'Invite Users' }
     requirements:
         _method:  GET|POST
+
+ZizooBaseBundle_Dashboard_VerifyPhone:
+    pattern:  /account/dashboard/verify-phone
+    defaults: { _controller: ZizooBaseBundle:Dashboard:user, other_controller: ZizooSmsBundle:Default:verify, title: 'Verify Phone' }
+    requirements:
+        _method:  GET|POST
     
     
     

@@ -1,0 +1,9 @@
+ZizooSmsBundle_Default_Verify:
+    pattern:  /verify/{message}
+    defaults: { _controller: ZizooSmsBundle:Default:verify, message: null }
+    requirements:
+        _method:  GET|POST
+
+ZizooSmsBundle_Default_SendCode:
+    pattern:  /send_code/{profileId}/
+    defaults: { _controller: ZizooSmsBundle:Default:sendCode }
