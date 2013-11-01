@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="verify")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"profile" = "ProfileSmsVerify", "booking" = "BookingSmsVerify"})
+ * @ORM\DiscriminatorMap({"profile" = "Zizoo\SmsBundle\Entity\ProfileSmsVerify", "booking" = "Zizoo\SmsBundle\Entity\BookingSmsVerify"})
  */
 class SmsVerifyBase
 {
