@@ -44,16 +44,14 @@
             url:        '{{ path('ZizooCrewBundle_Skills_GetLicense') }}',
             type:       'get',
             success:    function(data, textStatus, XHR){
-                console.log(data)
-                //zizoo_crewbundle_skilltype_skills_0_license_image_div_container
-                var newImageDivContainer    = $(data).find('#zizoo_crewbundle_skilltype_skills_'+index+'_license_image_div_container');
 
+                var newImageDivContainer    = $(data).find('#zizoo_crewbundle_skilltype_skills_'+index+'_license_image_div_container');
                 $('#zizoo_crewbundle_skilltype_skills_'+index+'_license_image_div_container').html($(newImageDivContainer).html());
-               // $('#zizoo_charter_logo_container #zizoo_charter_logo').html($(newSkillLicense).html());
+
                 removeUploadedFiles(index);
 
                 var src = $(newImageDivContainer).find('.controls .full_url').val();
-                //$('#charter_logo #logo_img').attr('src', src).css('display', 'block');
+
             }
         });
     }
@@ -68,6 +66,9 @@
         var index = $(clickableElements[0]).parents('li').index();
         var skillId = $('#zizoo_crewbundle_skilltype_skills_'+index+'_skill').val();
         if (skillId=='') $('#zizoo_crewbundle_skilltype_skills_'+index+'_skill').val(response.skill_id);
+
+        var licenseId = $('#zizoo_crewbundle_skilltype_skills_'+index+'_license_id').val();
+        if (licenseId=='') $('#zizoo_crewbundle_skilltype_skills_'+index+'_license_id').val(response.license_id);
         getLicense(index);
     }
 

@@ -18,23 +18,30 @@
             <div id="{{ id }}_dropzone" class="{% if dropzone != false %}dropzone{% endif %} list">
             {% endif %}
 
-                {% if file_url is not null %}
 
-                    <div id="{{ id }}_image_div_container" class="image_div_container">
-                        <div class="image_div">
-                           <img id="{{ id }}_image" src="{{ asset(file_url|imagine_filter('thumb_120x80')) }}?ver={{ version }}"/>
-                           <div class="zizoo_media_overlay"></div>
-                           <div class="controls">
-                               <a href="#" id="{{ id }}_crop_btn" class="crop_btn">Crop</a>
-                               {% if allow_delete == true %}
-                                   <a href="#" id="{{ id }}_delete_btn" class="delete_btn">Delete</a>
-                               {% endif %}
-                               <input id="{{ id }}_full_url" class="full_url" type="hidden" value="{{ asset(file_url) }}?ver={{ version }}" />
-                               <input id="{{ id }}_id" class="id" type="hidden" value="{{ id }}" />
-                           </div>
-                        </div>
+
+                <div id="{{ id }}_image_div_container" class="image_div_container">
+
+                    {% if file_url is not null %}
+
+                    <div class="image_div">
+                       <img id="{{ id }}_image" src="{{ asset(file_url|imagine_filter('thumb_120x80')) }}?ver={{ version }}"/>
+                       <div class="zizoo_media_overlay"></div>
+                       <div class="controls">
+                           <a href="#" id="{{ id }}_crop_btn" class="crop_btn">Crop</a>
+                           {% if allow_delete == true %}
+                               <a href="#" id="{{ id }}_delete_btn" class="delete_btn">Delete</a>
+                           {% endif %}
+                           <input id="{{ id }}_full_url" class="full_url" type="hidden" value="{{ asset(file_url) }}?ver={{ version }}" />
+                           <input id="{{ id }}_id" class="id" type="hidden" value="{{ id }}" />
+                       </div>
                     </div>
-                {% endif %}
+
+
+                    {% endif %}
+
+                </div>
+
 
             {% if part_of_collection == false %}
             </div>
