@@ -455,9 +455,9 @@ class CharterController extends Controller
                 'search'            => array(
                                                 'options'           => $reservationOptions,
                                                 'initial_option'    => $request->get('booking', null)),
-                'callback'           => function($field, $val, $booking) use ($routes) {
+                'callback'           => function($field, $val, $booking) use ($router, $routes) {
                     $reference = $booking->getReference();
-                    $url = "<a href=".$this->generateUrl($routes['view_booking_route'], array('id' => $val)).">".$reference."</a>";
+                    $url = "<a href=".$router->generate($routes['view_booking_route'], array('id' => $val)).">".$reference."</a>";
                     return $url;
                 }
                                                
