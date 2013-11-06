@@ -1,22 +1,27 @@
 [
     {
         "id":       "inboard",
-        "name":     "Inboard",
+        "name":     "zizoo_boat.engine.inboard",
         "order":    0
     },
     {
         "id":       "outboard",
-        "name":     "Outboard",
+        "name":     "zizoo_boat.engine.outboard",
         "order":    1
     },
     {
         "id":       "stern",
-        "name":     "Stern",
+        "name":     "zizoo_boat.engine.stern",
         "order":    2
     },
     {
-        "id":       "jet",
-        "name":     "Jet",
+        "id":       "electric",
+        "name":     "zizoo_boat.engine.electric",
         "order":    3
+    },
+    {
+        "id":       "jet",
+        "name":     "zizoo_boat.engine.jet",
+        "order":    4
     }
 ]
