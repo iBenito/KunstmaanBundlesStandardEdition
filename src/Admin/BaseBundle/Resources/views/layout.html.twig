@@ -1,0 +1,5 @@
+{% extends '::admin.html.twig' %}
+
+{% block navigation %}
+    {% render controller('ZizooAdminBundle:Page:loginWidget', {showLoginForm: false}) %}
+{% endblock %}

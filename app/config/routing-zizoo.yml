@@ -1,0 +1,78 @@
+zizoo_sms:
+    resource: "@ZizooSmsBundle/Resources/config/routing.yml"
+    prefix:   /
+
+zizoo_datatables:
+    resource: "@ZizooDatatablesBundle/Resources/config/routing.yml"
+    prefix:   /
+
+zizoo_media:
+    resource: "@ZizooMediaBundle/Resources/config/routing.yml"
+    prefix:   /
+
+zizoo_event:
+    resource: "@ZizooEventBundle/Resources/config/routing.yml"
+    prefix:   /event
+
+zizoo_charter:
+    resource: "@ZizooCharterBundle/Resources/config/routing.yml"
+    prefix:   /charter
+
+zizoo_admin:
+    resource: "@ZizooAdminBundle/Resources/config/routing.yml"
+    prefix:   /admin
+
+zizoo_notification:
+    resource: "@ZizooNotificationBundle/Resources/config/routing.yml"
+    prefix:   /
+
+zizoo_billing:
+    resource: "@ZizooBillingBundle/Resources/config/routing.yml"
+    prefix:   /billing
+
+zizoo_crew:
+    resource: "@ZizooCrewBundle/Resources/config/routing.yml"
+    prefix:   /crew
+
+zizoo_reservation:
+    resource: "@ZizooReservationBundle/Resources/config/routing.yml"
+    prefix:   /
+
+zizoo_address:
+    resource: "@ZizooAddressBundle/Resources/config/routing.yml"
+    prefix:   /
+
+zizoo_profile:
+    resource: "@ZizooProfileBundle/Resources/config/routing.yml"
+    prefix:   /
+
+zizoo_booking:
+    resource: "@ZizooBookingBundle/Resources/config/routing.yml"
+    prefix:   /account
+
+zizoo_user:
+    resource: "@ZizooUserBundle/Resources/config/routing.yml"
+    prefix:   /
+
+zizoo_boat:
+    resource: "@ZizooBoatBundle/Resources/config/routing.yml"
+    prefix:   /
+
+zizoo_base:
+    resource: "@ZizooBaseBundle/Resources/config/routing.yml"
+    prefix:   /
+
+zizoo_message:
+    resource: "@ZizooMessageBundle/Resources/config/routing.yml"
+    prefix:   /account/messages
+
+
+_imagine:
+    resource: .
+    type: imagine
+
+
+# Internal routing configuration to handle ESI
+#_internal:
+#    resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
+#    prefix:   /_internal

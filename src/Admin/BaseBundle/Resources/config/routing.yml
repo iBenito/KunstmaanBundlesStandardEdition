@@ -1,0 +1,3 @@
+admin_base_homepage:
+    pattern:  /
+    defaults: { _controller: AdminBaseBundle:Page:loginWidget }
