@@ -24,6 +24,19 @@ class Configuration implements ConfigurationInterface
         // configure your bundle. See the documentation linked above for
         // more information on that topic.
 
+        $rootNode
+            ->children()
+                ->scalarNode('allow_bookings')
+                    ->defaultValue(false)
+                    ->isRequired()
+                    ->end()
+                ->scalarNode('cut_amount')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                    ->end()
+            ->end()
+        ;
+        
         return $treeBuilder;
     }
 }

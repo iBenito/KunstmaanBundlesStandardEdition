@@ -12,6 +12,7 @@ class SkillType extends AbstractType
     {
         $builder
             ->add('skills', 'collection', array(
+                'label' => false,
                 'type' => new SkillsType(),
                 'allow_add' => true,
                 'by_reference' => false,
@@ -23,7 +24,9 @@ class SkillType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Zizoo\UserBundle\Entity\User'
+            'data_class'            => 'Zizoo\UserBundle\Entity\User',
+            'validation_groups'     => array('license'),
+            'cascade_validation'    => true
         ));
     }
 

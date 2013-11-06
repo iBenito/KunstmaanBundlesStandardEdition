@@ -39,6 +39,9 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('account_settings_route')->isRequired()->cannotBeEmpty()->end()
                                 ->scalarNode('verify_facebook_route')->isRequired()->cannotBeEmpty()->end()
                                 ->scalarNode('unverify_facebook_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('invite_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('verify_phone_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('verify_send_route')->isRequired()->cannotBeEmpty()->end()
                             ->end()
                         ->end() // end user routes
                         ->arrayNode('charter_routes')
@@ -52,6 +55,7 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('view_thread_route')->isRequired()->cannotBeEmpty()->end()
                                 ->scalarNode('payments_route')->isRequired()->cannotBeEmpty()->end()
                                 ->scalarNode('payout_settings_route')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('invite_route')->isRequired()->cannotBeEmpty()->end()
                                 ->scalarNode('boats_route')->isRequired()->cannotBeEmpty()->end()
                                 ->scalarNode('boat_new_route')->isRequired()->cannotBeEmpty()->end()
                                 ->scalarNode('boat_edit_route')->isRequired()->cannotBeEmpty()->end()

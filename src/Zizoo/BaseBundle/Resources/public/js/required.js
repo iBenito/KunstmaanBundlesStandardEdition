@@ -545,6 +545,7 @@ $(document).ready(function() {
                     $this.css("max-width", dialog.options.maxWidth);
                 }
                 //reposition dialog
+                console.log(dialog.options.position);
                 dialog.option("position", dialog.options.position);
             }
         });

@@ -17,7 +17,6 @@ class CharterLogo extends Media {
      * @ORM\JoinColumn(name="charter_id", referencedColumnName="id")
      */
     protected $charter;
-    
 
     /**
      * Set charter
@@ -41,88 +40,12 @@ class CharterLogo extends Media {
     {
         return $this->charter;
     }
-    
-    /**
-     * @ORM\Column(name="mime_type", type="text", nullable=false)
-     */
-    private $mimeType;
-    
-    public function setMimeType($mimeType)
-    {
-        $this->mimeType = $mimeType;
-        return $this;
-    }
-    
-    public function getMimeType()
-    {
-        return $this->mimeType;
-    }
-    
-    
-    
-    
-    
-    public function getUploadRootDir()
-    {
-        // the absolute directory path where uploaded
-        // documents should be saved
-        return __DIR__.'/../../../../web/'.$this->getUploadDir();
-    }
 
     public function getUploadDir()
     {
         // get rid of the __DIR__ so it doesn't screw up
         // when displaying uploaded doc/image in the view.
         return 'images/charter/'.$this->charter->getId();
-    }
-    
-    
-    
-    
-    
-
-    /**
-     * @ORM\PreRemove()
-     */
-    public function storeFilenameForRemove()
-    {
-        $this->temp = $this->getAbsolutePath();
-    }
-
-    /**
-     * @ORM\PostRemove()
-     */
-    public function removeUpload()
-    {
-        if (isset($this->temp)) {
-            unlink($this->temp);
-        }
-    }
-
-    public function getPathAndName()
-    {
-        return (null === $this->getPath() || null === $this->getId())
-            ? null
-            : $this->getId().'.'.$this->getPath();
-    }
-    
-    public function getAbsolutePath()
-    {
-        return null === $this->getPathAndName()
-            ? null
-            : $this->getUploadRootDir().'/'.$this->getPathAndName();
-    }
-    
-    /**
-     * Get the image url
-     *
-     * @return null|string
-     */
-    public function getWebPath()
-    {
-        return null === $this->getPathAndName()
-            ? null
-            : $this->getUploadDir().'/'.$this->getPathAndName();
     }
  
 }

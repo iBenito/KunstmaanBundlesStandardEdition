@@ -54,40 +54,77 @@ class BookingAgentController {
         throw new PluginNotFoundException(sprintf('There is no plugin that processes payments for "%s".', $paymentMethod));
     }
     
-    public function createPaymentsFromInstalmentOption(InstalmentOption $instalmentOption, \DateTime $checkIn, $total)
+    public function createPaymentsFromInstalmentOption(InstalmentOption $instalmentOption, \DateTime $now, \DateTime $checkIn, $total)
     {
         $payments = new \Doctrine\Common\Collections\ArrayCollection();
         $pattern = $instalmentOption->getPattern();
         $checkTotal = 0.0;
-        $parts = explode(';', $pattern);
-        foreach ($parts as $part){
-            $p = explode(':', $part);
-            if (count($p)!=2) throw new \Exception('Invalid instalment option pattern: ' . $pattern);
-            switch ($p[0])
-            {
-                case 'S':
-                    $x = intval($p[1]);
-                    if (!is_int($x)) throw new \Exception('Invalid instalment option pattern: ' . $pattern);
-                    $x /= 100;
-                    $checkTotal += floatval($x);
-                    $payment = new Payment();
-                    $payment->setAmount(round($x*$total, 2));
-                    $payments->add($payment);
-                    break;
-                case 'E':
-                    $x = intval($p[1]);
-                    if (!is_int($x)) throw new \Exception('Invalid instalment option pattern: ' . $pattern);
-                    $x /= 100;
-                    $checkTotal += floatval($x);
-                    $payment = new Payment();
-                    $payment->setAmount(round($x*$total, 2));
-                    $payment->setDateDue($checkIn->modify('-5 days'));
-                    $payments->add($payment);
-                    break;
-                default:
-                    throw new \Exception('Invalid instalment option pattern: ' . $pattern);
+        
+        $datePartPattern    = '(S|E)(\((-?\d+)\))*';
+        $amountPartPattern  = '(\d+)';
+        $instalmentPattern  = "$datePartPattern:$amountPartPattern";
+        $matches = array();
+        $numInstalmentOptions = preg_match_all("/$instalmentPattern+/", $pattern, $matches);
+        
+        for ($i=0; $i<$numInstalmentOptions; $i++){
+            $optionPattern  = $matches[0][$i];
+            $optionType     = $matches[1][$i];
+            $optionDays     = $matches[3][$i];
+            $optionAmount   = $matches[4][$i];
+            
+            $dateDue = null;
+            
+            if ($optionType=='S'){
+                if ($optionDays!==''){
+                    $dateDue = clone $now;
+                    $dateDue->modify($optionDays.' days');
+                }
+            } else if ($optionType=='E'){
+                $dateDue = clone $checkIn;
+                if ($optionDays!=='') $dateDue->modify($optionDays.' days');
+            } else {
+                throw new \Exception('Invalid instalment option pattern: ' . $pattern . ', specifically: ' . $optionPattern);
             }
+            
+            $x = intval($optionAmount);
+            if (!is_int($x)) throw new \Exception('Invalid instalment option pattern: ' . $pattern);
+            $x /= 100;
+            $checkTotal += floatval($x);
+            $payment = new Payment();
+            $payment->setAmount(round($x*$total, 2));
+            $payment->setDateDue($dateDue);
+            $payments->add($payment);
         }
+        
+//        $parts = explode(';', $pattern);
+//        foreach ($parts as $part){
+//            $p = explode(':', $part);
+//            if (count($p)!=2) throw new \Exception('Invalid instalment option pattern: ' . $pattern);
+//            switch ($p[0])
+//            {
+//                case 'S':
+//                    $x = intval($p[1]);
+//                    if (!is_int($x)) throw new \Exception('Invalid instalment option pattern: ' . $pattern);
+//                    $x /= 100;
+//                    $checkTotal += floatval($x);
+//                    $payment = new Payment();
+//                    $payment->setAmount(round($x*$total, 2));
+//                    $payments->add($payment);
+//                    break;
+//                case (preg_match('/E*/', $p[0]) ? true : false) :
+//                    $x = intval($p[1]);
+//                    if (!is_int($x)) throw new \Exception('Invalid instalment option pattern: ' . $pattern);
+//                    $x /= 100;
+//                    $checkTotal += floatval($x);
+//                    $payment = new Payment();
+//                    $payment->setAmount(round($x*$total, 2));
+//                    $payment->setDateDue($checkIn->modify('-5 days'));
+//                    $payments->add($payment);
+//                    break;
+//                default:
+//                    throw new \Exception('Invalid instalment option pattern: ' . $pattern);
+//            }
+//        }
         
         if ($checkTotal!==1.0) throw new \Exception('Invalid instalment option pattern: ' . $pattern);
         
@@ -106,7 +143,8 @@ class BookingAgentController {
     
     public function makeBooking(User $user, Boat $boat, \DateTime $reservationFrom, \DateTime $reservationTo, $price, $numGuests, $crew, $initialPaymentMethod, InstalmentOption $instalmentOption, $extraData=array())
     {
-        if (!$this->container->hasParameter('zizoo_booking.allow_bookings') || $this->container->getParameter('zizoo_booking.allow_bookings') !== true){
+        $bookingsAllowed = $this->container->getParameter('zizoo_booking.allow_bookings') === true;
+        if ($bookingsAllowed!==true){
             throw new InvalidBookingException('Bookings are currently not possible');
         }
         $plugin         = $this->getPlugin($initialPaymentMethod);
@@ -117,7 +155,7 @@ class BookingAgentController {
         $reservation    = $reservationAgent->makeReservation($boat, $reservationFrom, $reservationTo, $numGuests, $price, $user);
         $booking        = $plugin->makeBooking($reservation, $user, $price, $crew);
         
-        $payments       = $this->createPaymentsFromInstalmentOption($instalmentOption, clone $reservationFrom, $price);
+        $payments       = $this->createPaymentsFromInstalmentOption($instalmentOption, new \DateTime(), clone $reservationFrom, $price);
         
         foreach ($payments as $payment){
             if ($payment->getDateDue()===null){

@@ -2,7 +2,6 @@
 namespace Zizoo\BookingBundle\Entity;
 
 use Zizoo\BaseBundle\Entity\BaseEntity;
-use Zizoo\MessageBundle\Entity\Thread;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -58,8 +57,12 @@ class Booking extends BaseEntity
      * @ORM\OneToMany(targetEntity="Zizoo\BookingBundle\Entity\Payment", mappedBy="booking")
      */
     protected $payment;
-    
-    
+
+    /**
+     * @ORM\OneToOne(targetEntity="Zizoo\SmsBundle\Entity\BookingSmsVerify", mappedBy="booking", cascade={"persist", "remove"})
+     */
+    protected $verification;
+
     /**
      * @ORM\ManyToOne(targetEntity="Zizoo\BillingBundle\Entity\Payout", inversedBy="booking")
      * @ORM\JoinColumn(name="payout_id", referencedColumnName="id")
@@ -79,14 +82,6 @@ class Booking extends BaseEntity
      * @ORM\Column(name="crew", type="boolean")
      */
     protected $crew;
-    
-    
-    /**
-     * @ORM\OneToOne(targetEntity="Zizoo\MessageBundle\Entity\Thread", mappedBy="booking")
-     **/
-    protected $thread;
-    
-   
     
     public function __construct()
     {
@@ -267,6 +262,29 @@ class Booking extends BaseEntity
     }
 
     /**
+     * Set verification
+     *
+     * @param \Zizoo\SmsBundle\Entity\BookingSmsVerify $verification
+     * @return Booking
+     */
+    public function setVerification(\Zizoo\SmsBundle\Entity\BookingSmsVerify $verification = null)
+    {
+        $this->verification = $verification;
+
+        return $this;
+    }
+
+    /**
+     * Get verification
+     *
+     * @return \Zizoo\SmsBundle\Entity\BookingSmsVerify
+     */
+    public function getVerification()
+    {
+        return $this->verification;
+    }
+
+    /**
      * Set reservation
      *
      * @param \Zizoo\ReservationBundle\Entity\Reservation $reservation
@@ -320,16 +338,5 @@ class Booking extends BaseEntity
     {
         return $this->crew;
     }
-    
-    public function setThread(Thread $thread)
-    {
-        $this->thread = $thread;
-        return $this;
-    }
-    
-    public function getThread()
-    {
-        return $this->thread;
-    }
-    
+        
 }

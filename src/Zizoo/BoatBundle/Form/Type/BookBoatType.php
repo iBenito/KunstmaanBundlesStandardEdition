@@ -18,10 +18,9 @@ class BookBoatType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        
-        
-        
-        $builder->add('reservation_range', new ReservationRangeType(), array(   'required'      => false));
+                
+        $builder->add('reservation_range', new ReservationRangeType(), array(   'required'          => false,
+                                                                                'validation_groups' => $options['validation_groups']));
         
         $builder->add('num_guests', 'integer', array('required'         => false,
                                                         'by_reference'  => false,
@@ -36,6 +35,7 @@ class BookBoatType extends AbstractType
     {
         $resolver->setDefaults(array(   'data_class'            => 'Zizoo\BoatBundle\Form\Model\BookBoat',
                                         'cascade_validation'    => true,
+                                        'validation_groups'    => array('book'),
                                         'csrf_protection'       => false,
                                         'current'               => '-1'));
     }

@@ -1,0 +1,236 @@
+<div id="message_owner_widget">
+    <div id="message_owner_widget_inner">
+        <form id="message_owner_form" action="{{ path('ZizooBoatBundle_message_owner_widget', {id: boat.id}) }}" method="get" class="form">
+            <table>
+                <tr>
+                    <td>
+                        <span class="icon calendar black"></span>
+                        <span class="field">{{ form_widget(form.reservation_range.reservation_from) }}</span>
+                        {{ form_errors(form.reservation_range.reservation_from) }}
+                    </td>
+                    <td>
+                        <span class="icon calendar black"></span>
+                        <span class="field">{{ form_widget(form.reservation_range.reservation_to) }}</span>
+                        {{ form_errors(form.reservation_range.reservation_to) }}
+                    </td>
+                    <td>
+                        <span class="icon hash black"></span>
+                        <span class="field">{{ form_widget(form.num_guests) }}</span>
+                        {% if form.num_guests.vars.errors|length > 0 %}
+                            {{ form_errors(form.num_guests) }}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% if form.reservation_range.vars.errors|length > 0 %}
+                <tr>
+                    <td colspan="2">
+                    {{ form_errors(form.reservation_range) }}
+                    </td>
+                </tr>
+                {% endif %}
+            </table>
+            <div>
+                {{ form_widget(form.message) }}
+                {{ form_errors(form.message) }}
+            </div>
+            <button type="submit" id="send_message_now_btn" class="button orange big" title="Book it">Send Message</button>
+        </form>
+    </div>
+</div>
+   
+<style type="text/css">
+#zizoo_message_owner_message {
+    width: 100%;
+    height: 300px;
+    resize: vertical;
+    -moz-box-sizing: border-box;
+}
+#message_owner_form table td {
+    vertical-align: top;
+}
+</style>
+   
+<script type="text/javascript">
+
+    var bookingWidgetMappings = new Array({'original_state': {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_ACCEPTED') }}, 
+                                    'mapped_state': 'day_unavailable'},
+                                    {'original_state': {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_HOLD') }}, 
+                                    'mapped_state': 'day_unavailable'},
+                                    {'original_state': {{ constant('Zizoo\\ReservationBundle\\Entity\\Reservation::STATUS_SELF') }},
+                                    'mapped_state': 'day_unavailable'});
+                                
+    var bookingWidgetReservedDates      = {{ boat|reservedDatesWithBookings(reservations)|raw }};
+    var bookingWidgetPriceDates         = {{ boat|priceDates(prices)|raw }};
+    var bookingWidgetDefaultAllowed     = {{ boat.hasDefaultPrice ? 'true' : 'false' }};
+    var bookingWidgetDefaultPrice       = {{ boat.hasDefaultPrice ? boat.defaultPrice : 'null' }};
+    
+    
+    function setupMessageOwner(){
+
+        var clearBtnFnc1 = function(input) {
+            setTimeout(function() {
+                var buttonPane = $( input )
+                    .datepicker( "widget" )
+                    .find( ".ui-datepicker-buttonpane" );
+                var btn = $( '<button class="ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all" type="button">Clear</button>');
+                btn.unbind("click")  .bind("click", function () {  
+                    $.datepicker._clearDate( input );
+                });
+                btn.appendTo(buttonPane);
+            }, 1 );
+        };
+
+        var clearBtnFnc2 = function(yes, month, inst) {
+            setTimeout(function() {
+                var buttonPane = $( this )
+                    .datepicker( "widget" )
+                    .find( ".ui-datepicker-buttonpane" );
+                var btn = $( '<button class="ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all" type="button">Clear</button>');
+                btn.unbind("click")  .bind("click", function () {  
+                   $.datepicker._clearDate( inst.input ); 
+                });
+                btn.appendTo(buttonPane);
+            }, 1 );
+        };
+
+
+        Date.prototype.getDateFormatted = function() {
+            var d = this.getDate();
+            return d < 10 ? '0' + (d) : (d); // 
+        }
+        Date.prototype.getMonthFormatted = function() {
+            var month = this.getMonth();
+            return month < 9 ? '0' + (month+1) : (month+1); // ('' + month) for string result
+        }
+        
+        $.extend($.datepick, {
+            zizoo_widget: function(date) {
+                var id = $(this).attr('id');
+                var selectable = true;
+                var previousDate            = date.daysMoreLess(-1);
+                var reservedDate            = getDates(availabilityReservedDates, date);
+                var previousReservedDate    = getDates(availabilityReservedDates, previousDate);
+                var priceDate               = getDates(availabilityPriceDates, date);
+                var previousPriceDate       = getDates(availabilityPriceDates, previousDate);
+                
+                var content = date.getDateFormatted();
+                var defaultDateClass = '{% if boat.hasDefaultPrice %}day_available{% else %}day_unavailable{% endif %}';
+                var previousDefaultDateClass = defaultDateClass;
+                    
+                var todayDefaultDateClass    = determineDefaultDateClass(defaultDateClass, priceDate);
+                var previousDefaultDateClass = determineDefaultDateClass(defaultDateClass, previousPriceDate);
+                    
+                var todayClass  = getDateClass(reservedDate, bookingWidgetMappings, todayDefaultDateClass);
+                var dateClass   = todayClass;
+                var lastClass   = getDateClass(previousReservedDate, bookingWidgetMappings, previousDefaultDateClass);
+                
+                var lastClassArr = lastClass.split('-');
+                lastClass = lastClassArr[lastClassArr.length-1];
+                if (lastClass != dateClass){
+                    dateClass = lastClass + '-' + dateClass;
+                }
+                
+                if ( (dateClass=='day_available-day_unavailable' && id=='zizoo_boat_book_reservation_range_reservation_from') 
+                    || (dateClass=='day_unavailable-day_available' && id=='zizoo_boat_book_reservation_range_reservation_to') )
+                {
+                    selectable = false;
+                } else  if (dateClass=='day_available-day_unavailable' && id=='zizoo_boat_book_reservation_range_reservation_to'){
+                    selectable = true;
+                } else if (todayClass=='day_unavailable'){
+                    selectable = false;
+                }
+                
+                return {selectable: selectable, dateClass: todayClass, title: '', content: content};
+                
+            }
+        });
+        
+        $( "#zizoo_message_owner_reservation_range_reservation_from" ).datepick({
+            rangeSelect: false,
+            changeMonth: false,
+            defaultDate: "+1d",
+            numberOfMonths: 1,
+            minDate: new Date(),
+            showAnim: 'slideDown',
+            dateFormat: 'dd/mm/yyyy',
+            showButtonPanel: true,
+            beforeShow: clearBtnFnc1,
+            onChangeMonthYear: clearBtnFnc2,
+            onSelect: function (dates){
+                if (dates.length>0){
+                    var d = dates[0];
+                    if (this.id == 'zizoo_message_owner_reservation_range_reservation_from') {
+                        d = $.datepick.add(d, 1, 'd');
+                        $('#zizoo_message_owner_reservation_range_reservation_to').datepick('option', 'minDate', d || null); 
+                    } 
+                    else {
+                        d = $.datepick.add(d, -1, 'd'); 
+                        $('#zizoo_message_owner_reservation_range_reservation_from').datepick('option', 'maxDate', d || null); 
+                    }
+                }
+                reloadWidget();
+            },
+            onDate: $.datepick.zizoo_widget,
+            renderer: $.datepick.themeRollerRenderer
+        });
+        
+        $( "#zizoo_message_owner_reservation_range_reservation_to" ).datepick({
+            rangeSelect: false,
+            changeMonth: false,
+            defaultDate: "+1d",
+            numberOfMonths: 1,
+            minDate: new Date(),
+            showAnim: 'slideDown',
+            dateFormat: 'dd/mm/yyyy',
+            showButtonPanel: true,
+            beforeShow: clearBtnFnc1,
+            onChangeMonthYear: clearBtnFnc2,
+            onSelect: function (dates){
+                if (dates.length>0){
+                    var d = dates[0];
+                    if (this.id == 'zizoo_message_owner_reservation_range_reservation_from') {
+                        d = $.datepick.add(d, 1, 'd');
+                        $('#zizoo_message_owner_reservation_range_reservation_to').datepick('option', 'minDate', d || null); 
+                    } 
+                    else {
+                        d = $.datepick.add(d, -1, 'd'); 
+                        $('#zizoo_message_owner_reservation_range_reservation_from').datepick('option', 'maxDate', d || null); 
+                    }
+                }
+                reloadWidget();
+            },
+            onDate: $.datepick.zizoo_widget,
+            renderer: $.datepick.themeRollerRenderer
+        });
+        
+        
+        jQuery('#message_owner_form').unbind('submit').submit(function(){
+            $('#message_owner_widget').block({ message: null });
+            $.ajax({
+                type: "POST",
+                url: jQuery('#message_owner_form').attr('action'),
+                data: $('#message_owner_form').serialize(),
+                success: function (data, textStatus, jqXHR){
+                    $('#message_owner_widget').html($(data).find('#message_owner_widget_inner'));
+                    setupMessageOwner();
+                    $('#message_owner_widget').unblock();
+                }
+            });
+
+            return false;
+        });
+    }
+    
+    
+    function dateExists(dates, year, month, day){
+        return (typeof dates[year]!='undefined' && typeof dates[year][month]!='undefined' && typeof dates[year][month][day]!='undefined');
+    }
+
+    
+    $(document).ready(function(){
+    
+        
+        
+    
+    });
+</script>

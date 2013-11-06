@@ -1,0 +1,15 @@
+imports:
+- { resource: twilio.yml }
+
+services:
+    # FORM TYPES
+    zizoo_verify.verify_type:
+        class:  Zizoo\SmsBundle\Form\VerifyType
+        tags:
+            - { name: form.type, alias: zizoo_verify }
+
+    zizoo_verify.sms_agent:
+        class:  Zizoo\SmsBundle\Service\SmsAgent
+        arguments:
+            entityManager:  "@doctrine.orm.entity_manager"
+            container:      "@service_container"

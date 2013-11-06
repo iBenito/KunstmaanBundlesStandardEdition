@@ -22,9 +22,9 @@ class ProfileController extends Controller
      * 
      * @return Response
      */
-    public function showAction($username) 
+    public function showAction($id)
     {
-        $user   = $this->getDoctrine()->getManager()->getRepository('ZizooUserBundle:User')->findOneByUsername($username);
+        $user   = $this->getDoctrine()->getManager()->getRepository('ZizooUserBundle:User')->findOneById($id);
 
         return $this->render('ZizooProfileBundle:Profile:show.html.twig', array(
             'user' => $user
@@ -46,7 +46,7 @@ class ProfileController extends Controller
         
         $profileType = $this->get('zizoo_profile.profile_type');
         $editForm = $this->createForm($profileType, $profile, array('validation_groups' => 'Default'));
-        
+
         if ($request->isMethod('post')){
             $editForm->bind($request);
 
@@ -77,7 +77,7 @@ class ProfileController extends Controller
         }
    
         return $this->render('ZizooProfileBundle:Profile:edit.html.twig',array(
-            'edit_form'     => $editForm->createView()
+            'edit_form'     => $editForm->createView(),
         ));
     }
     

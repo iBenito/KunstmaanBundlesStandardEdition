@@ -30,6 +30,7 @@ twig:
             - ZizooBookingBundle:Form:Div/fields.html.twig
             - ZizooMediaBundle:Form:Div/fields.html.twig
             - ZizooUserBundle:Form:Div/fields.html.twig
+            - ZizooCrewBundle:Form:Div/fields.html.twig
             - ZizooBaseBundle:Form:Div/fields.html.twig
             
 
@@ -136,7 +137,11 @@ zizoo_base:
             account_settings_route:     ZizooBaseBundle_Dashboard_AccountSettings
             verify_facebook_route:      ZizooBaseBundle_Dashboard_VerifyFacebook
             unverify_facebook_route:    ZizooBaseBundle_Dashboard_UnverifyFacebook
+            invite_route:               ZizooBaseBundle_Dashboard_Invite
             
+            verify_phone_route:         ZizooBaseBundle_Dashboard_VerifyPhone
+            verify_send_route:          ZizooBaseBundle_Dashboard_VerifySend
+
         charter_routes:  
             profile_route:              ZizooBaseBundle_Dashboard_CharterProfile
             bookings_route:             ZizooBaseBundle_Dashboard_CharterBookings
@@ -155,6 +160,10 @@ zizoo_base:
             boat_calendar_route:        ZizooBaseBundle_Dashboard_CharterEditPriceBoat
             boat_delete_route:          ZizooBaseBundle_Dashboard_CharterDeleteBoat
             boat_active_route:          ZizooBaseBundle_Dashboard_CharterActiveBoat
+            invite_route:               ZizooBaseBundle_Dashboard_CharterInvite
+
+zizoo_booking:
+    cut_amount: 0.12
 
 #knp_paginator:
 #    template:

@@ -37,8 +37,8 @@ class MessageExtension extends \Twig_Extension
         $userIsCharterRep   = false;
         $senderIsCharterRep = false;
         
-        if ($thread->getBooking()){
-            $charter = $thread->getBooking()->getReservation()->getBoat()->getCharter();
+        if ($thread->getReservation()){
+            $charter = $thread->getReservation()->getBoat()->getCharter();
             if ($userCharter && $userCharter->getId() == $charter->getId()){
                 $userIsCharterRep = true;
             }

@@ -94,3 +94,11 @@ ZizooBoatBundle_booking_widget:
     requirements:
         _method:  GET|POST
         id: \d+
+        
+        
+ZizooBoatBundle_message_owner_widget:
+    pattern:  /message-owner/{id}
+    defaults: { _controller: ZizooBoatBundle:Boat:messageOwnerWidget }
+    requirements:
+        _method:  GET|POST
+        id: \d+

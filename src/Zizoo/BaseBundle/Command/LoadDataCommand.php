@@ -309,6 +309,7 @@ class LoadDataCommand extends ContainerAwareCommand
     {
         /**
          *  Enquiry
+         *  Request
             Expired
             Declined
             Accepted
@@ -317,6 +318,8 @@ class LoadDataCommand extends ContainerAwareCommand
          */
         
         $this->em->persist(new MessageType('enquiry', 'Enquiry'));
+        
+        $this->em->persist(new MessageType('request', 'Request'));
 
         $this->em->persist(new MessageType('expired', 'Expired'));
         

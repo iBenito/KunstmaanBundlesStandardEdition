@@ -36,10 +36,12 @@
                     <li>
                         <span class="icon calendar black"></span>
                         <span class="field">{{ form_widget(form.reservation_range.reservation_from) }}</span>
+                        {{ form_errors(form.reservation_range.reservation_from) }}
                     </li>
                     <li>
                         <span class="icon calendar black"></span>
                         <span class="field">{{ form_widget(form.reservation_range.reservation_to) }}</span>
+                        {{ form_errors(form.reservation_range.reservation_to) }}
                     </li>
                     {% if form.reservation_range.vars.errors|length > 0 %}
                     <li>
@@ -52,6 +54,9 @@
                         {% if form.num_guests.vars.errors|length > 0 %}
                             {{ form_errors(form.num_guests) }}
                         {% endif %}
+                    </li>
+                    <li>
+                        {{ form_errors(form) }}
                     </li>
                 </ul>
                 <noscript>

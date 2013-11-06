@@ -231,7 +231,7 @@ class CharterController extends Controller
             }
             
         }
-        
+
         return $this->render('ZizooCharterBundle:Charter:profile.html.twig',array(
             'form'   => $form->createView()
         ));
@@ -455,9 +455,9 @@ class CharterController extends Controller
                 'search'            => array(
                                                 'options'           => $reservationOptions,
                                                 'initial_option'    => $request->get('booking', null)),
-                'callback'           => function($field, $val, $booking) use ($routes) {
+                'callback'           => function($field, $val, $booking) use ($router, $routes) {
                     $reference = $booking->getReference();
-                    $url = "<a href=".$this->generateUrl($routes['view_booking_route'], array('id' => $val)).">".$reference."</a>";
+                    $url = "<a href=".$router->generate($routes['view_booking_route'], array('id' => $val)).">".$reference."</a>";
                     return $url;
                 }
                                                
@@ -865,108 +865,7 @@ class CharterController extends Controller
         
     }
     
-    
-    public static function getPaymentsData(&$grid)
-    {
-        if ($grid->getSession()->get($grid->getHash()) == 'Y') {
-            
-            $request = $grid->getRequest();
-            $page = $request->query->get('page');
-            $limit = $request->query->get('rows');
 
-            if ($grid->getSourceData()){
-                $pagination = $grid->getPaginator()->paginate($grid->getSourceData(), $page, $limit);
-            } else {
-                $sidx   = $request->query->get('sidx');
-                $sord   = $request->query->get('sord');
-                $search = $request->query->get('_search');
-
-                if ($sidx != '') {
-                    $grid->getQueryBuilder()->orderBy($sidx, $sord);
-                }
-
-                if ($search) {
-                    $grid->generateFilters();
-                }
-                $pagination = $grid->getPaginator()->paginate($grid->getQueryBuilder()->getQuery(), $page, $limit);
-            }
-
-            $nbRec = $pagination->getTotalItemCount();
-
-            if ($nbRec > 0) {
-                $total_pages = ceil($nbRec / $limit);
-            } else {
-                $total_pages = 0;
-            }
-
-            $response = array(
-                'page' => $page, 'total' => $total_pages, 'records' => $nbRec
-            );
-
-            $reservationAgent   = $grid->getContainer()->get('zizoo_reservation_reservation_agent');
-            $router             = $grid->getContainer()->get('router');
-            $trans              = $grid->getContainer()->get('translator');
-            $columns            = $grid->getColumns();
-            $templating         = $grid->getTemplating();
-            foreach ($pagination as $key => $item) {
-                $row            = $item;
-                $booking        = $item[0];
-                
-                $val = array();
-                foreach ($columns as $c) {
-                    
-                    $fieldName = $c->getFieldName();
-                    $methodName = 'get'.$c->getFieldName();
-                    if ($fieldName=='cost'){
-                        if ($booking){
-                            $cost = $row[$c->getFieldName()];
-                            $val[] = number_format($cost, 2).' &euro;';
-                        } else {
-                            $val[] = '-';
-                        }
-                    } else if ($fieldName=='payment_total'){
-                        if ($booking){
-                            $total = $row[$c->getFieldName()];
-                            $val[] = number_format(($total?$total:0), 2).' &euro;';
-                        } else {
-                            $val[] = '-';
-                        }
-                    } else if ($fieldName=='guest_username'){
-                        if ($booking){
-                            $val[] = $booking->getRenter()->getUsername();
-                        } else {
-                            $val[] = '-';
-                        }
-                    } else if (method_exists($row, $methodName)){
-                        $val[] = call_user_func(array( &$row, $methodName)); 
-                    } elseif (array_key_exists($c->getFieldName(), $row)) {
-                        $val[] = $row[$c->getFieldName()];
-                    } elseif ($c->getFieldValue()) {
-                        $val[] = $c->getFieldValue();
-                    } elseif ($c->getFieldTwig()) {
-                        $val[] = $this->templating
-                                      ->render($c->getFieldTwig(),
-                                        array(
-                                            'ligne' => $row
-                                        ));
-                    } else {
-                        $val[] = ' ';
-                    }
-                    
-                    
-                }
-
-                $response['rows'][$key]['cell'] = $val;
-            }
-
-            $grid->setGetDataFunctionResponse($response);
-        } else {
-            throw \Exception('Invalid query');
-        }
-    }
-    
-    
-    
     /**
      * View booking.
      * @param type $id
@@ -1053,18 +952,22 @@ class CharterController extends Controller
         
         $reservation = $booking->getReservation();
         if (!$reservation){
-            return $this->redirect($this->generateUrl($routes['bookings_route']));
+            return $this->redirect($this->generateUrl($routes['view_booking_route'], array('id' => $id)));
+        }
+        
+        if ($reservation->getStatus()!==Reservation::STATUS_REQUESTED){
+            return $this->redirect($this->generateUrl($routes['view_booking_route'], array('id' => $id)));
         }
         
         $boat   = $reservation->getBoat();
         if (!$boat || !$boat->getCharter()->getUsers()->contains($user)){
-             return $this->redirect($this->generateUrl($routes['bookings_route']));
+             return $this->redirect($this->generateUrl($routes['view_booking_route'], array('id' => $id)));
         }
         
         $bookingAgent       = $this->get('zizoo_booking_booking_agent');
         $trans              = $this->get('translator');
         
-        $thread             = $em->getRepository('ZizooMessageBundle:Thread')->findOneByBooking($booking);
+        $thread             = $em->getRepository('ZizooMessageBundle:Thread')->findOneByReservation($reservation);
         
         $overlappingReservationRequests = $em->getRepository('ZizooReservationBundle:Reservation')
                                                 ->getReservations($charter, $user, $reservation->getBoat(), 
@@ -1177,19 +1080,23 @@ class CharterController extends Controller
         
         $reservation = $booking->getReservation();
         if (!$reservation){
-            return $this->redirect($this->generateUrl($routes['bookings_route']));
+            return $this->redirect($this->generateUrl($routes['view_booking_route'], array('id' => $id)));
+        }
+        
+        if ($reservation->getStatus()!==Reservation::STATUS_REQUESTED){
+            return $this->redirect($this->generateUrl($routes['view_booking_route'], array('id' => $id)));
         }
         
         $boat   = $reservation->getBoat();
         if (!$boat || !$boat->getCharter()->getUsers()->contains($user)){
-             return $this->redirect($this->generateUrl($routes['bookings_route']));
+             return $this->redirect($this->generateUrl($routes['view_booking_route'], array('id' => $id)));
         }
         
         $reservationAgent   = $this->get('zizoo_reservation_reservation_agent');
         $bookingAgent       = $this->get('zizoo_booking_booking_agent');
         $trans              = $this->get('translator');
         
-        $thread             = $em->getRepository('ZizooMessageBundle:Thread')->findOneByBooking($booking);
+        $thread             = $em->getRepository('ZizooMessageBundle:Thread')->findOneByReservation($reservation);
         
         $form = $this->createForm(new DenyBookingType(), new DenyBooking());
         

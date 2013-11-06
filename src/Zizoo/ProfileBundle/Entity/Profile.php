@@ -51,6 +51,11 @@ class Profile extends BaseEntity
     protected $phone;
 
     /**
+     * @ORM\OneToOne(targetEntity="Zizoo\SmsBundle\Entity\ProfileSmsVerify", mappedBy="profile", cascade={"persist", "remove"})
+     */
+    protected $verification;
+
+    /**
      * @ORM\OneToOne(targetEntity="Zizoo\ProfileBundle\Entity\Profile\NotificationSettings", cascade={"persist"})
      */    
     protected $notification_settings;
@@ -240,6 +245,28 @@ class Profile extends BaseEntity
         return $this->phone;
     }
 
+    /**
+     * Set verification
+     *
+     * @param \Zizoo\SmsBundle\Entity\ProfileSmsVerify $verification
+     * @return Profile
+     */
+    public function setVerification(\Zizoo\SmsBundle\Entity\ProfileSmsVerify $verification = null)
+    {
+        $this->verification = $verification;
+
+        return $this;
+    }
+
+    /**
+     * Get verification
+     *
+     * @return \Zizoo\SmsBundle\Entity\ProfileSmsVerify
+     */
+    public function getVerification()
+    {
+        return $this->verification;
+    }
    
     /**
      * Set address

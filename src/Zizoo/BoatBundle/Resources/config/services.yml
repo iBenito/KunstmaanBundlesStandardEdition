@@ -64,6 +64,12 @@ services:
             arguments: ["@service_container"]
             tags:
                 - { name: form.type, alias: zizoo_boat_availability }
+                
+    zizoo_boat.message_owner_type:
+        class:  Zizoo\BoatBundle\Form\Type\MessageOwnerType
+        arguments: ["@service_container"]
+        tags:
+            - { name: form.type, alias: zizoo_message_owner }
             
             
     # FORM EXTENSIONS

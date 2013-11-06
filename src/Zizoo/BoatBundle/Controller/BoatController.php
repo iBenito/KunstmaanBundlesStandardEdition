@@ -10,6 +10,7 @@ use Zizoo\BoatBundle\Form\Type\AvailabilityType;
 use Zizoo\BoatBundle\Form\Model\BookBoat;
 use Zizoo\BoatBundle\Form\Model\ConfirmBoatPrice;
 use Zizoo\BoatBundle\Form\Model\Availability;
+use Zizoo\BoatBundle\Form\Model\MessageOwner;
 use Zizoo\ReservationBundle\Entity\Reservation;
 use Zizoo\ReservationBundle\Exception\InvalidReservationException;
 
@@ -199,10 +200,7 @@ class BoatController extends Controller
         if (!$url)      $url = $request->request->get('url', null);
         if (!$ajaxUrl)  $ajaxUrl = $request->request->get('ajax_url');
         
-        $bookingsAllowed = false;
-        if ($this->container->hasParameter('zizoo_booking.allow_bookings')){
-            $bookingsAllowed = $this->container->getParameter('zizoo_booking.allow_bookings') === true;
-        }
+        $bookingsAllowed = $this->container->getParameter('zizoo_booking.allow_bookings') === true;
         
         $bookUrl = $this->generateUrl('ZizooBoatBundle_Boat_Show', array('id' => $boat->getId()));
         if ($bookingsAllowed===true){
@@ -223,6 +221,80 @@ class BoatController extends Controller
             'ajax_url'              => $ajaxUrl,
             'book_url'              => $bookUrl,
             'bookings_allowed'      => $bookingsAllowed
+        ));
+    }
+    
+    
+    public function messageOwnerWidgetAction($id, Request $request, $reservations=null, $prices=null){
+        $em = $this->getDoctrine()->getManager();
+        $boat = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
+        if (!$boat) {
+            throw $this->createNotFoundException('Unable to find boat.');
+        }  
+        $user = $this->getUser();
+        
+        if ($user===null){
+            return $this->render('ZizooBoatBundle:Boat:message_owner_widget_blank.html.twig', array(
+                
+            ));
+        }
+        
+        $valid = false;
+        
+        $messageOwner = new MessageOwner($id, $this->getUser()->getId());
+                
+        $form = $this->createForm('zizoo_message_owner', $messageOwner, array('label' => '.'));
+        if ($request->isMethod('post') || $this->allParametersSet($request)){
+            $form->bind($request);
+            $messageOwner = $form->getData();
+
+            if ($form->isValid()){
+                $reservationAgent = $this->container->get('zizoo_reservation_reservation_agent');
+                try {
+
+                    $reservationRange   = $messageOwner->getReservationRange();
+                    $from   = $reservationRange?$reservationRange->getReservationFrom():null;
+                    $to  = $reservationRange?$reservationRange->getReservationTo():null;
+                    $numGuests          = $messageOwner->getNumGuests()?$messageOwner->getNumGuests():0;
+
+                    $composer       = $this->container->get('zizoo_message.composer');
+                    $sender         = $this->container->get('fos_message.sender');
+                    $messageTypeRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooMessageBundle:MessageType');
+
+                    $threadMessageBuilder = $composer->newThread()
+                                        ->setSender($user)
+                                        ->addRecipient($boat->getCharter()->getAdminUser())
+                                        ->setSubject('Enquiry')
+                                        ->setBody($messageOwner->getMessage());
+
+
+                    $message = $threadMessageBuilder->getMessage()
+                                        ->setMessageType($messageTypeRepo->findOneById('enquiry'));
+
+                    if ($from!==null && $to!==null){
+                        $reservation = $reservationAgent->makeEnquiryReservation($boat, $from, $to, $numGuests, $this->getUser());
+                        $message->getThread()->setReservation($reservation);
+                    }
+                    
+                    $em->flush();
+                    
+                    $sender->send($message);
+
+
+                } catch (\Zizoo\ReservationBundle\Exception\InvalidReservationException $e){
+
+                }
+            }
+
+        }
+        
+        return $this->render('ZizooBoatBundle:Boat:message_owner_widget.html.twig', array(
+            'boat'                  => $boat,
+            'message_owner'         => $messageOwner,
+            'form'                  => $form->createView(),
+            'valid'                 => $valid,
+            'reservations'          => $reservations,
+            'prices'                => $prices
         ));
     }
     

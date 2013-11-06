@@ -1,36 +1,17 @@
-ZizooCrewBundle_Skills:
-    pattern:  /skills
-    defaults: { _controller: "ZizooCrewBundle:Skills:index" }
-
-ZizooCrewBundle_Skills_Show:
-    pattern:  /{id}/show
-    defaults: { _controller: "ZizooCrewBundle:Skills:show" }
-
 ZizooCrewBundle_Skills_Add:
     pattern:  /account/skills/add
     defaults: { _controller: "ZizooCrewBundle:Skills:add" }
     requirements:
-      _method:  GET
-      user_id: \d+
+      _method:  GET|POST
 
-ZizooCrewBundle_Skills_Create:
-    pattern:  /account/create
-    defaults: { _controller: "ZizooCrewBundle:Skills:create" }
-    requirements: { _method: POST }
+ZizooCrewBundle_Skills_SetLicense:
+    pattern:  /account/skills/set
+    defaults: { _controller: "ZizooCrewBundle:Skills:setLicense" }
+    requirements:
+      _method:  POST
 
-ZizooCrewBundle_Skills_Edit:
-    pattern:  /{user_id}/skill/edit
-    defaults: { _controller: "ZizooCrewBundle:Skills:edit" }
+ZizooCrewBundle_Skills_GetLicense:
+    pattern:  /account/skills/license
+    defaults: { _controller: "ZizooCrewBundle:Skills:getLicense" }
     requirements:
       _method:  GET
-      user_id: \d+
-
-ZizooCrewBundle_Skills_Update:
-    pattern:  /{id}/update
-    defaults: { _controller: "ZizooCrewBundle:Skills:update" }
-    requirements: { _method: post }
-
-ZizooCrewBundle_Skills_Delete:
-    pattern:  /{id}/delete
-    defaults: { _controller: "ZizooCrewBundle:Skills:delete" }
-    requirements: { _method: post }

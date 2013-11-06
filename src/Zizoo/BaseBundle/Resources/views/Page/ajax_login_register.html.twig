@@ -110,7 +110,7 @@
                     if (login.length>0){
                         $('#login_inner_ajax').html(login);
                         $('#login_inner_ajax .login_facebook_btn').click(function(){
-                            $('#login_inner_ajax').block({ message: '' });
+                            //$('#login_inner_ajax').block({ message: '' });
                             window.open($(this).attr('href'), 'Login with Facebook', "height=200,width=200");
                             return false;
                         });
@@ -155,7 +155,7 @@
                     success: function(data, textStatus, XHR){
                         $('#login_hidden').removeClass('empty').html($(data).find('#login_inner_ajax'));
                         $('#login_inner_ajax .login_facebook_btn').click(function(){
-                            $('#login_inner_ajax').block({ message: '' });
+                            //$('#login_inner_ajax').block({ message: '' });
                             window.open($(this).attr('href'), 'Login with Facebook', "height=200,width=200");
                             return false;
                         });
@@ -212,7 +212,7 @@
                         $('#register_hidden').removeClass('empty').html($(data).find('#register_inner_ajax'));
                         $('#register_hidden .register_facebook_btn').click(function(){
                             //top.location.href = $(this).attr('href');
-                            $('#register_inner_ajax').block({ message: '' });
+                            //$('#register_inner_ajax').block({ message: '' });
                             window.open($(this).attr('href'), 'Register with Facebook', "height=200,width=200");
                             return false;
                         });

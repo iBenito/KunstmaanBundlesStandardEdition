@@ -38,15 +38,21 @@ function setupCalendar(){
     
 }
 
-function openMessageComingSoonDialog(){
-    $('#message_coming_soon').dialog({
+function openMessageToOwnerDialog(){
+    $('#message_to_owner').dialog({
         modal: true,
         closeOnEscape: false,
         resizable: false,
-        width: 470,
-        maxWidth: 470,
+        width: 500,
+        maxWidth: 500,
+        open: function( event, ui ) {
+            jQuery('#zizoo_message_owner_message').focus();
+            
+            setupMessageOwner();
+            
+        },
         fluid: true,
-        title: 'Coming Soon'
+        title: 'Send Message to Owner'
     });
 }
 
@@ -54,7 +60,7 @@ $(document).ready(function(){
     setupCalendar();
     
     $('#send_message_btn').click(function(){
-        openMessageComingSoonDialog();
+        openMessageToOwnerDialog();
         return false;
     });
     

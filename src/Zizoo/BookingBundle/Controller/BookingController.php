@@ -212,20 +212,18 @@ class BookingController extends Controller
                     $sender         = $this->container->get('fos_message.sender');
                     $messageTypeRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('ZizooMessageBundle:MessageType');
 
-                    $thread = $composer->newThread()
+                    $threadMessageBuilder = $composer->newThread()
                                         ->setSender($user)
                                         ->addRecipient($boat->getCharter()->getAdminUser())
                                         ->setSubject($bookingForm->getMessageToOwner()->getSubject())
-                                        ->setBody($bookingForm->getMessageToOwner()->getBody())
-                                        ->setBooking($booking);
+                                        ->setBody($bookingForm->getMessageToOwner()->getBody());
 
 
-                    $message = $thread->getMessage()
-                                        ->setMessageType($messageTypeRepo->findOneById('enquiry'));
+                    $message = $threadMessageBuilder->getMessage()
+                                        ->setMessageType($messageTypeRepo->findOneById('request'));
 
-
-                    $thread->setBooking($booking);
-
+                    $message->getThread()->setReservation($booking->getReservation());
+                    
                     $sender->send($message);
                     
                     

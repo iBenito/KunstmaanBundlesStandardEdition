@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="media")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"profile_avatar" = "Zizoo\ProfileBundle\Entity\ProfileAvatar", "boat_image" = "Zizoo\BoatBundle\Entity\BoatImage", "charter_logo" = "Zizoo\CharterBundle\Entity\CharterLogo"})
+ * @ORM\DiscriminatorMap({"profile_avatar" = "Zizoo\ProfileBundle\Entity\ProfileAvatar", "boat_image" = "Zizoo\BoatBundle\Entity\BoatImage", "charter_logo" = "Zizoo\CharterBundle\Entity\CharterLogo", "skill_license" = "Zizoo\CrewBundle\Entity\SkillLicense"})
  */
 abstract class Media extends BaseEntity
 {
@@ -26,8 +26,7 @@ abstract class Media extends BaseEntity
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $path;
-    
-    
+
     /**
      * @ORM\Column(name="order_num", type="integer", nullable=false)
      */
@@ -142,10 +141,8 @@ abstract class Media extends BaseEntity
     {
         return $this->h;
     }
-    
-    
+
     protected $temp;
-    
 
     /**
      * @ORM\PreRemove()
@@ -175,6 +172,54 @@ abstract class Media extends BaseEntity
     {
         return $this->file;
     }
-    
+
+    /**
+     * @ORM\Column(name="mime_type", type="text", nullable=false)
+     */
+    protected $mimeType;
+
+    public function setMimeType($mimeType)
+    {
+        $this->mimeType = $mimeType;
+        return $this;
+    }
+
+    public function getMimeType()
+    {
+        return $this->mimeType;
+    }
+
+    public function getUploadRootDir()
+    {
+        // the absolute directory path where uploaded
+        // documents should be saved
+        return __DIR__.'/../../../../web/'.$this->getUploadDir();
+    }
+
+    public function getPathAndName()
+    {
+        return (null === $this->getPath() || null === $this->getId())
+            ? null
+            : $this->getId().'.'.$this->getPath();
+    }
+
+    public function getAbsolutePath()
+    {
+        return null === $this->getPathAndName()
+            ? null
+            : $this->getUploadRootDir().'/'.$this->getPathAndName();
+    }
+
+    /**
+     * Get the image url
+     *
+     * @return null|string
+     */
+    public function getWebPath()
+    {
+        return null === $this->getPathAndName()
+            ? null
+            : $this->getUploadDir().'/'.$this->getPathAndName();
+    }
 }
 ?>

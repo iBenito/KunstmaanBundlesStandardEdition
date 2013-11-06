@@ -3,9 +3,12 @@
 {% set header           = null %}
 {% if message.messageType is null %}
     
-{% elseif message.messageType.id == message_types['enquiry']['id'] %}
+{% elseif message.messageType.id == message_types['request']['id'] %}
     {% set message_class    = 'dark' %}
     {% set header           = 'Boat Name | Aug 12, 2013 (Booking date)' %}
+{% elseif message.messageType.id == message_types['enquiry']['id'] %}
+    {% set message_class    = 'dark' %}
+    {% set header           = 'Boat Name | Aug 12, 2013' %}
 {% elseif message.messageType.id == message_types['accepted']['id'] %}
     {% set message_class    = 'green' %}
     {% set header           = 'Accepted' %}

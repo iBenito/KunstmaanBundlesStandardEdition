@@ -2,7 +2,7 @@
 
 <!-- start:avatar -->
 <div class="avatar">
-    <a href="{{ path('ZizooProfileBundle_Profile_Show', {username: user.username}) }}" title="View Profile">
+    <a href="{{ path('ZizooProfileBundle_Profile_Show', {id: user.profile.id}) }}" title="View Profile">
         <figure id="user_avatar">
             {% if user.profile.avatar|length > 0 %}
                 <img src="{{ asset(user.profile.avatar.first|pictureWebPath|imagine_filter('thumb_190x_')) }}" alt="{{ user.profile.firstName }} {{ user.profile.lastName }}" class="large" id="avatar_img" />
@@ -25,7 +25,12 @@
 <section class="verifications">
     <h4>Verifications</h4>
     <ul id="user_verifications">
-        <li class="phone verificated"><span></span>Phone <span class="icon check black"></span></li>
+        {% if user.profile.verification is not null %}
+            {% set phone_verified = user.profile.verification.verified %}
+        {% else %}
+            {% set phone_verified = false %}
+        {% endif %}
+        <a href="{{ path('ZizooBaseBundle_Dashboard_VerifyPhone') }}"><li class="phone {% if phone_verified %}verificated{% endif %}"><span></span>Phone<span class="icon {% if phone_verified %}check black{% else %}cross{% endif %}"></span></li></a>
         {% if user.facebookUid is not null %}
         <li class="facebook verificated"><a href="{{ path('ZizooBaseBundle_Dashboard_VerifyFacebook') }}"><span></span>Facebook <span class="icon check black"></span></a></li>
         {% else %}

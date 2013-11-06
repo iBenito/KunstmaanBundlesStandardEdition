@@ -3271,3 +3271,7 @@ a:hover .icon.add {
 .ui-dialog.blank .ui-dialog-content {
     padding: 0;
 }
+
+.datepick-popup {
+    z-index: 1002;
+}
