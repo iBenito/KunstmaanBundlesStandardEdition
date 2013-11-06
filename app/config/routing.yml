@@ -1,3 +1,8 @@
+ayc:
+    resource: "@AycBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 zizoo_datatables:
     resource: "@ZizooDatatablesBundle/Resources/config/routing.yml"
     prefix:   /
