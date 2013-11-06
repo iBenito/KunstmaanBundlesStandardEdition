@@ -104,6 +104,16 @@ class BoatService {
             $this->em->flush();
         }
     }
+
+    public function addAmenities(Boat $boat, Amenities $amenities, $flush=true)
+    {
+        $boat->addAmenities($amenities);
+        $amenities->addBoat($boat);
+        $this->em->persist($amenities);
+        if ($flush){
+            $this->em->flush();
+        }
+    }
     
     public function addImages(Boat $boat, $imageFiles, $flush=true){
         $boatImages = new ArrayCollection();

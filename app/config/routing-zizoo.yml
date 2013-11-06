@@ -1,3 +1,7 @@
+ayc:
+    resource: "@AycBundle/Controller/"
+    type:     annotation
+
 zizoo_sms:
     resource: "@ZizooSmsBundle/Resources/config/routing.yml"
     prefix:   /
