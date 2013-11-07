@@ -164,6 +164,7 @@ zizoo_base:
 
 zizoo_booking:
     cut_amount: 0.12
+    allow_bookings: true
 
 #knp_paginator:
 #    template:

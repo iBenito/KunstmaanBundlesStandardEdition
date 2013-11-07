@@ -1,5 +1,5 @@
 <?php
-namespace Zizoo\BaseBundle\Command;
+namespace Zizoo\AycBundle\Command;
 
 use Zizoo\UserBundle\Entity\User;
 use Zizoo\UserBundle\Entity\Group;
@@ -19,6 +19,10 @@ use Zizoo\CrewBundle\Entity\SkillType;
 use Zizoo\BookingBundle\Entity\PaymentMethod;
 use Zizoo\BookingBundle\Entity\InstalmentOption;
 use Zizoo\BillingBundle\Entity\PayoutMethod;
+use Zizoo\CharterBundle\Entity\Charter;
+use Zizoo\BoatBundle\Entity\Boat;
+use Zizoo\AddressBundle\Entity\BoatAddress;
+use Zizoo\AddressBundle\Entity\CharterAddress;
 
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -30,26 +34,45 @@ use Symfony\Component\Console\Input\ArrayInput;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-class LoadDataCommand extends ContainerAwareCommand
+class LoadFleetCommand extends ContainerAwareCommand
 {
-    private $container, $em, $boatTypeRepo;
-
+    private $container, $em, $boatTypeRepo, $countryRepo;
     private $amenities, $extras, $equipment;
+    private $boatService, $charterService;
 
-    private $boatService;
+    private $charter;
 
-    
     protected function configure()
     {
         $this
-            ->setName('zizoo:load')
-            ->setDescription('Load necessary data into Zizoo')
-            ->setDefinition(array(
-                new InputOption(
-                    'force', null, InputOption::VALUE_NONE,
-                    'Test.'
-                ),
-            ));
+            ->setName('ayc:loadfleet')
+            ->setDescription('Load AYC fleet into Zizoo');
+    }
+
+    private function loadCharter() {
+
+        $userRepo = $this->em->getRepository('ZizooUserBundle:User');
+        $user = $userRepo->loadUserByUsername('zizoo_info');
+        
+        $this->charter = new Charter();
+        $this->charter->setCharterName('AYC');
+
+        $this->charter->setAdminUser($user);
+        $this->charter->setBillingUser($user);
+        $this->charter->addUser($user);
+        $user->setCharter($this->charter);
+
+        $charterAddress = new CharterAddress();
+        $charterAddress->setAddressLine1('Tiefer Graben 7');
+        $charterAddress->setLocality('Vienna');
+        $charterAddress->setPostcode('1010');
+        $charterAddress->setCountry($this->countryRepo->findOneByIso('AT'));
+        $charterAddress->setCharter($this->charter);
+        $this->charter->setAddress($charterAddress);
+        
+        $this->charter = $this->em->persist($this->charter);
+        $this->em->persist($charterAddress);
+        
     }
     
     private function copyImage($filename, $tempDir)
@@ -68,14 +91,15 @@ class LoadDataCommand extends ContainerAwareCommand
         $this->boatService->addImage($boat, $uploadedFile, false);
     }
 
-    private initAssets($repo) {
+    private function initAssets($repo) {
 
         $equipmentRepo  = $this->em->getRepository($repo);
         $assets = $equipmentRepo->findAll();
 
         $hash = array();
         foreach($assets as $asset) {
-            $hash[$asset->id] = $asset;
+            $id = $asset->getId();
+            $hash[$id] = $asset;
         }
 
         return $hash;
@@ -90,13 +114,13 @@ class LoadDataCommand extends ContainerAwareCommand
         $addresses["vodice"]->setAddressLine1('Vrulje');
         $addresses["vodice"]->setLocality('Vodice');
         $addresses["vodice"]->setPostcode('22211');
-        $addresses["vodice"]->setCountry($countryRepo->findOneByIso('HR'));
+        $addresses["vodice"]->setCountry($this->countryRepo->findOneByIso('HR'));
         
         $addresses["krvavica"] = new BoatAddress();
         $addresses["krvavica"]->setAddressLine1('Krvavica');
         $addresses["krvavica"]->setLocality('Baška Voda');
         $addresses["krvavica"]->setPostcode('21320');
-        $addresses["krvavica"]->setCountry($countryRepo->findOneByIso('HR'));
+        $addresses["krvavica"]->setCountry($this->countryRepo->findOneByIso('HR'));
 
         return $addresses;
     }
@@ -168,7 +192,7 @@ class LoadDataCommand extends ContainerAwareCommand
         }
     }
 
-    private function loadBoat($csv, $boatService)
+    private function loadBoat($csv)
     {
         $boat = new Boat();
 
@@ -193,11 +217,11 @@ class LoadDataCommand extends ContainerAwareCommand
         $boat->setHasDefaultPrice(true);
         $boat->setActive(true);
 
-        $boat = $boatService->createBoat(
+        $boat = $this->boatService->createBoat(
             $boat,
             $address,
-            $boatTypeRepo->findOneByName('Sailboat'),
-            $charter1);
+            $this->boatTypeRepo->findOneByName('Sailboat'),
+            $this->charter);
 
         // Set the boat assets
         $this->setBoatAssets($boat, $csv);
@@ -208,12 +232,8 @@ class LoadDataCommand extends ContainerAwareCommand
     
     private function loadBoats()
     {    
-        $boats_src= file_get_contents(dirname(__FILE__).'/Data/ayc_fleet.json').
-        $boats_csv = json_decode($boats_src).
-
-
-        // Load some boat properties
-        $addresses = getAddresses();
+        $boats_src= file_get_contents(dirname(__FILE__).'/Data/ayc_fleet.json');
+        $boats_csv = json_decode($boats_src);
         
         foreach ($boats_csv as $boat_csv)
         {
@@ -224,21 +244,18 @@ class LoadDataCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         
-        $force = (true === $input->getOption('force'));
-        
-        if (!$force){
-            throw new \InvalidArgumentException('You must specify the --force option to carry out this command, but please be careful!');
-        }
-        
         $this->container    = $this->getContainer();
         $this->em           = $this->container->get('doctrine.orm.entity_manager');
         $this->boatService  = $this->container->get('boat_service');
-        $this->boatTypeRepo = $em->getRepository('ZizooBoatBundle:BoatType');
+        $this->charterService  = $this->container->get('zizoo_charter_charter_service');
+        $this->boatTypeRepo = $this->em->getRepository('ZizooBoatBundle:BoatType');
+        $this->countryRepo = $this->em->getRepository('ZizooAddressBundle:Country');
 
-        $this->$amenities = initAssets('ZizooBoatBundle:Amenities');
-        $this->$equipment = initAssets('ZizooBoatBundle:Equipment');
-        $this->$extras=  initAssets('ZizooBoatBundle:Extra');
+        $this->amenities = $this->initAssets('ZizooBoatBundle:Amenities');
+        $this->equipment = $this->initAssets('ZizooBoatBundle:Equipment');
+        $this->extras=  $this->initAssets('ZizooBoatBundle:Extra');
         
+        $this->loadCharter();
         $this->loadBoats();
         $this->em->flush();
     }

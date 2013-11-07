@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "851b3748816f12e34de091abf59c3d0b",
+    "hash": "7926687f08d96288d97cf2611390b75c",
     "packages": [
         {
             "name": "braintree/braintree_php",
@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/braintree/braintree_php.git",
-                "reference": "73cdf93052b8b31863e9fb0b0089d7cb954475d1"
+                "reference": "d19ccbd067fede14f49be9ed931268f7d30b3eb2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/braintree/braintree_php/zipball/73cdf93052b8b31863e9fb0b0089d7cb954475d1",
-                "reference": "73cdf93052b8b31863e9fb0b0089d7cb954475d1",
+                "url": "https://api.github.com/repos/braintree/braintree_php/zipball/d19ccbd067fede14f49be9ed931268f7d30b3eb2",
+                "reference": "d19ccbd067fede14f49be9ed931268f7d30b3eb2",
                 "shasum": ""
             },
             "require": {
@@ -45,7 +45,7 @@
                 }
             ],
             "description": "Braintree PHP Client Library",
-            "time": "2013-10-28 13:23:20"
+            "time": "2013-11-01 20:21:42"
         },
         {
             "name": "doctrine/annotations",
@@ -105,7 +105,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -1302,16 +1302,16 @@
         },
         {
             "name": "jms/metadata",
-            "version": "1.4.2",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/metadata.git",
-                "reference": "246d7096801ce29b5aea30a1abf0277ccfb9f055"
+                "reference": "88ffa28bc987e4c26229fc84a2e541b6ed4e1459"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/metadata/zipball/246d7096801ce29b5aea30a1abf0277ccfb9f055",
-                "reference": "246d7096801ce29b5aea30a1abf0277ccfb9f055",
+                "url": "https://api.github.com/repos/schmittjoh/metadata/zipball/88ffa28bc987e4c26229fc84a2e541b6ed4e1459",
+                "reference": "88ffa28bc987e4c26229fc84a2e541b6ed4e1459",
                 "shasum": ""
             },
             "require": {
@@ -1323,7 +1323,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.4.x-dev"
+                    "dev-master": "1.5.x-dev"
                 }
             },
             "autoload": {
@@ -1350,7 +1350,7 @@
                 "xml",
                 "yaml"
             ],
-            "time": "2013-09-13 09:05:44"
+            "time": "2013-11-05 23:02:36"
         },
         {
             "name": "jms/parser-lib",
@@ -1394,12 +1394,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/JMSPaymentCoreBundle.git",
-                "reference": "da2765cffed101e2659f1f19c79bbccbc28e084b"
+                "reference": "d14e4801ae94588cb690484e0b88fb3197804be5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/JMSPaymentCoreBundle/zipball/da2765cffed101e2659f1f19c79bbccbc28e084b",
-                "reference": "da2765cffed101e2659f1f19c79bbccbc28e084b",
+                "url": "https://api.github.com/repos/schmittjoh/JMSPaymentCoreBundle/zipball/d14e4801ae94588cb690484e0b88fb3197804be5",
+                "reference": "d14e4801ae94588cb690484e0b88fb3197804be5",
                 "shasum": ""
             },
             "require": {
@@ -1452,7 +1452,7 @@
             "keywords": [
                 "payment"
             ],
-            "time": "2013-10-29 11:12:18"
+            "time": "2013-11-01 13:01:45"
         },
         {
             "name": "jms/security-extra-bundle",
@@ -1967,12 +1967,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/punkave/symfony2-file-uploader-bundle.git",
-                "reference": "862d1b2b5ebb02c8bbf7cf92409b43620d7278a4"
+                "reference": "97d7a0c1c20c566e5ec23845fe8079bab1bcf883"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punkave/symfony2-file-uploader-bundle/zipball/862d1b2b5ebb02c8bbf7cf92409b43620d7278a4",
-                "reference": "862d1b2b5ebb02c8bbf7cf92409b43620d7278a4",
+                "url": "https://api.github.com/repos/punkave/symfony2-file-uploader-bundle/zipball/97d7a0c1c20c566e5ec23845fe8079bab1bcf883",
+                "reference": "97d7a0c1c20c566e5ec23845fe8079bab1bcf883",
                 "shasum": ""
             },
             "require": {
@@ -2020,7 +2020,7 @@
                 "upload",
                 "uploader"
             ],
-            "time": "2013-10-03 16:08:32"
+            "time": "2013-11-06 12:12:34"
         },
         {
             "name": "sensio/distribution-bundle",
@@ -2639,12 +2639,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/geocoder-php/Geocoder.git",
-                "reference": "e0f9f9228f8b60e28733cca1bd05ea014186736d"
+                "reference": "e89bfb1d5e8da937ba0d3ff6981f44a21a8e7474"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/geocoder-php/Geocoder/zipball/e0f9f9228f8b60e28733cca1bd05ea014186736d",
-                "reference": "e0f9f9228f8b60e28733cca1bd05ea014186736d",
+                "url": "https://api.github.com/repos/geocoder-php/Geocoder/zipball/e89bfb1d5e8da937ba0d3ff6981f44a21a8e7474",
+                "reference": "e89bfb1d5e8da937ba0d3ff6981f44a21a8e7474",
                 "shasum": ""
             },
             "require": {
@@ -2694,7 +2694,7 @@
                 "geocoding",
                 "geoip"
             ],
-            "time": "2013-10-22 13:12:00"
+            "time": "2013-11-06 08:10:16"
         }
     ],
     "packages-dev": [
