@@ -6,6 +6,7 @@ use Zizoo\BoatBundle\Entity\BoatType;
 use Zizoo\BoatBundle\Entity\Price;
 use Zizoo\BoatBundle\Entity\BoatImage;
 use Zizoo\BoatBundle\Entity\Equipment;
+use Zizoo\BoatBundle\Entity\Amenities;
 use Zizoo\BoatBundle\Entity\EngineType;
 
 use Zizoo\CharterBundle\Entity\Charter;
@@ -98,7 +99,7 @@ class BoatService {
     public function addEquipment(Boat $boat, Equipment $equipment, $flush=true)
     {
         $boat->addEquipment($equipment);
-        $equipment->addBoat($boat);
+        //$equipment->addBoat($boat);
         $this->em->persist($equipment);
         if ($flush){
             $this->em->flush();
@@ -108,7 +109,7 @@ class BoatService {
     public function addAmenities(Boat $boat, Amenities $amenities, $flush=true)
     {
         $boat->addAmenities($amenities);
-        $amenities->addBoat($boat);
+        //$amenities->addBoat($boat);
         $this->em->persist($amenities);
         if ($flush){
             $this->em->flush();

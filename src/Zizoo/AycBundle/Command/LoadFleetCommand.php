@@ -31,12 +31,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
 class LoadFleetCommand extends ContainerAwareCommand
 {
-    private $container, $em, $boatTypeRepo, $countryRepo;
+    private $container, $em;
+    private $boatTypeRepo, $countryRepo, $engineTypeRepo;
     private $amenities, $extras, $equipment;
     private $boatService, $charterService;
 
@@ -70,9 +72,8 @@ class LoadFleetCommand extends ContainerAwareCommand
         $charterAddress->setCharter($this->charter);
         $this->charter->setAddress($charterAddress);
         
-        $this->charter = $this->em->persist($this->charter);
         $this->em->persist($charterAddress);
-        
+        $this->em->persist($this->charter);
     }
     
     private function copyImage($filename, $tempDir)
@@ -83,10 +84,10 @@ class LoadFleetCommand extends ContainerAwareCommand
         return $toFile;
     }
     
-    private function addImage(Boat $boat, $filename)
+    private function addImage(Boat $boat, $fromFile, $filename)
     {
         $tempDir = ini_get('upload_tmp_dir');
-        $tmpFilename = $this->copyImage($filename, $tempDir);
+        $tmpFilename = $this->copyImage($fromFile, $tempDir);
         $uploadedFile = new UploadedFile($tmpFilename, $filename, null, null, null, true);
         $this->boatService->addImage($boat, $uploadedFile, false);
     }
@@ -129,65 +130,65 @@ class LoadFleetCommand extends ContainerAwareCommand
     {
 
         $dates = array(
-            '_29_03__19_04' => DateTime('04/19/2014'),
-            '_19_04__03_05' => DateTime('05/03/2014'),
-            '_03_05__17_05' => DateTime('05/17/2014'),
-            '_17_05__31_05' => DateTime('05/31/2014'),
-            '_31_05__14_06' => DateTime('06/14/2014'),
-            '_14_06__19_07' => DateTime('07/19/2014'),
-            '_19_07__09_08' => DateTime('08/09/2014'),
-            '_09_08__23_08' => DateTime('08/23/2014'),
-            '_23_08__06_09' => DateTime('09/06/2014'),
-            '_06_09__20_09' => DateTime('09/20/2014'),
-            '_20_09__04_10' => DateTime('10/04/2014'),
-            '_04_10__18_10' => DateTime('10/18/2014'),
-            '_18_10__01_11' => DateTime('11/01/2014'),
+            '_29_3__19_4' => new \DateTime('04/19/2014'),
+            '_19_4__3_5' => new \DateTime('05/03/2014'),
+            '_3_5__17_5' => new \DateTime('05/17/2014'),
+            '_17_5__31_5' => new \DateTime('05/31/2014'),
+            '_31_5__14_6' => new \DateTime('06/14/2014'),
+            '_14_6__19_7' => new \DateTime('07/19/2014'),
+            '_19_7__9_8' => new \DateTime('08/09/2014'),
+            '_9_8__23_8' => new \DateTime('08/23/2014'),
+            '_23_8__6_9' => new \DateTime('09/06/2014'),
+            '_6_9__20_9' => new \DateTime('09/20/2014'),
+            '_20_9__4_10' => new \DateTime('10/04/2014'),
+            '_4_10__18_10' => new \DateTime('10/18/2014'),
+            '_18_10__1_11' => new \DateTime('11/01/2014'),
         );
 
         $keys = array_keys($dates);
-        $from = DateTime('03/29/2014');
+        $from = new \DateTime('03/29/2014');
 
         foreach($keys as $key)
         {
             $to = $dates[$key];
-            $p = $csv[$key] / 7;
+            $p = $csv->$key / 7;
             $this->boatService->addPrice($boat, $from, $to, $p, false, false);
             $from = clone $to;
+            $from = $from->modify('+1 day');
         }
 
         // remaining price
-        $to = DateTime('12/31/2014');
-        $p = $csv['_01_11__'] / 7;
+        $to = new \DateTime('12/31/2014');
+        $p = $csv->_1_11__ / 7;
         $this->boatService->addPrice($boat, $from, $to, $p, false, false);
     }
 
     private function setBoatAssets($boat, $csv) {
 
-        $assets = $this->amenities;
-        $assetIds = array_keys($assets);
-        foreach($assetIds as $id) {
-            if($csv[$id] == "1") {
-                $this->boatService->addAmenities($boat, $assets[$id], false);
-            }
-        }
-
-        $assets = $this->equipment;
-        $assetIds = array_keys($assets);
-        foreach($assetIds as $id) {
-            if($csv[$id] == "1") {
-                $this->boatService->addEquipment($boat, $assets[$id], false);
+        foreach ($csv as $id => $value)
+        {
+            if(array_key_exists($id, $this->equipment) && $value == '1')
+            {
+                $this->boatService->addEquipment($boat, $this->equipment[$id], false);
+            } 
+            else if(array_key_exists($id, $this->amenities) && $value == '1')
+            {
+                $this->boatService->addAmenities($boat, $this->amenities[$id], false);
             }
         }
     }
 
     private function setBoatImages($boat, $csv) {
 
-        $base = dirname(__FILE__).'/Data//';
-        $images = scandir($base.$csv->id);
+        $base = dirname(__FILE__)."/Data//$csv->id//";
 
-        foreach($images as $image) {
-            if(is_file($base.$image)) {
-                $this->addImage($boat, $base.$image);
+        if(file_exists($base)) {
+            $images = scandir($base);
+
+            foreach($images as $image) {
+                if(is_file($base.$image) && strtolower($image) != 'thumbs.db') {
+                    $this->addImage($boat, $base.$image, $image);
+                }
             }
         }
     }
@@ -221,13 +222,18 @@ class LoadFleetCommand extends ContainerAwareCommand
             $boat,
             $address,
             $this->boatTypeRepo->findOneByName('Sailboat'),
-            $this->charter);
+            $this->charter,
+            null,
+            $this->engineTypeRepo->findOneById('outboard'),
+            true);
 
         // Set the boat assets
         $this->setBoatAssets($boat, $csv);
 
         // Set the boat price
         $this->setBoatPrices($boat, $csv);
+
+        $this->setBoatImages($boat, $csv);
     }
     
     private function loadBoats()
@@ -248,8 +254,10 @@ class LoadFleetCommand extends ContainerAwareCommand
         $this->em           = $this->container->get('doctrine.orm.entity_manager');
         $this->boatService  = $this->container->get('boat_service');
         $this->charterService  = $this->container->get('zizoo_charter_charter_service');
+        
         $this->boatTypeRepo = $this->em->getRepository('ZizooBoatBundle:BoatType');
         $this->countryRepo = $this->em->getRepository('ZizooAddressBundle:Country');
+        $this->engineTypeRepo = $this->em->getRepository('ZizooBoatBundle:EngineType');
 
         $this->amenities = $this->initAssets('ZizooBoatBundle:Amenities');
         $this->equipment = $this->initAssets('ZizooBoatBundle:Equipment');
