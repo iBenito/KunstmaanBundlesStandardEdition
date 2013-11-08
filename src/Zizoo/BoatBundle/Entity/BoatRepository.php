@@ -55,10 +55,9 @@ class BoatRepository extends EntityRepository
     {
         // Join boat, image, address, country and reservation
         $qb = $this->createQueryBuilder('boat')
-                   ->select('boat, image, address, country, reservation, price, boat_type, equipment')
+                   ->select('boat, image, address, country, reservation, boat_type, equipment')
                    ->leftJoin('boat.image', 'image')
                    ->leftJoin('boat.address', 'address')
-                   ->leftJoin('boat.price', 'price')
                    ->leftJoin('boat.address', 'boat_address')
                    ->leftJoin('address.country', 'country')
                    ->leftJoin('boat.reservation', 'reservation')
