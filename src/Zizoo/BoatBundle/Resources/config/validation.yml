@@ -1,6 +1,7 @@
 Zizoo\BoatBundle\Form\Model\BookBoat:
     constraints:
-        - Zizoo\BoatBundle\Validator\Constraints\BookBoat: ~
+        - Zizoo\BoatBundle\Validator\Constraints\BookBoat: 
+            groups: [book]
         
 Zizoo\BoatBundle\Form\Model\Availability:
     constraints:
