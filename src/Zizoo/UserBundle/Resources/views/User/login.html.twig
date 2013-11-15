@@ -37,15 +37,22 @@
                     <input type="password" name="_password" id="password">
                 </div>
             </div>
-                
             
+            {% if error %}
+                <div class="row-errors-container root">
+                    <div class="row-errors">
+                        <ul>
+                            <li>{{ loginError(error, last_username)|raw }}</li>
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+  
             <div class="row">
                 <input type="checkbox" checked="checked" name="_remember_me" id="remember_me" />
                 <label class="remember_me" for="remember_me"><span class="icon"></span>Remember Me</label>
             </div>
-            
-                
-  
+
             <div class="row">
                 <button class="button blue big" type="submit">{% trans %}zizoo_user.label.login{% endtrans %}</button>
             </div>
@@ -55,15 +62,7 @@
             #}
 
             
-        </form>
-        
-        {% if unconfirmed_user is not null %}
-            <div>You need to <a class="resend_confirmation_link" href="{{ path('ZizooUserBundle_resend_confirmation', {email: unconfirmed_user.email}) }}">{% trans %}confirm your account{% endtrans %}</a></div>
-        {% elseif error %}
-            <div>{{ error.message }}</div>
-            <a class="forgot_password_link" href="{{ path('ZizooUserBundle_forgot_password') }}">{% trans %}zizoo_user.label.forgot_password{% endtrans %}</a>
-        {% endif %}
-            
+        </form>  
         
     </div>
 </div>

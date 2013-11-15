@@ -56,6 +56,7 @@ class ProfileService {
         $avatar->setFile($imageFile);
         $avatar->setPath($imageFile->guessExtension());
         $avatar->setMimeType($imageFile->getMimeType());
+        $avatar->setOriginalFilename($imageFile->getClientOriginalName());
         $avatar->setProfile($profile);
         $profile->addAvatar($avatar);
         

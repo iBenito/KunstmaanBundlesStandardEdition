@@ -195,9 +195,9 @@ class BoatRepository extends EntityRepository
             }
             if ($filterBoat->getPriceTo()){
                 if ($firstWhere){
-                    $qb->where('boat.highestPrice <= :price_to');
+                    $qb->where('boat.lowestPrice <= :price_to');
                 } else {
-                    $qb->andWhere('boat.highestPrice <= :price_to');
+                    $qb->andWhere('boat.lowestPrice <= :price_to');
                 }
                 $qb->setParameter('price_to', $filterBoat->getPriceTo());
                 $firstWhere = false;

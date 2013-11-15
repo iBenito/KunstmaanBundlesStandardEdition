@@ -44,11 +44,15 @@
                 </ul>
                 <!-- end:messagess -->
 
-                <!-- start:more -->
-                <div class="more">
-                    <a href="{{ path('ZizooBaseBundle_Dashboard_Inbox') }}">All Messages</a>
-                </div>
-                <!-- end:more -->
+                {% if latestThreads|length > 0 %}
+                    <!-- start:more -->
+                    <div class="more">
+                        <a href="{{ path('ZizooBaseBundle_Dashboard_Inbox') }}">All Messages</a>
+                    </div>
+                    <!-- end:more -->
+                {% else %}
+                    <p>No messages.</p>
+                {% endif %}
 
             </section>
             <!-- end:inbox -->
@@ -80,6 +84,13 @@
                             </div>
                         </article>
                     {% endfor %}
+                
+                    <!-- start:more -->
+                    <div class="more">
+                        <a href="{{ path('ZizooBaseBundle_Dashboard_Trips') }}">Show More</a>
+                    </div>
+                    <!-- end:more -->
+                
                 {% else %}
                     <p>No upcoming trips.</p>
                 {% endif %}
@@ -87,12 +98,6 @@
                 
             </section>
             <!-- end:upcoming -->
-
-            <!-- start:more -->
-            <div class="more">
-                <a href="{{ path('ZizooBaseBundle_Dashboard_Trips') }}">Show More</a>
-            </div>
-            <!-- end:more -->
 
         </div>
     </div>

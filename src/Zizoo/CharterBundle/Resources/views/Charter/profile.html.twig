@@ -22,10 +22,10 @@
                 url:        '{{ path('ZizooCharterBundle_Charter_GetLogo') }}',
                 type:       'get',
                 success:    function(data, textStatus, XHR){
-                    var newImageDivContainer    = $(data).find('#zizoo_charter_logo_image_div_container');
+                    var newImageDivContainer    = $(data).find('#zizoo_charter_logo_media_div_container');
                     var newCharterLogo          = $(data).find('#zizoo_charter_logo');
                     
-                    $('#zizoo_charter_logo_image_div_container').html($(newImageDivContainer).html());
+                    $('#zizoo_charter_logo_media_div_container').html($(newImageDivContainer).html());
                     $('#zizoo_charter_logo_container #zizoo_charter_logo').html($(newCharterLogo).html());
                     removeUploadedFiles();
                     
@@ -72,20 +72,53 @@
             });
         }
         
-        function logoDelete(container){
-            var id  = $(container).find('.media_id').val();
-            $(container).find('.image_div').html('');
-            $.ajax({
-                url:            '{{ path('ZizooMediaBundle_Media_DeleteMedia') }}',
-                type:           'post',
-                data: {
-                    id:             id,
-                    entity_type:    'ZizooCharterBundle:CharterLogo'
-                },
-                success: function(data){
-                }
+        function openDeleteDialog(){
+            $('#delete_logo').dialog({
+                title: 'Delete logo?',
+                width: 470,
+                maxWidth: 470,
+                fluid: true,
+                modal: true,
+                closeOnEscape: false,
+                resizable: false
             });
         }
+
+        function closeDeleteDialog(){
+            $('#delete_logo').dialog('close');            
+            $('#delete_logo').unblock();
+        }
+        
+        function logoDelete(container){
+            var id  = $(container).find('.media_id').val();
+
+            $('#delete_logo .submit_btn').unbind('click').click(function(){
+                $('#delete_logo').block({ message: '' });
+                $.ajax({
+                    url:            '{{ path('ZizooMediaBundle_Media_DeleteMedia') }}',
+                    type:           'post',
+                    data: {
+                        id:             id,
+                        entity_type:    'ZizooCharterBundle:CharterLogo'
+                    },
+                    success: function(data){
+                        $(container).find('.media_div').html('');
+                        closeDeleteDialog();
+                    },
+                    error: function(jqXHR, statusText, errorThrown){
+                        //console.log(jqXHR);
+                    }
+                });
+            });
+            
+            $('#delete_logo .cancel_btn').unbind('click').click(function(){
+                closeDeleteDialog();
+            });
+            
+            openDeleteDialog();
+            
+        }
+        
         
     </script>
 
@@ -96,5 +129,17 @@
         <br />
         <button type="submit" class="button blue small right">Save</button>
     </form>
+    
+    <div id="context_hidden" style="display: none">
+        <div id="delete_logo">
+            <p>
+                Are you sure you want to delete the logo?
+            </p>
+            
+            <br />
+            <input type="button" value="Delete" class="submit_btn button red small right" />
+            <input type="button" value="Cancel" class="cancel_btn button grey small right" />
+        </div>
+    </div>
 
 {% endblock %}

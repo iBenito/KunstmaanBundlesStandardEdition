@@ -89,23 +89,25 @@ class BoatExtension extends \Twig_Extension
     public function reservedDatesWithBookings($boat, $reservations)
     {
         $arr = array();
-        foreach ($reservations as $reservation){
-            $booking = $reservation->getBooking();
-            $from   = clone $reservation->getCheckIn();
-            $to     = clone $reservation->getCheckOut();
-            $from->setTime(12,0,0);
-            $to->setTime(11,59,59);
-            
-            do {
-                $arr[$from->format('Y')][$from->format('m')][$from->format('d')][$reservation->getStatus()][] = array(
-                    $reservation->getStatus(), 
-                    $reservation->getId(), 
-                    ($booking!=null?$booking->getId():null),
-                    null
-                );
-                $from = $from->modify('+1 day');
-            } while ($from <= $to);            
+        if ($reservations !== null){
+            foreach ($reservations as $reservation){
+                $booking = $reservation->getBooking();
+                $from   = clone $reservation->getCheckIn();
+                $to     = clone $reservation->getCheckOut();
+                $from->setTime(12,0,0);
+                $to->setTime(11,59,59);
 
+                do {
+                    $arr[$from->format('Y')][$from->format('m')][$from->format('d')][$reservation->getStatus()][] = array(
+                        $reservation->getStatus(), 
+                        $reservation->getId(), 
+                        ($booking!=null?$booking->getId():null),
+                        null
+                    );
+                    $from = $from->modify('+1 day');
+                } while ($from <= $to);            
+
+            }
         }
         return json_encode($arr);
     }
@@ -114,15 +116,17 @@ class BoatExtension extends \Twig_Extension
     public function reservedDates($boat, $reservations)
     {
         $arr = array();
-        foreach ($reservations as $reservation){
-            $from   = clone $reservation->getCheckIn();
-            $to     = $reservation->getCheckOut();
-            
-            do {
-                //$arr[] = array($from->format('Y'), $from->format('m'), $from->format('d'));
-                $arr[$from->format('Y')][$from->format('m')][$from->format('d')] = array($reservation->getStatus(), $reservation->getId());
-                $from = $from->modify('+1 day');
-            } while ($from < $to);
+        if ($reservations !== null){
+            foreach ($reservations as $reservation){
+                $from   = clone $reservation->getCheckIn();
+                $to     = $reservation->getCheckOut();
+
+                do {
+                    //$arr[] = array($from->format('Y'), $from->format('m'), $from->format('d'));
+                    $arr[$from->format('Y')][$from->format('m')][$from->format('d')] = array($reservation->getStatus(), $reservation->getId());
+                    $from = $from->modify('+1 day');
+                } while ($from < $to);
+            }
         }
         return json_encode($arr);
     }
@@ -130,9 +134,11 @@ class BoatExtension extends \Twig_Extension
     public function priceDates($boat, $prices)
     {
         $arr = array();
-        foreach ($prices as $price){
-            $available   = clone $price->getAvailable();            
-            $arr[$available->format('Y')][$available->format('m')][$available->format('d')] = array(number_format($price->getPrice(),2));
+        if ($prices !== null){
+            foreach ($prices as $price){
+                $available   = clone $price->getAvailable();            
+                $arr[$available->format('Y')][$available->format('m')][$available->format('d')] = array(number_format($price->getPrice(),2));
+            }
         }
         return json_encode($arr);
     }

@@ -79,6 +79,7 @@ class CharterService
         $logo->setFile($imageFile);
         $logo->setPath($imageFile->guessExtension());
         $logo->setMimeType($imageFile->getMimeType());
+        $logo->setOriginalFilename($imageFile->getClientOriginalName());
         
         $validator          = $this->container->get('validator');
         $charterErrors      = $validator->validate($charter, 'logo');

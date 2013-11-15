@@ -1,5 +1,6 @@
 zizoo_user.error.email_taken: "This email address is already taken."
 zizoo_user.error.user_taken: "This username is already taken."
+zizoo_user.error.fb_uid_already_exists: "This Facebook account has already been verified by another user."
 
 zizoo_user.error.username_not_blank: "You must choose a username."
 zizoo_user.error.username_min_length: "Your username must have at least {{ limit }} characters.|Your username must have at least {{ limit }} characters."
@@ -11,3 +12,6 @@ zizoo_user.error.current_password_not_blank: "You must enter your current passwo
 zizoo_user.error.password_mismatch: "The password fields must match."
 
 zizoo_user.error.new_email_valid: "You must enter a valid email address."
+
+zizoo_user.verify_facebook_success: "You have successfully verified your Facebook account."
+zizoo_user.unverify_facebook_success: "You have successfully unverified your Facebook account."

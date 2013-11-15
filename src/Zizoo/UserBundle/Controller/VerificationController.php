@@ -64,10 +64,21 @@ class VerificationController extends Controller
                 
                 $user->setFacebookUid($obj['id']);
                 
-                $em->persist($user);
-                $em->flush();
+                $validator = $this->container->get('validator');
+                $errors = $validator->validate($user, 'verify');
+                $numErrors = $errors->count();
                 
-                $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.verify_facebook_success'));
+                if ($numErrors==0){
+                    $em->persist($user);
+                    $em->flush();
+                    $this->get('session')->getFlashBag()->add('notice', $trans->trans('zizoo_user.verify_facebook_success'));
+                } else {
+                    for ($i=0; $i<$numErrors; $i++){
+                        $error = $errors->get($i);
+                        $this->get('session')->getFlashBag()->add('notice', $trans->trans($error->getMessage()));
+                    }
+                }
+                
                 return $this->redirect($this->generateUrl($routes['verify_facebook_route']));
             }
         }

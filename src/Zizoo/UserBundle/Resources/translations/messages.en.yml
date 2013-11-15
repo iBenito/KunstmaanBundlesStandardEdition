@@ -1,4 +1,4 @@
-Bad credentials: Username/email and/or password incorrect
+zizoo_user.error.bad_credentials: Username/email and/or password incorrect
 
 zizoo_user.message.password_changed: "Your password was changed successfully!"
 zizoo_user.message.email_changed: "An email with a confirmation link was sent to %email%. Please click on the link to confirm the new email address."
@@ -8,16 +8,20 @@ zizoo_user.message.account_settings_not_changed: "Wrong current password."
 zizoo_user.label.username: Username
 zizoo_user.label.email: Email
 zizoo_user.label.password: Password
-zizoo_user.label.password_repeat: Repeat password
+zizoo_user.label.password_repeat: Repeat
 zizoo_user.label.terms: I agree to the %terms_link%
 zizoo_user.label.terms_link: Terms & Conditions
 
-zizoo_user.label.current_password: Current password
-zizoo_user.label.new_password: New password
-zizoo_user.label.new_password_repeat: Repeat new password
+zizoo_user.label.current_password: Current
+zizoo_user.label.new_password: New
+zizoo_user.label.new_password_repeat: Repeat
 
 zizoo_user.friends_invited: has been invited!
 
 zizoo_user.friend_already_exists: is already a Zizoo user!
 
 zizoo_user.label.change_email: New Email
+
+zizoo_user.label.username_or_email: Username
+
+zizoo_user.label.forgot_password: Forgot password?

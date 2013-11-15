@@ -1,3 +1,7 @@
+zizoo_mango_pay:
+    resource: "@ZizooMangoPayBundle/Resources/config/routing.yml"
+    prefix:   /
+
 Zizoo_Routing:
     resource: "routing-zizoo.yml"
     prefix:   /

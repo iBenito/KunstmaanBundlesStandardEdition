@@ -785,6 +785,7 @@
 .form .row input[type="text"],
 .form .row input[type="email"],
 .form .row input[type="password"],
+.form .row input[type="number"],
 .form .row textarea {
     display: block;
     width: 100%;

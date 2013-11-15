@@ -33,6 +33,7 @@
                 {{ form_widget(form.message) }}
                 {{ form_errors(form.message) }}
             </div>
+            <br />
             <button type="submit" id="send_message_now_btn" class="button orange big" title="Book it">Send Message</button>
         </form>
     </div>
@@ -211,6 +212,13 @@
                 url: jQuery('#message_owner_form').attr('action'),
                 data: $('#message_owner_form').serialize(),
                 success: function (data, textStatus, jqXHR){
+                    $('#message_owner_widget').html($(data).find('#message_owner_widget_inner'));
+                    setupMessageOwner();
+                    $('#message_owner_widget').unblock();
+                    closeMessageToOwnerDialog();
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    var data = $(jqXHR.responseText);
                     $('#message_owner_widget').html($(data).find('#message_owner_widget_inner'));
                     setupMessageOwner();
                     $('#message_owner_widget').unblock();

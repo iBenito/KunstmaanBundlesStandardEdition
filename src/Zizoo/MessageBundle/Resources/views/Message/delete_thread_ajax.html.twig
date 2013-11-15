@@ -8,11 +8,12 @@
 
             <form id="delete_thread_form" action="{{ path('ZizooMessageBundle_delete_thread', {threadId: form.get('thread_id') }) }}" method="post" {{ form_enctype(form) }}>
                 <p>
-                    {% trans %}zizoo_message.label.confirm_message_delete{% endtrans %}
+                    {% trans %}zizoo_message.label.confirm_thread_delete{% endtrans %}
                 </p>
                 {{ form_widget(form) }}
-                <input type="submit" value="OK" />
-                <input type="button" value="Cancel" class="cancel_btn" />
+                <br />
+                <input type="submit" value="Delete" class="button red small right" />
+                <input type="button" value="Cancel" class="cancel_btn button grey small right" />
             </form>
 
         </div>

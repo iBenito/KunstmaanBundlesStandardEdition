@@ -65,7 +65,9 @@
                         <!-- start:media -->
                         <div class="media">
                             <div class="full">
+                                {% if boat.image|length > 0 %}
                                 <img src="{{ asset(boat.image.first|pictureWebPath) }}" alt="">
+                                {% endif %}
                             </div>
 
                             <a href="#" class="arrow prev ir" title="Previous">Previous</a>
