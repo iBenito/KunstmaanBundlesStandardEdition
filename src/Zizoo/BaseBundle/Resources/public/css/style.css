@@ -2319,6 +2319,10 @@ input[type="number"]::-webkit-inner-spin-button{
     padding: 0 10px 10px 0;
 }
 
+#grid .box .boat figure img {
+    height: 114px;
+}
+
 /**
  * List
  */

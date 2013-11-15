@@ -26,13 +26,14 @@ class ProfileType extends AbstractType
             ->add('lastName', 'text', array('label' => array('value' => 'zizoo_profile.label.last_name', 'class' => 'last_name')))
             ->add('about', 'textarea', array('label' => array('value' => 'zizoo_profile.label.about', 'class' => 'description')))
             ->add('phone', 'text', array(
-                                            'attr'  => array('oninvalid'=>"setCustomValidity('Please enter a valid Phone Number')"),
+                                            //'attr'  => array('oninvalid'=>"setCustomValidity('Please enter a valid Phone Number')"),
                                             'label' => array('value' => 'zizoo_profile.label.phone', 'class' => 'phone')))
             ->add('languages', 'entity', array(
-                'class' => 'ZizooAddressBundle:Language',
+                'class'     => 'ZizooAddressBundle:Language',
                 'multiple'  => true,
-                'attr'  => array('title'=>'select', 'no-select-box-it'=>'no-select-box-it'),
-                'property' => 'name',
+                'attr'      => array('title'=>'select', 'no-select-box-it'=>'no-select-box-it'),
+                'required'  => false,
+                'property'  => 'name',
                 'label' => array('value' => 'zizoo_profile.label.languages', 'class' => 'languages')))
             ->add('avatar', 'zizoo_media_collection', array(    'type'              => 'zizoo_media',
                                                                 'property_path'     => 'avatar',
