@@ -261,7 +261,7 @@ class ReservationAgent {
         
         if ($reservation->getStatus()!=Reservation::STATUS_REQUESTED) return false;
         
-        $setHoursToRespond = $this->container->getParameter('zizoo_reservation.reservation_request_response_hours');
+        //$setHoursToRespond = $this->container->getParameter('zizoo_reservation.reservation_request_response_hours');
         
         $now = new \DateTime();
         
@@ -270,7 +270,7 @@ class ReservationAgent {
         $hours = $interval->h;
         $hours = $hours + ($interval->d*24);
         
-        return $setHoursToRespond - $hours;
+        return $hoursToRespond - $hours;
     }
     
     

@@ -30,7 +30,7 @@
         {% else %}
             {% set phone_verified = false %}
         {% endif %}
-        <a href="{{ path('ZizooBaseBundle_Dashboard_VerifyPhone') }}"><li class="phone {% if phone_verified %}verificated{% endif %}"><span></span>Phone<span class="icon {% if phone_verified %}check black{% else %}cross{% endif %}"></span></li></a>
+        <li class="phone {% if phone_verified %}verificated{% endif %}"><a href="{{ path('ZizooBaseBundle_Dashboard_VerifyPhone') }}"><span></span>Phone<span class="icon {% if phone_verified %}check black{% else %}cross{% endif %}"></span></a></li>
         {% if user.facebookUid is not null %}
         <li class="facebook verificated"><a href="{{ path('ZizooBaseBundle_Dashboard_VerifyFacebook') }}"><span></span>Facebook <span class="icon check black"></span></a></li>
         {% else %}

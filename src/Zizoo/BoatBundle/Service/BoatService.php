@@ -197,7 +197,6 @@ class BoatService {
         
         $this->em->persist($address);
         $this->em->persist($boat);
-        $this->em->persist($engineType);
         if ($flush) $this->em->flush();
         
         return $boat;

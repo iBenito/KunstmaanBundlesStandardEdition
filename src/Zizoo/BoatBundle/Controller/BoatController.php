@@ -119,7 +119,7 @@ class BoatController extends Controller
             'reservations'      => $reservations,
             'prices'            => $prices,
             'equipment'         => $equipment,
-            'amenities'   => $amenities,
+            'amenities'         => $amenities,
             'request'           => $request
         ));
     }
@@ -323,7 +323,7 @@ class BoatController extends Controller
         $charter    = $user->getCharter();
         $session    = $this->get('session');
         
-        $routes         = $request->query->get('routes');
+        $routes = $request->query->get('routes');
         
         $session->set('step', 'one');
         

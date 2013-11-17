@@ -209,6 +209,8 @@ class CharterController extends Controller
                                                                 'validation_groups' => array('Default')));
         
         if ($request->isMethod('post')){
+            $routes = $request->query->get('routes');
+
             $form->bind($request);
             $charter = $form->getData();
             if ($form->isValid()) {
@@ -224,10 +226,10 @@ class CharterController extends Controller
                 $address->setCharter($charter);
                 $em->persist($charter);
                 $charter->setAddress($address);
-                
+
                 $em->flush();
                 $this->get('session')->setFlash('notice', 'Your charter profile was updated!');
-                return $this->redirect($this->generateUrl($request->query->get('profile_route')));
+                return $this->redirect($this->generateUrl($routes['profile_route']));
             }
             
         }
@@ -237,7 +239,6 @@ class CharterController extends Controller
         ));
 
     }
-    
     
     /**
      * Edit Payout Settings
@@ -365,7 +366,6 @@ class CharterController extends Controller
         ));
     }
     
-    
     public function usersAction()
     {
         $user       = $this->getUser();
@@ -375,7 +375,6 @@ class CharterController extends Controller
             return $this->redirect($this->generateUrl('ZizooBaseBundle_homepage'));
         }        
     }
-
 
     /**
      * @Template()
@@ -662,7 +661,6 @@ class CharterController extends Controller
 //        }
 //    }
 
-
     public function paymentsJsonAction() {
          $user       = $this->getUser();
         $charter    = $user->getCharter();
@@ -865,7 +863,6 @@ class CharterController extends Controller
         
     }
     
-
     /**
      * View booking.
      * @param type $id
@@ -1148,7 +1145,6 @@ class CharterController extends Controller
         ), $response);
         
     }
-    
     
     public function setLogoAction()
     {

@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
+
     public function verifyAction(Request $request, $message = '')
     {
         $routes     = $request->query->get('routes');
