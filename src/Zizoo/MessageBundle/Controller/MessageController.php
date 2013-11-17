@@ -11,6 +11,7 @@ use FOS\MessageBundle\Model\ParticipantInterface;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,14 +59,21 @@ class MessageController extends BaseController
         if (!$threadId){
             return new RedirectResponse($this->container->get('router')->generate('fos_message_inbox'));
         }
-        $request                = $this->container->get('request');
+        $request        = $this->container->get('request');
         
         $routes         = $request->query->get('routes');
         $user           = $this->container->get('security.context')->getToken()->getUser();
         $charter        = $user->getCharter();
         
         $provider       = $this->getProvider();
-        $thread         = $provider->getThread($threadId);
+        
+        try {
+            $thread         = $provider->getThread($threadId);
+        } catch (AccessDeniedException $e){
+            $url = $this->container->get('router')->generate($routes['inbox_route'], array(), array());
+            return new RedirectResponse($url);
+        }
+        
         $form           = $this->container->get('zizoo_message.reply_form.factory')->create($thread);
         $formHandler    = $this->container->get('zizoo_message.reply_form.handler');
         

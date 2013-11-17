@@ -233,7 +233,7 @@
                 $('#{{ id }} input[type="checkbox"]:checked').checkBox('toggle');
                 $('#{{ id }} .zizoo-slider').each(function(index,el){
                     var reset = $(el).attr('reset');
-                    console.log(reset);
+                    //console.log(reset);
                     eval(reset+'()');
                 });
                 {% if callback is not null %}

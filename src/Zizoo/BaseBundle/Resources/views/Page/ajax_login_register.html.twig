@@ -209,6 +209,7 @@
                     type: 'get',
                     url: '{{ path('ZizooUserBundle_register') }}',
                     success: function(data, textStatus, XHR){
+                        console.log($(data).find('script'));
                         $('#register_hidden').removeClass('empty').html($(data).find('#register_inner_ajax'));
                         $('#register_hidden .register_facebook_btn').click(function(){
                             //top.location.href = $(this).attr('href');
@@ -302,7 +303,7 @@
             type: 'get',
             url: '{{ path('ZizooUserBundle_register_facebook_link') }}',
             success: function(data, textStatus, XHR){
-                console.log($(data).find('#facebook_register_inner_ajax'));
+                //console.log($(data).find('#facebook_register_inner_ajax'));
                 $('#facebook_register_hidden').removeClass('empty').html($(data).find('#facebook_register_inner_ajax'));
                 $.unblockUI();
                 openFacebookRegisterDialog();

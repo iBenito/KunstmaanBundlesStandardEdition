@@ -29,6 +29,18 @@
         <input id="override_url" name="override_url" type="hidden" value="" />
     </form>
     
+    <div id="context_hidden" style="display: none">
+        <div id="delete_photo">
+            <p>
+                Are you sure you want to delete this photo?
+            </p>
+            
+            <br />
+            <input type="button" value="Delete" class="submit_btn button red small right" />
+            <input type="button" value="Cancel" class="cancel_btn button grey small right" />
+        </div>
+    </div>
+    
     <script type="text/javascript">
         var uploadedFiles = new Array();
 
@@ -94,21 +106,53 @@
             });
         }
 
-        function photoDelete(container){
-            var id  = $(container).find('.media_id').val();
-            $(container).remove();
-            $.ajax({
-                url:            '{{ path('ZizooMediaBundle_Media_DeleteMedia') }}',
-                type:           'post',
-                data: {
-                    id:             id,
-                    entity_type:    'ZizooBoatBundle:BoatImage'
-                },
-                success: function(data){
-                }
+        function openDeleteDialog(){
+            $('#delete_photo').dialog({
+                title: 'Delete photo?',
+                width: 470,
+                maxWidth: 470,
+                fluid: true,
+                modal: true,
+                closeOnEscape: false,
+                resizable: false
             });
         }
+
+        function closeDeleteDialog(){
+            $('#delete_photo').dialog('close');            
+            $('#delete_photo').unblock();
+        }
         
+        function photoDelete(container){
+            var id  = $(container).find('.media_id').val();
+
+            $('#delete_photo .submit_btn').unbind('click').click(function(){
+                $('#delete_photo').block({ message: '' });
+                $.ajax({
+                    url:            '{{ path('ZizooMediaBundle_Media_DeleteMedia') }}',
+                    type:           'post',
+                    data: {
+                        id:             id,
+                        entity_type:    'ZizooBoatBundle:BoatImage'
+                    },
+                    success: function(data){
+                        $(container).remove();
+                        closeDeleteDialog();
+                    },
+                    error: function(jqXHR, statusText, errorThrown){
+                        //console.log(jqXHR);
+                    }
+                });
+            });
+            
+            $('#delete_photo .cancel_btn').unbind('click').click(function(){
+                closeDeleteDialog();
+            });
+            
+            openDeleteDialog();
+            
+        }
+
         $(document).ready(function(){
             changed = false;
         });

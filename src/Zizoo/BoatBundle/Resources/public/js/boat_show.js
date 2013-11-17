@@ -47,13 +47,16 @@ function openMessageToOwnerDialog(){
         maxWidth: 500,
         open: function( event, ui ) {
             jQuery('#zizoo_message_owner_message').focus();
-            
             setupMessageOwner();
             
         },
         fluid: true,
         title: 'Send Message to Owner'
     });
+}
+
+function closeMessageToOwnerDialog(){
+    $('#message_to_owner').dialog('destroy');
 }
 
 $(document).ready(function(){

@@ -48,7 +48,7 @@ class AddressController extends Controller
                         
         $page       = $request->attributes->get('page', 1);
         if (!$page) $page = $request->query->get('page', 1);
-        $pageSize   = $request->query->get('page_size', 10);
+        $pageSize   = $request->query->get('page_size', 15);
         $view       = $request->query->get('view_style', 'grid');
         $orderBy    = $request->query->get('order_by', 'date');
         
@@ -71,10 +71,10 @@ class AddressController extends Controller
                                     ),
             'order_by'      => $orderBy,
             'page_sizes'    => array(
-                                        '10'    => '10',
-                                        '20'    => '20',
-                                        '50'    => '50',
-                                        '100'   => '100'
+                                        '15'    => '15',
+                                        '30'    => '30',
+                                        '60'    => '60',
+                                        '90'    => '90'
                                     )
         ));
         

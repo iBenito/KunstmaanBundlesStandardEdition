@@ -3,31 +3,38 @@
 namespace Zizoo\MediaBundle\Twig;
 
 use Zizoo\MediaBundle\Entity\Media;
-use Zizoo\ProfileBundle\Entity\ProfileAvatar;
 
 class MediaExtension extends \Twig_Extension
 {
-    public function getFilters()
+    public function getFunctions()
     {
         return array(
-            'mediaWebPath' => new \Twig_Filter_Method($this, 'mediaWebPath'),
+//            'mediaWebPath' => new \Twig_Filter_Method($this, 'mediaWebPath'),
+            'isImage'   => new \Twig_Function_Function(array($this, 'isImage'))
         );
     }
 
-    public function mediaWebPath($media, $options = array())
+    public function isImage($mimeType)
     {
-        
-        if ($media instanceof ProfileAvatar){
-            $webPath = $media->$media->getWebPath();
-            
-        }
-        
-        return 'images/boats/'.$image->getBoat()->getId().'/'.$size.'/'.$image->getPath();
+        if ($mimeType===null) return false;
+        $match = preg_match("/image\\/(png|jpeg)/", $mimeType);
+        return $match!=0;
     }
+    
+//    public function mediaWebPath($media, $options = array())
+//    {
+//        
+//        if ($media instanceof ProfileAvatar){
+//            $webPath = $media->$media->getWebPath();
+//            
+//        }
+//        
+//        return 'images/boats/'.$image->getBoat()->getId().'/'.$size.'/'.$image->getPath();
+//    }
 
     public function getName()
     {
-        return 'image_extension';
+        return 'media_extension';
     }
 }
 ?>

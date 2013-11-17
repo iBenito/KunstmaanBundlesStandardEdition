@@ -96,6 +96,7 @@ class SkillsController extends Controller
         $license = new SkillLicense();
         $license->setFile($licenseFile);
         $license->setPath($licenseFile->guessExtension());
+        $license->setOriginalFilename($licenseFile->getClientOriginalName());
         $license->setMimeType($licenseFile->getMimeType());
 
         $validator          = $this->container->get('validator');

@@ -39,13 +39,15 @@
         <!-- end:messagess -->
     </section>
     
-    {# display navigation #}
-    <div id="navigation_container">
-        <div id="navigation">
-            {{ pagination.setTemplate('ZizooBaseBundle:Elements:pagination_sliding_with_info.html.twig') }}
-            {{ knp_pagination_render(pagination) }}
+    {% if pagination.count() > 0 %}
+        {# display navigation #}
+        <div id="navigation_container">
+            <div id="navigation">
+                {{ pagination.setTemplate('ZizooBaseBundle:Elements:pagination_sliding_with_info.html.twig') }}
+                {{ knp_pagination_render(pagination) }}
+            </div>
         </div>
-    </div>
+    {% endif %}
 
     <script type="text/javascript">
     
@@ -64,6 +66,7 @@
     
     function openDeleteDialog(){
         $('#delete_thread_inner_ajax').dialog({
+            title: 'Delete thread?',
             width: 470,
             maxWidth: 470,
             fluid: true,

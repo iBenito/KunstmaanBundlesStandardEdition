@@ -31,6 +31,11 @@ abstract class Media extends BaseEntity
      * @ORM\Column(name="order_num", type="integer", nullable=false)
      */
     private $order;
+    
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $originalFilename;
 
     protected $x1;
     protected $y1;
@@ -74,6 +79,17 @@ abstract class Media extends BaseEntity
     public function getOrder()
     {
         return $this->order;
+    }
+    
+    public function setOriginalFilename($originalFilename)
+    {
+        $this->originalFilename = $originalFilename;
+        return $this;
+    }
+    
+    public function getOriginalFilename()
+    {
+        return $this->originalFilename;
     }
     
     public function setX1($value)

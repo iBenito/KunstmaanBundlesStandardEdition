@@ -56,25 +56,11 @@ class UserController extends Controller
         }
         $routeName = $request->get('_route');
         $facebook = $this->get('facebook');
-        
-        $unconfirmedUser    = null;
-        if ($error instanceof \Symfony\Component\Security\Core\Exception\DisabledException){
-            $lastUsername   = $session->get(SecurityContext::LAST_USERNAME);
-            $userRepo       = $this->getDoctrine()->getManager()->getRepository('ZizooUserBundle:User');
-            $emailUser      = $userRepo->findOneByEmail($lastUsername);
-            $usernameUser   = $userRepo->findOneByUsername($lastUsername);
-            if ($emailUser){
-                $unconfirmedUser = $emailUser->getConfirmationToken()!=null?$emailUser:null;
-            } else if ($usernameUser){
-                $unconfirmedUser = $usernameUser->getConfirmationToken()!=null?$usernameUser:null;
-            }
-        }
-        
+                 
         return $this->render('ZizooUserBundle:User:login.html.twig', array(
             // last username entered by the user
             'last_username'         => $session->get(SecurityContext::LAST_USERNAME),
             'error'                 => $error,
-            'unconfirmed_user'      => $unconfirmedUser,
             'current_route'         => $routeName,
             'facebook'              => $facebook,
             'ajax'                  => $request->isXmlHttpRequest()

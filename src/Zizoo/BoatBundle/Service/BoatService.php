@@ -135,6 +135,7 @@ class BoatService {
         $image->setFile($imageFile);
         $image->setPath($imageFile->guessExtension());
         $image->setMimeType($imageFile->getMimeType());
+        $image->setOriginalFilename($imageFile->getClientOriginalName());
         $image->setBoat($boat);
         $boat->addImage($image);
             

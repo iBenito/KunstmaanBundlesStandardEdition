@@ -19,6 +19,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass="Zizoo\UserBundle\Entity\UserRepository")
  * @UniqueEntity(fields="username", groups={"registration"}, message="zizoo_user.error.user_taken")
  * @UniqueEntity(fields="email", groups={"registration"}, message="zizoo_user.error.email_taken")
+ * @UniqueEntity(fields="facebookUID", groups={"registration", "verify"}, message="zizoo_user.error.fb_uid_already_exists")
  */
 class User extends BaseEntity implements AdvancedUserInterface, \Serializable, ParticipantInterface
 {
@@ -64,7 +65,7 @@ class User extends BaseEntity implements AdvancedUserInterface, \Serializable, P
     private $changeEmailToken;
     
     /**
-     * @ORM\Column(name="fb_uid", type="string", length=255, nullable=true)
+     * @ORM\Column(name="fb_uid", type="string", length=255, nullable=true, unique=true)
      */
     private $facebookUID;
      

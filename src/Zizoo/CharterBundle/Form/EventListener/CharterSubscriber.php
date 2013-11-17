@@ -59,7 +59,9 @@ class CharterSubscriber implements EventSubscriberInterface
                                                                 'map_show'          => $options['map_show'],
                                                                 'map_update'        => $options['map_update'],
                                                                 'map_drag'          => $options['map_drag']));
-        $form->add('charter_phone', 'text', array('label' => array('value' => 'zizoo_charter.label.charter_phone', 'class' => 'phone'), 'property_path' => 'phone'));
+        $form->add('charter_phone', 'text', array('label'               => array('value' => 'zizoo_charter.label.charter_phone', 'class' => 'phone'), 
+                                                    'property_path'     => 'phone',
+                                                    'required'          => false));
         
         // check if the product object is "new"
         // If you didn't pass any data to the form, the data is "null".

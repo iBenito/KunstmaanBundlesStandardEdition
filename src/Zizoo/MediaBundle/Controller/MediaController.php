@@ -28,7 +28,7 @@ class MediaController extends Controller
 {
     
     
-    private function getMediaEntity(Request $request, EntityManager $em)
+    private function getMediaEntity(Request $request, EntityManager $em, &$ownerEntity=null)
     {
         $user       = $this->getUser();
         $profile    = $user->getProfile();
@@ -51,20 +51,24 @@ class MediaController extends Controller
             if (!$profile->getAvatar()->contains($mediaEntity)){
                 return new JsonResponse(array('error' => 'Not allowed'), 400);
             }
+            $ownerEntity = $profile;
         } else if ($mediaEntity instanceof CharterLogo){
             if (!$charter || $charter->getLogo()!=$mediaEntity){
                 return new JsonResponse(array('error' => 'Not allowed'), 400);
             }
+            $ownerEntity = $charter;
         } else if ($mediaEntity instanceof BoatImage){
             $boat = $mediaEntity->getBoat();
             if (!$charter || !$charter->getBoats()->contains($boat)){
                 return new JsonResponse(array('error' => 'Not allowed'), 400);
             }
+            $ownerEntity = $boat;
         } else if ($mediaEntity instanceof SkillLicense){
             $skill = $mediaEntity->getSkill();
             if (!$user || !$user->getSkills()->contains($skill)){
                 return new JsonResponse(array('error' => 'Not allowed'), 400);
             }
+            $ownerEntity = $skill;
         }
         
         return $mediaEntity;
@@ -113,11 +117,13 @@ class MediaController extends Controller
         return new JsonResponse(array('success' => 'Media Entity with ID '.$mediaEntity->getId().' was successfully deleted'));   
     }
     
+    
     public function cropMediaAction()
     {
-        $request    = $this->getRequest();
-        $em         = $this->getDoctrine()->getManager();
-        $mediaEntity = $this->getMediaEntity($request, $em);
+        $request        = $this->getRequest();
+        $em             = $this->getDoctrine()->getManager();
+        $ownerEntity    = null;
+        $mediaEntity    = $this->getMediaEntity($request, $em, $ownerEntity);
         
         $parentClass = get_parent_class($mediaEntity);
         if ($parentClass !== 'Zizoo\MediaBundle\Entity\Media'){
@@ -149,7 +155,11 @@ class MediaController extends Controller
             $em->flush();
         }
         
-        return new JsonResponse(array('success' => 'Media Entity with ID '.$mediaEntity->getId().' was successfully cropped'));   
+        
+        
+        return new JsonResponse(array('success'     => 'Media Entity with ID '.$mediaEntity->getId().' was successfully cropped',
+                                        'media_id'  => $mediaEntity->getId(),
+                                        'owner_id'  => $ownerEntity->getId()));   
         
     }
     

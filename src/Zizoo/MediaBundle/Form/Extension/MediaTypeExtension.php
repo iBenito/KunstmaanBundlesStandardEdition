@@ -93,9 +93,13 @@ class MediaTypeExtension extends AbstractTypeExtension
                 $fileUrl = $accessor->getValue($media, $options['file_path']);
                 $view->vars['file_url'] = $fileUrl;
                 $view->vars['version']  = $media->getUpdated()->format('Y_m_d_H_i_s');
+                $view->vars['mime_type'] = $media->getMimeType();
+                $view->vars['filename'] = $media->getOriginalFilename();
             } else {
                 $view->vars['file_url'] = null;
                 $view->vars['version']  = null;
+                $view->vars['mime_type']  = null;
+                $view->vars['filename'] = null;
             }
 
         } else {
@@ -108,14 +112,20 @@ class MediaTypeExtension extends AbstractTypeExtension
                     $fileUrl = $accessor->getValue($media, $parentOptions['file_path']);
                     $view->vars['file_url'] = $fileUrl;
                     $view->vars['version']  = $media->getUpdated()->format('Y_m_d_H_i_s');
+                    $view->vars['mime_type'] = $media->getMimeType();
+                    $view->vars['filename'] = $media->getOriginalFilename();
                 } else {
                     $view->vars['file_url'] = null;
                     $view->vars['version']  = null;
+                    $view->vars['mime_type']  = null;
+                    $view->vars['filename'] = null;
                 }
 
             } else {
                 $view->vars['file_url'] = null;
                 $view->vars['version']  = null;
+                $view->vars['mime_type']  = null;
+                $view->vars['filename'] = null;
             }
         }
     }

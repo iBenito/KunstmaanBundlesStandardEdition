@@ -1,7 +1,8 @@
 services:
     # TWIG EXTENSIONS
-    zizoo_user.twig.image_extension:
+    zizoo_user.twig.user_extension:
         class: Zizoo\UserBundle\Twig\UserExtension
+        arguments: ["@doctrine.orm.entity_manager", "@translator", "@router"]
         tags:
             - { name: twig.extension }
             

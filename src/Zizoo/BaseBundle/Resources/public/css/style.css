@@ -95,7 +95,7 @@ input[type="number"]::-webkit-inner-spin-button{
     -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.5);
     -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.5);
     box-shadow: 0 1px 2px rgba(0,0,0,0.5);
-    z-index: 9000;
+    z-index: 1000;
 }
 
 #header .logo {
@@ -2317,6 +2317,10 @@ input[type="number"]::-webkit-inner-spin-button{
     float: left;
     width: 33.33%;
     padding: 0 10px 10px 0;
+}
+
+#grid .box .boat figure img {
+    height: 114px;
 }
 
 /**

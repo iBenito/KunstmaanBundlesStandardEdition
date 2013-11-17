@@ -4,12 +4,11 @@
 '   <h2 class="marker_heading"><a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}?zizoo_boat_book[reservation_range][reservation_from]={{ form.vars.value.reservationFrom is empty ? "" : form.vars.value.reservationFrom|date }}&zizoo_boat_book[reservation_range][reservation_to]={{ form.vars.value.reservationTo is empty ? "" : form.vars.value.reservationTo|date }}&zizoo_boat_book[num_guests]={{ form.vars.value.numGuests }}{% if boat.crewOptional == true %}&zizoo_boat_book[crew]=true{% endif %}">{{ boat.name }}: {{ boat.title }}</a></h2>'+
 '   <div id="marker_content">'+
 '       <div class="marker_images">'+
-        {% for image in boat.image %}
-'           <article class="image" id="image-{{ image.id }}">'+
-'               <img src="{{ asset(image|pictureWebPath)| imagine_filter('thumb_120x80') }}" alt="" class="small" />'+
+        {% if boat.image|length > 0 %}
+'           <article class="image" id="image-{{ boat.image.first.id }}">'+
+'               <img src="{{ asset(boat.image.first|pictureWebPath)| imagine_filter('thumb_120x80') }}" alt="" class="small" />'+
 '           </article>'+
-        {% else %}
-        {% endfor %}
+        {% endif %}
 '   </div>'+
 '   {{ boat.description }}'+
 '</div>'

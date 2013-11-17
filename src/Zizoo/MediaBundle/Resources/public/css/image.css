@@ -34,18 +34,18 @@
     padding: 10px;
 }
 
-.image_div {
+.media_div {
     position: relative;
 }
 
-.zizoo_media_container.single .image_div_container {
+.zizoo_media_container.single .media_div_container {
     display: inline-block;
     margin: 0 10px 10px 0;
     float: left;
 }
 
 
-.image_div .zizoo_media_overlay {
+.media_div .zizoo_media_overlay {
     position: absolute;
     width: 120px;
     height: 80px;
@@ -56,7 +56,7 @@
     top: 0;
 }
 
-.image_div .controls {
+.media_div .controls {
     z-index: 2;
     position: absolute;
     display: none;
@@ -172,11 +172,33 @@
     border-radius: 3px;
 }
 
+.zizoo_media_container div.non_image {
+    display: block;
+    width: 100px;
+    height: 68px;
+    border-radius: 3px;
+    overflow: hidden;
+    padding: 5px;
+    
+    white-space: pre;           /* CSS 2.0 */
+    white-space: pre-wrap;      /* CSS 2.1 */
+    white-space: pre-line;      /* CSS 3.0 */
+    white-space: -pre-wrap;     /* Opera 4-6 */
+    white-space: -o-pre-wrap;   /* Opera 7 */
+    white-space: -moz-pre-wrap; /* Mozilla */
+    white-space: -hp-pre-wrap;  /* HP Printers */
+    word-wrap: break-word;      /* IE 5+ */
+}
+
+.zizoo_media_container:hover div.non_image {
+    overflow: visible;
+}
+
 .zizoo_media_container br {
     display: none;
 }
 
-.zizoo_media_container .image_div .zizoo_media_overlay {
+.zizoo_media_container .media_div .zizoo_media_overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -187,13 +209,13 @@
     border-radius: 3px;
 }
 
-.zizoo_media_container .image_div .controls {
+.zizoo_media_container .media_div .controls {
     position: absolute;
     top: 24px;
     left: 25px;
 }
 
-.zizoo_media_container .image_div .controls a {
+.zizoo_media_container .media_div .controls a {
     display: block;
     float: left;
     width: 21px;
@@ -203,20 +225,20 @@
     cursor: pointer;
 }
 
-.zizoo_media_container .image_div .controls .crop_btn {
+.zizoo_media_container .media_div .controls .crop_btn {
     margin: 0 9px 0 0;
     background-position: 0 0;
 }
 
-.zizoo_media_container .image_div .controls .crop_btn:hover {
+.zizoo_media_container .media_div .controls .crop_btn:hover {
     background-position: 0 -21px;
 }
 
-.zizoo_media_container .image_div .controls .delete_btn {
+.zizoo_media_container .media_div .controls .delete_btn {
     background-position: -21px 0;
 }
 
-.zizoo_media_container .image_div .controls .delete_btn:hover {
+.zizoo_media_container .media_div .controls .delete_btn:hover {
     background-position: -21px -21px;
 }
 

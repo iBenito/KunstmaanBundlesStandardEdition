@@ -224,7 +224,7 @@ class Messenger {
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
             ->setFrom($from, $name)
-            ->setTo($user->getEmail());
+            ->setTo($user->getNewEmail());
 
         if (!empty($htmlBody)) {
             $message->setBody($htmlBody, 'text/html')

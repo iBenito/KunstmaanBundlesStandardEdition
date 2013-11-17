@@ -239,10 +239,9 @@ class BoatController extends Controller
             ));
         }
         
-        $valid = false;
+        $response = new Response('', 200);
         
         $messageOwner = new MessageOwner($id, $this->getUser()->getId());
-                
         $form = $this->createForm('zizoo_message_owner', $messageOwner, array('label' => '.'));
         if ($request->isMethod('post') || $this->allParametersSet($request)){
             $form->bind($request);
@@ -282,8 +281,10 @@ class BoatController extends Controller
 
 
                 } catch (\Zizoo\ReservationBundle\Exception\InvalidReservationException $e){
-
+                    $response->setStatusCode(400);
                 }
+            } else {
+                $response->setStatusCode(400);
             }
 
         }
@@ -292,10 +293,9 @@ class BoatController extends Controller
             'boat'                  => $boat,
             'message_owner'         => $messageOwner,
             'form'                  => $form->createView(),
-            'valid'                 => $valid,
             'reservations'          => $reservations,
             'prices'                => $prices
-        ));
+        ), $response);
     }
     
     /**
@@ -377,14 +377,18 @@ class BoatController extends Controller
         $request    = $this->getRequest();
         $session    = $this->get('session');
         $em         = $this->getDoctrine()->getManager();
-        $boat       = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
-
+        $user       = $this->getUser();
+        $routes     = $request->query->get('routes');
+        
+        $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
         if (!$boat){
-            throw $this->createNotFoundException('Unable to find Boat entity.');
+            return $this->redirect($this->generateUrl($routes['boats_route'], array(), $request->query->all()));
         }
-        
-        $routes         = $request->query->get('routes');
-        
+        $charter = $boat->getCharter();
+        if (!$charter->getUsers()->contains($user)){
+            return $this->redirect($this->generateUrl($routes['boats_route'], array(), $request->query->all()));
+        }
+
         $step = $session->get('step');
         if ($step){
             $session->set('step', 'one');
@@ -431,15 +435,19 @@ class BoatController extends Controller
      */
     public function editDetailsAction($id)
     {
-        $request = $this->getRequest();
-        $em     = $this->getDoctrine()->getManager();
-        $boat   = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
-
-        if (!$boat){
-            throw $this->createNotFoundException('Unable to find Boat entity.');
-        }
+        $request    = $this->getRequest();
+        $em         = $this->getDoctrine()->getManager();
+        $user       = $this->getUser();
+        $routes     = $request->query->get('routes');
         
-        $routes         = $request->query->get('routes');
+        $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
+        if (!$boat){
+            return $this->redirect($this->generateUrl($routes['boats_route'], array(), $request->query->all()));
+        }
+        $charter = $boat->getCharter();
+        if (!$charter->getUsers()->contains($user)){
+            return $this->redirect($this->generateUrl($routes['boats_route'], array(), $request->query->all()));
+        }
         
         $session = $this->get('session');
         $step = $session->get('step');
@@ -488,12 +496,17 @@ class BoatController extends Controller
      */
     public function editPhotosAction(Request $request, $id)
     {
+        $user       = $this->getUser();
+        $routes     = $request->query->get('routes');
+        
         $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
         if (!$boat){
-            throw $this->createNotFoundException('Unable to find Boat entity.');
+            return $this->redirect($this->generateUrl($routes['boats_route'], array(), $request->query->all()));
         }
-
-        $routes         = $request->query->get('routes');
+        $charter = $boat->getCharter();
+        if (!$charter->getUsers()->contains($user)){
+            return $this->redirect($this->generateUrl($routes['boats_route'], array(), $request->query->all()));
+        }
         
         $session = $this->get('session');
         $step = $session->get('step');
@@ -592,14 +605,17 @@ class BoatController extends Controller
         $boatService        = $this->container->get('boat_service');
         $reservationAgent   = $this->container->get('zizoo_reservation_reservation_agent');
         $user               = $this->getUser();
-        $charter            = $user->getCharter();
+        $routes             = $request->query->get('routes');
         
         $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
-        //if (!$boat || $boat->getCharter()->getAdminUser()!=$user) {
-        if (!$boat || !$charter->getUsers()->contains($user)){
-            throw $this->createNotFoundException('Unable to find Boat entity.');
+        if (!$boat){
+            return $this->redirect($this->generateUrl($routes['boats_route'], array(), $request->query->all()));
         }
-
+        $charter = $boat->getCharter();
+        if (!$charter->getUsers()->contains($user)){
+            return $this->redirect($this->generateUrl($routes['boats_route'], array(), $request->query->all()));
+        }
+        
         $step = $session->get('step');
         if ($step){
             $session->set('step', 'four');
@@ -608,9 +624,7 @@ class BoatController extends Controller
         $availability = new Availability($boat);
         $availability->setBoatId($boat->getId());
         $availabilityForm = $this->createForm('zizoo_boat_availability', $availability, array('boat' => $boat, 'label' => 'f'));
-        
-        $routes = $request->query->get('routes');
-        
+                
         $reservations   = $boat->getReservation();
         $prices         = $boat->getPrice();
             
@@ -685,20 +699,21 @@ class BoatController extends Controller
     public function deleteAction(Request $request, $id)
     {
         $em                 = $this->getDoctrine()->getManager();
-        $boat               = $em->getRepository('ZizooBoatBundle:Boat')->find($id);
         $user               = $this->getUser();
-        $charter            = $user->getCharter();
         $boatService        = $this->get('boat_service');
         $reservationAgent   = $this->get('zizoo_reservation_reservation_agent');
         $bookingAgent       = $this->get('zizoo_booking_booking_agent');
         $trans              = $this->get('translator');
+        $routes             = $request->query->get('routes');
         
-        //if (!$boat || $charter->getAdminUser()!=$user) {
-        if (!$boat || !$charter->getUsers()->contains($user)){
-            throw $this->createNotFoundException('Unable to find Boat entity.');
+        $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
+        if (!$boat){
+            return $this->redirect($this->generateUrl($routes['boats_route'], array(), $request->query->all()));
         }
-        
-        $routes         = $request->query->get('routes');
+        $charter = $boat->getCharter();
+        if (!$charter->getUsers()->contains($user)){
+            return $this->redirect($this->generateUrl($routes['boats_route'], array(), $request->query->all()));
+        }
         
         $form = $this->createDeleteForm($id);
         
@@ -776,18 +791,37 @@ class BoatController extends Controller
         $request            = $this->getRequest();
         $boatService        = $this->container->get('boat_service');
         $user               = $this->getUser();
-        $charter            = $user->getCharter();
         $em                 = $this->getDoctrine()->getEntityManager();
         
         if (!$id) $id       = $request->get('boat_id', null);
         $active             = $request->get('active', false)=='true';
                 
-        $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
-        if (!$boat || !$charter->getUsers()->contains($user)){
-            throw $this->createNotFoundException('Unable to find Boat entity.');
-        }
+        $routes             = $request->query->get('routes');
         
         $response = new JSONResponse();
+        
+        $boat = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat')->find($id);
+        if (!$boat){
+            $response->setStatusCode(400);
+            $response->setData(array(
+                'boat_id'       => $id,
+                'boat_active'   => false,
+                'errors'        => array('Default' => array('No such boat'))
+            ));
+            return $response;
+        }
+        
+        $charter = $boat->getCharter();
+        if (!$charter->getUsers()->contains($user)){
+            $response->setStatusCode(400);
+            $response->setData(array(
+                'boat_id'       => $boat->getId(),
+                'boat_active'   => false,
+                'errors'        => array('Default' => array('No such boat'))
+            ));
+            return $response;
+        }
+        
         
         $completeErrors = $boatService->boatCompleteValidate($boat);
         if ( ($active === true && count($completeErrors) == 0) || $active !== true){
@@ -804,8 +838,6 @@ class BoatController extends Controller
             'errors'        => $completeErrors
         ));
         
-        $routes = $request->get('routes');
- 
         if (true){
             return $response;
         } else {

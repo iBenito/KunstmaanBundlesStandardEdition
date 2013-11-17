@@ -46,7 +46,7 @@ class Profile extends BaseEntity
     protected $address;
     
     /**
-     * @ORM\Column(type="string", length=60, unique=true, nullable=true)
+     * @ORM\Column(type="string", length=60, nullable=true)
      */
     protected $phone;
 
