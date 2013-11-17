@@ -12,3 +12,12 @@ web_profiler:
 
 swiftmailer:
     disable_delivery: true
+
+# app/config/config_test.yml
+doctrine:
+    # ...
+#    dbal:
+#        host: localhost
+#        dbname: testdb
+#        user: testdb
+#        password: testdb
