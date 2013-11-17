@@ -1,14 +1,22 @@
-{% set sender_receiver = message.sender == user ? 'sender' : 'receiver' %}
+{% set sender_receiver  = message.sender == user ? 'sender' : 'receiver' %}
 {% set message_class    = '' %}
 {% set header           = null %}
+{% set reservation      = message.thread.reservation %}
+{% set reservation_info = null %}
+{% if reservation is not null %}
+    {% set reservation_header = '<a href=' ~ path('ZizooBoatBundle_Boat_Show', {id: reservation.boat.id}) ~ '>' ~ reservation.boat.name ~ '</a> | ' ~ reservation.checkIn|date('M d, Y') ~ ' - ' ~ reservation.checkOut|date('M d, Y') %}
+{% endif %}
+
 {% if message.messageType is null %}
-    
+
 {% elseif message.messageType.id == message_types['request']['id'] %}
     {% set message_class    = 'dark' %}
-    {% set header           = 'Boat Name | Aug 12, 2013 (Booking date)' %}
+    {% set header           = reservation_header %}
+    {% set reservation_info = true %}
 {% elseif message.messageType.id == message_types['enquiry']['id'] %}
     {% set message_class    = 'dark' %}
-    {% set header           = 'Boat Name | Aug 12, 2013' %}
+    {% set header           = reservation_header %}
+    {% set reservation_info = true %}
 {% elseif message.messageType.id == message_types['accepted']['id'] %}
     {% set message_class    = 'green' %}
     {% set header           = 'Accepted' %}
@@ -32,7 +40,18 @@
         </div>
         <div class="background">
             {% if header is not null %}
-                <header>{{ header }}</header>
+                <header>{{ header|raw }}</header>
+            {% endif %}
+            {% if reservation_info is not null %}
+                {% set boat = reservation.boat %}
+                <div class="trip clearfix">
+                    <a href="{{ path('ZizooBoatBundle_Boat_Show', {id: boat.id}) }}" title="Hvar"><img src="{{ asset(boat.image.first|pictureWebPath|imagine_filter('thumb_131x68')) }}" alt=""></a>
+                    <p>
+                        <strong>Boat: </strong>{{ boat.title }}<br>
+                        <strong>Homeport: </strong>{{ boat.address.locality }}, {{ boat.address.country }}<br>
+                        <strong>Cabins / Berths: </strong>{{ boat.cabins }} / {{ boat.berths }}
+                    </p>
+                </div>
             {% endif %}
             <p>
                 {{ message.body }}
