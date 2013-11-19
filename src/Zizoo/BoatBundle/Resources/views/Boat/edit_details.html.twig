@@ -4,9 +4,8 @@
     {{ render(controller('ZizooBaseBundle:Dashboard:charterTabs', { 'current': 'boats' })) }}
 {% endblock %}
 
-{% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['boat_details_route'], 'routes': routes }  %}
-
 <div class="content">
+    {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['boat_details_route'], 'routes': routes }  %}
     {% if step != "" %}
         <h1>Step {{ step }}</h1>
     {% endif %}

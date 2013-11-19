@@ -4,9 +4,8 @@
     {{ render(controller('ZizooBaseBundle:Dashboard:charterTabs', { 'current': 'boats' })) }}
 {% endblock %}
 
-{% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['boat_edit_route'], 'routes': routes }  %}
-
 <div class="content">
+    {% include 'ZizooBoatBundle:Boat:boat_navigation.html.twig' with { 'boat': boat, 'current_route': routes['boat_edit_route'], 'routes': routes }  %}
     {% if step != "" %}
         <h1>Step {{ step }}</h1>
     {% endif %}
@@ -34,9 +33,6 @@
         }
 
         $(document).ready(function(){
-            $( "#zizoo_boat_default_price_choice_nullable_value" ).attr('placeholder', 'per day');
-            $( "#zizoo_boat_length" ).attr('placeholder', 'in metres');
-            $( "#zizoo_boat_water_capacity" ).attr('placeholder', 'in litres');
             $('#zizoo_boat_crew_optional input[name="zizoo_boat[crew_optional]"]').change(changeCrew).change();
             {% if boat.id is not null %}
                 changed = false;
