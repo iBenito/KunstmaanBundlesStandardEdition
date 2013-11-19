@@ -34,7 +34,7 @@
                 </div>
             </div>
             {% endif %}
-            <h1>{{ boat.title }} <span>{{ boat.address.locality }}, {{ boat.address.country }}/Year: {{ boat.year }}</span></h1>
+            <h1>{{ boat.name }} <span>{{ boat.address.locality }}, {{ boat.address.country }}/Year: {{ boat.year }}</span></h1>
             <ul class="social">
                 <li><a href="" class="facebook" title="Facebook"></a></li>
                 <li><a href="" class="twitter" title="Twitter"></a></li>
@@ -109,6 +109,7 @@
                     </header>
 
                     <div class="content">
+                        <h3>{{ boat.title }}</h3>
                         <p>{{ boat.description }}</p>
                     </div>
                 </section>
