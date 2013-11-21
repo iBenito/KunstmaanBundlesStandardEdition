@@ -479,9 +479,9 @@ class CharterController extends Controller
                                                 'options'           => $boatOptions,
                                                 'initial_option'    => $request->get('boat', null)
                 ),
-                'callback'           => function($field, $val, $booking) use ($router, $routes) {
+                'callback'           => function($field, $val, $booking) use ($router) {
                     $id     = $booking->getReservation()->getBoat()->getId();
-                    $url    = "<a href=".$this->generateUrl('ZizooBoatBundle_Boat_Show', array('id' => $id)).">".$val."</a>";
+                    $url    = "<a href=".$router->generate('ZizooBoatBundle_Boat_Show', array('id' => $id)).">".$val."</a>";
                     return $url;
                 }
             ),
@@ -498,9 +498,9 @@ class CharterController extends Controller
                                                 'options'           => $guestOptions,
                                                 'initial_option'    => $request->get('guest', null)
                 ),
-                'callback'           => function($field, $val, $booking) use ($router, $routes) {
+                'callback'           => function($field, $val, $booking) use ($router) {
                     $id     = $booking->getReservation()->getGuest()->getId();
-                    $url    = "<a href=".$this->generateUrl('ZizooProfileBundle_Profile_Show', array('id' => $id)).">".$val."</a>";
+                    $url    = "<a href=".$router->generate('ZizooProfileBundle_Profile_Show', array('id' => $id)).">".$val."</a>";
                     return $url;
                 }
             ),
