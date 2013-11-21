@@ -15,8 +15,14 @@ class NumberNullableType extends AbstractType
                                                     'expanded'          => true,
                                                     'multiple'          => false,
                                                     'choices'           => array(false => 'Off', true => 'On')));
-        
-        $builder->add('nullable_value', 'number', array('property_path' => $options['value_property_path']));
+
+        if (array_key_exists('attr', $options)){
+            $numberAttrs = $options['attr'];
+        } else {
+            $numberAttrs = array();
+        }
+        $builder->add('nullable_value', 'number', array('property_path' => $options['value_property_path'],
+                                                        'attr'          => $numberAttrs));
                 
     }
     

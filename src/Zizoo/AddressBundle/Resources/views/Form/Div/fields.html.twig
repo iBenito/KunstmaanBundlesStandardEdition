@@ -184,6 +184,8 @@
                 } else {
                     {{id}}_marker.setPosition(results[0].geometry.location);
                 }
+                $('#{{form.lat.vars.id}}').val(results[0].geometry.location.lat());
+                $('#{{form.lng.vars.id}}').val(results[0].geometry.location.lng());
                 {{id}}_map.setCenter(results[0].geometry.location);
             } else {
                 //alert('Geocode was not successful for the following reason: ' + status);
