@@ -34,7 +34,7 @@ class SkillsType extends AbstractType
                     'upload_error_js'   => 'licenseUploadError',
                     'upload_success_js' => 'licenseUploadSuccess',
                 )))->addViewTransformer($transformer))
-            ->add('experience')
+            ->add('experience', 'number', array('attr' => array('placeholder'=>'in years')))
             ->add('boats', 'entity', array(
                 'class' => 'ZizooBoatBundle:BoatType',
                 'multiple'  => true,

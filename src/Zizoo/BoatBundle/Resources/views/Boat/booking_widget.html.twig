@@ -76,7 +76,7 @@
                 <button type="submit" id="book_btn" class="button orange big" title="Book it">Book It</button>
             </form>
         {% else %}
-           <button type="button" id="book_btn" disabled="disabled" class="button orange big" title="Book it">Book It</button>
+           <button type="button" id="book_btn" class="button orange big" title="Book it">Book It</button>
         {% endif %}
 
         <div id="booking_coming_soon" style="display: none">
@@ -133,7 +133,11 @@
         $('#zizoo_boat_book_crew').change(function(){
             reloadWidget();
         });
-        
+
+        $('#book_btn').click(function(){
+            reloadWidget();
+        });
+
         $('#booking_form').submit(function(){
             {% if bookings_allowed == true %}
             //window.location.href = $('#booking_form').attr('action');

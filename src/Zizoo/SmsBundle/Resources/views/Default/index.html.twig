@@ -23,7 +23,7 @@
             {% endif %}
         {% endif %}
     {% else %}
-        <p>{{ 'zizoo_sms.phone.none' | trans({'%link_start%' : '<a href="'~path(routes['verify_send_route'], {profileId: profile.id})~'">', '%link_end%' : '</a>'}) | raw }}</p>
+        <p>{{ 'zizoo_sms.phone.none' | trans({'%link_start%' : '<a href="'~path(routes['profile_route'])~'">', '%link_end%' : '</a>'}) | raw }}</p>
     {% endif %}
 
 {% endblock %}
