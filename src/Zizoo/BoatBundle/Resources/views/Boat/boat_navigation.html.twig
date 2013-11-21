@@ -83,14 +83,9 @@
 </div>
 <ul id="boat_nav" class="tabs boat clearfix">
     {% if boat.id is not null %}
-        <li{{ current_route == routes['boat_edit_route'] ? ' class="current"' : ''}}><a href="{{ path(routes['boat_edit_route'], { 'id': boat.id }) }}">Overview</a></li>
-        <li{{ current_route == routes['boat_details_route'] ? ' class="current"' : ''}}><a href="{{ path(routes['boat_details_route'], { 'id': boat.id }) }}">Details</a></li>
-        <li{{ current_route == routes['boat_photos_route'] ? ' class="current"' : ''}}><a href="{{ path(routes['boat_photos_route'], { 'id': boat.id }) }}">Photos</a></li>
-        <li{{ current_route == routes['boat_calendar_route'] ? ' class="current"' : ''}}><a href="{{ path(routes['boat_calendar_route'], { 'id': boat.id }) }}">Price</a></li>
-    {% else %}
-        <li class="current"><a href="{{ path(routes['boat_new_route']) }}">Overview</a></li>
-        <li class=""><a href="#" redirect="{{ routes['boat_details_route'] }}">Details</a></li>
-        <li class=""><a href="#" redirect="{{ routes['boat_photos_route'] }}">Photos</a></li>
-        <li class=""><a href="#" redirect="{{ routes['boat_calendar_route'] }}">Price</a></li>
+        <li{{ current_route == routes['boat_edit_route'] ? ' class="current"' : ''}}><a href="{{ path(routes['boat_edit_route'], { 'id': boat.id }) }}"><span class="icon overview"></span> Overview</a></li>
+        <li{{ current_route == routes['boat_details_route'] ? ' class="current"' : ''}}><a href="{{ path(routes['boat_details_route'], { 'id': boat.id }) }}"><span class="icon description"></span> Details</a></li>
+        <li{{ current_route == routes['boat_photos_route'] ? ' class="current"' : ''}}><a href="{{ path(routes['boat_photos_route'], { 'id': boat.id }) }}"><span class="icon photos"></span> Photos</a></li>
+        <li{{ current_route == routes['boat_calendar_route'] ? ' class="current"' : ''}}><a href="{{ path(routes['boat_calendar_route'], { 'id': boat.id }) }}"><span class="icon calendar"></span> Price</a></li>
     {% endif %}
 </ul>
