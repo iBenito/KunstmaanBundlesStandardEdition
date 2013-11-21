@@ -299,8 +299,8 @@ class BoatRepository extends EntityRepository
                    ->where('charter = :charter')
                    ->andWhere('boat.active = :active')
                         ->setParameter('active', $active)
-                   ->andWhere('boat.status = :status')
-                        ->setParameter('status', $complete)
+                   ->andWhere('boat.complete = :complete')
+                        ->setParameter('complete', $complete)
                    ->andWhere('boat.deleted IS NULL')
                         ->setParameter('charter', $charter);
 

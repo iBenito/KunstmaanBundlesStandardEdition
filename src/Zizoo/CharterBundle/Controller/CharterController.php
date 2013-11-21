@@ -127,13 +127,13 @@ class CharterController extends Controller
         
         switch ($listing_status) {
             case "incomplete":
-                $dql .= " AND b.complete = 0";
+                $dql .= " AND b.complete = 0 AND";
                 break;
             case "hidden":
-                $dql .= " AND b.active = 0";
+                $dql .= " AND b.active = 0 AND b.complete = 0";
                 break;
             case "active":
-                $dql .= " AND b.active = 1";
+                $dql .= " AND b.active = 1 AND b.complete = 1";
                 break;
         }
 
@@ -438,7 +438,7 @@ class CharterController extends Controller
                 $guestOptions[$option['guest_id']] = $option['guest_name'];
             }
             
-            for ($i=0; $i<Reservation::NUM_STATUS; $i++){
+            for ($i=1; $i<Reservation::NUM_STATUS; $i++){
                 $statusOptions[$i] = $reservationAgent->statusToString($i);
             }
         }
@@ -478,7 +478,12 @@ class CharterController extends Controller
                                                 'target'            => 'boat_id',
                                                 'options'           => $boatOptions,
                                                 'initial_option'    => $request->get('boat', null)
-                )
+                ),
+                'callback'           => function($field, $val, $booking) use ($router, $routes) {
+                    $id     = $booking->getReservation()->getBoat()->getId();
+                    $url    = "<a href=".$this->generateUrl('ZizooBoatBundle_Boat_Show', array('id' => $id)).">".$val."</a>";
+                    return $url;
+                }
             ),
             'guest_id' => array(
                 'visible'           => false,
@@ -492,7 +497,12 @@ class CharterController extends Controller
                                                 'target'            => 'guest_id',
                                                 'options'           => $guestOptions,
                                                 'initial_option'    => $request->get('guest', null)
-                )
+                ),
+                'callback'           => function($field, $val, $booking) use ($router, $routes) {
+                    $id     = $booking->getReservation()->getGuest()->getId();
+                    $url    = "<a href=".$this->generateUrl('ZizooProfileBundle_Profile_Show', array('id' => $id)).">".$val."</a>";
+                    return $url;
+                }
             ),
             'created' => array(
                 'title'             => 'Created',

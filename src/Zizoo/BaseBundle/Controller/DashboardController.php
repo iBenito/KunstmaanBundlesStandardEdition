@@ -92,7 +92,7 @@ class DashboardController extends Controller {
         $acceptedRequests       = $reservationRepository->getAcceptedReservations($charter);
 
         $boatRepository     = $this->getDoctrine()->getRepository('ZizooBoatBundle:Boat');
-        $activeListings     = $boatRepository->getNumberOfCharterBoats($charter, TRUE);
+        $activeListings     = $boatRepository->getNumberOfCharterBoats($charter, TRUE, TRUE);
         $incompleteListings = $boatRepository->getNumberOfCharterBoats($charter, FALSE);
         $hiddenListings     = $boatRepository->getNumberOfCharterBoats($charter, FALSE, TRUE);
 
