@@ -33,6 +33,9 @@
             <!-- start:summary -->
             <div class="summary">
                 <ul class="clearfix">
+                    {% if boat.minimumDays %}
+                        {{ boat.minimumDays ~ " " ~ "zizoo_boat.booking.min_days"|trans }}
+                    {% endif %}
                     <li>
                         <span class="icon calendar black"></span>
                         <span class="field">{{ form_widget(form.reservation_range.reservation_from) }}</span>
