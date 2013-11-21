@@ -23,7 +23,7 @@
             {% endif %}
         {% endif %}
     {% else %}
-        <h3>{{ "zizoo_sms.phone.none"|trans }}</h3>
+        <p>{{ 'zizoo_sms.phone.none' | trans({'%link_start%' : '<a href="'~path(routes['verify_send_route'], {profileId: profile.id})~'">', '%link_end%' : '</a>'}) | raw }}</p>
     {% endif %}
 
 {% endblock %}
