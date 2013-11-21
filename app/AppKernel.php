@@ -48,7 +48,7 @@ class AppKernel extends Kernel
             new Zizoo\AycBundle\AycBundle(),
             new Zizoo\SmsBundle\ZizooSmsBundle(),
             new Admin\BaseBundle\AdminBaseBundle(),
-            new Zizoo\MangoPayBundle\ZizooMangoPayBundle(),
+//            new Zizoo\MangoPayBundle\ZizooMangoPayBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
