@@ -3,3 +3,5 @@ zizoo_boat.engine.outboard: Outboard
 zizoo_boat.engine.stern: Stern
 zizoo_boat.engine.electric: Electric
 zizoo_boat.engine.jet: Jet
+
+zizoo_boat.booking.min_days: Days Minimum

@@ -54,7 +54,7 @@ abstract class AbstractBookingAgent implements BookingAgentInterface
     
     function makeBooking(Reservation $reservation, User $user, $cost, $crew)
     {
-        $reference = date("Ymd").$user->getId().$reservation->getBoat()->getId().'ZIZOO';
+        $reference = date("Ymd").$reservation->getId().'-ZIZOO';
 
         $booking = new Booking();
         $booking->setReference($reference);

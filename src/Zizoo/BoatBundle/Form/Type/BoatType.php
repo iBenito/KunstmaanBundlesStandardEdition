@@ -27,7 +27,8 @@ class BoatType extends AbstractType
                                                                             'value_property_path'   => 'defaultPrice',
                                                                             'data_class'            => $options['data_class'],
                                                                             'label'                 => array('value' => 'Default Price (€)',
-                                                                                                             'help'  => 'Only if there is a constant price for all periods <br/> otherwise set prices per specific dates/periods in the "Price" field')))
+                                                                                                             'help'  => 'Only if there is a constant price for all periods <br/> otherwise set prices per specific dates/periods in the "Price" field'),
+                                                                            'attr'                  => array('placeholder'=>'per day')))
             ->add('minimum_days_choice', 'zizoo_number_nullable', array(    'required'              => $options['required'], 
                                                                             'has_property_path'     => 'hasMinimumDays', 
                                                                             'value_property_path'   => 'minimumDays',
@@ -36,9 +37,9 @@ class BoatType extends AbstractType
             ->add('year', 'text', array('required'  => $options['required']))
             ->add('brand', 'text', array('required'  => $options['required']))
             ->add('model', 'text', array('required'  => $options['required']))
-            ->add('length', 'number', array('required'  => $options['required']))
+            ->add('length', 'number', array('required'  => $options['required'], 'attr' => array('placeholder'=>'in metres')))
             ->add('hull_material', 'text', array('required'  => $options['required']))
-            ->add('water_capacity', 'number', array('required'  => $options['required']))
+            ->add('water_capacity', 'number', array('required'  => $options['required'], 'attr' => array('placeholder'=>'in litres')))
             ->add('cabins', 'number', array('required'  => $options['required'],'label' => '# of Cabins'))
             ->add('berths', 'number', array('required'  => $options['required'],'label' => '# of Berths'))
             ->add('bathrooms', 'number', array('required'  => $options['required'],'label' => '# of Bathrooms'))
