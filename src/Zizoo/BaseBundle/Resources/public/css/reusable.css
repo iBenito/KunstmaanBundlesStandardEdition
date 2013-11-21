@@ -19,7 +19,7 @@
 
 .bar {
     padding: 15px 0;
-    margin: 40px 0 0 0;
+    margin: 90px 0 0 0;
     background: -moz-linear-gradient(top, #4d4d4d 50%, #484848 50%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#4d4d4d), color-stop(50%,#484848));
     background: -webkit-linear-gradient(top, #4d4d4d 50%,#484848 50%);
