@@ -52,14 +52,20 @@ class CharterController extends Controller
 
             if ($charterAddress->getLat() && $charterAddress->getLng()){
                 $map->setCenter($charterAddress->getLat(), $charterAddress->getLng(), true);
+                $marker = $this->get('ivory_google_map.marker');
+                $marker->setPosition($charterAddress->getLat(), $charterAddress->getLng(), true);
+                $marker->setOption('title', $charter->getCharterName());
+                $marker->setOption('clickable', true);
+                $marker->setIcon($this->container->get('templating.helper.assets')->getUrl('/bundles/zizoobase/images/google-maps-marker.png'));
+                $map->addMarker($marker);
             }
-            $map->setMapOption('zoom', 6);
+            $map->setMapOption('zoom', 9);
             $map->setMapOption('disableDefaultUI', true);
             $map->setMapOption('zoomControl', true);
             $map->setMapOption('scrollwheel', false);
             $map->setStylesheetOptions(array(
                 'width' => '100%',
-                'height' => '0'
+                'height' => '200px'
             ));
         }
         else {
@@ -925,7 +931,7 @@ class CharterController extends Controller
         }
         
         
-        return $this->render('ZizooCharterBundle:Charter:view_booking.html.twig', array(
+        return $this->render('ZizooBookingBundle:Booking:view_booking.html.twig', array(
             'booking'       => $booking,
             'status'        => $statusString,
             'show_controls' => $showControls,
